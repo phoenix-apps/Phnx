@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{B3BF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.AspNet.Windows.Extensions", "AspNet\Windows\MarkSFrancis.AspNet.Windows.Extensions\MarkSFrancis.AspNet.Windows.Extensions.csproj", "{F40DE857-B44D-4103-9138-6C71CBAD5123}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Benchmark", "MarkSFrancis.Benchmark\MarkSFrancis.Benchmark.csproj", "{67BE86C0-69C4-4E33-A4E9-16A549539D65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{F40DE857-B44D-4103-9138-6C71CBAD5123}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F40DE857-B44D-4103-9138-6C71CBAD5123}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F40DE857-B44D-4103-9138-6C71CBAD5123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67BE86C0-69C4-4E33-A4E9-16A549539D65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67BE86C0-69C4-4E33-A4E9-16A549539D65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67BE86C0-69C4-4E33-A4E9-16A549539D65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67BE86C0-69C4-4E33-A4E9-16A549539D65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
