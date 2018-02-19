@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MarkSFrancis.DotNetExtensions\MarkSFrancis.DotNetExtensions.csproj" />
+    <ProjectReference Include="..\MarkSFrancis.Extensions\MarkSFrancis.Extensions.csproj" />
     <ProjectReference Include="..\MarkSFrancis\MarkSFrancis.csproj" />
   </ItemGroup>
 

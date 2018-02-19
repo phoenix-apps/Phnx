@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MarkSFrancis.Console\MarkSFrancis.Console.csproj" />
-    <ProjectReference Include="..\MarkSFrancis.DotNetExtensions\MarkSFrancis.DotNetExtensions.csproj" />
+    <ProjectReference Include="..\MarkSFrancis.Extensions\MarkSFrancis.Extensions.csproj" />
   </ItemGroup>
 
 </Project>
