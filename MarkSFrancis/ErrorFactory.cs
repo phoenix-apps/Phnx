@@ -1,6 +1,6 @@
 ﻿namespace MarkSFrancis
 {
-    public class Class1
+    public class ErrorFactory
     {
     }
 }
