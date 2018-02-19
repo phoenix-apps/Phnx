@@ -17,7 +17,7 @@ namespace SyntaxTest
             consoleIo.WriteCollection(test);
             consoleIo.WriteCollection(data);
 
-            consoleIo.Pause();
+            consoleIo.ReadKey();
         }
     }
 }

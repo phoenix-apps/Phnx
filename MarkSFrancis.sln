@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis", "MarkSFrancis\MarkSFrancis.csproj", "{B6018D31-3F76-4558-8119-466314B7DAEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Console", "..\MarkSFrancis.Console\MarkSFrancis.Console.csproj", "{057AA0D2-2B6E-4FC3-9253-D6E7E7E48B2D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Console", "MarkSFrancis.Console\MarkSFrancis.Console.csproj", "{057AA0D2-2B6E-4FC3-9253-D6E7E7E48B2D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Reflection", "MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj", "{4B5795C8-B068-4C30-B782-BD842FFB7D6D}"
 EndProject
