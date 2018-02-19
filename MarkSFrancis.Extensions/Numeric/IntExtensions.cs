@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MarkSFrancis.DotNetExtensions.Numeric
+namespace MarkSFrancis.Extensions.Numeric
 {
     public static class IntExtensions
     {

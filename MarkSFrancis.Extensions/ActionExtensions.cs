@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace MarkSFrancis.DotNetExtensions
+namespace MarkSFrancis.Extensions
 {
     public static class ActionExtensions
     {

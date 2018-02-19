@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace MarkSFrancis.DotNetExtensions.IO
+namespace MarkSFrancis.Extensions.IO
 {
     public static class StreamExtensions
     {

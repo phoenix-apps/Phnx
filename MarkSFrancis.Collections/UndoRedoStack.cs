@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MarkSFrancis.DotNetExtensions.Collections;
+using MarkSFrancis.Extensions.Collections;
 
 namespace MarkSFrancis.Collections
 {

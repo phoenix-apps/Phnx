@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace MarkSFrancis.DotNetExtensions.Collections
+namespace MarkSFrancis.Extensions.Collections
 {
     public static class ByteArrayExtensions
     {

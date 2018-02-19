@@ -1,6 +1,6 @@
 ﻿using MarkSFrancis.Console;
-using MarkSFrancis.DotNetExtensions.Collections;
-using MarkSFrancis.DotNetExtensions.IO;
+using MarkSFrancis.Extensions.Collections;
+using MarkSFrancis.Extensions.IO;
 
 namespace SyntaxTest
 {

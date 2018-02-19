@@ -1,4 +1,4 @@
-﻿namespace MarkSFrancis.DotNetExtensions
+﻿namespace MarkSFrancis.Extensions
 {
     public static class BooleanExtensions
     {

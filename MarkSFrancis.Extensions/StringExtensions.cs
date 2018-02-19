@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MarkSFrancis.DotNetExtensions
+namespace MarkSFrancis.Extensions
 {
     public static class StringExtensions
     {

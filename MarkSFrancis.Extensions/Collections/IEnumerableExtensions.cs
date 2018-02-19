@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MarkSFrancis.DotNetExtensions.Collections
+namespace MarkSFrancis.Extensions.Collections
 {
     public static class IEnumerableExtensions
     {

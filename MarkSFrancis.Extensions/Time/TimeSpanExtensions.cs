@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using MarkSFrancis.DotNetExtensions.Numeric;
+using MarkSFrancis.Extensions.Numeric;
 
-namespace MarkSFrancis.DotNetExtensions.Time
+namespace MarkSFrancis.Extensions.Time
 {
     [Flags]
     public enum TimeComponents

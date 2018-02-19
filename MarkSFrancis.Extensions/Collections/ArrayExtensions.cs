@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace MarkSFrancis.DotNetExtensions.Collections
+namespace MarkSFrancis.Extensions.Collections
 {
     public static class ArrayExtensions
     {

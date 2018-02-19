@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MarkSFrancis.DotNetExtensions
+namespace MarkSFrancis.Extensions
 {
     public static class TypeExtensions
     {

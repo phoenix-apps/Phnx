@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace MarkSFrancis.DotNetExtensions
+namespace MarkSFrancis.Extensions
 {
     public static class CharExtensions
     {

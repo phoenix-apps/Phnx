@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MarkSFrancis.DotNetExtensions.Time
+namespace MarkSFrancis.Extensions.Time
 {
     public static class DateTimeExtensions
     {

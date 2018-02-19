@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MarkSFrancis.DotNetExtensions
+namespace MarkSFrancis.Extensions
 {
     public static class RandomExtensions
     {

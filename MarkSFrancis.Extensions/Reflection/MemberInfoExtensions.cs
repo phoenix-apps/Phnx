@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace MarkSFrancis.DotNetExtensions.Reflection
+namespace MarkSFrancis.Extensions.Reflection
 {
     public static class MemberInfoExtensions
     {
