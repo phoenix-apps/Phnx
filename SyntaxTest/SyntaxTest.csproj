@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MarkSFrancis.Console\MarkSFrancis.Console.csproj" />
+    <ProjectReference Include="..\MarkSFrancis.Console\MarkSFrancis.Console.csproj" />
     <ProjectReference Include="..\MarkSFrancis.DotNetExtensions\MarkSFrancis.DotNetExtensions.csproj" />
   </ItemGroup>
 
