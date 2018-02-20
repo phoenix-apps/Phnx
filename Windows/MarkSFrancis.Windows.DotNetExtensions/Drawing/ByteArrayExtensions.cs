@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.IO;
 
-namespace MarkSFrancis.Windows.DotNetExtensions.Drawing
+namespace MarkSFrancis.Windows.Extensions.Drawing
 {
     public static class ByteArrayExtensions
     {

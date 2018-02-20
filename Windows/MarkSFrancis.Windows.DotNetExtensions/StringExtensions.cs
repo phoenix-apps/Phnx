@@ -1,6 +1,6 @@
 ﻿using System.Net.Mail;
 
-namespace MarkSFrancis.Windows.DotNetExtensions
+namespace MarkSFrancis.Windows.Extensions
 {
     public static class StringExtensions
     {

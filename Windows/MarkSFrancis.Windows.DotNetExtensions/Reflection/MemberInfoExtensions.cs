@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using MarkSFrancis.Extensions.Reflection;
 
-namespace MarkSFrancis.Windows.DotNetExtensions.Reflection
+namespace MarkSFrancis.Windows.Extensions.Reflection
 {
     public static class MemberInfoExtensions
     {

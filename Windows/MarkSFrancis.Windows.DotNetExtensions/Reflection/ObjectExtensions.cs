@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace MarkSFrancis.Windows.DotNetExtensions.Reflection
+namespace MarkSFrancis.Windows.Extensions.Reflection
 {
     public static class ObjectExtensions
     {

@@ -7,8 +7,8 @@
     <ProjectGuid>{241985EE-B9F2-40EC-A16D-B9FF3746DA36}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MarkSFrancis.Windows.DotNetExtensions</RootNamespace>
-    <AssemblyName>MarkSFrancis.Windows.DotNetExtensions</AssemblyName>
+    <RootNamespace>MarkSFrancis.Windows.Extensions</RootNamespace>
+    <AssemblyName>MarkSFrancis.Windows.Extensions</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

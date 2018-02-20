@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyntaxTest", "SyntaxTest\Sy
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{BCC7CBC7-7B54-4758-AC67-4EE8A7BEB26C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Windows.DotNetExtensions", "Windows\MarkSFrancis.Windows.DotNetExtensions\MarkSFrancis.Windows.DotNetExtensions.csproj", "{241985EE-B9F2-40EC-A16D-B9FF3746DA36}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Windows.Extensions", "Windows\MarkSFrancis.Windows.DotNetExtensions\MarkSFrancis.Windows.Extensions.csproj", "{241985EE-B9F2-40EC-A16D-B9FF3746DA36}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AspNet", "AspNet", "{4B6BDD07-EAB4-4323-B045-B0BFC494756B}"
 EndProject

@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace MarkSFrancis.Windows.DotNetExtensions.Reflection
+namespace MarkSFrancis.Windows.Extensions.Reflection
 {
     public static class PropertyInfoExtensions
     {

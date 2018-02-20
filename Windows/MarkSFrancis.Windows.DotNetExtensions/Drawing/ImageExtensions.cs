@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace MarkSFrancis.Windows.DotNetExtensions.Drawing
+namespace MarkSFrancis.Windows.Extensions.Drawing
 {
     public static class ImageExtensions
     {
