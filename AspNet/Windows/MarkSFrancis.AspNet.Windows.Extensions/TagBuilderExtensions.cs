@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace MarkSFrancis.AspNet.Windows
+namespace MarkSFrancis.AspNet.Windows.Extensions
 {
     public static class TagBuilderExtensions
     {
