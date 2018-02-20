@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using MarkSFrancis.DotNetExtensions.Reflection;
+using MarkSFrancis.Extensions.Reflection;
 
 namespace MarkSFrancis.Windows.DotNetExtensions.Reflection
 {

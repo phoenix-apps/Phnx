@@ -12,6 +12,8 @@ namespace MarkSFrancis.AspNet.Windows.Modals
             Guid = System.Guid.NewGuid().ToString();
         }
 
+        public string Guid { get; set; }
+
         public string Heading { get; set; }
 
         public string Body { get; set; }
@@ -42,17 +44,5 @@ namespace MarkSFrancis.AspNet.Windows.Modals
                 return icon + "></i>";
             }
         }
-
-        public IHtmlString RenderHtml()
-        {
-            return DefaultModalRenderer.Render(this);
-        }
-
-        public IHtmlString RenderJs()
-        {
-            return DefaultModalRenderer.RenderJs(this);
-        }
-
-        public string Guid { get; set; }
     }
 }
