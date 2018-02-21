@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MarkSFrancis.Data.LazyLoad
 {
-    public static class LazyWithSharedCache
+    public static class LazyDatabase
     {
         private static Dictionary<Type, Dictionary<object, object>> CacheManager { get; set; }
             = new Dictionary<Type, Dictionary<object, object>>();
@@ -38,13 +38,7 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         private static bool CacheIsMaxSize { get; set; }
-
-        /// <summary>
-        /// Returns the value if it's in cache, 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="getFunc"></param>
-        /// <returns></returns>
+        
         public static TObject GetValue<TKey, TObject>(TKey id, Func<TKey, TObject> getFunc)
         {
             lock (CacheLock)
