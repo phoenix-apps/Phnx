@@ -18,11 +18,11 @@ namespace MarkSFrancis.Data.LazyLoad
         public event ValueGetEvent ValueGet;
 
         private T _cachedValue;
-        private bool _valueIsCached = false;
+        private bool _valueIsCached;
 
         public bool CanSet => _setFunc != null;
 
-        private bool _valueChangedInLife = false;
+        private bool _valueChangedInLife;
         public bool ValueChangedInLife => _valueChangedInLife;
 
         public Lazy(Func<T> getFunction)
