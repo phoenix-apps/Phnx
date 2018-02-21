@@ -2,6 +2,9 @@
 
 namespace MarkSFrancis.Data
 {
+    /// <summary>
+    /// Generate random entities of various types
+    /// </summary>
     public static class GetRandom
     {
         static readonly char[] AlphaNumericChars =
@@ -14,26 +17,35 @@ namespace MarkSFrancis.Data
             'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w',
             'x', 'y', 'z'
         };
+
         private static Random Random => RandomHelper.Random;
+
+        /// <summary>
+        /// Get random text of a given length. Only uses alphanumeric characters
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
         public static string String(int length)
         {
-            string ReturnValue = "";
+            string returnValue = "";
             for (int i = 0; i < length; i++)
             {
-                ReturnValue += AlphaNumericChars[Random.Next(0, AlphaNumericChars.Length)];
+                returnValue += AlphaNumericChars[Random.Next(0, AlphaNumericChars.Length)];
             }
-            return ReturnValue;
+            return returnValue;
         }
+
         /// <summary>
-        /// Generates a random string with a length between 1 and 19 characters
+        /// Generates a random string with a length between 1 and 19 characters. Only uses alphanumeric characters
         /// </summary>
         /// <returns></returns>
         public static string String()
         {
             return String(Random.Next(1, 20));
         }
+
         /// <summary>
-        /// 
+        /// Generate a random <see cref="ulong"/> within a given range
         /// </summary>
         /// <param name="minimum">Inclusive minimum</param>
         /// <param name="maximum">Exclusive maximum</param>
@@ -44,8 +56,9 @@ namespace MarkSFrancis.Data
             Random.NextBytes(buffer);
             return (ulong)(BitConverter.ToInt64(buffer, 0)) % (maximum - minimum) + minimum;
         }
+
         /// <summary>
-        /// 
+        /// Generate a random <see cref="long"/> within a given range
         /// </summary>
         /// <param name="minimum">Inclusive minimum</param>
         /// <param name="maximum">Exclusive maximum</param>
@@ -57,8 +70,9 @@ namespace MarkSFrancis.Data
             long longRand = BitConverter.ToInt64(buf, 0);
             return Math.Abs(longRand % (maximum - minimum)) + minimum;
         }
+
         /// <summary>
-        /// 
+        /// Generate a random <see cref="int"/> within a given range
         /// </summary>
         /// <param name="minimum">Inclusive minimum</param>
         /// <param name="maximum">Exclusive maximum</param>
@@ -67,8 +81,9 @@ namespace MarkSFrancis.Data
         {
             return Random.Next(minimum, maximum);
         }
+
         /// <summary>
-        /// 
+        /// Generate a random <see cref="uint"/> within a given range
         /// </summary>
         /// <param name="minimum">Inclusive minimum</param>
         /// <param name="maximum">Exclusive maximum</param>
@@ -81,8 +96,9 @@ namespace MarkSFrancis.Data
                 Math.Min(min, max),
                 Math.Max(min, max))), 0);
         }
+
         /// <summary>
-        /// 
+        /// Generate a random <see cref="short"/> within a given range
         /// </summary>
         /// <param name="minimum">Inclusive minimum</param>
         /// <param name="maximum">Exclusive maximum</param>
@@ -91,8 +107,9 @@ namespace MarkSFrancis.Data
         {
             return (short)Random.Next(minimum, maximum);
         }
+
         /// <summary>
-        /// 
+        /// Generate a random <see cref="ushort"/> within a given range
         /// </summary>
         /// <param name="minimum">Inclusive minimum</param>
         /// <param name="maximum">Exclusive maximum</param>
@@ -101,8 +118,9 @@ namespace MarkSFrancis.Data
         {
             return (ushort)Random.Next(minimum, maximum);
         }
+
         /// <summary>
-        /// 
+        /// Generate a random <see cref="sbyte"/> within a given range
         /// </summary>
         /// <param name="minimum">Inclusive minimum</param>
         /// <param name="maximum">Exclusive maximum</param>
@@ -111,8 +129,9 @@ namespace MarkSFrancis.Data
         {
             return (sbyte)Random.Next(minimum, maximum);
         }
+
         /// <summary>
-        /// 
+        /// Generate a random <see cref="byte"/> within a given range
         /// </summary>
         /// <param name="minimum">Inclusive minimum</param>
         /// <param name="maximum">Exclusive maximum</param>
