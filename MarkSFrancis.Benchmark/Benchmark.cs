@@ -3,71 +3,112 @@ using System.Diagnostics;
 
 namespace MarkSFrancis.Benchmark
 {
+    /// <summary>
+    /// Benchmark a given function or series of functions by generating values, and then sending them to each, timing how long each function takes to compute all values
+    /// </summary>
+    /// <typeparam name="T">The type passed to each function as an input</typeparam>
     public class Benchmark<T>
     {
-        public long NumberOfValuesToCompute { get; private set; }
+        /// <summary>
+        /// The number of values to generate/ compute
+        /// </summary>
+        public long NumberOfValuesToCompute => BenchmarkWithValues.Length;
 
-        public Func<long, T> GenerateValueMethod { get; private set; }
-
+        /// <summary>
+        /// The methods that are being benchmarked
+        /// </summary>
         public Action<T>[] ComputeMethods { get; private set; }
 
+        /// <summary>
+        /// The method that logs events
+        /// </summary>
         private Action<string> Log { get; set; }
 
+        /// <summary>
+        /// Whether to log events
+        /// </summary>
         private bool Verbose => Log != null;
 
-        private T[] GeneratedValues { get; set; }
+        /// <summary>
+        /// The values to pass to the <see cref="ComputeMethods"/> when benchmarking
+        /// </summary>
+        public T[] BenchmarkWithValues { get; private set; }
 
-        public Benchmark(long numberOfValuesToCompute, Func<long, T> generateValue, Action<T>[] computeMethods)
+        /// <summary>
+        /// Create a new <see cref="Benchmark{T}"/> without writing steps to the log
+        /// </summary>
+        /// <param name="computeMethods">The methods to benchmark</param>
+        /// <param name="numberOfValuesToCompute">The number of values to be computed by each of the <see cref="ComputeMethods"/></param>
+        /// <param name="generateValue">The function used to generate values. The number generated so far is passed in</param>
+        public Benchmark(Action<T>[] computeMethods, Func<long, T> generateValue, long numberOfValuesToCompute)
         {
-            Initialise(numberOfValuesToCompute, generateValue, null, computeMethods);
-        }
-
-        public Benchmark(long numberOfValuesToCompute, Func<long, T> generateValue, Action<string> log, params Action<T>[] computeMethods)
-        {
-            Initialise(numberOfValuesToCompute, generateValue, log, computeMethods);
-        }
-
-        private void Initialise(long numberOfValuesToCompute, Func<long, T> generateValue, Action<string> log, Action<T>[] computeMethods)
-        {
-            NumberOfValuesToCompute = numberOfValuesToCompute;
-
-            GenerateValueMethod = generateValue;
-
             ComputeMethods = computeMethods;
+
+            GenerateValues(generateValue, numberOfValuesToCompute);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="Benchmark{T}"/> without writing steps to the log
+        /// </summary>
+        /// <param name="computeMethods">The methods to benchmark</param>
+        /// <param name="benchmarkWithValues">The values to pass to the <see cref="ComputeMethods"/> when benchmarking</param>
+        public Benchmark(Action<T>[] computeMethods, T[] benchmarkWithValues)
+        {
+            ComputeMethods = computeMethods;
+
+            BenchmarkWithValues = benchmarkWithValues;
+        }
+
+        /// <summary>
+        /// Create a new <see cref="Benchmark{T}"/> without writing steps to the log
+        /// </summary>
+        /// <param name="computeMethods">The methods to benchmark</param>
+        /// <param name="numberOfValuesToCompute">The number of values to be computed by each of the <see cref="ComputeMethods"/></param>
+        /// <param name="generateValue">The function used to generate values. The number generated so far is passed in</param>
+        /// <param name="log">The function called when events such as "values generated" occur, with the event description passed in</param>
+        public Benchmark(Action<T>[] computeMethods, Func<long, T> generateValue, long numberOfValuesToCompute, Action<string> log)
+        {
+            ComputeMethods = computeMethods;
+
+            GenerateValues(generateValue, numberOfValuesToCompute);
 
             Log = log;
         }
 
-        public void GenerateValues()
+        /// <summary>
+        /// Generates a given number of values using a function
+        /// </summary>
+        /// <param name="generateValue">The function used to generate values. The number of values generated so far is passed in as a parameter to the function</param>
+        /// <param name="numberOfValuesToGenerate">The number of values to generate using the function</param>
+        private void GenerateValues(Func<long, T> generateValue, long numberOfValuesToGenerate)
         {
-            GeneratedValues = new T[NumberOfValuesToCompute];
+            BenchmarkWithValues = new T[numberOfValuesToGenerate];
 
             LogIfVerbose("Starting to generate values...");
 
-            for (long index = 0; index < NumberOfValuesToCompute; index++)
+            for (long index = 0; index < numberOfValuesToGenerate; index++)
             {
-                GeneratedValues[index] = GenerateValueMethod(index);
+                BenchmarkWithValues[index] = generateValue(index);
             }
 
             LogIfVerbose("Finished generating values...");
         }
 
+        /// <summary>
+        /// Benchmarks all methods, and returns how long each of the <see cref="ComputeMethods"/> took to compute all <see cref="BenchmarkWithValues"/> in a <see cref="TimeSpan"/> array
+        /// </summary>
+        /// <returns>How long each <see cref="ComputeMethods"/> took to process all values</returns>
         public TimeSpan[] Run()
         {
             var timings = new TimeSpan[ComputeMethods.Length];
-
-            if (GeneratedValues == null)
-            {
-                GenerateValues();
-            }
-
+            
             for (var taskIndex = 0; taskIndex < ComputeMethods.Length; taskIndex++)
             {
                 LogIfVerbose("Starting benchmark number " + taskIndex);
 
                 Stopwatch stp = new Stopwatch();
                 stp.Start();
-                foreach (var generatedValue in GeneratedValues)
+                foreach (var generatedValue in BenchmarkWithValues)
                 {
                     ComputeMethods[taskIndex](generatedValue);
                 }
