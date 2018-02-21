@@ -15,16 +15,9 @@ namespace MarkSFrancis.Reflection
         /// Whether this is a <see cref="PropertyInfo"/>
         /// </summary>
         public bool IsProperty => Property == null;
-
-        /// <summary>
-        /// Convert this to a <see cref="PropertyInfo"/>. If this is not a property, this returns null
-        /// </summary>
-        public PropertyInfo Property { get; }
-
-        /// <summary>
-        /// Convert this to a <see cref="FieldInfo"/>. If this is not a field, this returns null
-        /// </summary>
-        public FieldInfo Field { get; }
+        private PropertyInfo Property { get; }
+        
+        private FieldInfo Field { get; }
 
         /// <summary>
         /// Get the <see cref="Member"/> for this
@@ -148,6 +141,47 @@ namespace MarkSFrancis.Reflection
         public U GetValue(T baseObject)
         {
             return (U)(Property?.GetValue(baseObject) ?? Field?.GetValue(baseObject));
+        }
+
+        /// <summary>
+        /// Converts this <see cref="PropertyFieldInfo{T,U}"/> to a <see cref="PropertyInfo"/>. If the given <see cref="PropertyFieldInfo{T,U}"/> is a <see cref="FieldInfo"/>, an <see cref="InvalidCastException"/> is thrown
+        /// </summary>
+        /// <param name="propFieldInfo">The <see cref="PropertyFieldInfo{T,U}"/> to convert</param>
+        public static explicit operator PropertyInfo(PropertyFieldInfo<T, U> propFieldInfo)
+        {
+            var prop = propFieldInfo.Property;
+
+            if (prop == null)
+            {
+                ErrorFactory.Default.InvalidCast(propFieldInfo.Name, typeof(PropertyFieldInfo<T, U>),
+                    typeof(PropertyInfo));
+            }
+            return prop;
+        }
+
+        /// <summary>
+        /// Converts this <see cref="PropertyFieldInfo{T,U}"/> to a <see cref="FieldInfo"/>. If the given <see cref="PropertyFieldInfo{T,U}"/> is a <see cref="PropertyInfo"/>, an <see cref="InvalidCastException"/> is thrown
+        /// </summary>
+        /// <param name="propFieldInfo">The <see cref="PropertyFieldInfo{T,U}"/> to convert</param>
+        public static explicit operator FieldInfo(PropertyFieldInfo<T, U> propFieldInfo)
+        {
+            var field = propFieldInfo.Field;
+
+            if (field == null)
+            {
+                ErrorFactory.Default.InvalidCast(propFieldInfo.Name, typeof(PropertyFieldInfo<T, U>),
+                    typeof(FieldInfo));
+            }
+            return field;
+        }
+
+        /// <summary>
+        /// Converts this <see cref="PropertyFieldInfo{T,U}"/> to a <see cref="FieldInfo"/>
+        /// </summary>
+        /// <param name="propFieldInfo">The <see cref="PropertyFieldInfo{T,U}"/> to convert</param>
+        public static explicit operator MemberInfo(PropertyFieldInfo<T, U> propFieldInfo)
+        {
+            return propFieldInfo.Member;
         }
     }
 
