@@ -67,6 +67,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\MarkSFrancis\MarkSFrancis.csproj">
+      <Project>{B6018D31-3F76-4558-8119-466314B7DAEF}</Project>
+      <Name>MarkSFrancis</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MarkSFrancis.AspNet.Windows.Extensions\MarkSFrancis.AspNet.Windows.Extensions.csproj">
       <Project>{f40de857-b44d-4103-9138-6c71cbad5123}</Project>
       <Name>MarkSFrancis.AspNet.Windows.Extensions</Name>

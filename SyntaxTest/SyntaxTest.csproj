@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MarkSFrancis.Console\MarkSFrancis.Console.csproj" />
     <ProjectReference Include="..\MarkSFrancis.Extensions\MarkSFrancis.Extensions.csproj" />
+    <ProjectReference Include="..\MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj" />
   </ItemGroup>
 
 </Project>

@@ -56,7 +56,7 @@ namespace MarkSFrancis
         public const string DefaultConnectionStringKey = "DefaultConnection";
 
         /// <summary>
-        /// Gets the <see cref="DefaultConnectionString"/> from the connection strings
+        /// Gets the default from the connection strings
         /// </summary>
         public string DefaultConnectionString => GetConnectionString(DefaultConnectionStringKey);
     }

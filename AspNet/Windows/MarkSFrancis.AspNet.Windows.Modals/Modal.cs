@@ -4,7 +4,7 @@ using System.Web;
 
 namespace MarkSFrancis.AspNet.Windows.Modals
 {
-    public class ModalManager<TModalRenderer, TModal> where TModal : IModal
+    public class ModalManager<TModal> where TModal : IModal
     {
         public const string SessionMessageKey = "ModalMessage";
         
@@ -22,7 +22,7 @@ namespace MarkSFrancis.AspNet.Windows.Modals
                 var curContext = HttpContext.Current;
                 if (curContext == null)
                 {
-                    throw ErrorFactory.HttpContextRequired;
+                    throw ErrorFactory.Default.HttpContextRequired();
                 }
 
                 return (List<TModal>)curContext.Session[SessionMessageKey];
@@ -32,7 +32,7 @@ namespace MarkSFrancis.AspNet.Windows.Modals
                 var curContext = HttpContext.Current;
                 if (curContext == null)
                 {
-                    throw ErrorFactory.HttpContextRequired;
+                    throw ErrorFactory.Default.HttpContextRequired();
                 }
 
                 HttpContext.Current.Session[SessionMessageKey] = value;

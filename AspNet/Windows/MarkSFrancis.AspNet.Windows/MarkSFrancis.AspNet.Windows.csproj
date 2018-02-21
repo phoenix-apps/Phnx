@@ -42,11 +42,16 @@
     <Compile Include="Services\Cache\ICacheEntryGroup.cs" />
     <Compile Include="Services\Cache\ICacheEntryGroupChild.cs" />
     <Compile Include="Services\Context\BaseContextService.cs" />
-    <Compile Include="ErrorFactory.cs" />
+    <Compile Include="ErrorFactoryExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Context\CookiesService.cs" />
     <Compile Include="Services\Context\HeadersService.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\MarkSFrancis\MarkSFrancis.csproj">
+      <Project>{b6018d31-3f76-4558-8119-466314b7daef}</Project>
+      <Name>MarkSFrancis</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
