@@ -4,12 +4,19 @@ using System.Configuration;
 namespace MarkSFrancis
 {
     /// <summary>
-    /// Access this application's configuration. To load this from a web.config or app.config, use <see cref="FromConfig"/>. Use the constructor for a custom settings source. Inherit from this class to provide your own custom key reading properties (like <see cref="DefaultConnectionString"/>)
+    /// Access this application's configuration. Use the constructor for a custom settings source. Inherit from this class to provide your own custom key reading properties (like <see cref="DefaultConnectionString"/>)
     /// </summary>
     public class ApplicationConfiguration
     {
         private NameValueCollection AppSettings { get; }
         private ConnectionStringSettingsCollection ConnectionStrings { get; }
+
+        /// <summary>
+        /// Create a new ApplicationConfiguration reader from the app.config or web.config
+        /// </summary>
+        public ApplicationConfiguration() : this(ConfigurationManager.AppSettings, ConfigurationManager.ConnectionStrings)
+        {
+        }
 
         /// <summary>
         /// Create a new application configuration from a given <see cref="NameValueCollection"/>
@@ -21,14 +28,6 @@ namespace MarkSFrancis
             AppSettings = appSettings;
             ConnectionStrings = connectionStrings;
         }
-
-        /// <summary>
-        /// Create a new ApplicationConfiguration reader from the app.config or web.config
-        /// </summary>
-        /// <returns></returns>
-        public static ApplicationConfiguration FromConfig() => 
-            new ApplicationConfiguration(
-                ConfigurationManager.AppSettings, ConfigurationManager.ConnectionStrings);
 
         /// <summary>
         /// Get a given key from the application settings
