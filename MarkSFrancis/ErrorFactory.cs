@@ -33,7 +33,7 @@ namespace MarkSFrancis
         /// <returns></returns>
         public InvalidCastException InvalidCast(string paramName, string castingFrom, string castingTo)
         {
-            return new InvalidCastException(nameof(paramName) + " cannot be cast from type " + castingFrom + " to type " + castingTo);
+            return new InvalidCastException(paramName + " cannot be cast from type " + castingFrom + " to type " + castingTo);
         }
     }
 }
