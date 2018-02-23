@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MarkSFrancis.Extensions.Collections
+namespace MarkSFrancis.Collections.Extensions
 {
     public static class IListExtensions
     {
