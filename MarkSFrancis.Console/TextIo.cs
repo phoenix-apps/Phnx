@@ -134,72 +134,72 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
-        /// Write a message to the <see cref="Output"/>, and then get a line of text from the <see cref="Input"/>
+        /// Write a question to the <see cref="Output"/>, and then get a line of text from the <see cref="Input"/>
         /// </summary>
-        /// <param name="message">The message to write</param>
+        /// <param name="question">The question to write</param>
         /// <returns></returns>
-        public string GetString(string message)
+        public string GetString(string question)
         {
-            message = FormatQuestion(message);
+            question = FormatQuestion(question);
 
-            Write(message);
+            Write(question);
             return GetString();
         }
 
         /// <summary>
-        /// Write a message to the <see cref="Output"/>, and then get attempt to get an <see cref="int"/> from the <see cref="Input"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
+        /// Write a question to the <see cref="Output"/>, and then get attempt to get an <see cref="int"/> from the <see cref="Input"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
         /// </summary>
-        /// <param name="message">The message to write</param>
+        /// <param name="question">The question to write</param>
         /// <returns></returns>
-        public int GetInt(string message = null)
+        public int GetInt(string question = null)
         {
-            return Get(int.Parse, message);
+            return Get(int.Parse, question);
         }
 
         /// <summary>
-        /// Write a message to the <see cref="Output"/>, and then get attempt to get a <see cref="long"/> from the <see cref="Input"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
+        /// Write a question to the <see cref="Output"/>, and then get attempt to get a <see cref="long"/> from the <see cref="Input"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
         /// </summary>
-        /// <param name="message">The message to write</param>
+        /// <param name="question">The question to write</param>
         /// <returns></returns>
-        public long GetLong(string message = null)
+        public long GetLong(string question = null)
         {
-            return Get(long.Parse, message);
+            return Get(long.Parse, question);
         }
 
         /// <summary>
-        /// Write a message to the <see cref="Output"/>, and then get attempt to get a <see cref="decimal"/> from the <see cref="Input"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
+        /// Write a question to the <see cref="Output"/>, and then get attempt to get a <see cref="decimal"/> from the <see cref="Input"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
         /// </summary>
-        /// <param name="message">The message to write</param>
+        /// <param name="question">The question to write</param>
         /// <returns></returns>
-        public decimal GetDecimal(string message = null)
+        public decimal GetDecimal(string question = null)
         {
-            return Get(decimal.Parse, message);
+            return Get(decimal.Parse, question);
         }
 
         /// <summary>
-        /// Write a message to the <see cref="Output"/>, and then get attempt to get a <see cref="DateTime"/> from the <see cref="Input"/> using <see cref="DateTime.Parse(string)"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
+        /// Write a question to the <see cref="Output"/>, and then get attempt to get a <see cref="DateTime"/> from the <see cref="Input"/> using <see cref="DateTime.Parse(string)"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
         /// </summary>
-        /// <param name="message">The message to write</param>
+        /// <param name="question">The question to write</param>
         /// <returns></returns>
-        public DateTime GetDateTime(string message = null)
+        public DateTime GetDateTime(string question = null)
         {
-            return Get(DateTime.Parse, message);
+            return Get(DateTime.Parse, question);
         }
 
         /// <summary>
-        /// Write a message to the <see cref="Output"/>, and then get attempt to get a value from the <see cref="Input"/> using the given converter. If the received input is invalid, this process repeats. Any errors are written to <see cref="Debug"/>
+        /// Write a question to the <see cref="Output"/>, and then get attempt to get a value from the <see cref="Input"/> using the given converter. If the received input is invalid, this process repeats. Any errors are written to <see cref="Debug"/>
         /// </summary>
         /// <param name="converter">The method to use when converting from the text to the desired type</param>
-        /// <param name="message">The message to write</param>
+        /// <param name="question">The question to write</param>
         /// <returns></returns>
-        public virtual T Get<T>(Func<string, T> converter, string message = null)
+        public virtual T Get<T>(Func<string, T> converter, string question = null)
         {
             if (converter == null)
             {
                 throw new ArgumentNullException(nameof(converter));
             }
 
-            message = FormatQuestion(message);
+            question = FormatQuestion(question);
 
             T returnValue = default(T);
 
@@ -207,9 +207,9 @@ namespace MarkSFrancis.Console
                 bool conversionWorked;
                 do
                 {
-                    if (message != null)
+                    if (question != null)
                     {
-                        Write(message);
+                        Write(question);
                     }
 
                     var valueEntered = GetString();
@@ -233,7 +233,7 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
-        /// Format a question for displaying on the console by adding a ": " to the end of the message if it does not already contain one
+        /// Format a question for displaying on the console by adding a ": " to the end of the question if it does not already contain one
         /// </summary>
         /// <param name="question">The question to format</param>
         /// <returns></returns>

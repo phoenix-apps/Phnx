@@ -22,19 +22,19 @@ namespace MarkSFrancis.Console
         public void Clear() => System.Console.Clear();
 
         /// <summary>
-        /// Write a message to the <see cref="System.Console"/>, and then get attempt to get a value from the <see cref="System.Console"/> using the given converter. If the received input is invalid, <see cref="Clear"/> is called, and the process repeats. Any errors are written to <see cref="Debug"/>
+        /// Write a question to the <see cref="System.Console"/>, and then get attempt to get a value from the <see cref="System.Console"/> using the given converter. If the received input is invalid, <see cref="Clear"/> is called, and the process repeats. Any errors are written to <see cref="Debug"/>
         /// </summary>
         /// <param name="converter">The method to use when converting from the text to the desired type</param>
-        /// <param name="message">The message to write</param>
+        /// <param name="question">The question to write</param>
         /// <returns></returns>
-        public override T Get<T>(Func<string, T> converter, string message = null)
+        public override T Get<T>(Func<string, T> converter, string question = null)
         {
             if (converter == null)
             {
                 throw new ArgumentNullException(nameof(converter));
             }
 
-            message = FormatQuestion(message);
+            question = FormatQuestion(question);
 
             T returnValue = default(T);
 
@@ -42,11 +42,11 @@ namespace MarkSFrancis.Console
                 bool conversionWorked;
                 do
                 {
-                    if (message != null)
+                    if (question != null)
                     {
                         Clear();
 
-                        Write(message);
+                        Write(question);
                     }
 
                     var valueEntered = GetString();
