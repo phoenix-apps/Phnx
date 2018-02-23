@@ -35,13 +35,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Benchmark", "M
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IO", "IO", "{5783F05D-B833-433D-B217-CB4A365E3566}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.IO.DelimitedData", "IO\MarkSFrancis.IO.DelimitedData\MarkSFrancis.IO.DelimitedData.csproj", "{024CAA11-3192-4AE1-A2DE-C1E5243202D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.IO.DelimitedData", "IO\MarkSFrancis.IO.DelimitedData\MarkSFrancis.IO.DelimitedData.csproj", "{024CAA11-3192-4AE1-A2DE-C1E5243202D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.IO.DelimitedData.Tests", "IO\MarkSFrancis.IO.DelimitedData.Tests\MarkSFrancis.IO.DelimitedData.Tests.csproj", "{8B13FDD1-085D-488A-912E-25B0DAB0E5A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.IO.DelimitedData.Tests", "IO\MarkSFrancis.IO.DelimitedData.Tests\MarkSFrancis.IO.DelimitedData.Tests.csproj", "{8B13FDD1-085D-488A-912E-25B0DAB0E5A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.IO.Threaded", "IO\MarkSFrancis.IO.Threaded\MarkSFrancis.IO.Threaded.csproj", "{6DC472FA-82A5-4A41-A395-EBF5AEA5224A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.IO.Threaded", "IO\MarkSFrancis.IO.Threaded\MarkSFrancis.IO.Threaded.csproj", "{6DC472FA-82A5-4A41-A395-EBF5AEA5224A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.IO.Threaded.Tests", "IO\MarkSFrancis.IO.Threaded.Tests\MarkSFrancis.IO.Threaded.Tests.csproj", "{D5B04B10-1C37-4849-AB96-C098DA262C17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.IO.Threaded.Tests", "IO\MarkSFrancis.IO.Threaded.Tests\MarkSFrancis.IO.Threaded.Tests.csproj", "{D5B04B10-1C37-4849-AB96-C098DA262C17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Configuration", "MarkSFrancis.Configuration\MarkSFrancis.Configuration.csproj", "{0BB29485-8289-442E-8E5B-875CD12BDDD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,6 +115,10 @@ Global
 		{D5B04B10-1C37-4849-AB96-C098DA262C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5B04B10-1C37-4849-AB96-C098DA262C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5B04B10-1C37-4849-AB96-C098DA262C17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BB29485-8289-442E-8E5B-875CD12BDDD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BB29485-8289-442E-8E5B-875CD12BDDD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BB29485-8289-442E-8E5B-875CD12BDDD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BB29485-8289-442E-8E5B-875CD12BDDD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

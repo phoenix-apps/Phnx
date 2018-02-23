@@ -48,9 +48,9 @@
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MarkSFrancis.Extensions\MarkSFrancis.Extensions.csproj">
-      <Project>{38e07d6b-a762-468a-9cf4-dad52799a2d4}</Project>
-      <Name>MarkSFrancis.Extensions</Name>
+    <ProjectReference Include="..\..\MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj">
+      <Project>{4B5795C8-B068-4C30-B782-BD842FFB7D6D}</Project>
+      <Name>MarkSFrancis.Reflection</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

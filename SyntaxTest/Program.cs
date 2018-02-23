@@ -8,6 +8,15 @@ namespace SyntaxTest
 
         static void Main(string[] args)
         {
+            if (Console.YesNo("Would you like to continue?"))
+            {
+                Console.WriteLine("Selected Yes");
+            }
+            else
+            {
+                Console.WriteLine("Selected No");
+            }
+
             Console.ReadKey();
         }
     }
