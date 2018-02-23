@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Linq;
 using MarkSFrancis.Collections;
 
 namespace MarkSFrancis.Configuration
@@ -12,8 +13,8 @@ namespace MarkSFrancis.Configuration
     /// </summary>
     public class AppConfig : IReadOnlyDictionary<string, string>
     {
-        private NameValueCollection AppSettings { get; }
-        private ConnectionStringSettingsCollection ConnectionStrings { get; }
+        protected NameValueCollection AppSettings { get; }
+        protected ConnectionStringSettingsCollection ConnectionStrings { get; }
 
         /// <summary>
         /// Create a new ApplicationConfiguration reader from the app.config or web.config
@@ -31,16 +32,6 @@ namespace MarkSFrancis.Configuration
         {
             AppSettings = appSettings;
             ConnectionStrings = connectionStrings;
-        }
-
-        /// <summary>
-        /// Get a given key from the application settings
-        /// </summary>
-        /// <param name="key">The key for the setting to retrieve</param>
-        /// <returns></returns>
-        public virtual string Get(string key)
-        {
-            return AppSettings[key];
         }
 
         /// <summary>
@@ -92,7 +83,7 @@ namespace MarkSFrancis.Configuration
             
             try
             {
-                value = AppSettings[key];
+                value = this[key];
                 return true;
             }
             catch
@@ -106,7 +97,7 @@ namespace MarkSFrancis.Configuration
         /// Returns an enumerator that iterates through the collection
         /// </summary>
         /// <returns>An enumerator that can be used to iterate through the collection</returns>
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        public virtual IEnumerator<KeyValuePair<string, string>> GetEnumerator()
         {
             var allKeys = AppSettings.AllKeys;
             foreach (var key in allKeys)
@@ -135,10 +126,10 @@ namespace MarkSFrancis.Configuration
         public virtual string DefaultConnectionString => GetConnectionString(DefaultConnectionStringKey);
 
         /// <summary>
-        /// Gets an enumerable collection that contains the keys in the read-only dictionary
+        /// Gets an enumerable collection that contains the keys in Application Settings (excluding Connection Strings)
         /// </summary>
-        /// <returns>An enumerable collection that contains the keys in the read-only dictionary</returns>
-        public IEnumerable<string> Keys => AppSettings.AllKeys;
+        /// <returns>An enumerable collection that contains the keys in Application Settings (excluding Connection Strings)</returns>
+        public virtual IEnumerable<string> Keys => AppSettings.AllKeys;
 
         /// <summary>
         /// Gets an enumerable collection that contains the values in the read-only dictionary
@@ -156,12 +147,14 @@ namespace MarkSFrancis.Configuration
         }
 
         /// <summary>
-        /// Gets the number of elements in the collection
+        /// Gets the number of elements in the Application Settings (excluding Connection Strings)
         /// </summary>
         /// <returns>The number of elements in the collection</returns>
-        public int Count => AppSettings.AllKeys.Length;
+        public int Count => GetEnumerator().ToEnumerable().Count();
         
-        /// <summary>Gets the element that has the specified key in the read-only dictionary</summary>
+        /// <summary>
+        /// Gets the element that has the specified key in Application Settings (excluding Connection Strings)
+        /// </summary>
         /// <param name="key">The key to locate</param>
         /// <returns>The element that has the specified key in the read-only dictionary</returns>
         /// <exception cref="T:System.ArgumentNullException">
