@@ -35,5 +35,24 @@ namespace MarkSFrancis
         {
             return new InvalidCastException(paramName + " cannot be cast from type " + castingFrom + " to type " + castingTo);
         }
+
+        /// <summary>
+        /// Create an <see cref="ArgumentNullException" /> with the name of the parameter that causes this exception
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception</param>
+        public ArgumentNullException ArgumentNull(string paramName)
+        {
+            return new ArgumentNullException(paramName);
+        }
+
+        /// <summary>
+        /// Create an <see cref="ArgumentNullException" /> with a specified error message and the name of the parameter that causes this exception
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception</param>
+        /// <param name="message">A message that describes the error</param>
+        public ArgumentNullException ArgumentNull(string paramName, string message)
+        {
+            return new ArgumentNullException(paramName, message);
+        }
     }
 }

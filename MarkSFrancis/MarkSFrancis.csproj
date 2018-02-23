@@ -8,8 +8,4 @@
     <DocumentationFile>bin\Debug\netstandard2.0\MarkSFrancis.xml</DocumentationFile>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
-  </ItemGroup>
-
 </Project>
