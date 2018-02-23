@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace MarkSFrancis.Extensions.IO
+namespace MarkSFrancis.IO.Extensions
 {
     public static class StreamExtensions
     {
@@ -11,6 +11,16 @@ namespace MarkSFrancis.Extensions.IO
             stream.Read(data, 0, data.Length);
 
             return data;
+        }
+
+        public static bool ReachedEnd(this Stream stream)
+        {
+            return stream.Position == stream.Length;
+        }
+
+        public static bool ReachedEnd(this TextReader reader)
+        {
+            return reader.Peek() == -1;
         }
     }
 }
