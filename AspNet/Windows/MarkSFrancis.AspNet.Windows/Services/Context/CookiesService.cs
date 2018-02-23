@@ -1,21 +1,38 @@
-﻿using System.Web;
+﻿using System;
+using System.Linq;
+using System.Web;
 
 namespace MarkSFrancis.AspNet.Windows.Services.Context
 {
-    public class CookiesService : BaseContextService
+    public class CookiesService : BaseContextService, IContextMetaService<string, HttpCookie>
     {
         public CookiesService(HttpRequestBase request, HttpResponseBase response) : base(request, response)
         {
         }
 
-        protected HttpCookie Get(string cookieKey)
+        protected HttpCookieCollection RequestCookies => Request.Cookies;
+        protected HttpCookieCollection ResponseCookies => Response.Cookies;
+
+        public HttpCookie Get(string cookieKey)
         {
-            return Request.Cookies[cookieKey];
+            return RequestCookies[cookieKey];
         }
 
-        protected void Set(string cookieKey, HttpCookie cookie)
+        public void Set(string cookieKey, HttpCookie cookie)
         {
-            Response.Cookies.Set(cookie);
+            if (cookieKey != cookie.Name)
+            {
+                throw new ArgumentException($"{nameof(cookieKey)} must match the name of the cookie. The key given was \"{cookieKey}\" and the cookie name was \"{cookie.Name}\"");
+            }
+
+            if (ResponseCookies.AllKeys.Contains(cookieKey))
+            {
+                ResponseCookies.Set(cookie);
+            }
+            else
+            {
+                ResponseCookies.Add(cookie);
+            }
         }
     }
 }

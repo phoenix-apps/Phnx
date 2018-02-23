@@ -46,6 +46,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Context\CookiesService.cs" />
     <Compile Include="Services\Context\HeadersService.cs" />
+    <Compile Include="Services\Context\IContextMetaService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\MarkSFrancis\MarkSFrancis.csproj">

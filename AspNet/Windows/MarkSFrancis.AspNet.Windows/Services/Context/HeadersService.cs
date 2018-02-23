@@ -1,21 +1,25 @@
-﻿using System.Web;
+﻿using System.Collections.Specialized;
+using System.Web;
 
 namespace MarkSFrancis.AspNet.Windows.Services.Context
 {
-    public class HeadersService : BaseContextService
+    public class HeadersService : BaseContextService, IContextMetaService<string, string>
     {
         public HeadersService(HttpRequestBase request, HttpResponseBase response) : base(request, response)
         {
         }
 
-        protected string Get(string key)
+        protected NameValueCollection RequestHeaders => Request.Headers;
+        protected NameValueCollection ResponseHeaders => Request.Headers;
+
+        public string Get(string key)
         {
-            return Request.Headers[key];
+            return RequestHeaders[key];
         }
 
-        protected void Set(string key, string value)
+        public void Set(string key, string value)
         {
-            Response.Headers[key] = value;
+            ResponseHeaders[key] = value;
         }
     }
 }
