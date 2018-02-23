@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Reflection;
 
-namespace MarkSFrancis.Extensions.Reflection
+namespace MarkSFrancis.Reflection.Extensions
 {
+    /// <summary>
+    /// Provides a series of extension methods onto <see cref="MemberInfo"/>
+    /// </summary>
     public static class MemberInfoExtensions
     {
         /// <summary>Retrieves a custom attribute of a specified type that is applied to a specified member.</summary>
         /// <param name="member">The member to inspect.</param>
         /// <typeparam name="T">The type of attribute to search for.</typeparam>
-        /// <returns>A custom attribute that matches <paramref name="T" />, or null if no such attribute is found.</returns>
+        /// <returns>A custom attribute that matches the given type, or null if no such attribute is found.</returns>
         /// <exception cref="T:System.ArgumentNullException">
         /// <paramref name="member" /> is null. </exception>
         /// <exception cref="T:System.NotSupportedException">
