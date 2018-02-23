@@ -1,0 +1,10 @@
+﻿namespace MarkSFrancis.Security.Hash
+{
+    public static class ErrorFactoryExtensions
+    {
+        public static DuplicateHashVersionException DuplicateHashVersion(this ErrorFactory factory, int hashVersion)
+        {
+            return new DuplicateHashVersionException($"{nameof(hashVersion)} is already configured and cannot be re-added");
+        }
+    }
+}
