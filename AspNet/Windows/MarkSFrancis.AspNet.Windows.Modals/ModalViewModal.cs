@@ -1,6 +1,4 @@
-﻿using System.Web;
-
-namespace MarkSFrancis.AspNet.Windows.Modals
+﻿namespace MarkSFrancis.AspNet.Windows.Modals
 {
     /// <summary>
     /// The default message view modal, which has a dependancy on Bootstrap 4 and Font Awesome 5. If you want a custom implementation, create an implementation of IModal

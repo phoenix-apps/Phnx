@@ -10,14 +10,19 @@ namespace MarkSFrancis.IO.Json
             return JsonConvert.DeserializeObject<T>(json);
         }
         
+        public static string ToJson(object data)
+        {
+            return JsonConvert.SerializeObject(data);
+        }
+        
         internal static JObject ToJObject(object data)
         {
             return JObject.FromObject(data);
         }
-        
-        public static string ToJson(object data)
+
+        internal static JObject ToJObject(string json)
         {
-            return JsonConvert.SerializeObject(data);
+            return JObject.Parse(json);
         }
     }
 }

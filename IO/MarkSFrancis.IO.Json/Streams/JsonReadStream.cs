@@ -9,9 +9,10 @@ namespace MarkSFrancis.IO.Json.Streams
 {
     public class JsonReadStream : IDisposable
     {
-        public JsonReadStream(TextReader stream)
+        public JsonReadStream(TextReader stream, bool closeBaseStreamWhenDisposed = true)
         {
             TextReader = stream;
+            CloseBaseStreamWhenDisposed = closeBaseStreamWhenDisposed;
 
             Reader = new JsonTextReader(stream)
             {
@@ -19,58 +20,46 @@ namespace MarkSFrancis.IO.Json.Streams
             };
         }
 
-        private JsonReader Reader { get; }
+        protected JsonReader Reader { get; }
 
-        private TextReader TextReader { get; }
+        protected TextReader TextReader { get; }
 
-        protected JObject ReadObject()
+        public bool CloseBaseStreamWhenDisposed { get; set; }
+
+        public virtual T Read<T>()
         {
-            return JObject.Load(Reader);
-        }
-
-        public T Read<T>()
-        {
-            var loadedValue = ReadObject();
+            var loadedValue = ReadJObject();
 
             return loadedValue.ToObject<T>();
         }
 
-        public Dictionary<string, string> ReadAndUnwrap()
+        public virtual Dictionary<string, string> ReadAndUnwrap()
         {
-            var loadedValue = ReadObject();
+            var loadedValue = ReadJObject();
 
             return Unwrap(loadedValue);
         }
 
-        public bool ReachedEnd => TextReader.ReachedEnd();
-
-        public static Dictionary<string, string> Unwrap(JObject obj, string baseSource = "")
+        protected JObject ReadJObject()
         {
-            Dictionary<string, string> retValue = new Dictionary<string, string>();
-
-            foreach (var val in obj)
-            {
-                if (val.Value is JObject jObjValue)
-                {
-                    var childProperties = Unwrap(jObjValue, baseSource + val.Key + ".");
-                    foreach (var property in childProperties)
-                    {
-                        retValue.Add(property.Key, property.Value);
-                    }
-                }
-                else
-                {
-                    retValue.Add(baseSource + val.Key, val.Value.ToString().Trim('{', '}'));
-                }
-            }
-
-            return retValue;
+            return JObject.Load(Reader);
         }
+
+        protected Dictionary<string, string> Unwrap(JObject jObject)
+        {
+            return JsonWrapper.Unwrap(jObject);
+        }
+
+        public bool ReachedEnd => TextReader.ReachedEnd();
 
         public void Dispose()
         {
             Reader.Close();
-            TextReader.Dispose();
+
+            if (CloseBaseStreamWhenDisposed)
+            {
+                TextReader?.Dispose();
+            }
         }
     }
 }
