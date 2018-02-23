@@ -16,7 +16,7 @@ namespace MarkSFrancis.Security.Tests
         public void EncryptingText_WithMessage_CreatesUnreadableBytes()
         {
             // Arrange
-            byte[] key = KeyGen.SecureRandomBytes(32);
+            byte[] key = AesEncryption.CreateRandomKey();
             string plainText = "This is an awkwardly long message that must be secured in a meaningful way";
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
 
@@ -31,7 +31,7 @@ namespace MarkSFrancis.Security.Tests
         public void EncryptingAndDecryptingText_WithMessage_RestoresOriginalMessage()
         {
             // Arrange
-            byte[] key = KeyGen.SecureRandomBytes(32);
+            byte[] key = AesEncryption.CreateRandomKey();
             string plainText = "This is an awkwardly long message that must be secured in a meaningful way";
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
 

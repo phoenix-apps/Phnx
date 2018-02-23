@@ -5,10 +5,15 @@ using MarkSFrancis.Security.Interfaces;
 
 namespace MarkSFrancis.Security
 {
-    public class AesEncryption : IEncryption
+    public class AesEncryption : ISymmetricEncryption
     {
         public const int BlockBitSize = 128;
         public const int KeyBitSize = 256;
+
+        public byte[] CreateRandomKey()
+        {
+            return SecureRandomBytes.Generate(32);
+        }
 
         public byte[] Encrypt(byte[] secretMessage, byte[] cryptKey)
         {

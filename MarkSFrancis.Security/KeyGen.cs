@@ -2,9 +2,9 @@
 
 namespace MarkSFrancis.Security
 {
-    public static class KeyGen
+    public static class SecureRandomBytes
     {
-        public static byte[] SecureRandomBytes(int numberOfBytesToGenerate)
+        public static byte[] Generate(int numberOfBytesToGenerate)
         {
             var rnd = RandomNumberGenerator.Create();
 

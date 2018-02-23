@@ -12,7 +12,7 @@ namespace SyntaxTest
         {
             string plainText = "This is an awkwardly long message that must be secured in a meaningful way";
             RsaEncryption rsa = new RsaEncryption();
-            rsa.CreateRandomBlobs(out byte[] pubKey, out byte[] privKey);
+            rsa.CreateRandomKeys(out byte[] pubKey, out byte[] privKey);
 
             var encBytes = rsa.Encrypt(plainText, pubKey, Encoding.UTF8);
 

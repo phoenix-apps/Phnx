@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using NUnit.Framework;
 
 namespace MarkSFrancis.Security.Tests
@@ -18,7 +16,7 @@ namespace MarkSFrancis.Security.Tests
         public void EncryptingText_WithMessage_CreatesUnreadableBytes()
         {
             // Arrange
-            RsaEncryption.CreateRandomBlobs(out byte[] publicBlob, out byte[] privateBlob);
+            RsaEncryption.CreateRandomKeys(out byte[] publicBlob, out byte[] privateBlob);
 
             string plainText = "This is an awkwardly long message that must be secured in a meaningful way";
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
@@ -34,7 +32,7 @@ namespace MarkSFrancis.Security.Tests
         public void EncryptingAndDecryptingText_WithMessage_RestoresOriginalMessage()
         {
             // Arrange
-            RsaEncryption.CreateRandomBlobs(out byte[] publicBlob, out byte[] privateBlob);
+            RsaEncryption.CreateRandomKeys(out byte[] publicBlob, out byte[] privateBlob);
 
             string plainText = "This is an awkwardly long message that must be secured in a meaningful way";
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
