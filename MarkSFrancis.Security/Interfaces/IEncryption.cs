@@ -1,6 +1,6 @@
 ﻿namespace MarkSFrancis.Security.Interfaces
 {
-    public interface IAsymmetricEncryption
+    public interface IEncryption
     {
         byte[] Encrypt(byte[] data, byte[] key);
 

@@ -11,18 +11,20 @@ namespace SyntaxTest
         static void Main(string[] args)
         {
             string plainText = "This is an awkwardly long message that must be secured in a meaningful way";
-            AesEncryption aes = new AesEncryption();
+            RsaEncryption rsa = new RsaEncryption();
+            rsa.CreateRandomBlobs(out byte[] pubKey, out byte[] privKey);
 
-            byte[] pass = KeyGen.SecureRandomBytes(32);
-            var enc = aes.Encrypt(plainText, pass, Encoding.UTF8);
+            var encBytes = rsa.Encrypt(plainText, pubKey, Encoding.UTF8);
 
-            var plainEnc = Encoding.UTF8.GetString(enc);
+            var encText = Encoding.UTF8.GetString(encBytes);
 
-            var dec = aes.Decrypt(enc, pass, Encoding.UTF8);
+            var decText = rsa.Decrypt(encBytes, privKey, Encoding.UTF8);
 
             Console.WriteLine("Original: " + plainText);
-            Console.WriteLine("Encrypted: " + plainEnc);
-            Console.WriteLine("Decrypted: " + dec);
+
+            Console.WriteLine("Encrypted:" + encText);
+
+            Console.WriteLine("Decrypted: " + decText);
 
             Console.ReadKey();
         }

@@ -5,7 +5,7 @@ using MarkSFrancis.Security.Interfaces;
 
 namespace MarkSFrancis.Security
 {
-    public class AesEncryption : ISymmetricEncryption
+    public class AesEncryption : IEncryption
     {
         public const int BlockBitSize = 128;
         public const int KeyBitSize = 256;
