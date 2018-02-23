@@ -13,7 +13,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         public ConsoleIo() : base(System.Console.In, System.Console.Out)
         {
-            
+
         }
 
         /// <summary>
@@ -76,17 +76,15 @@ namespace MarkSFrancis.Console
         /// <returns></returns>
         public bool YesNo(string question)
         {
+            Write(question + " (y/n): ");
+
             ConsoleKeyInfo keyInfo;
 
+            do
             {
-                do
-                {
-                    Write(question + " (y/n): ");
+                keyInfo = ReadKey();
 
-                    keyInfo = ReadKey();
-
-                } while (keyInfo.Key != ConsoleKey.Y && keyInfo.Key != ConsoleKey.N);
-            }
+            } while (keyInfo.Key != ConsoleKey.Y && keyInfo.Key != ConsoleKey.N);
 
             WriteLine(keyInfo.KeyChar);
 
@@ -100,18 +98,16 @@ namespace MarkSFrancis.Console
         /// <returns></returns>
         public bool? YesNoCancel(string question)
         {
+            Write(question + " (y/n/escape): ");
+
             ConsoleKeyInfo keyInfo;
 
+            do
             {
-                do
-                {
-                    Write(question + " (y/n/escape): ");
+                keyInfo = ReadKey();
 
-                    keyInfo = ReadKey();
-
-                } while (keyInfo.Key != ConsoleKey.Y && keyInfo.Key != ConsoleKey.N &&
-                         keyInfo.Key != ConsoleKey.Escape);
-            }
+            } while (keyInfo.Key != ConsoleKey.Y && keyInfo.Key != ConsoleKey.N &&
+                     keyInfo.Key != ConsoleKey.Escape);
 
             if (keyInfo.Key == ConsoleKey.Escape)
             {
