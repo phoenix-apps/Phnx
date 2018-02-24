@@ -3,7 +3,7 @@ using MarkSFrancis.Security.Passwords.Interface;
 
 namespace MarkSFrancis.Security.Tests.Passwords
 {
-    internal class HashGeneratorMock : IPasswordHashVersion
+    internal class PasswordHashVersionMock : IPasswordHashVersion
     {
         public int Version => 1;
         public int HashBytesLength => 24;
@@ -11,7 +11,7 @@ namespace MarkSFrancis.Security.Tests.Passwords
 
         private RNGCryptoServiceProvider CryptoServiceProvider { get; }
 
-        public HashGeneratorMock()
+        public PasswordHashVersionMock()
         {
             CryptoServiceProvider = new RNGCryptoServiceProvider();
         }

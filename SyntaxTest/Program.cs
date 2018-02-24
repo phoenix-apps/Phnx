@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using MarkSFrancis.Console;
 using MarkSFrancis.Security;
+using MarkSFrancis.Security.Extensions;
 
 namespace SyntaxTest
 {

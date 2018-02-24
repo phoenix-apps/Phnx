@@ -1,10 +1,10 @@
 ﻿using MarkSFrancis.Security.Passwords;
 using NUnit.Framework;
 
-namespace MarkSFrancis.Security.Tests.Hash
+namespace MarkSFrancis.Security.Tests.Passwords
 {
     [TestFixture]
-    public class HashManagerServiceTests
+    public class PasswordHashManagerTest
     {
         [Test]
         public void HashingAPassword_WithANewSalt_GeneratesHash()
@@ -47,7 +47,7 @@ namespace MarkSFrancis.Security.Tests.Hash
             // Act
             byte[] securedPassword = hashManager.HashPasswordWithLatestHashGenerator(password);
 
-            hashManager.AddHashGenerator(new HashGeneratorMock());
+            hashManager.AddHashGenerator(new PasswordHashVersionMock());
             bool needsUpdate = hashManager.ShouldUpdateHash(securedPassword);
 
             // Assert
@@ -60,7 +60,7 @@ namespace MarkSFrancis.Security.Tests.Hash
             // Arrange
             PasswordHashManager hashManager = new PasswordHashManager(
                 new PasswordHashVersionZero(),
-                new HashGeneratorMock());
+                new PasswordHashVersionMock());
 
             string password = "password";
 
@@ -85,7 +85,7 @@ namespace MarkSFrancis.Security.Tests.Hash
             // Act
             byte[] securedPassword = hashManager.HashPasswordWithLatestHashGenerator(password);
 
-            hashManager.AddHashGenerator(new HashGeneratorMock());
+            hashManager.AddHashGenerator(new PasswordHashVersionMock());
 
             bool passwordsMatch = hashManager.PasswordMatch(password, securedPassword);
 
