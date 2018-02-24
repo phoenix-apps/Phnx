@@ -6,23 +6,23 @@ using MarkSFrancis.Security.Passwords.Interface;
 
 namespace MarkSFrancis.Security.Passwords
 {
-    public sealed class HashManagerService
+    public sealed class PasswordHashManager
     {
-        private List<IHashGeneratorVersion> HashGeneratorServices { get; }
+        private List<IPasswordHashVersion> HashGeneratorServices { get; }
 
-        private IHashGeneratorVersion LatestGenerateHashService => HashGeneratorServices.MaxBy(g => g.Version);
+        private IPasswordHashVersion LatestGenerateHashService => HashGeneratorServices.MaxBy(g => g.Version);
 
-        public HashManagerService(params IHashGeneratorVersion[] hashGenerators)
+        public PasswordHashManager(params IPasswordHashVersion[] hashGenerators)
         {
-            HashGeneratorServices = new List<IHashGeneratorVersion>(hashGenerators);
+            HashGeneratorServices = new List<IPasswordHashVersion>(hashGenerators);
         }
 
-        public HashManagerService(IEnumerable<IHashGeneratorVersion> hashGenerators)
+        public PasswordHashManager(IEnumerable<IPasswordHashVersion> hashGenerators)
         {
-            HashGeneratorServices = new List<IHashGeneratorVersion>(hashGenerators);
+            HashGeneratorServices = new List<IPasswordHashVersion>(hashGenerators);
         }
 
-        private IHashGeneratorVersion GetHashGeneratorFromHash(byte[] hash)
+        private IPasswordHashVersion GetHashGeneratorFromHash(byte[] hash)
         {
             int hashVersion = VersionedHash.GetVersionFromBytes(hash);
             return HashGeneratorServices.First(h => h.Version == hashVersion);
@@ -76,7 +76,7 @@ namespace MarkSFrancis.Security.Passwords
             return true;
         }
 
-        public void AddHashGenerator(IHashGeneratorVersion hashGenerator)
+        public void AddHashGenerator(IPasswordHashVersion hashGenerator)
         {
             if (HashGeneratorServices.Any(knownHashGenerator => knownHashGenerator.Version == hashGenerator.Version))
             {

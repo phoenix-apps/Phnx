@@ -6,7 +6,7 @@ namespace MarkSFrancis.Security.Passwords
     /// <summary>
     /// A hash generator with a version of zero
     /// </summary>
-    public class HashGeneratorVersionZero : IHashGeneratorVersion
+    public class PasswordHashVersionZero : IPasswordHashVersion
     {
         public int Version => 0;
         public int HashBytesLength => 24;
@@ -15,7 +15,7 @@ namespace MarkSFrancis.Security.Passwords
 
         private RNGCryptoServiceProvider CryptoServiceProvider { get; }
 
-        public HashGeneratorVersionZero()
+        public PasswordHashVersionZero()
         {
             CryptoServiceProvider = new RNGCryptoServiceProvider();
         }

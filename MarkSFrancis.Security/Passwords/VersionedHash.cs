@@ -8,7 +8,7 @@ namespace MarkSFrancis.Security.Passwords
     {
         private static readonly Encoding DefaultPasswordEncoding = Encoding.Unicode;
         
-        public VersionedHash(string password, IHashGeneratorVersion hashGenerator)
+        public VersionedHash(string password, IPasswordHashVersion hashGenerator)
         {
             Version = hashGenerator.Version;
             Salt = hashGenerator.GenerateSalt();
@@ -17,7 +17,7 @@ namespace MarkSFrancis.Security.Passwords
             PasswordHash = hashGenerator.GenerateHash(passBytes, Salt);
         }
 
-        public VersionedHash(string password, byte[] salt, IHashGeneratorVersion hashGenerator)
+        public VersionedHash(string password, byte[] salt, IPasswordHashVersion hashGenerator)
         {
             Version = hashGenerator.Version;
             Salt = salt;
@@ -26,7 +26,7 @@ namespace MarkSFrancis.Security.Passwords
             PasswordHash = hashGenerator.GenerateHash(passBytes, salt);
         }
 
-        public VersionedHash(byte[] bytes, IHashGeneratorVersion hashGenerator)
+        public VersionedHash(byte[] bytes, IPasswordHashVersion hashGenerator)
         {
             Version = BitConverter.ToInt32(bytes, 0);
 

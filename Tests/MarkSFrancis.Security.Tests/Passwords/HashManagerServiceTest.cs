@@ -10,7 +10,7 @@ namespace MarkSFrancis.Security.Tests.Hash
         public void HashingAPassword_WithANewSalt_GeneratesHash()
         {
             // Arrange
-            HashManagerService hashManager = new HashManagerService(new HashGeneratorVersionZero());
+            PasswordHashManager hashManager = new PasswordHashManager(new PasswordHashVersionZero());
             string password = "password";
 
             // Act
@@ -24,7 +24,7 @@ namespace MarkSFrancis.Security.Tests.Hash
         public void CheckingIfPasswordsMatch_WithMatchingPasswords_MatchesPassword()
         {
             // Arrange
-            HashManagerService hashManager = new HashManagerService(new HashGeneratorVersionZero());
+            PasswordHashManager hashManager = new PasswordHashManager(new PasswordHashVersionZero());
             string password = "password";
 
             // Act
@@ -39,8 +39,8 @@ namespace MarkSFrancis.Security.Tests.Hash
         public void CheckingIfPasswordIsLatest_WithOldHash_AsksForRehash()
         {
             // Arrange
-            HashManagerService hashManager = new HashManagerService(
-                new HashGeneratorVersionZero());
+            PasswordHashManager hashManager = new PasswordHashManager(
+                new PasswordHashVersionZero());
 
             string password = "password";
 
@@ -58,8 +58,8 @@ namespace MarkSFrancis.Security.Tests.Hash
         public void CheckingIfPasswordIsLatest_WithNewHash_DoesNotAskForRehash()
         {
             // Arrange
-            HashManagerService hashManager = new HashManagerService(
-                new HashGeneratorVersionZero(),
+            PasswordHashManager hashManager = new PasswordHashManager(
+                new PasswordHashVersionZero(),
                 new HashGeneratorMock());
 
             string password = "password";
@@ -77,8 +77,8 @@ namespace MarkSFrancis.Security.Tests.Hash
         public void LoggingIn_WithOldHash_StillLogsIn()
         {
             // Arrange
-            HashManagerService hashManager = new HashManagerService(
-                new HashGeneratorVersionZero());
+            PasswordHashManager hashManager = new PasswordHashManager(
+                new PasswordHashVersionZero());
 
             string password = "password";
 

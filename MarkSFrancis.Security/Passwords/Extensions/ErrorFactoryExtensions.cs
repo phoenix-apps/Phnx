@@ -4,7 +4,7 @@
     {
         public static DuplicateHashVersionException DuplicateHashVersion(this ErrorFactory factory, int hashVersion)
         {
-            return new DuplicateHashVersionException($"{nameof(hashVersion)} is already configured and cannot be re-added");
+            return new DuplicateHashVersionException($"{hashVersion} is already configured and cannot be re-added");
         }
     }
 }

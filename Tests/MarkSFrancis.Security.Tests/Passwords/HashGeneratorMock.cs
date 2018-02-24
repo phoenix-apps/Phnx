@@ -3,7 +3,7 @@ using MarkSFrancis.Security.Passwords.Interface;
 
 namespace MarkSFrancis.Security.Tests.Passwords
 {
-    internal class HashGeneratorMock : IHashGeneratorVersion
+    internal class HashGeneratorMock : IPasswordHashVersion
     {
         public int Version => 1;
         public int HashBytesLength => 24;

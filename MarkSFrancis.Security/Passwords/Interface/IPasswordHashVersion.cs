@@ -1,6 +1,6 @@
 ﻿namespace MarkSFrancis.Security.Passwords.Interface
 {
-    public interface IHashGeneratorVersion
+    public interface IPasswordHashVersion
     {
         int Version { get; }
 
