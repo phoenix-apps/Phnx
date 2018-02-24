@@ -1,4 +1,4 @@
-﻿namespace MarkSFrancis.Security.Hash
+﻿namespace MarkSFrancis.Security.Passwords.Extensions
 {
     public static class ErrorFactoryExtensions
     {

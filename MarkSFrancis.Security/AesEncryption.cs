@@ -12,16 +12,16 @@ namespace MarkSFrancis.Security
 
         public byte[] CreateRandomKey()
         {
-            return SecureRandomBytes.Generate(32);
+            return SecureRandomBytes.Generate(KeyBitSize / 8);
         }
 
-        public byte[] Encrypt(byte[] secretMessage, byte[] cryptKey)
+        public byte[] Encrypt(byte[] data, byte[] key)
         {
             //User Error Checks
-            if (cryptKey == null || cryptKey.Length != KeyBitSize / 8)
+            if (key == null || key.Length != KeyBitSize / 8)
                 throw new ArgumentException(String.Format("Key needs to be {0} bit!", KeyBitSize), "cryptKey");
 
-            if (secretMessage == null || secretMessage.Length < 1)
+            if (data == null || data.Length < 1)
                 throw new ArgumentException("Secret Message Required!", "secretMessage");
 
             byte[] cipherText;
@@ -40,14 +40,14 @@ namespace MarkSFrancis.Security
                 aes.GenerateIV();
                 iv = aes.IV;
 
-                using (var encrypter = aes.CreateEncryptor(cryptKey, iv))
+                using (var encrypter = aes.CreateEncryptor(key, iv))
                 using (var cipherStream = new MemoryStream())
                 {
                     using (var cryptoStream = new CryptoStream(cipherStream, encrypter, CryptoStreamMode.Write))
                     using (var binaryWriter = new BinaryWriter(cryptoStream))
                     {
                         //Encrypt Data
-                        binaryWriter.Write(secretMessage);
+                        binaryWriter.Write(data);
                     }
 
                     cipherText = cipherStream.ToArray();
@@ -70,13 +70,13 @@ namespace MarkSFrancis.Security
             }
         }
 
-        public byte[] Decrypt(byte[] encryptedMessage, byte[] cryptKey)
+        public byte[] Decrypt(byte[] encryptedData, byte[] key)
         {
             //Basic Usage Error Checks
-            if (cryptKey == null || cryptKey.Length != KeyBitSize / 8)
+            if (key == null || key.Length != KeyBitSize / 8)
                 throw new ArgumentException(String.Format("CryptKey needs to be {0} bit!", KeyBitSize), "cryptKey");
 
-            if (encryptedMessage == null || encryptedMessage.Length == 0)
+            if (encryptedData == null || encryptedData.Length == 0)
                 throw new ArgumentException("Encrypted Message Required!", "encryptedMessage");
 
             using (var aes = new AesManaged
@@ -90,9 +90,9 @@ namespace MarkSFrancis.Security
 
                 //Grab IV from message
                 var iv = new byte[BlockBitSize / 8];
-                Array.Copy(encryptedMessage, 0, iv, 0, iv.Length);
+                Array.Copy(encryptedData, 0, iv, 0, iv.Length);
 
-                using (var decrypter = aes.CreateDecryptor(cryptKey, iv))
+                using (var decrypter = aes.CreateDecryptor(key, iv))
                 using (var plainTextStream = new MemoryStream())
                 {
                     using (var decrypterStream = new CryptoStream(plainTextStream, decrypter, CryptoStreamMode.Write))
@@ -100,9 +100,9 @@ namespace MarkSFrancis.Security
                     {
                         //Decrypt Cipher Text from Message
                         binaryWriter.Write(
-                            encryptedMessage,
+                            encryptedData,
                             iv.Length,
-                            encryptedMessage.Length - iv.Length
+                            encryptedData.Length - iv.Length
                         );
                     }
 

@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using MarkSFrancis.Security.Interfaces;
 
-namespace MarkSFrancis.Security
+namespace MarkSFrancis.Security.Extensions
 {
     public static class IEncryptionExtensions
     {

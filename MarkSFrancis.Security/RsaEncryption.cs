@@ -5,9 +5,11 @@ namespace MarkSFrancis.Security
 {
     public class RsaEncryption : IAsymmetricEncryption
     {
+        public const int KeySize = 2048;
+
         public void CreateRandomKeys(out byte[] publicKey, out byte[] privateKey)
         {
-            var provider = new RSACryptoServiceProvider(2048);
+            var provider = new RSACryptoServiceProvider(KeySize);
 
             publicKey = provider.ExportCspBlob(false);
 

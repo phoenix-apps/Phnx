@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MarkSFrancis.Collections.Extensions;
-using MarkSFrancis.Security.Hash.Interface;
+using MarkSFrancis.Security.Passwords.Extensions;
+using MarkSFrancis.Security.Passwords.Interface;
 
-namespace MarkSFrancis.Security.Hash
+namespace MarkSFrancis.Security.Passwords
 {
     public sealed class HashManagerService
     {

@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
-using MarkSFrancis.Security.Hash.Interface;
+using MarkSFrancis.Security.Passwords.Interface;
 
-namespace MarkSFrancis.Security.Hash
+namespace MarkSFrancis.Security.Passwords
 {
     /// <summary>
     /// A hash generator with a version of zero

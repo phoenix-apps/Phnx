@@ -2,6 +2,10 @@
 {
     public interface IHash
     {
-        byte[] Hash(byte[] data);
+        int IterationCount { get; }
+
+        byte[] GenerateSalt();
+
+        byte[] Hash(byte[] data, byte[] salt);
     }
 }

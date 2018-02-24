@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
-using MarkSFrancis.Security.Hash.Interface;
+using MarkSFrancis.Security.Passwords.Interface;
 
-namespace MarkSFrancis.Security.Hash
+namespace MarkSFrancis.Security.Passwords
 {
     internal class VersionedHash
     {

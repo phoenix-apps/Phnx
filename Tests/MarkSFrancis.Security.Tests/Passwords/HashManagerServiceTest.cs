@@ -1,4 +1,4 @@
-﻿using MarkSFrancis.Security.Hash;
+﻿using MarkSFrancis.Security.Passwords;
 using NUnit.Framework;
 
 namespace MarkSFrancis.Security.Tests.Hash

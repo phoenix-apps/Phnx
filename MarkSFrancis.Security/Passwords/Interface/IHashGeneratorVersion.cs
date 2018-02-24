@@ -1,4 +1,4 @@
-﻿namespace MarkSFrancis.Security.Hash.Interface
+﻿namespace MarkSFrancis.Security.Passwords.Interface
 {
     public interface IHashGeneratorVersion
     {
