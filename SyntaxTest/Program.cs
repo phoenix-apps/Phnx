@@ -1,7 +1,4 @@
-﻿using System.Text;
-using MarkSFrancis.Console;
-using MarkSFrancis.Security;
-using MarkSFrancis.Security.Extensions;
+﻿using MarkSFrancis.Console;
 
 namespace SyntaxTest
 {
@@ -9,24 +6,8 @@ namespace SyntaxTest
     {
         public static readonly ConsoleIo Console = new ConsoleIo();
 
-        static void Main(string[] args)
+        static void Main()
         {
-            string plainText = "This is an awkwardly long message that must be secured in a meaningful way";
-            RsaEncryption rsa = new RsaEncryption();
-            rsa.CreateRandomKeys(out byte[] pubKey, out byte[] privKey);
-
-            var encBytes = rsa.Encrypt(plainText, pubKey, Encoding.UTF8);
-
-            var encText = Encoding.UTF8.GetString(encBytes);
-
-            var decText = rsa.Decrypt(encBytes, privKey, Encoding.UTF8);
-
-            Console.WriteLine("Original: " + plainText);
-
-            Console.WriteLine("Encrypted:" + encText);
-
-            Console.WriteLine("Decrypted: " + decText);
-
             Console.ReadKey();
         }
     }
