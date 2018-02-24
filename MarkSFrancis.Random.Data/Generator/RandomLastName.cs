@@ -1,7 +1,7 @@
-﻿using MarkSFrancis.Random.Generator.Data.Source;
+﻿using MarkSFrancis.Random.Data.Source;
 using MarkSFrancis.Random.Generator.Interfaces;
 
-namespace MarkSFrancis.Random.Generator.Data
+namespace MarkSFrancis.Random.Data.Generator
 {
     public class RandomLastName : IRandomGenerator<string>
     {

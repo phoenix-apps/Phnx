@@ -1,4 +1,4 @@
-﻿namespace MarkSFrancis.Random.Generator.Data.Source
+﻿namespace MarkSFrancis.Random.Data.Source
 {
     /// <summary>
     /// Source: https://www.ssa.gov/OACT/babynames/decades/names2000s.html

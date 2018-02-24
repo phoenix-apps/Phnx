@@ -19,10 +19,10 @@
     <ProjectReference Include="..\MarkSFrancis.Console\MarkSFrancis.Console.csproj" />
     <ProjectReference Include="..\MarkSFrancis.Data\MarkSFrancis.Data.csproj" />
     <ProjectReference Include="..\MarkSFrancis.Extensions\MarkSFrancis.Extensions.csproj" />
-    <ProjectReference Include="..\MarkSFrancis.Random\MarkSFrancis.Random.csproj" />
     <ProjectReference Include="..\MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj" />
     <ProjectReference Include="..\MarkSFrancis.Security\MarkSFrancis.Security.csproj" />
     <ProjectReference Include="..\MarkSFrancis\MarkSFrancis.csproj" />
+    <ProjectReference Include="..\Random\MarkSFrancis.Random\MarkSFrancis.Random.csproj" />
     <ProjectReference Include="..\Windows\MarkSFrancis.Windows.DotNetExtensions\MarkSFrancis.Windows.Extensions.csproj" />
   </ItemGroup>
 

@@ -13,7 +13,7 @@ namespace SyntaxTest
 
             for (var genTimes = 0; genTimes < 10; genTimes++)
             {
-                var val = rndULong.Get(ulong.MinValue, ulong.MaxValue);
+                var val = rndULong.Get();
 
                 Console.WriteLine(val);
             }
