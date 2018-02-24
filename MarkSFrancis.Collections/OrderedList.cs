@@ -16,20 +16,12 @@ namespace MarkSFrancis.Collections
             get => this._orderedBy;
             set
             {
-                if (Count > 0)
+                if (value == null)
                 {
-                    // Order by the function
-                    if (value == null)
-                    {
-                        // Mix list into random order
-                        OrderBy((x, y) => RandomHelper.Random.Next(0, Count));
-                    }
-                    else
-                    {
-                        OrderBy(value);
-                    }
+                    throw ErrorFactory.Default.ArgumentNull(nameof(value));
                 }
-                this._orderedBy = value;
+                _items.Sort(value);
+                _orderedBy = value;
             }
         }
 
@@ -183,7 +175,7 @@ namespace MarkSFrancis.Collections
 
             var index = BinarySearch(0, _items.Count - 1);
 
-            while(!defaultComparer.Equals(_items[index], item))
+            while (!defaultComparer.Equals(_items[index], item))
             {
                 index++;
 
@@ -209,11 +201,11 @@ namespace MarkSFrancis.Collections
                 {
                     // Could be more than one match. Check to see if there are any earlier in the array
                     var foundIndex = mid - 1;
-                    while(OrderedBy(_items[foundIndex], item) == 0)
+                    while (OrderedBy(_items[foundIndex], item) == 0)
                     {
                         --foundIndex;
                     }
-                        
+
                     return ++foundIndex;
                 }
                 else if (orderResult == 1)
@@ -240,12 +232,6 @@ namespace MarkSFrancis.Collections
         public void RemoveAt(int index)
         {
             _items.RemoveAt(index);
-        }
-
-        public void OrderBy(Comparison<T> orderByFunc)
-        {
-            _items.Sort(orderByFunc);
-            _orderedBy = orderByFunc;
         }
 
         public IEnumerator<T> GetEnumerator()
