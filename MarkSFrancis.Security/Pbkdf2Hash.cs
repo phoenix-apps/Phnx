@@ -4,9 +4,9 @@ using MarkSFrancis.Security.Interfaces;
 
 namespace MarkSFrancis.Security
 {
-    public class Pbkdf2Hash : IHash
+    public class Pbkdf2Hash : IHashWithSalt
     {
-        public const int HashBytesLength = 24;
+        public const int HashBytesLength = 128;
         public const int SaltBytesLength = 24;
         public int IterationCount { get; }
 
