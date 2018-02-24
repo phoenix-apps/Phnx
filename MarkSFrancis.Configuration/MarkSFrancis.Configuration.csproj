@@ -10,8 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MarkSFrancis.Collections\MarkSFrancis.Collections.csproj" />
-    <ProjectReference Include="..\MarkSFrancis.Extensions\MarkSFrancis.Extensions.csproj" />
-    <ProjectReference Include="..\MarkSFrancis\MarkSFrancis.csproj" />
   </ItemGroup>
 
 </Project>
