@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using MarkSFrancis.Security.Passwords.Interface;
+﻿using MarkSFrancis.Security.Passwords.Interface;
 
 namespace MarkSFrancis.Security.Passwords
 {
@@ -13,29 +12,21 @@ namespace MarkSFrancis.Security.Passwords
         public int SaltBytesLength => 24;
         public int IterationCount => 1024;
 
-        private RNGCryptoServiceProvider CryptoServiceProvider { get; }
+        private Pbkdf2Hash HashGenerator { get; }
 
         public PasswordHashVersionZero()
         {
-            CryptoServiceProvider = new RNGCryptoServiceProvider();
+            HashGenerator = new Pbkdf2Hash(IterationCount);
         }
 
         public byte[] GenerateHash(byte[] password, byte[] salt)
         {
-            byte[] hashValue;
-            using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, IterationCount))
-            {
-                hashValue = pbkdf2.GetBytes(HashBytesLength);
-            }
-            return hashValue;
+            return HashGenerator.Hash(password, salt);
         }
 
         public byte[] GenerateSalt()
         {
-            byte[] newSalt = new byte[SaltBytesLength];
-            CryptoServiceProvider.GetBytes(newSalt);
-
-            return newSalt;
+            return HashGenerator.GenerateSalt();
         }
     }
 }
