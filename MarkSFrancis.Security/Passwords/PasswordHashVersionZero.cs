@@ -5,7 +5,7 @@ namespace MarkSFrancis.Security.Passwords
     /// <summary>
     /// A hash generator with a version of zero
     /// </summary>
-    public class PasswordHashVersionZero : IPasswordHashVersion
+    public sealed class PasswordHashVersionZero : IPasswordHashVersion
     {
         public int Version => 0;
         public int HashBytesLength => 24;
