@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MarkSFrancis.Extensions\MarkSFrancis.Extensions.csproj" />
     <ProjectReference Include="..\..\MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj" />
     <ProjectReference Include="..\MarkSFrancis.IO.Threaded\MarkSFrancis.IO.Threaded.csproj" />
   </ItemGroup>

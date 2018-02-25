@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Collections", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Data", "MarkSFrancis.Data\MarkSFrancis.Data.csproj", "{F90EE708-3E55-48F1-8B73-AE56F635CF3F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Extensions", "MarkSFrancis.Extensions\MarkSFrancis.Extensions.csproj", "{38E07D6B-A762-468A-9CF4-DAD52799A2D4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyntaxTest", "SyntaxTest\SyntaxTest.csproj", "{F062FCD7-19F1-4B66-BCAB-C0FB1DB7B30B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{BCC7CBC7-7B54-4758-AC67-4EE8A7BEB26C}"
@@ -61,7 +59,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Random", "Rand
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Random", "Random", "{1571A99B-2C4C-44B3-B274-7EDCFEDAF326}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Random.Data", "Random\MarkSFrancis.Random.Data\MarkSFrancis.Random.Data.csproj", "{CA49E46B-EF6D-44A7-B9A7-49A1D9F2D9DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Random.Data", "Random\MarkSFrancis.Random.Data\MarkSFrancis.Random.Data.csproj", "{CA49E46B-EF6D-44A7-B9A7-49A1D9F2D9DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,10 +87,6 @@ Global
 		{F90EE708-3E55-48F1-8B73-AE56F635CF3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F90EE708-3E55-48F1-8B73-AE56F635CF3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F90EE708-3E55-48F1-8B73-AE56F635CF3F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38E07D6B-A762-468A-9CF4-DAD52799A2D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38E07D6B-A762-468A-9CF4-DAD52799A2D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38E07D6B-A762-468A-9CF4-DAD52799A2D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38E07D6B-A762-468A-9CF4-DAD52799A2D4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F062FCD7-19F1-4B66-BCAB-C0FB1DB7B30B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F062FCD7-19F1-4B66-BCAB-C0FB1DB7B30B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F062FCD7-19F1-4B66-BCAB-C0FB1DB7B30B}.Release|Any CPU.ActiveCfg = Release|Any CPU
