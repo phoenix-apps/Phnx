@@ -9,7 +9,7 @@ namespace MarkSFrancis.Extensions
     public static class ObjectExtensions
     {
         /// <summary>
-        /// Check whether a given object is assignable to a given type
+        /// Check whether an object is assignable to a type
         /// </summary>
         /// <param name="o">The object to check</param>
         /// <param name="t">The type to check if the object is assinable to</param>
@@ -24,9 +24,25 @@ namespace MarkSFrancis.Extensions
 
             return t.IsAssignableFrom(oType);
         }
+        
+        /// <summary>
+        /// Check whether a type is assignable to a type
+        /// </summary>
+        /// <param name="childType">The type to check</param>
+        /// <param name="parentType">The type to check if the object is assinable to</param>
+        /// <returns></returns>
+        public static bool Is(this Type childType, Type parentType)
+        {
+            if (childType == parentType)
+            {
+                return true;
+            }
+
+            return parentType.IsAssignableFrom(childType);
+        }
 
         /// <summary>
-        /// Allow a given action to be chained onto this object. Useful for chaining methods all related to the same object onto a single line
+        /// Allow an action to be chained onto this object. Useful for chaining methods all related to the same object onto a single line
         /// </summary>
         /// <typeparam name="T">The type of object to chain actions to</typeparam>
         /// <param name="t">The object to chain actions to</param>
@@ -53,7 +69,7 @@ namespace MarkSFrancis.Extensions
         }
 
         /// <summary>
-        /// Converts a given single object to an <see cref="IEnumerable{T}"/> of length 1
+        /// Converts a single object to an <see cref="IEnumerable{T}"/> of length 1
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IEnumerable{T}"/> to create</typeparam>
         /// <param name="single">The item to place in the collection</param>

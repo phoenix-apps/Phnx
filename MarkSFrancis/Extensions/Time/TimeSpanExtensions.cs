@@ -25,7 +25,7 @@ namespace MarkSFrancis.Extensions.Time
     public static class TimeSpanExtensions
     {
         /// <summary>
-        /// Create a new <see cref="DateTime"/> from a given <see cref="TimeSpan"/> after <see cref="DateTimeExtensions.Epoch"/>
+        /// Create a new <see cref="DateTime"/> from a <see cref="TimeSpan"/> after <see cref="DateTimeExtensions.Epoch"/>
         /// </summary>
         /// <param name="span">The time difference between now an <see cref="DateTimeExtensions.Epoch"/></param>
         /// <returns></returns>
@@ -35,7 +35,7 @@ namespace MarkSFrancis.Extensions.Time
         }
 
         /// <summary>
-        /// Represent a given <see cref="TimeSpan"/> as a <see cref="string"/>, formatting it with only certain parts <see cref="TimeSpan"/>, such as "3 days 04:13:22"
+        /// Represent a <see cref="TimeSpan"/> as a <see cref="string"/>, formatting it with only certain parts <see cref="TimeSpan"/>, such as "3 days 04:13:22"
         /// </summary>
         /// <param name="ts">The <see cref="TimeSpan"/> to represent</param>
         /// <param name="tsComponents">The <see cref="TimeComponents"/> to include in the outputted string</param>

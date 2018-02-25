@@ -1,21 +1,37 @@
-﻿using System;
-using System.Security.Cryptography;
-using MarkSFrancis.Security.Extensions;
+﻿using System.Security.Cryptography;
 using MarkSFrancis.Security.Interfaces;
 
 namespace MarkSFrancis.Security
 {
-    public class Sha256Hash : IHashWithoutSalt, IHashWithSalt
+    /// <summary>
+    /// A 256 bit SHA2 hashing algorithm. Suitable for checksums, but generally not secure for passwords. Consider using <see cref="Pbkdf2Hash"/> if you're hashing passwords
+    /// </summary>
+    public class Sha256Hash : IHashWithoutSalt
     {
+        /// <summary>
+        /// The number of bytes produced when the given data is hashed
+        /// </summary>
         public const int HashBytesLength = 32;
-        public const int SaltBytesLength = 32;
+
+        /// <summary>
+        /// The number of times the algorithm is ran on given data when using <see cref="Hash(byte[])"/>
+        /// </summary>
         public int IterationCount { get; }
 
+        /// <summary>
+        /// Create a new <see cref="Sha256Hash"/>
+        /// </summary>
+        /// <param name="iterationCount">The number of times to run the algorithm when hashing data</param>
         public Sha256Hash(int iterationCount = 1)
         {
             IterationCount = iterationCount;
         }
 
+        /// <summary>
+        /// Hash given data
+        /// </summary>
+        /// <param name="data">The data to hash</param>
+        /// <returns></returns>
         public byte[] Hash(byte[] data)
         {
             if (IterationCount <= 0)
@@ -33,25 +49,6 @@ namespace MarkSFrancis.Security
             }
 
             return hashedData;
-        }
-
-        public byte[] GenerateSalt()
-        {
-            return SecureRandomBytes.Generate(SaltBytesLength);
-        }
-
-        public byte[] Hash(byte[] data, byte[] salt)
-        {
-            if (salt.Length != SaltBytesLength)
-            {
-                throw ErrorFactory.Default.InvalidSaltSize(SaltBytesLength, salt.Length);
-            }
-
-            byte[] copiedData = new byte[data.Length + salt.Length];
-            Array.Copy(data, copiedData, data.Length);
-            Array.Copy(salt, 0, copiedData, data.Length, salt.Length);
-
-            return Hash(copiedData);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace MarkSFrancis.Extensions.Time
         public static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0);
 
         /// <summary>
-        /// Get a person's age given their date of birth, and the time zone they were born in
+        /// Get a person's age from their date of birth and the time zone they were born in
         /// </summary>
         /// <param name="dob">The person's date of birth</param>
         /// <param name="dobTimeZone">The time zone that the person was born in</param>
@@ -26,7 +26,7 @@ namespace MarkSFrancis.Extensions.Time
         }
 
         /// <summary>
-        /// Get a person's age given their date of birth in UTC time zone
+        /// Get a person's age from their date of birth in UTC time zone
         /// </summary>
         /// <param name="dob">The person's date of birth in UTC time zone</param>
         /// <returns></returns>
@@ -53,7 +53,7 @@ namespace MarkSFrancis.Extensions.Time
         }
 
         /// <summary>
-        /// Convert <paramref name="dt"/> (UTC) into a given <see cref="TimeZoneInfo"/>
+        /// Convert <paramref name="dt"/> from UTC to a time zone
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to convert</param>
         /// <param name="timeZone">The time zone to convert to</param>

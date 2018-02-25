@@ -35,9 +35,9 @@ namespace MarkSFrancis.Reflection
         public Type Type => Property?.PropertyType ?? Field.FieldType;
 
         /// <summary>
-        /// Create a new <see cref="PropertyFieldInfo{T,U}"/> from a given function expression
+        /// Create a new <see cref="PropertyFieldInfo{T,U}"/> from a function expression
         /// </summary>
-        /// <param name="expression">The expression that points to the given property/ field</param>
+        /// <param name="expression">The expression that points to a property/ field</param>
         public PropertyFieldInfo(Expression<Func<T, U>> expression)
         {
             MemberInfo member;
@@ -78,7 +78,7 @@ namespace MarkSFrancis.Reflection
         }
 
         /// <summary>
-        /// Create a new <see cref="PropertyFieldInfo{T,U}"/> from a given <see cref="MemberInfo"/>
+        /// Create a new <see cref="PropertyFieldInfo{T,U}"/> from a <see cref="MemberInfo"/>
         /// </summary>
         /// <param name="member">The meber (must be either a <see cref="PropertyInfo"/> or a <see cref="FieldInfo"/>)</param>
         public PropertyFieldInfo(MemberInfo member)
@@ -89,7 +89,7 @@ namespace MarkSFrancis.Reflection
         }
 
         /// <summary>
-        /// Create a new <see cref="PropertyFieldInfo{T,U}"/> from a given <see cref="FieldInfo"/>
+        /// Create a new <see cref="PropertyFieldInfo{T,U}"/> from a <see cref="FieldInfo"/>
         /// </summary>
         /// <param name="field">The field</param>
         public PropertyFieldInfo(FieldInfo field)
@@ -98,7 +98,7 @@ namespace MarkSFrancis.Reflection
         }
 
         /// <summary>
-        /// Create a new <see cref="PropertyFieldInfo{T,U}"/> from a given <see cref="PropertyInfo"/>
+        /// Create a new <see cref="PropertyFieldInfo{T,U}"/> from a <see cref="PropertyInfo"/>
         /// </summary>
         /// <param name="property">The property</param>
         public PropertyFieldInfo(PropertyInfo property)
@@ -122,7 +122,7 @@ namespace MarkSFrancis.Reflection
         }
 
         /// <summary>
-        /// Set this member's value on a given object
+        /// Set this member's value on an object
         /// </summary>
         /// <param name="baseObject">The base object to set the member of</param>
         /// <param name="valueToAssign">The value to assign to the member</param>
@@ -134,7 +134,7 @@ namespace MarkSFrancis.Reflection
         }
 
         /// <summary>
-        /// Get this member's value from a given object
+        /// Get this member's value from an object
         /// </summary>
         /// <param name="baseObject">The base object to get the member of</param>
         /// <returns>The value of the member</returns>
@@ -144,7 +144,7 @@ namespace MarkSFrancis.Reflection
         }
 
         /// <summary>
-        /// Converts this <see cref="PropertyFieldInfo{T,U}"/> to a <see cref="PropertyInfo"/>. If the given <see cref="PropertyFieldInfo{T,U}"/> is a <see cref="FieldInfo"/>, an <see cref="InvalidCastException"/> is thrown
+        /// Converts this <see cref="PropertyFieldInfo{T,U}"/> to a <see cref="PropertyInfo"/>. If the <see cref="PropertyFieldInfo{T,U}"/> is a <see cref="FieldInfo"/>, an <see cref="InvalidCastException"/> is thrown
         /// </summary>
         /// <param name="propFieldInfo">The <see cref="PropertyFieldInfo{T,U}"/> to convert</param>
         public static explicit operator PropertyInfo(PropertyFieldInfo<T, U> propFieldInfo)
@@ -160,7 +160,7 @@ namespace MarkSFrancis.Reflection
         }
 
         /// <summary>
-        /// Converts this <see cref="PropertyFieldInfo{T,U}"/> to a <see cref="FieldInfo"/>. If the given <see cref="PropertyFieldInfo{T,U}"/> is a <see cref="PropertyInfo"/>, an <see cref="InvalidCastException"/> is thrown
+        /// Converts this <see cref="PropertyFieldInfo{T,U}"/> to a <see cref="FieldInfo"/>. If the <see cref="PropertyFieldInfo{T,U}"/> is a <see cref="PropertyInfo"/>, an <see cref="InvalidCastException"/> is thrown
         /// </summary>
         /// <param name="propFieldInfo">The <see cref="PropertyFieldInfo{T,U}"/> to convert</param>
         public static explicit operator FieldInfo(PropertyFieldInfo<T, U> propFieldInfo)
@@ -191,16 +191,16 @@ namespace MarkSFrancis.Reflection
     public class PropertyFieldInfo : PropertyFieldInfo<object, object>
     {
         /// <summary>
-        /// Create a new <see cref="PropertyFieldInfo"/> from a given function expression
+        /// Create a new <see cref="PropertyFieldInfo"/> from a function expression
         /// </summary>
-        /// <param name="expression">The expression that points to the given property/ field</param>
+        /// <param name="expression">The expression that points to the property/ field</param>
         public PropertyFieldInfo(Expression<Func<object, object>> expression) : base(expression)
         {
 
         }
 
         /// <summary>
-        /// Create a new <see cref="PropertyFieldInfo"/> from a given <see cref="MemberInfo"/>
+        /// Create a new <see cref="PropertyFieldInfo"/> from a <see cref="MemberInfo"/>
         /// </summary>
         /// <param name="member">The meber (must be either a <see cref="PropertyInfo"/> or a <see cref="FieldInfo"/>)</param>
         public PropertyFieldInfo(MemberInfo member) : base(member)
@@ -209,7 +209,7 @@ namespace MarkSFrancis.Reflection
         }
 
         /// <summary>
-        /// Create a new <see cref="PropertyFieldInfo"/> from a given <see cref="FieldInfo"/>
+        /// Create a new <see cref="PropertyFieldInfo"/> from a <see cref="FieldInfo"/>
         /// </summary>
         /// <param name="field">The field</param>
         public PropertyFieldInfo(FieldInfo field) : base(field)
@@ -217,7 +217,7 @@ namespace MarkSFrancis.Reflection
 
         }
         /// <summary>
-        /// Create a new <see cref="PropertyFieldInfo"/> from a given <see cref="PropertyInfo"/>
+        /// Create a new <see cref="PropertyFieldInfo"/> from a <see cref="PropertyInfo"/>
         /// </summary>
         /// <param name="property">The property</param>
 

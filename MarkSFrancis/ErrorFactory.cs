@@ -13,7 +13,7 @@ namespace MarkSFrancis
         public static readonly ErrorFactory Default = new ErrorFactory();
 
         /// <summary>
-        /// Create an <see cref="InvalidCastException"/> for a given failed cast
+        /// Create an <see cref="InvalidCastException"/> for a failed cast
         /// </summary>
         /// <param name="paramName">The name of the parameter that could not be cast</param>
         /// <param name="castingFrom">The type being cast from</param>
@@ -25,7 +25,7 @@ namespace MarkSFrancis
         }
 
         /// <summary>
-        /// Create an <see cref="InvalidCastException"/> for a given failed cast
+        /// Create an <see cref="InvalidCastException"/> for a failed cast
         /// </summary>
         /// <param name="paramName">The name of the parameter that could not be cast</param>
         /// <param name="castingFrom">The type being cast from's full name</param>
@@ -53,6 +53,27 @@ namespace MarkSFrancis
         public ArgumentNullException ArgumentNull(string paramName, string message)
         {
             return new ArgumentNullException(paramName, message);
+        }
+
+        /// <summary>
+        /// Create a <see cref="NotImplementedException"/> without a message
+        /// </summary>
+        /// <returns></returns>
+        public NotImplementedException NotImplemented()
+        {
+            return new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Create a <see cref="NotImplementedException"/> with a message
+        /// </summary>
+        /// <param name="todoNote">The TODO note. The message is prepended with "TODO: " automatically</param>
+        /// <returns></returns>
+        public NotImplementedException NotImplemented(string todoNote)
+        {
+            string prependedTodoNote = todoNote.ToUpperInvariant().StartsWith("TODO:") ? todoNote : "TODO: " + todoNote;
+
+            return new NotImplementedException(prependedTodoNote);
         }
     }
 }

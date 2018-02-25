@@ -7,7 +7,7 @@ using System.Linq;
 namespace MarkSFrancis.Console
 {
     /// <summary>
-    /// Stream data input and output between a given <see cref="TextReader"/> and <see cref="TextWriter"/> such as <see cref="System.Console.In"/>, a file, or a web stream
+    /// Stream data input and output between a <see cref="TextReader"/> and <see cref="TextWriter"/> such as <see cref="System.Console.In"/>, a file, or a web stream
     /// </summary>
     public class TextIo
     {
@@ -187,7 +187,7 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
-        /// Write a question to the <see cref="Output"/>, and then get attempt to get a value from the <see cref="Input"/> using the given converter. If the received input is invalid, this process repeats. Any errors are written to <see cref="Debug"/>
+        /// Write a question to the <see cref="Output"/>, and then get attempt to get a value from the <see cref="Input"/> using <paramref name="converter"/>. If the received input is invalid, this process repeats. Any errors are written to <see cref="Debug"/>
         /// </summary>
         /// <param name="converter">The method to use when converting from the text to the desired type</param>
         /// <param name="question">The question to write</param>

@@ -12,12 +12,12 @@ namespace MarkSFrancis.Collections.Extensions
 
         public static KeyNotFoundException KeyNotFound(this ErrorFactory factory, string key)
         {
-            return new KeyNotFoundException($"The key \"{key}\" was not found in the given collection");
+            return new KeyNotFoundException($"The key \"{key}\" was not found in the collection");
         }
 
         public static KeyNotFoundException KeyNotFound(this ErrorFactory factory, string key, string collectionName)
         {
-            return new KeyNotFoundException($"The key \"{key}\" was not found in the given collection \"{collectionName}\"");
+            return new KeyNotFoundException($"The key \"{key}\" was not found in the collection \"{collectionName}\"");
         }
     }
 }

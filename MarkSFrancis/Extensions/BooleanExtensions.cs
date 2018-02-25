@@ -6,7 +6,7 @@
     public static class BooleanExtensions
     {
         /// <summary>
-        /// Convert a given <see cref="bool"/> to a string, with set values for what to display in each case
+        /// Convert a <see cref="bool"/> to a string, with set values for what to display in each case
         /// </summary>
         /// <param name="condition">Whether to display <paramref name="trueText"/> or <paramref name="falseText"/></param>
         /// <param name="trueText">The text to return if <paramref name="condition"/> is <see langword="true"/></param>

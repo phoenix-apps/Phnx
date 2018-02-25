@@ -43,7 +43,7 @@ namespace MarkSFrancis.Extensions
         }
 
         /// <summary>
-        /// Removes a given series of characters from a string
+        /// Removes a series of characters from a string
         /// </summary>
         /// <param name="s">The string to remove the characters from</param>
         /// <param name="charsToRemove">The characters to remove</param>
@@ -54,7 +54,7 @@ namespace MarkSFrancis.Extensions
         }
         
         /// <summary>
-        /// Removes a given series of characters from a string
+        /// Removes a series of characters from a string
         /// </summary>
         /// <param name="s">The string to remove the characters from</param>
         /// <param name="charsToRemove">The characters to remove</param>
@@ -71,7 +71,7 @@ namespace MarkSFrancis.Extensions
         }
         
         /// <summary>
-        /// Removes a given series of strings from a string
+        /// Removes a series of strings from a string
         /// </summary>
         /// <param name="s">The string to remove the strings from</param>
         /// <param name="textToRemove">The strings to remove</param>
@@ -82,7 +82,7 @@ namespace MarkSFrancis.Extensions
         }
         
         /// <summary>
-        /// Removes a given series of strings from a string
+        /// Removes a series of strings from a string
         /// </summary>
         /// <param name="s">The string to remove the strings from</param>
         /// <param name="textToRemove">The strings to remove</param>
@@ -99,7 +99,7 @@ namespace MarkSFrancis.Extensions
         }
 
         /// <summary>
-        /// Converts a given string to camel case, using <paramref name="wordDelimiters"/> to indicate where each word begins
+        /// Converts a string to camel case, using <paramref name="wordDelimiters"/> to indicate where each word begins
         /// </summary>
         /// <param name="str">The string to convert</param>
         /// <param name="firstCharIsUpper">Whether the first character should be upper case. Setting this to true is the same as <see cref="ToPascalCase"/></param>
@@ -142,7 +142,7 @@ namespace MarkSFrancis.Extensions
         }
 
         /// <summary>
-        /// Converts a given string to camel case, using <paramref name="wordDelimiters"/> to indicate where each word begins
+        /// Converts a string to camel case, using <paramref name="wordDelimiters"/> to indicate where each word begins
         /// </summary>
         /// <param name="str">The string to convert</param>
         /// <param name="wordDelimiters">The strings that seperate each word. If none are given, this is set to "-", "_" and " "</param>

@@ -6,7 +6,7 @@ namespace MarkSFrancis.Collections.Extensions
     public static class IDictionaryExtensions
     {
         /// <summary>
-        /// Set (or add if it does not already exist) a given key to the dictionary, using <see cref="o:Convert.ChangeType"/> to convert the given type into the stored type. <see cref="o:Convert.ChangeType"/> is only used if the given type is not inherited from the stored type
+        /// Set (or add if it does not already exist) a key to the dictionary, using <see cref="o:Convert.ChangeType"/> to convert the type into the stored type. <see cref="o:Convert.ChangeType"/> is only used if <see cref="TConvertFrom"/> is not inherited from <see cref="TStored"/>
         /// </summary>
         /// <typeparam name="TKey">The key type for entries in the <see cref="IDictionary{TKey,TValue}"/></typeparam>
         /// <typeparam name="TStored">The type stored in the <see cref="IDictionary{TKey,TValue}"/></typeparam>

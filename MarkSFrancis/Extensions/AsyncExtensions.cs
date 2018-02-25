@@ -10,7 +10,7 @@ namespace MarkSFrancis.Extensions
     public static class AsyncExtensions
     {
         /// <summary>
-        /// Invoke a given method asynchronously
+        /// Invoke a method asynchronously
         /// </summary>
         /// <param name="action">The method to invoke</param>
         /// <param name="withContext">Whether to preserve the <see cref="SynchronizationContext.Current"/>. This should generally be set to <see langword="true"/> if you're writing a library</param>
@@ -25,7 +25,7 @@ namespace MarkSFrancis.Extensions
         }
         
         /// <summary>
-        /// Invoke a given method asynchronously
+        /// Invoke a method asynchronously
         /// </summary>
         /// <param name="func">The method to invoke</param>
         /// <param name="withContext">Whether to preserve the <see cref="SynchronizationContext.Current"/>. This should generally be set to <see langword="true"/> if you're writing a library</param>

@@ -22,7 +22,7 @@ namespace MarkSFrancis.Console
         public void Clear() => System.Console.Clear();
 
         /// <summary>
-        /// Write a question to the <see cref="System.Console"/>, and then get attempt to get a value from the <see cref="System.Console"/> using the given converter. If the received input is invalid, <see cref="Clear"/> is called, and the process repeats. Any errors are written to <see cref="Debug"/>
+        /// Write a question to the <see cref="System.Console"/>, and then get attempt to get a value from the <see cref="System.Console"/> using <paramref name="converter"/>. If the received input is invalid, <see cref="Clear"/> is called, and the process repeats. Any errors are written to <see cref="Debug"/>
         /// </summary>
         /// <param name="converter">The method to use when converting from the text to the desired type</param>
         /// <param name="question">The question to write</param>
