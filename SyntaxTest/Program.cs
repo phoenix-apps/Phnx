@@ -1,5 +1,5 @@
-﻿using MarkSFrancis.Console;
-using MarkSFrancis.Random.Generator;
+﻿using MarkSFrancis;
+using MarkSFrancis.Console;
 
 namespace SyntaxTest
 {
@@ -9,16 +9,26 @@ namespace SyntaxTest
 
         static void Main()
         {
-            RandomULongGenerator rndULong = new RandomULongGenerator();
+            var converter = ConverterHelpers.GetDefaultConverter<asdf2, asdf>();
 
-            for (var genTimes = 0; genTimes < 10; genTimes++)
-            {
-                var val = rndULong.Get();
+            var converted = converter(new asdf2());
 
-                Console.WriteLine(val);
-            }
+            Console.WriteLine(converted.val);
 
             Console.ReadKey();
+        }
+    }
+
+    class asdf
+    {
+        public string val { get; set; }
+    }
+
+    class asdf2 : asdf
+    {
+        public asdf2()
+        {
+            val = "a";
         }
     }
 }
