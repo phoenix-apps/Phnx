@@ -24,7 +24,7 @@ namespace MarkSFrancis.Configuration
         }
 
         /// <summary>
-        /// Create a new application configuration from a given <see cref="NameValueCollection"/>
+        /// Create a new application configuration from a <see cref="NameValueCollection"/>
         /// </summary>
         /// <param name="appSettings">The <see cref="NameValueCollection"/> to use as the settings source</param>
         /// <param name="connectionStrings">The <see cref="ConnectionStringSettingsCollection"/> to use as the connection strings source</param>
@@ -35,7 +35,7 @@ namespace MarkSFrancis.Configuration
         }
 
         /// <summary>
-        /// Get a given key from the connection strings
+        /// Get a key's value from the connection strings
         /// </summary>
         /// <param name="key">The key for the connection string to retrieve</param>
         /// <returns></returns>

@@ -38,7 +38,7 @@ namespace MarkSFrancis.Security
         }
 
         /// <summary>
-        /// Encrypt given data
+        /// Encrypt data
         /// </summary>
         /// <param name="data">The data to encrypt</param>
         /// <param name="publicKey">The public key to use when encrypting the data</param>
@@ -52,7 +52,7 @@ namespace MarkSFrancis.Security
         }
 
         /// <summary>
-        /// Decrypt given data
+        /// Decrypt data
         /// </summary>
         /// <param name="encryptedData">The data to decrypt</param>
         /// <param name="privateKey">The private key to use when decrypting the data</param>

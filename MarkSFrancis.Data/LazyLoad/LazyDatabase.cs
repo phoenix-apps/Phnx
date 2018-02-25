@@ -49,12 +49,12 @@ namespace MarkSFrancis.Data.LazyLoad
         private static bool CacheIsMaxSize { get; set; }
         
         /// <summary>
-        /// Get a given value from the cache
+        /// Get a value from the cache using a unique identifier
         /// </summary>
-        /// <typeparam name="TKey">The type of the unique identifier for this item</typeparam>
-        /// <typeparam name="TObject">The type of object to load from the cache</typeparam>
-        /// <param name="id">The unique identifier for this item</param>
-        /// <param name="getFunc">The method to call if the given item is not already in the cache</param>
+        /// <typeparam name="TKey">The type of the unique identifier for this value</typeparam>
+        /// <typeparam name="TObject">The type of value to load from the cache</typeparam>
+        /// <param name="id">The unique identifier for this value</param>
+        /// <param name="getFunc">The method to call if the value is not already in the cache</param>
         /// <returns></returns>
         public static TObject GetValue<TKey, TObject>(TKey id, Func<TKey, TObject> getFunc)
         {
@@ -71,7 +71,7 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Gets the total number of items cached for this given type
+        /// Gets the total number of items cached for a type
         /// </summary>
         /// <param name="type">The type to get the number of records cached for</param>
         /// <returns></returns>
@@ -96,7 +96,7 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Clear all items from the cache for a given type, forcing all new requests for that type to be reloaded into the cache
+        /// Clear all items from the cache for a type, forcing all new requests for that type to be reloaded into the cache when their values are requested
         /// </summary>
         /// <param name="typeToClear"></param>
         public static void ClearAllCache(Type typeToClear)

@@ -20,7 +20,7 @@ namespace MarkSFrancis.Security
         public int SaltBytesLength { get; }
         
         /// <summary>
-        /// The number of times the algorithm is ran on given data when using <see cref="Hash(byte[], byte[])"/>
+        /// The number of times the algorithm is ran on data when using <see cref="Hash(byte[], byte[])"/>
         /// </summary>
         public int IterationCount { get; }
         
@@ -45,7 +45,7 @@ namespace MarkSFrancis.Security
         }
 
         /// <summary>
-        /// Hash given data using a salt
+        /// Hash data using a salt
         /// </summary>
         /// <param name="data">The data to hash</param>
         /// <param name="salt">The salt to use. This must have the same length as <see cref="SaltBytesLength"/></param>

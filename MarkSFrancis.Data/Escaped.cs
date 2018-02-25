@@ -6,7 +6,7 @@
     public static class Escaped
     {
         /// <summary>
-        /// Escapes some given characters with a given escape character
+        /// Escapes certain characters within text using an escape character
         /// </summary>
         /// <param name="textToEscape">The text to escape</param>
         /// <param name="escapeChar">The character to use when escaping</param>
@@ -25,7 +25,7 @@
         }
 
         /// <summary>
-        /// Escapes some given characters with a given escape character
+        /// Unescapes certain characters within text, removing an escape character where appropriate
         /// </summary>
         /// <param name="escapedText">The text to unescape</param>
         /// <param name="escapeChar">The character that's been used when escaping</param>

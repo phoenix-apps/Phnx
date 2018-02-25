@@ -30,7 +30,7 @@ namespace MarkSFrancis.Security
         }
 
         /// <summary>
-        /// Encrypt data using a given key. The randomly generated IV is stored at the beginning of the returned data ready to be used when you decrypt the data
+        /// Encrypt data using a key. The randomly generated IV is stored at the beginning of the returned data ready to be used when you decrypt the data
         /// </summary>
         /// <param name="data">The data to encrypt</param>
         /// <param name="key">The key to use when encrypting the data</param>
@@ -91,7 +91,7 @@ namespace MarkSFrancis.Security
         }
 
         /// <summary>
-        /// Decrypt data using a given key. The randomly generated IV must be stored at the beginning of the data, which is done automatically for you by <see cref="Encrypt"/>
+        /// Decrypt data using a key. The randomly generated IV must be stored at the beginning of the data, which is done automatically for you by <see cref="Encrypt"/>
         /// </summary>
         /// <param name="encryptedData">The data to decrypt</param>
         /// <param name="key">The key to use when decrypting the data</param>

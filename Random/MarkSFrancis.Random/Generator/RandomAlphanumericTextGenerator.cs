@@ -28,7 +28,7 @@ namespace MarkSFrancis.Random.Generator
         }
 
         /// <summary>
-        /// Get random text of a given length. Only uses alphanumeric characters
+        /// Get random alphanumeric text of a certain length
         /// </summary>
         /// <param name="length"></param>
         /// <returns></returns>

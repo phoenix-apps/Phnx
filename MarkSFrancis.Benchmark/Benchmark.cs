@@ -4,7 +4,7 @@ using System.Diagnostics;
 namespace MarkSFrancis.Benchmark
 {
     /// <summary>
-    /// Benchmark a given function or series of functions by generating values, and then sending them to each, timing how long each function takes to compute all values
+    /// Benchmark a function or series of functions by generating values and then sending those values to each function, timing how long each function takes to compute all values
     /// </summary>
     /// <typeparam name="T">The type passed to each function as an input</typeparam>
     public class Benchmark<T>
@@ -76,10 +76,10 @@ namespace MarkSFrancis.Benchmark
         }
 
         /// <summary>
-        /// Generates a given number of values using a function
+        /// Generates a number of values using a function
         /// </summary>
         /// <param name="generateValue">The function used to generate values. The number of values generated so far is passed in as a parameter to the function</param>
-        /// <param name="numberOfValuesToGenerate">The number of values to generate using the function</param>
+        /// <param name="numberOfValuesToGenerate">The number of values to generate</param>
         private void GenerateValues(Func<long, T> generateValue, long numberOfValuesToGenerate)
         {
             BenchmarkWithValues = new T[numberOfValuesToGenerate];

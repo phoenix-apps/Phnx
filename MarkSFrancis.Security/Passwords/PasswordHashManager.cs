@@ -22,7 +22,7 @@ namespace MarkSFrancis.Security.Passwords
         protected IPasswordHashVersion LatestGenerateHashService => HashGeneratorServices.MaxBy(g => g.Version);
 
         /// <summary>
-        /// Create a new instance of the <see cref="PasswordHashManager"/> from a given collection of <see cref="IPasswordHashVersion"/>
+        /// Create a new instance of the <see cref="PasswordHashManager"/> from a collection of <see cref="IPasswordHashVersion"/>
         /// </summary>
         /// <param name="hashGenerators">The generators to register with the manager</param>
         public PasswordHashManager(params IPasswordHashVersion[] hashGenerators)
@@ -31,7 +31,7 @@ namespace MarkSFrancis.Security.Passwords
         }
         
         /// <summary>
-        /// Create a new instance of the <see cref="PasswordHashManager"/> from a given collection of <see cref="IPasswordHashVersion"/>
+        /// Create a new instance of the <see cref="PasswordHashManager"/> from a collection of <see cref="IPasswordHashVersion"/>
         /// </summary>
         /// <param name="hashGenerators">The generators to register with the manager</param>
         public PasswordHashManager(IEnumerable<IPasswordHashVersion> hashGenerators)
@@ -40,7 +40,7 @@ namespace MarkSFrancis.Security.Passwords
         }
 
         /// <summary>
-        /// Gets the hash generator with a version number that matches the one used by the given hash
+        /// Gets the hash generator with a version number that matches the one used by the <paramref name="hash"/>
         /// </summary>
         /// <param name="hash">The hash to get the generator that was used</param>
         /// <returns></returns>
@@ -65,7 +65,7 @@ namespace MarkSFrancis.Security.Passwords
         }
 
         /// <summary>
-        /// Gets whether a password matches a given hash
+        /// Gets whether a password matches a hash
         /// </summary>
         /// <param name="password"></param>
         /// <param name="hash"></param>
@@ -82,7 +82,7 @@ namespace MarkSFrancis.Security.Passwords
         }
 
         /// <summary>
-        /// Gets whether a given hash is using an old hashing algorithm, and should therefore be updated to the latest algorithm
+        /// Gets whether a hash is using an old hashing algorithm, and should therefore be updated to the latest algorithm
         /// </summary>
         /// <param name="hash">The hash to check the version number of</param>
         /// <returns></returns>
@@ -94,7 +94,7 @@ namespace MarkSFrancis.Security.Passwords
         }
 
         /// <summary>
-        /// Hash a given password using the latest hash generator
+        /// Hash a password using the latest hash generator
         /// </summary>
         /// <param name="password">The password to hash</param>
         /// <returns></returns>

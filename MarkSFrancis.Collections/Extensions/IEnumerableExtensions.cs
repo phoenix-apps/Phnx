@@ -202,7 +202,7 @@ namespace MarkSFrancis.Collections.Extensions
 
             if (firstRun)
             {
-                throw new InvalidOperationException("The given sequence is empty");
+                throw ErrorFactory.Default.CollectionEmpty(nameof(enumerable));
             }
 
             return curMax;
@@ -235,7 +235,7 @@ namespace MarkSFrancis.Collections.Extensions
 
             if (firstRun)
             {
-                throw new InvalidOperationException("The given sequence is empty");
+                throw ErrorFactory.Default.CollectionEmpty(nameof(enumerable));
             }
 
             return curMin;

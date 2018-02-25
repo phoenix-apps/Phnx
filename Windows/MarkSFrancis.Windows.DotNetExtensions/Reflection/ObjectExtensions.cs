@@ -8,10 +8,10 @@ namespace MarkSFrancis.Windows.Extensions.Reflection
     public static class ObjectExtensions
     {
         /// <summary>
-        /// Deep clones a given object. The given type MUST be serializable
+        /// Deep clones an object. <typeparamref name="T"/> must be marked as serializable
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="t"></param>
+        /// <typeparam name="T">The type of object to serialize</typeparam>
+        /// <param name="t">The object to serialize</param>
         /// <returns></returns>
         public static T DeepCopy<T>(this T t)
         {
@@ -25,6 +25,12 @@ namespace MarkSFrancis.Windows.Extensions.Reflection
             }
         }
 
+        /// <summary>
+        /// Shallow clones an object
+        /// </summary>
+        /// <typeparam name="T">The type of object to shallow clone</typeparam>
+        /// <param name="t">The object to shallow clone</param>
+        /// <returns></returns>
         public static T ShallowCopy<T>(this T t)
         {
             MethodInfo method = t.GetType().GetMethod("MemberwiseClone",

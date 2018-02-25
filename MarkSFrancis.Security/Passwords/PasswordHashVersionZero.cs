@@ -23,7 +23,7 @@ namespace MarkSFrancis.Security.Passwords
         public int SaltBytesLength => 24;
 
         /// <summary>
-        /// The number of times this hash is ran on any given passwords
+        /// The number of times this hash is ran on any passwords
         /// </summary>
         public int IterationCount => HashGenerator.IterationCount;
 
@@ -38,7 +38,7 @@ namespace MarkSFrancis.Security.Passwords
         }
 
         /// <summary>
-        /// Generate a hash from a given password and salt
+        /// Generate a hash from a password and salt
         /// </summary>
         /// <param name="password">The password to hash</param>
         /// <param name="salt">The salt to use</param>

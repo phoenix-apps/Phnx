@@ -9,12 +9,12 @@ namespace MarkSFrancis.Security
     public class Sha256Hash : IHashWithoutSalt
     {
         /// <summary>
-        /// The number of bytes produced when the given data is hashed
+        /// The number of bytes produced when the data is hashed
         /// </summary>
         public const int HashBytesLength = 32;
 
         /// <summary>
-        /// The number of times the algorithm is ran on given data when using <see cref="Hash(byte[])"/>
+        /// The number of times the algorithm is ran on data when using <see cref="Hash(byte[])"/>
         /// </summary>
         public int IterationCount { get; }
 
@@ -28,7 +28,7 @@ namespace MarkSFrancis.Security
         }
 
         /// <summary>
-        /// Hash given data
+        /// Hash data
         /// </summary>
         /// <param name="data">The data to hash</param>
         /// <returns></returns>

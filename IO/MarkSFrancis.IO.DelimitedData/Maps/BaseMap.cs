@@ -46,7 +46,7 @@ namespace MarkSFrancis.IO.DelimitedData.Maps
         }
 
         /// <summary>
-        /// Assigns the relevant property a value given the column Id and column name in accordance to the object map. The value is ignored if the column is not mapped
+        /// Assigns the relevant property a value using the column Id and column name in accordance to the object map. The value is ignored if the column is not mapped
         /// </summary>
         /// <param name="mapBy">The name of the column containing the value</param>
         /// <param name="value">The value contained within the field to be assigned to the object</param>

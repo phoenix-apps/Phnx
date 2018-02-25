@@ -6,7 +6,7 @@
     public interface IHashWithoutSalt : IHash
     {
         /// <summary>
-        /// Hash given data
+        /// Hash data
         /// </summary>
         /// <param name="data">The data to hash</param>
         /// <returns></returns>

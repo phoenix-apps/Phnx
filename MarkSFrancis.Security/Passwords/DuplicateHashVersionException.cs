@@ -10,7 +10,7 @@ namespace MarkSFrancis.Security.Passwords
     public class DuplicateHashVersionException : InvalidOperationException
     {
         /// <summary>
-        /// Create a new instance of the <see cref="DuplicateHashVersionException"/> with a given error message
+        /// Create a new instance of the <see cref="DuplicateHashVersionException"/> with an error message
         /// </summary>
         /// <param name="message">The message to diplay</param>
         public DuplicateHashVersionException(string message) : base(message)

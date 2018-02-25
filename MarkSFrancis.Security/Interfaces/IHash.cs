@@ -6,7 +6,7 @@
     public interface IHash
     {
         /// <summary>
-        /// The number of times this hashing algorithm is ran on given data
+        /// The number of times this hashing algorithm is ran on data
         /// </summary>
         int IterationCount { get; }
     }

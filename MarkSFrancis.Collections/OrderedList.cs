@@ -170,7 +170,7 @@ namespace MarkSFrancis.Collections
 
         public int IndexOf(T item)
         {
-            // Given the ordered by, binary search
+            // binary search using the ordered by function
             var defaultComparer = EqualityComparer<T>.Default;
 
             var index = BinarySearch(0, _items.Count - 1);

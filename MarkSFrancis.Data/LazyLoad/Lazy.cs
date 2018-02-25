@@ -3,7 +3,7 @@
 namespace MarkSFrancis.Data.LazyLoad
 {
     /// <summary>
-    /// Lazy loading for a given property, with the option to set and get its value
+    /// Lazy loading for a property, with the option to set and get its value
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class Lazy<T>
@@ -63,7 +63,7 @@ namespace MarkSFrancis.Data.LazyLoad
         public bool ValueChangedInLife => _valueChangedInLife;
 
         /// <summary>
-        /// Create a new read-only <see cref="Lazy{T}"/> using a given function to load the data from an external source
+        /// Create a new read-only <see cref="Lazy{T}"/> using a function to load the data from an external source when requested
         /// </summary>
         /// <param name="getFunction">The function to load the data from an external source</param>
         public Lazy(Func<T> getFunction)
@@ -72,7 +72,7 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Create a new <see cref="Lazy{T}"/> using a given function to load the data from an external source, and a given function to update the external source. The external source is updated immediately when the <see cref="Value"/> is set
+        /// Create a new <see cref="Lazy{T}"/> using a function to load the data from an external source when requested, and a function to update the external source. The external source is updated immediately when the <see cref="Value"/> is set
         /// </summary>
         /// <param name="getFunction">The function to load the data from an external source</param>
         /// <param name="setFunction">The function to send the data to an external source</param>
