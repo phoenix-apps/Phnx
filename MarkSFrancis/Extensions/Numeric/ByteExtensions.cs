@@ -2,18 +2,17 @@
 
 namespace MarkSFrancis.Extensions.Numeric
 {
+    /// <summary>
+    /// Extension methods for the base type <see cref="byte"/>
+    /// </summary>
     public static class ByteExtensions
     {
-        public static byte Max(this byte a, byte b)
-        {
-            return Math.Max(a, b);
-        }
-
-        public static byte Min(this byte a, byte b)
-        {
-            return Math.Min(a, b);
-        }
-
+        /// <summary>
+        /// Round to the nearest value
+        /// </summary>
+        /// <param name="valueToRound">The value to be rounded</param>
+        /// <param name="toNearest">The value to round to</param>
+        /// <returns></returns>
         public static byte RoundToNearest(this byte valueToRound, byte toNearest)
         {
             return (byte)(Math.Round((decimal)valueToRound / toNearest, MidpointRounding.AwayFromZero) * toNearest);

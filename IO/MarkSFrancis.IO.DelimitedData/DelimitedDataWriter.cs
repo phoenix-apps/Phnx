@@ -33,22 +33,9 @@ namespace MarkSFrancis.IO.DelimitedData
 
             for (int valueIndex = 0; valueIndex < values.Count; valueIndex++)
             {
-                string valueToPrint = values[valueIndex] ?? "";
+                var sanitisedField = SanitiseForWriting(values[valueIndex], Splitter);
 
-                valueToPrint = valueToPrint.Replace("\"", "\"\"");
-                valueToPrint = valueToPrint.Replace("'", "''");
-
-                if (valueToPrint.Contains(Splitter) || valueToPrint.Contains(Environment.NewLine) || valueToPrint.Contains("\"") || valueToPrint.Contains("'"))
-                {
-                    textToWrite.Append("\"");
-                    textToWrite.Append(valueToPrint);
-                    textToWrite.Append("\"");
-                }
-                else
-                {
-                    textToWrite.Append(valueToPrint);
-                }
-
+                textToWrite.Append(sanitisedField);
                 textToWrite.Append(Splitter);
             }
 
@@ -62,6 +49,22 @@ namespace MarkSFrancis.IO.DelimitedData
             }
 
             MyStream.Write(Environment.NewLine);
+        }
+
+        public static string SanitiseForWriting(string field, string fieldSplitter)
+        {
+            string valueToPrint = field ?? "";
+
+            valueToPrint = valueToPrint.Replace("\"", "\"\"");
+            valueToPrint = valueToPrint.Replace("'", "''");
+
+            if (valueToPrint.Contains(fieldSplitter) || valueToPrint.Contains(Environment.NewLine) || valueToPrint.Contains("\"") || valueToPrint.Contains("'"))
+            {
+                // Surround with speech marks
+                return "\"" + valueToPrint + "\"";
+            }
+
+            return valueToPrint;
         }
 
         public void WriteRow(params string[] values)
