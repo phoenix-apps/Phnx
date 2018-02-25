@@ -6,30 +6,30 @@ namespace MarkSFrancis.Collections.Extensions
     public static class IDictionaryExtensions
     {
         /// <summary>
-        /// Set (or add if it does not already exist) a key to the dictionary, using <see cref="o:Convert.ChangeType"/> to convert the type into the stored type. <see cref="o:Convert.ChangeType"/> is only used if <see cref="TConvertFrom"/> is not inherited from <see cref="TStored"/>
+        /// Set (or add if it does not already exist) a key to the dictionary, using <see cref="ConverterHelpers.GetDefaultConverter{TSetAs,TStored}"/> as the type converter
         /// </summary>
-        /// <typeparam name="TKey">The key type for entries in the <see cref="IDictionary{TKey,TValue}"/></typeparam>
-        /// <typeparam name="TStored">The type stored in the <see cref="IDictionary{TKey,TValue}"/></typeparam>
-        /// <typeparam name="TConvertFrom">The type of value to set in the <see cref="IDictionary{TKey,TValue}"/></typeparam>
-        /// <param name="dictionary">The <see cref="IDictionary{TKey,TValue}"/> to set the given key in</param>
-        /// <param name="key">The key to the item to set</param>
+        /// <typeparam name="TKey">The key type for entries in the <see cref="IDictionary{TKey,TStored}"/></typeparam>
+        /// <typeparam name="TStored">The type stored in the <see cref="IDictionary{TKey,TStored}"/></typeparam>
+        /// <typeparam name="TSetAs">The type to convert to <typeparamref name="TStored"/></typeparam>
+        /// <param name="dictionary">The <see cref="IDictionary{TKey,TStored}"/> to set the key's value in</param>
+        /// <param name="key">The key to the value to set</param>
         /// <param name="value">The value to set</param>
-        public static void SetAs<TKey, TStored, TConvertFrom>(this IDictionary<TKey, TStored> dictionary, TKey key, TConvertFrom value)
+        public static void SetAs<TKey, TStored, TSetAs>(this IDictionary<TKey, TStored> dictionary, TKey key, TSetAs value)
         {
-            SetAs(dictionary, key, value, s => (TStored)Convert.ChangeType(s, typeof(TStored)));
+            SetAs(dictionary, key, value, ConverterHelpers.GetDefaultConverter<TSetAs, TStored>());
         }
 
         /// <summary>
-        /// Set (or add if it does not already exist) a given key to the dictionary, using a given function to convert the given type to the stored type
+        /// Set (or add if it does not already exist) a key to the dictionary, using a function to convert the desired type into the stored type
         /// </summary>
-        /// <typeparam name="TKey">The key type for entries in the <see cref="IDictionary{TKey,TValue}"/></typeparam>
-        /// <typeparam name="TStored">The type stored in the <see cref="IDictionary{TKey,TValue}"/></typeparam>
-        /// <typeparam name="TConvertFrom">The type of value to set in the <see cref="IDictionary{TKey,TValue}"/></typeparam>
-        /// <param name="dictionary">The <see cref="IDictionary{TKey,TValue}"/> to set the given key in</param>
-        /// <param name="key">The key to the item to set</param>
-        /// <param name="convertFunc">The function to use to convert the stored type into the desired type. This is only used if the stored type is not inherited from the desired type</param>
+        /// <typeparam name="TKey">The key type for entries in the <see cref="IDictionary{TKey,TStored}"/></typeparam>
+        /// <typeparam name="TStored">The type stored in the <see cref="IDictionary{TKey,TStored}"/></typeparam>
+        /// <typeparam name="TSetAs">The type to convert to <typeparamref name="TStored"/></typeparam>
+        /// <param name="dictionary">The <see cref="IDictionary{TKey,TStored}"/> to set the key's value in</param>
+        /// <param name="key">The key to the value to set</param>
         /// <param name="value">The value to set</param>
-        public static void SetAs<TKey, TStored, TConvertFrom>(this IDictionary<TKey, TStored> dictionary, TKey key, TConvertFrom value, Func<TConvertFrom, TStored> convertFunc)
+        /// <param name="convertFunc">The function to use to convert <typeparamref name="TSetAs"/> to <typeparamref name="TStored"/></param>
+        public static void SetAs<TKey, TStored, TSetAs>(this IDictionary<TKey, TStored> dictionary, TKey key, TSetAs value, Func<TSetAs, TStored> convertFunc)
         {
             TStored valueAsStoredType;
             if (value is TStored)

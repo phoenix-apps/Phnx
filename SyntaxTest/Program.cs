@@ -9,26 +9,13 @@ namespace SyntaxTest
 
         static void Main()
         {
-            var converter = ConverterHelpers.GetDefaultConverter<asdf2, asdf>();
+            var converter = ConverterHelpers.GetDefaultConverter<string, int>();
 
-            var converted = converter(new asdf2());
+            int converted = converter("1");
 
-            Console.WriteLine(converted.val);
+            Console.WriteLine(converted);
 
             Console.ReadKey();
-        }
-    }
-
-    class asdf
-    {
-        public string val { get; set; }
-    }
-
-    class asdf2 : asdf
-    {
-        public asdf2()
-        {
-            val = "a";
         }
     }
 }
