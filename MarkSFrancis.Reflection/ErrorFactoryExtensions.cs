@@ -15,7 +15,7 @@ namespace MarkSFrancis.Reflection
         /// <param name="factory">The error factory that this method extends</param>
         /// <param name="paramName">The name of the <see cref="Expression"/> parameter</param>
         /// <returns></returns>
-        public static ArgumentException InvalidExpression(this ErrorFactory factory, string paramName) =>
+        public static ArgumentException ExpressionIsNotPropertyOrFieldAccess(this ErrorFactory factory, string paramName) =>
             new ArgumentException("Expression is not a field or property access", paramName);
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace MarkSFrancis.Reflection
         /// <param name="factory">The error factory that this method extends</param>
         /// <param name="paramName">The name of the <see cref="MemberInfo"/> parameter</param>
         /// <returns></returns>
-        public static ArgumentException InvalidMember(this ErrorFactory factory, string paramName) =>
+        public static ArgumentException MemberIsNotPropertyOrField(this ErrorFactory factory, string paramName) =>
             new ArgumentException("Member is not a field or property access", paramName);
     }
 }

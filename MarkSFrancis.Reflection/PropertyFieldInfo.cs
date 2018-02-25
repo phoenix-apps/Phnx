@@ -52,12 +52,12 @@ namespace MarkSFrancis.Reflection
                     }
                     else
                     {
-                        throw ErrorFactory.Default.InvalidExpression(nameof(expression));
+                        throw ErrorFactory.Default.ExpressionIsNotPropertyOrFieldAccess(nameof(expression));
                     }
                 }
                 else
                 {
-                    throw ErrorFactory.Default.InvalidExpression(nameof(expression));
+                    throw ErrorFactory.Default.ExpressionIsNotPropertyOrFieldAccess(nameof(expression));
                 }
             }
             else
@@ -68,7 +68,7 @@ namespace MarkSFrancis.Reflection
                 }
                 else
                 {
-                    throw ErrorFactory.Default.InvalidExpression(nameof(expression));
+                    throw ErrorFactory.Default.ExpressionIsNotPropertyOrFieldAccess(nameof(expression));
                 }
             }
 
@@ -118,7 +118,7 @@ namespace MarkSFrancis.Reflection
                 return (null, field);
             }
 
-            throw ErrorFactory.Default.InvalidMember(nameof(member));
+            throw ErrorFactory.Default.MemberIsNotPropertyOrField(nameof(member));
         }
 
         /// <summary>
