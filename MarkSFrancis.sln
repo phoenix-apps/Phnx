@@ -61,7 +61,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Random", "Rand
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Random", "Random", "{1571A99B-2C4C-44B3-B274-7EDCFEDAF326}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Random.Data", "MarkSFrancis.Random.Data\MarkSFrancis.Random.Data.csproj", "{CA49E46B-EF6D-44A7-B9A7-49A1D9F2D9DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Random.Data", "Random\MarkSFrancis.Random.Data\MarkSFrancis.Random.Data.csproj", "{CA49E46B-EF6D-44A7-B9A7-49A1D9F2D9DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
