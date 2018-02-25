@@ -1,7 +1,7 @@
 ﻿namespace MarkSFrancis.Security.Interfaces
 {
     /// <summary>
-    /// One way hashing without a salt
+    /// One way hashing without a salt. Useful for generating checksums for data at a fixed length
     /// </summary>
     public interface IHashWithoutSalt : IHash
     {

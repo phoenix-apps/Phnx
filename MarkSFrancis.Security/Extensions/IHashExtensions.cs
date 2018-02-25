@@ -3,16 +3,34 @@ using MarkSFrancis.Security.Interfaces;
 
 namespace MarkSFrancis.Security.Extensions
 {
+    /// <summary>
+    /// Extension methods for <see cref="IHash"/>, <see cref="IHashWithSalt"/> and <see cref="IHashWithoutSalt"/>
+    /// </summary>
     public static class IHashExtensions
     {
-        public static byte[] Encrypt(this IHashWithSalt encryption, string data, byte[] salt, Encoding encoding)
+        /// <summary>
+        /// Hash text using encoding to transfer between the text and bytes
+        /// </summary>
+        /// <param name="encryption">The hashing algorithm to use</param>
+        /// <param name="data">The data to hash</param>
+        /// <param name="salt">The salt to use</param>
+        /// <param name="encoding">The encoding to convert the text to bytes with</param>
+        /// <returns></returns>
+        public static byte[] Hash(this IHashWithSalt encryption, string data, byte[] salt, Encoding encoding)
         {
             var bytes = encoding.GetBytes(data);
 
             return encryption.Hash(bytes, salt);
         }
-        
-        public static byte[] Encrypt(this IHashWithoutSalt encryption, string data, Encoding encoding)
+
+        /// <summary>
+        /// Hash text using encoding to transfer between the text and bytes
+        /// </summary>
+        /// <param name="encryption">The hashing algorithm to use</param>
+        /// <param name="data">The data to hash</param>
+        /// <param name="encoding">The encoding to convert the text to bytes with</param>
+        /// <returns></returns>
+        public static byte[] Hash(this IHashWithoutSalt encryption, string data, Encoding encoding)
         {
             var bytes = encoding.GetBytes(data);
 

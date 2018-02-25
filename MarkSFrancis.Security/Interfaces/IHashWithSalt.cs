@@ -1,7 +1,7 @@
 ﻿namespace MarkSFrancis.Security.Interfaces
 {
     /// <summary>
-    /// One way hashing using a salt
+    /// One way hashing using a salt. Useful for storing passwords
     /// </summary>
     public interface IHashWithSalt : IHash
     {
