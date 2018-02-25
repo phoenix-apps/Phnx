@@ -29,7 +29,7 @@ namespace MarkSFrancis.Security.Tests.Passwords
 
             // Act
             byte[] securedPassword = hashManager.HashPasswordWithLatestHashGenerator(password);
-            bool matchesPassword = hashManager.PasswordMatch(password, securedPassword);
+            bool matchesPassword = hashManager.PasswordMatchesHash(password, securedPassword);
 
             // Assert
             Assert.True(matchesPassword);
@@ -87,7 +87,7 @@ namespace MarkSFrancis.Security.Tests.Passwords
 
             hashManager.AddHashGenerator(new PasswordHashVersionMock());
 
-            bool passwordsMatch = hashManager.PasswordMatch(password, securedPassword);
+            bool passwordsMatch = hashManager.PasswordMatchesHash(password, securedPassword);
 
             // Assert
             Assert.True(passwordsMatch);

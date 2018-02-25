@@ -252,6 +252,38 @@ namespace MarkSFrancis.Collections.Extensions
             }
         }
 
+        public static bool IsEqualToRange<T>(this IEnumerable<T> enumerable, IEnumerable<T> rangeToCompare)
+        {
+            var comparer = EqualityComparer<T>.Default;
+
+            using (var enumerator1 = enumerable.GetEnumerator())
+            {
+                using (var enumerator2 = rangeToCompare.GetEnumerator())
+                {
+                    do
+                    {
+                        if (!comparer.Equals(enumerator1.Current, enumerator2.Current))
+                        {
+                            return false;
+                        }
+
+                        if (!enumerator1.MoveNext())
+                        {
+                            // Reached the end of collection 1
+                            // If we're not at the end of collection 2, they don't match as collection 2 must be longer
+                            // If we are, they match
+                            return !enumerator2.MoveNext();
+                        }
+
+                        if (!enumerator2.MoveNext())
+                        {
+                            return false;
+                        }
+                    } while (true);
+                }
+            }
+        }
+
         public static List<T> ToList<T>(this IEnumerable<T> enumerable, int capacity)
         {
             var newList = new List<T>(capacity);
