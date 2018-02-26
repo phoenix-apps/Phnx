@@ -5,6 +5,9 @@ using System.Xml.Serialization;
 
 namespace MarkSFrancis.Windows.Extensions.Reflection
 {
+    /// <summary>
+    /// Extensions for <see cref="object"/>, <see cref="string"/> and <see cref="T:byte[]"/> related to Binary and XML serialization
+    /// </summary>
     public static class SerializeExtensions
     {
         public static byte[] SerializeBinary<T>(this T t)

@@ -2,6 +2,9 @@
 
 namespace MarkSFrancis.AspNet.Windows.Extensions
 {
+    /// <summary>
+    /// Extensions for <see cref="TagBuilder"/>
+    /// </summary>
     public static class TagBuilderExtensions
     {
         public static MvcHtmlString ToMvcHtmlString(this TagBuilder tag, TagRenderMode renderMode)

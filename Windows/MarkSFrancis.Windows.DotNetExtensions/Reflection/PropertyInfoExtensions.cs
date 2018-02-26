@@ -4,6 +4,9 @@ using System.Runtime.CompilerServices;
 
 namespace MarkSFrancis.Windows.Extensions.Reflection
 {
+    /// <summary>
+    /// Extensions for <see cref="PropertyInfo"/>
+    /// </summary>
     public static class PropertyInfoExtensions
     {
         public static bool IsAuto(this PropertyInfo property)

@@ -1,7 +1,7 @@
 ﻿namespace MarkSFrancis.Security.Passwords.Extensions
 {
     /// <summary>
-    /// Add new error messages related to Passwords
+    /// Extensions for <see cref="ErrorFactory"/>
     /// </summary>
     public static class ErrorFactoryExtensions
     {

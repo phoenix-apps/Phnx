@@ -4,7 +4,7 @@ using System.Reflection;
 namespace MarkSFrancis.Reflection.Extensions
 {
     /// <summary>
-    /// Provides a series of extension methods onto <see cref="MemberInfo"/>
+    /// Extensions for <see cref="MemberInfo"/>
     /// </summary>
     public static class MemberInfoExtensions
     {

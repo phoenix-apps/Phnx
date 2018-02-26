@@ -5,6 +5,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace MarkSFrancis.Windows.Extensions.Reflection
 {
+    /// <summary>
+    /// Extensions for <see cref="object"/>
+    /// </summary>
     public static class ObjectExtensions
     {
         /// <summary>

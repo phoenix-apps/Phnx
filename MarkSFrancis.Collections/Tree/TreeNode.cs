@@ -6,7 +6,7 @@ namespace MarkSFrancis.Collections.Tree
     {
         public TreeNode(T value)
         {
-            this.Value = value;
+            Value = value;
         }
 
         public T Value { get; set; }
@@ -27,9 +27,9 @@ namespace MarkSFrancis.Collections.Tree
             return returnNodes;
         }
 
-        public static explicit operator TreeNode<T>(T item)
+        public static explicit operator TreeNode<T>(T value)
         {
-            return new TreeNode<T>(item);
+            return new TreeNode<T>(value);
         }
     }
 }

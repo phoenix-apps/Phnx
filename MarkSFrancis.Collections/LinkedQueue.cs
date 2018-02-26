@@ -5,45 +5,45 @@ namespace MarkSFrancis.Collections
 {
     public class LinkedQueue<T> : IEnumerable<T>
     {
-        private readonly LinkedList<T> items;
+        private readonly LinkedList<T> values;
 
-        public int Count => items.Count;
+        public int Count => values.Count;
 
         public LinkedQueue()
         {
-            items = new LinkedList<T>();
+            values = new LinkedList<T>();
         }
 
         public LinkedQueue(IEnumerable<T> collection)
         {
-            this.items = new LinkedList<T>(collection);
+            values = new LinkedList<T>(collection);
         }
 
         public void Enqueue(T value)
         {
-            items.AddLast(value);
+            values.AddLast(value);
         }
 
         public T Dequeue()
         {
-            T first = items.First.Value;
-            items.RemoveFirst();
+            T first = values.First.Value;
+            values.RemoveFirst();
             return first;
         }
 
         public void Clear()
         {
-            this.items.Clear();
+            values.Clear();
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return items.GetEnumerator();
+            return values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return items.GetEnumerator();
+            return values.GetEnumerator();
         }
     }
 }

@@ -5,6 +5,9 @@ using MarkSFrancis.Reflection.Extensions;
 
 namespace MarkSFrancis.Windows.Extensions.Reflection
 {
+    /// <summary>
+    /// Extensions for <see cref="MemberInfo"/>
+    /// </summary>
     public static class MemberInfoExtensions
     {
         public static string GetDisplayName(this MemberInfo member)

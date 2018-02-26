@@ -12,22 +12,22 @@ namespace MarkSFrancis.Collections.Tree
 
         public T this[int index] => AllNodes[index].Value;
 
-        public TreeNode<T> this[T item] => AllNodes.First(x => x.Value.Equals(item));
+        public TreeNode<T> this[T value] => AllNodes.First(x => x.Value.Equals(value));
 
         public Tree()
         {
             AllNodes = new List<TreeNode<T>>();
         }
 
-        public void Add(T item)
+        public void Add(T value)
         {
-            TreeNode<T> newNode = new TreeNode<T>(item);
+            TreeNode<T> newNode = new TreeNode<T>(value);
             AllNodes.Add(newNode);
         }
 
-        public TreeNode<T> Add(T item, TreeNode<T> parentNode)
+        public TreeNode<T> Add(T value, TreeNode<T> parentNode)
         {
-            TreeNode<T> newNode = new TreeNode<T>(item);
+            TreeNode<T> newNode = new TreeNode<T>(value);
             AllNodes.Add(newNode);
 
             parentNode.ImmediateChildren.Add(newNode);
@@ -142,7 +142,7 @@ namespace MarkSFrancis.Collections.Tree
 
         public void Clear() => AllNodes.Clear();
 
-        public bool Contains(T item) => AllNodes.Any(x => (object)x.Value == (object)item);
+        public bool Contains(T value) => AllNodes.Any(x => (object)x.Value == (object)value);
 
         public void CopyTo(T[] array, int arrayIndex)
         {
@@ -158,14 +158,14 @@ namespace MarkSFrancis.Collections.Tree
         }
 
         /// <summary>
-        /// Removes the first occurance of an object from the tree
+        /// Removes the first occurance of a value from the tree
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public bool Remove(T item)
+        public bool Remove(T value)
         {
             int count = AllNodes.Count;
-            foreach (TreeNode<T> nodeToRemove in AllNodes.Where(x => (object)x.Value == (object)item))
+            foreach (TreeNode<T> nodeToRemove in AllNodes.Where(x => (object)x.Value == (object)value))
             {
                 Remove(nodeToRemove);
                 if (count != AllNodes.Count)

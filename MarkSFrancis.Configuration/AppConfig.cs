@@ -139,9 +139,9 @@ namespace MarkSFrancis.Configuration
         {
             get
             {
-                foreach(var item in new EnumerableEnumerator<KeyValuePair<string, string>>(GetEnumerator()))
+                foreach(var keyValue in new EnumerableEnumerator<KeyValuePair<string, string>>(GetEnumerator()))
                 {
-                    yield return item.Value;
+                    yield return keyValue.Value;
                 }
             }
         }

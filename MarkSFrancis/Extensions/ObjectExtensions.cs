@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace MarkSFrancis.Extensions
 {
     /// <summary>
-    /// Provides a series of extension methods onto all objects
+    /// Extensions for <see cref="object"/>
     /// </summary>
     public static class ObjectExtensions
     {
@@ -72,7 +72,7 @@ namespace MarkSFrancis.Extensions
         /// Converts a single object to an <see cref="IEnumerable{T}"/> of length 1
         /// </summary>
         /// <typeparam name="T">The type of <see cref="IEnumerable{T}"/> to create</typeparam>
-        /// <param name="single">The item to place in the collection</param>
+        /// <param name="single">The value to place in the collection</param>
         /// <returns></returns>
         public static IEnumerable<T> SingleToIEnumerable<T>(this T single)
         {

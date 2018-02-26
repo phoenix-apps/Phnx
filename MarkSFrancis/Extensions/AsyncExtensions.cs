@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace MarkSFrancis.Extensions
 {
     /// <summary>
-    /// Extension methods for helping asynchronous operations
+    /// Extensions for <see cref="Func{TResult}"/> and <see cref="Action"/>, helping with asynchronous operations
     /// </summary>
     public static class AsyncExtensions
     {

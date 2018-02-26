@@ -12,38 +12,38 @@ namespace MarkSFrancis.Data.LazyLoad
         private readonly Action<T> _setFunc;
 
         /// <summary>
-        /// Occurs when the value for this item is set
+        /// Occurs when the value for a <see cref="Lazy{T}"/> is set
         /// </summary>
         /// <param name="sender">The <see cref="Lazy{T}"/> that triggered the event</param>
         /// <param name="newValue">The new value that has been assigned to the sender</param>
         public delegate void ValueSetEvent(Lazy<T> sender, T newValue);
 
         /// <summary>
-        /// Occurs when the value for this item is loaded from an external source into the cache
+        /// Occurs when the value for a <see cref="Lazy{T}"/> is loaded from an external source into its cache
         /// </summary>
         /// <param name="sender">The <see cref="Lazy{T}"/> that triggered the event</param>
         /// <param name="cachedValue">The value that has been loaded into the cache</param>
         public delegate void ValueCachedEvent(Lazy<T> sender, T cachedValue);
         
         /// <summary>
-        /// Occurs when the value for this item is requested
+        /// Occurs when the value for a <see cref="Lazy{T}"/> is requested
         /// </summary>
         /// <param name="sender">The <see cref="Lazy{T}"/> that triggered the event</param>
         /// <param name="value">The value of the sender that has retrieved</param>
         public delegate void ValueGetEvent(Lazy<T> sender, T value);
 
         /// <summary>
-        /// Occurs when the value for this item is set
+        /// Occurs when the value for this <see cref="Lazy{T}"/> is set
         /// </summary>
         public event ValueSetEvent ValueSet;
 
         /// <summary>
-        /// Occurs when the value for this item is loaded from an external source into the cache
+        /// Occurs when the value for this <see cref="Lazy{T}"/> is loaded from an external source into the cache
         /// </summary>
         public event ValueCachedEvent ValueCached;
 
         /// <summary>
-        /// Occurs when the value for this item is loaded from an external source, or from the cache
+        /// Occurs when the value for this <see cref="Lazy{T}"/> is loaded from an external source, or from the cache
         /// </summary>
         public event ValueGetEvent ValueGet;
 
@@ -51,7 +51,7 @@ namespace MarkSFrancis.Data.LazyLoad
         private bool _valueIsCached;
 
         /// <summary>
-        /// Whether the value for this item can be set
+        /// Whether the value for this <see cref="Lazy{T}"/> can be set
         /// </summary>
         public bool CanSet => _setFunc != null;
 

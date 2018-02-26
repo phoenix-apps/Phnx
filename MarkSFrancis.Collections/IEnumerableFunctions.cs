@@ -2,18 +2,21 @@
 
 namespace MarkSFrancis.Collections
 {
+    /// <summary>
+    /// Extensions for <see cref="IEnumerable{T}"/>
+    /// </summary>
     public static class IEnumerableExtensions
     {
         public static IEnumerable<T> Flatten<T>(this IEnumerable<T> collection, params IEnumerable<T>[] collections)
         {
-            foreach (var item in collection)
+            foreach (var value in collection)
             {
-                yield return item;
+                yield return value;
             }
 
-            foreach (var item in Flatten((IEnumerable<IEnumerable<T>>) collections))
+            foreach (var value in Flatten((IEnumerable<IEnumerable<T>>) collections))
             {
-                yield return item;
+                yield return value;
             }
         }
 

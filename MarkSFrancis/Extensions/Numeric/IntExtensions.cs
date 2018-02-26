@@ -3,7 +3,7 @@
 namespace MarkSFrancis.Extensions.Numeric
 {
     /// <summary>
-    /// Extension methods for the base type <see cref="int"/>
+    /// Extensions for <see cref="int"/>
     /// </summary>
     public static class IntExtensions
     {

@@ -17,17 +17,17 @@ namespace MarkSFrancis.IO.Threaded.Tests
         private MemoryStreamFactory StreamFactory { get; }
 
         [Test]
-        public void Write_WithValidEntries_WritesFirstItem()
+        public void Write_WithValidEntries_WritesFirstValue()
         {
             // Arrange
-            List<string> items = new List<string> { "asdf", "asdf2", "asdf3" };
+            List<string> values = new List<string> { "asdf", "asdf2", "asdf3" };
             string result = null;
-            string expectedResult = items.First();
+            string expectedResult = values.First();
 
             using (ThreadedWriter<string> writer = new ThreadedWriter<string>(s => result = s))
             {
                 // Act
-                writer.Write(items.First());
+                writer.Write(values.First());
                 writer.Dispose();
 
                 // Assert
@@ -36,10 +36,10 @@ namespace MarkSFrancis.IO.Threaded.Tests
         }
 
         [Test]
-        public void ReadFromStreamUsingLookAhead_WithValidEntries_ReturnsAllItems()
+        public void ReadFromStreamUsingLookAhead_WithValidEntries_ReturnsAllValues()
         {
             // Arrange
-            List<string> items = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
+            List<string> values = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
 
             var ms = StreamFactory.Create();
 
@@ -47,9 +47,9 @@ namespace MarkSFrancis.IO.Threaded.Tests
 
             using (ThreadedWriter<string> writer = new ThreadedWriter<string>(s => msWriter.WriteLine(s)))
             {
-                for (int index = 0; index < items.Count; index++)
+                for (int index = 0; index < values.Count; index++)
                 {
-                    writer.Write(items[index]);
+                    writer.Write(values[index]);
                 }
             }
 
@@ -67,7 +67,7 @@ namespace MarkSFrancis.IO.Threaded.Tests
             var resultsWithoutFinalBlankLine = results.Take(results.Length - 1).ToList();
 
             //Assert
-            Assert.AreEqual(items, resultsWithoutFinalBlankLine);
+            Assert.AreEqual(values, resultsWithoutFinalBlankLine);
         }
     }
 }

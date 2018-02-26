@@ -4,6 +4,9 @@ using System.Drawing.Drawing2D;
 
 namespace MarkSFrancis.Windows.Extensions.Drawing
 {
+    /// <summary>
+    /// Extensions for <see cref="Image"/>
+    /// </summary>
     public static class ImageExtensions
     {
         /// <summary>

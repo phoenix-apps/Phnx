@@ -2,6 +2,9 @@
 
 namespace MarkSFrancis.IO.Extensions
 {
+    /// <summary>
+    /// Extensions for <see cref="Stream"/> and <see cref="TextReader"/>
+    /// </summary>
     public static class StreamExtensions
     {
         public static byte[] ReadToEnd(this Stream stream)

@@ -90,9 +90,9 @@ namespace MarkSFrancis.Random
             return values[Random.Next(values.Count)];
         }
 
-        public static T OneOf<T>(IEnumerable<T> values, int totalItemsCount)
+        public static T OneOf<T>(IEnumerable<T> values, int totalValuesCount)
         {
-            var index = Random.Next(totalItemsCount);
+            var index = Random.Next(totalValuesCount);
             return values.Skip(index).First();
         }
 
@@ -103,23 +103,23 @@ namespace MarkSFrancis.Random
                 throw ErrorFactory.Default.ArgumentNull(nameof(values));
             }
 
-            var totalItems = values.Sum(v => v.Count);
+            var totalValues = values.Sum(v => v.Count);
 
-            if (totalItems == 0)
+            if (totalValues == 0)
             {
                 throw ErrorFactory.Default.CollectionEmpty(nameof(values));
             }
 
-            var indexToGet = Random.Next(0, totalItems);
+            var indexToGet = Random.Next(0, totalValues);
 
-            foreach (var items in values)
+            foreach (var value in values)
             {
-                if (indexToGet < items.Count)
+                if (indexToGet < value.Count)
                 {
-                    return items[indexToGet];
+                    return value[indexToGet];
                 }
 
-                indexToGet -= items.Count;
+                indexToGet -= value.Count;
             }
 
             throw new Exception("Program should have never reached this point");

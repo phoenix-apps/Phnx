@@ -1,6 +1,5 @@
-﻿using MarkSFrancis.Console;
-using MarkSFrancis.Drawing;
-using MarkSFrancis.Drawing.Shapes;
+﻿using MarkSFrancis.Collections.Extensions;
+using MarkSFrancis.Console;
 
 namespace SyntaxTest
 {
@@ -10,9 +9,9 @@ namespace SyntaxTest
 
         static void Main()
         {
-            Polygon p = new Square(new Point(0, 0), 5);
+            int[] items = {1, 2, 3};
 
-            Console.WriteLine(p.Area);
+            Console.WriteLine(items.IndexOf(0));
 
             Console.ReadKey();
         }

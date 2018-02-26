@@ -8,19 +8,19 @@ namespace MarkSFrancis.Collections
     public class OrderedList<T> : ICollection<T> where T : IComparable<T>
     {
         private const int DefaultCapacity = 4;
-        private readonly List<T> _items;
+        private readonly List<T> _values;
         private Comparison<T> _orderedBy;
 
         public Comparison<T> OrderedBy
         {
-            get => this._orderedBy;
+            get => _orderedBy;
             set
             {
                 if (value == null)
                 {
                     throw ErrorFactory.Default.ArgumentNull(nameof(value));
                 }
-                _items.Sort(value);
+                _values.Sort(value);
                 _orderedBy = value;
             }
         }
@@ -28,33 +28,33 @@ namespace MarkSFrancis.Collections
         public OrderedList()
         {
             _orderedBy = (x, y) => x.CompareTo(y);
-            _items = new List<T>(DefaultCapacity);
+            _values = new List<T>(DefaultCapacity);
         }
 
         public OrderedList(Comparison<T> sortFunc)
         {
             _orderedBy = sortFunc;
-            _items = new List<T>();
+            _values = new List<T>();
         }
 
         public OrderedList(int capacity)
         {
-            _items = new List<T>(capacity);
+            _values = new List<T>(capacity);
         }
 
         public OrderedList(int capacity, Comparison<T> sortFunc)
         {
-            _items = new List<T>(capacity);
+            _values = new List<T>(capacity);
             _orderedBy = sortFunc;
         }
 
         public T this[int index]
         {
-            get => _items[index];
-            private set => _items[index] = value;
+            get => _values[index];
+            private set => _values[index] = value;
         }
 
-        public int Count => _items.Count;
+        public int Count => _values.Count;
 
         public bool IsReadOnly => false;
 
@@ -64,14 +64,14 @@ namespace MarkSFrancis.Collections
             {
                 if (value == null)
                 {
-                    _items.Insert(0, value);
+                    _values.Insert(0, value);
                     return;
                 }
 
-                T compareTo = _items[_items.Count - 1];
+                T compareTo = _values[_values.Count - 1];
                 if (compareTo == null || _orderedBy(value, compareTo) >= 0)
                 {
-                    _items.Add(value);
+                    _values.Add(value);
                     return;
                 }
             }
@@ -82,35 +82,35 @@ namespace MarkSFrancis.Collections
             {
                 if (~index == Count)
                 {
-                    _items.Add(value);
+                    _values.Add(value);
                     return;
                 }
-                _items.Insert(~index, value);
+                _values.Insert(~index, value);
             }
             else
             {
-                _items.Insert(index, value);
+                _values.Insert(index, value);
             }
         }
 
         public void AddRange(IEnumerable<T> values)
         {
-            List<Tuple<int, T>> valueBuffer;
+            List<KeyValuePair<int, T>> valueBuffer;
 
             // Get where in the list to insert each new value
             {
                 var newValues = values.ToList();
                 newValues.Sort();
 
-                valueBuffer = new List<Tuple<int, T>>(newValues.Count);
+                valueBuffer = new List<KeyValuePair<int, T>>(newValues.Count);
 
                 foreach (T value in newValues)
                 {
-                    int insertAt = this._items.BinarySearch(value);
+                    int insertAt = _values.BinarySearch(value);
                     if (insertAt < 0)
                         insertAt = ~insertAt;
 
-                    valueBuffer.Add(new Tuple<int, T>(insertAt, value));
+                    valueBuffer.Add(new KeyValuePair<int, T>(insertAt, value));
                 }
             }
 
@@ -124,9 +124,9 @@ namespace MarkSFrancis.Collections
                 {
                     if (valuesInsertedCount < valueBuffer.Count)
                     {
-                        while (valueBuffer[valuesInsertedCount].Item1 == index)
+                        while (valueBuffer[valuesInsertedCount].Key == index)
                         {
-                            oldValuesQueue.Enqueue(valueBuffer[valuesInsertedCount].Item2);
+                            oldValuesQueue.Enqueue(valueBuffer[valuesInsertedCount].Value);
 
                             valuesInsertedCount++;
 
@@ -137,12 +137,12 @@ namespace MarkSFrancis.Collections
 
                     if (index < Count)
                     {
-                        oldValuesQueue.Enqueue(this._items[index]);
-                        this._items[index] = oldValuesQueue.Dequeue();
+                        oldValuesQueue.Enqueue(_values[index]);
+                        _values[index] = oldValuesQueue.Dequeue();
                     }
                     else
                     {
-                        this._items.Add(oldValuesQueue.Dequeue());
+                        _values.Add(oldValuesQueue.Dequeue());
                     }
                 }
             }
@@ -155,31 +155,31 @@ namespace MarkSFrancis.Collections
 
         public void Clear()
         {
-            _items.Clear();
+            _values.Clear();
         }
 
-        public bool Contains(T item)
+        public bool Contains(T value)
         {
-            return IndexOf(item) >= 0;
+            return IndexOf(value) >= 0;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            _items.CopyTo(array, arrayIndex);
+            _values.CopyTo(array, arrayIndex);
         }
 
-        public int IndexOf(T item)
+        public int IndexOf(T value)
         {
             // binary search using the ordered by function
             var defaultComparer = EqualityComparer<T>.Default;
 
-            var index = BinarySearch(0, _items.Count - 1);
+            var index = BinarySearch(0, _values.Count - 1);
 
-            while (!defaultComparer.Equals(_items[index], item))
+            while (!defaultComparer.Equals(_values[index], value))
             {
                 index++;
 
-                if (OrderedBy(item, _items[index]) != 0)
+                if (OrderedBy(value, _values[index]) != 0)
                 {
                     return ~index;
                 }
@@ -196,12 +196,12 @@ namespace MarkSFrancis.Collections
 
                 int mid = (left + right) / 2;
 
-                var orderResult = OrderedBy(_items[mid], item);
+                var orderResult = OrderedBy(_values[mid], value);
                 if (orderResult == 0)
                 {
                     // Could be more than one match. Check to see if there are any earlier in the array
                     var foundIndex = mid - 1;
-                    while (OrderedBy(_items[foundIndex], item) == 0)
+                    while (OrderedBy(_values[foundIndex], value) == 0)
                     {
                         --foundIndex;
                     }
@@ -217,31 +217,31 @@ namespace MarkSFrancis.Collections
             }
         }
 
-        public bool Remove(T item)
+        public bool Remove(T value)
         {
-            int index = IndexOf(item);
+            int index = IndexOf(value);
             if (index < 0)
             {
                 return false;
             }
 
-            _items.RemoveAt(index);
+            _values.RemoveAt(index);
             return true;
         }
 
         public void RemoveAt(int index)
         {
-            _items.RemoveAt(index);
+            _values.RemoveAt(index);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return _items.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _items.GetEnumerator();
+            return _values.GetEnumerator();
         }
 
         public override string ToString()

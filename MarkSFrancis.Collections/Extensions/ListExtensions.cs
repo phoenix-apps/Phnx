@@ -3,19 +3,22 @@ using System.Collections.Generic;
 
 namespace MarkSFrancis.Collections.Extensions
 {
+    /// <summary>
+    /// Extensions for <see cref="List{T}"/>
+    /// </summary>
     public static class ListExtensions
     {
-        public static void InsertRange<T>(this List<T> items, int startIndex, IEnumerable<T> itemsToInsert)
+        public static void InsertRange<T>(this List<T> values, int startIndex, IEnumerable<T> itemsToInsert)
         {
-            InsertRange(items, startIndex, itemsToInsert, null);
+            InsertRange(values, startIndex, itemsToInsert, null);
         }
 
-        public static void InsertRange<T>(this List<T> items, int startIndex, IEnumerable<T> itemsToInsert, int numberToInsert)
+        public static void InsertRange<T>(this List<T> values, int startIndex, IEnumerable<T> itemsToInsert, int numberToInsert)
         {
-            InsertRange(items, startIndex, itemsToInsert, (int?)numberToInsert);
+            InsertRange(values, startIndex, itemsToInsert, (int?)numberToInsert);
         }
 
-        private static void InsertRange<T>(List<T> items, int startIndex, IEnumerable<T> itemsToInsert, int? numberToInsert)
+        private static void InsertRange<T>(List<T> values, int startIndex, IEnumerable<T> itemsToInsert, int? numberToInsert)
         {
             Queue<T> buffer;
             if (numberToInsert.HasValue)
@@ -45,31 +48,31 @@ namespace MarkSFrancis.Collections.Extensions
                         }
                     }
 
-                    if (index < items.Count)
+                    if (index < values.Count)
                     {
-                        buffer.Enqueue(items[index]);
-                        items[index] = enumerator.Current;
+                        buffer.Enqueue(values[index]);
+                        values[index] = enumerator.Current;
                     }
                     else
                     {
-                        items.Add(enumerator.Current);
+                        values.Add(enumerator.Current);
                     }
 
                     ++valuesInserted;
                 }
             }
             
-            for (var curIndex = startIndex + valuesInserted; curIndex < items.Count; curIndex++)
+            for (var curIndex = startIndex + valuesInserted; curIndex < values.Count; curIndex++)
             {
-                // Move legacy items forward in list
+                // Move legacy values forward in list
 
-                buffer.Enqueue(items[curIndex]);
-                items[curIndex] = buffer.Dequeue();
+                buffer.Enqueue(values[curIndex]);
+                values[curIndex] = buffer.Dequeue();
             }
 
             while (buffer.Count > 0)
             {
-                items.Add(buffer.Dequeue());
+                values.Add(buffer.Dequeue());
             }
         }
     }

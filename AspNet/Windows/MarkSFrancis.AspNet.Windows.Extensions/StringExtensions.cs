@@ -2,6 +2,9 @@
 
 namespace MarkSFrancis.AspNet.Windows.Extensions
 {
+    /// <summary>
+    /// Extensions for <see cref="string"/>
+    /// </summary>
     public static class StringExtensions
     {
         /// <summary>

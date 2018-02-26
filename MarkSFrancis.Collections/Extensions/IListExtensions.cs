@@ -3,26 +3,29 @@ using System.Collections.Generic;
 
 namespace MarkSFrancis.Collections.Extensions
 {
+    /// <summary>
+    /// Extensions for <see cref="IList{T}"/>
+    /// </summary>
     public static class IListExtensions
     {
-        public static T Last<T>(this IList<T> items)
+        public static T Last<T>(this IList<T> values)
         {
-            if (items.Count == 0)
+            if (values.Count == 0)
             {
-                throw new IndexOutOfRangeException(nameof(items) + " is an empty " + nameof(IList<T>));
+                throw new IndexOutOfRangeException(nameof(values) + " is an empty " + nameof(IList<T>));
             }
 
-            return items[items.Count - 1];
+            return values[values.Count - 1];
         }
 
-        public static IList<T> Fill<T>(this IList<T> items, T fillWith)
+        public static IList<T> Fill<T>(this IList<T> values, T fillWith)
         {
-            for (int index = 0; index < items.Count; index++)
+            for (int index = 0; index < values.Count; index++)
             {
-                items[index] = fillWith;
+                values[index] = fillWith;
             }
 
-            return items;
+            return values;
         }
 
         public static bool IsEqualToRange<T>(this IList<T> list, IList<T> rangeToCompare)

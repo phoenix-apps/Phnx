@@ -37,7 +37,7 @@ namespace MarkSFrancis
         }
 
         /// <summary>
-        /// Create an <see cref="ArgumentNullException" /> with the name of the parameter that causes this exception
+        /// Create an <see cref="ArgumentNullException" /> with the name of the parameter that caused this exception
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the exception</param>
         public ArgumentNullException ArgumentNull(string paramName)
@@ -46,13 +46,94 @@ namespace MarkSFrancis
         }
 
         /// <summary>
-        /// Create an <see cref="ArgumentNullException" /> with a specified error message and the name of the parameter that causes this exception
+        /// Create an <see cref="ArgumentNullException" /> with a specified error message and the name of the parameter that caused this exception
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the exception</param>
         /// <param name="message">A message that describes the error</param>
         public ArgumentNullException ArgumentNull(string paramName, string message)
         {
             return new ArgumentNullException(paramName, message);
+        }
+
+        /// <summary>
+        /// Create an <see cref="ArgumentOutOfRangeException" /> with the name of the parameter that caused this exception
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception</param>
+        public ArgumentOutOfRangeException ArgumentOutOfRange(string paramName)
+        {
+            return new ArgumentOutOfRangeException(paramName);
+        }
+
+        /// <summary>
+        /// Create an <see cref="ArgumentOutOfRangeException" /> with a specified error message and the name of the parameter that caused this exception
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception</param>
+        /// <param name="message">A message that describes the error</param>
+        public ArgumentOutOfRangeException ArgumentOutOfRange(string paramName, string message)
+        {
+            return new ArgumentOutOfRangeException(paramName, message);
+        }
+
+        /// <summary>
+        /// Create an <see cref="ArgumentOutOfRangeException" /> for an argument that cannot be less than zero, but was passed with a negative value
+        /// </summary>
+        /// <param name="paramName">The name of the parameter that caused the exception</param>
+        public ArgumentOutOfRangeException ArgumentLessThanZero(string paramName)
+        {
+            return new ArgumentOutOfRangeException(paramName, paramName + " cannot be less than zero");
+        }
+
+        /// <summary>
+        /// Create an <see cref="IndexOutOfRangeException" /> for an indexer that is outside a collection of values
+        /// </summary>
+        /// <param name="indexerName">The name of the indexer that caused the exception</param>
+        public IndexOutOfRangeException IndexOutOfRange(string indexerName)
+        {
+            return new IndexOutOfRangeException(indexerName + " references an index outside the collection of values");
+        }
+
+        /// <summary>
+        /// Create an <see cref="IndexOutOfRangeException" /> for an indexer that is outside a collection of values
+        /// </summary>
+        /// <param name="indexerName">The name of the indexer that caused the exception</param>
+        /// <param name="indexerValue">The value of the indexer</param>
+        public IndexOutOfRangeException IndexOutOfRange(string indexerName, int indexerValue)
+        {
+            return new IndexOutOfRangeException($"{indexerName} references an index ({indexerValue}) outside the collection of values");
+        }
+
+        /// <summary>
+        /// Create an <see cref="IndexOutOfRangeException" /> for an indexer that is outside a collection of values
+        /// </summary>
+        /// <param name="indexerName">The name of the indexer that caused the exception</param>
+        /// <param name="indexerValue">The value of the indexer</param>
+        /// <param name="collectionValuesCount">The number of values in the collection that was being accessed by the indexer</param>
+        public IndexOutOfRangeException IndexOutOfRange(string indexerName, int indexerValue, int collectionValuesCount)
+        {
+            return new IndexOutOfRangeException($"{indexerName} references an index ({indexerValue}) outside the collection of values (number of values in the collection: {collectionValuesCount})");
+        }
+
+        /// <summary>
+        /// Create an <see cref="IndexOutOfRangeException" /> for an indexer that is outside a collection of values
+        /// </summary>
+        /// <param name="indexerName">The name of the indexer that caused the exception</param>
+        /// <param name="indexerValue">The value of the indexer</param>
+        /// <param name="collectionName">The name of the collection of values that was being accessed by the indexer</param>
+        public IndexOutOfRangeException IndexOutOfRange(string indexerName, int indexerValue, string collectionName)
+        {
+            return new IndexOutOfRangeException($"{indexerName} references an index ({indexerValue}) outside the collection of values (collection name: {collectionName})");
+        }
+
+        /// <summary>
+        /// Create an <see cref="IndexOutOfRangeException" /> for an indexer that is outside a collection of values
+        /// </summary>
+        /// <param name="indexerName">The name of the indexer that caused the exception</param>
+        /// <param name="indexerValue">The value of the indexer</param>
+        /// <param name="collectionName">The name of the collection of values that was being accessed by the indexer</param>
+        /// <param name="collectionValuesCount">The number of values in the collection that was being accessed by the indexer</param>
+        public IndexOutOfRangeException IndexOutOfRange(string indexerName, int indexerValue, string collectionName, int collectionValuesCount)
+        {
+            return new IndexOutOfRangeException($"{indexerName} references an index ({indexerValue}) outside the collection of values (collection name: {collectionName}, number of values in the collection: {collectionValuesCount})");
         }
 
         /// <summary>

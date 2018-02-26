@@ -20,7 +20,7 @@ namespace MarkSFrancis.Extensions.Time
     }
     
     /// <summary>
-    /// Extension methods for <see cref="TimeSpan"/> objects
+    /// Extensions for <see cref="TimeSpan"/>
     /// </summary>
     public static class TimeSpanExtensions
     {

@@ -38,6 +38,9 @@ namespace MarkSFrancis.Collections
         }
     }
 
+    /// <summary>
+    /// Extensions for <see cref="IEnumerator{T}"/>
+    /// </summary>
     public static class IEnumeratorExtensions
     {
         public static EnumerableEnumerator<T> ToEnumerable<T>(this IEnumerator<T> enumerator)

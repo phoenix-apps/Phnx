@@ -4,7 +4,7 @@ using MarkSFrancis.Security.Interfaces;
 namespace MarkSFrancis.Security.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="IHash"/>, <see cref="IHashWithSalt"/> and <see cref="IHashWithoutSalt"/>
+    /// Extension for <see cref="IHashWithSalt"/> and <see cref="IHashWithoutSalt"/>
     /// </summary>
     public static class IHashExtensions
     {

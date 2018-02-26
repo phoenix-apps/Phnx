@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace MarkSFrancis.Extensions
 {
     /// <summary>
-    /// Extension methods for the base type <see cref="string"/>
+    /// Extensions for <see cref="string"/>
     /// </summary>
     public static class StringExtensions
     {

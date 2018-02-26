@@ -3,7 +3,7 @@
 namespace MarkSFrancis.Security.Extensions
 {
     /// <summary>
-    /// Adds new errors onto the <see cref="ErrorFactory"/>
+    /// Extensions for <see cref="ErrorFactory"/>
     /// </summary>
     public static class ErrorFactoryExtensions
     {

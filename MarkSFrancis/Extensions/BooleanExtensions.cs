@@ -1,7 +1,7 @@
 ﻿namespace MarkSFrancis.Extensions
 {
     /// <summary>
-    /// Extension methods for the base type <see cref="bool"/>
+    /// Extensions for <see cref="bool"/>
     /// </summary>
     public static class BooleanExtensions
     {

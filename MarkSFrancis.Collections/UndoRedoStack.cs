@@ -7,7 +7,7 @@ namespace MarkSFrancis.Collections
 {
     public class UndoRedoStack<T>
     {
-        public T BaseItem { get; set; }
+        public T BaseValue { get; set; }
 
         private List<UndoRedoAction> MyStack { get; set; }
 
@@ -19,7 +19,7 @@ namespace MarkSFrancis.Collections
 
         public UndoRedoStack(T context)
         {
-            BaseItem = context;
+            BaseValue = context;
             MyStack = new List<UndoRedoAction>();
             ActiveStackIndex = 0;
         }
@@ -31,7 +31,7 @@ namespace MarkSFrancis.Collections
                 MyStack = MyStack.CopyRange(0, ActiveStackIndex).ToList();
             }
 
-            actionToPerform(BaseItem);
+            actionToPerform(BaseValue);
 
             MyStack.Add(new UndoRedoAction(actionToPerform, undoAction, taskDescription, taskDescription));
 
@@ -45,7 +45,7 @@ namespace MarkSFrancis.Collections
                 MyStack = MyStack.CopyRange(0, ActiveStackIndex).ToList();
             }
 
-            actionToPerform(BaseItem);
+            actionToPerform(BaseValue);
 
             MyStack.Add(new UndoRedoAction(actionToPerform, undoAction, undoDescription, redoDescription));
 
@@ -55,7 +55,7 @@ namespace MarkSFrancis.Collections
         public void Undo()
         {
             var actionToUndo = MyStack[ActiveStackIndex];
-            actionToUndo.Undo(BaseItem);
+            actionToUndo.Undo(BaseValue);
 
             ActiveStackIndex--;
         }
@@ -63,7 +63,7 @@ namespace MarkSFrancis.Collections
         public void Redo()
         {
             var actionToRedo = MyStack[ActiveStackIndex];
-            actionToRedo.Redo(BaseItem);
+            actionToRedo.Redo(BaseValue);
 
             ActiveStackIndex++;
         }
@@ -102,10 +102,10 @@ namespace MarkSFrancis.Collections
 
             public UndoRedoAction(Action<T> redo, Action<T> undo, string undoDescription, string redoDescription)
             {
-                this.Redo = redo;
-                this.Undo = undo;
-                this.UndoDescription = undoDescription;
-                this.RedoDescription = redoDescription;
+                Redo = redo;
+                Undo = undo;
+                UndoDescription = undoDescription;
+                RedoDescription = redoDescription;
             }
         }
     }
