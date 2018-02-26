@@ -26,33 +26,33 @@ namespace MarkSFrancis.IO.Json.Streams
 
         public bool CloseBaseStreamWhenDisposed { get; set; }
 
-        public virtual T Read<T>()
+        public virtual T ReadObject<T>()
         {
             var loadedValue = ReadJObject();
 
-            return loadedValue.ToObject<T>();
+            return JObjectConverter.ToObject<T>(loadedValue);
         }
 
-        public virtual Dictionary<string, string> ReadAndUnwrap()
+        public virtual Dictionary<string, string> ReadPropertyDictionary()
         {
             var loadedValue = ReadJObject();
 
-            return Unwrap(loadedValue);
+            return JObjectConverter.ToPropertyDictionary(loadedValue);
         }
 
-        protected JObject ReadJObject()
+        public virtual JObject ReadJObject()
         {
             return JObject.Load(Reader);
         }
 
-        protected Dictionary<string, string> Unwrap(JObject jObject)
+        public virtual string ReadJson()
         {
-            return JsonWrapper.Unwrap(jObject);
+            return JObjectConverter.ToJson(JObject.Load(Reader));
         }
 
         public bool ReachedEnd => TextReader.ReachedEnd();
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Reader.Close();
 

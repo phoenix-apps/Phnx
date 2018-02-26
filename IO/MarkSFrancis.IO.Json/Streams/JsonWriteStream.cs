@@ -25,31 +25,33 @@ namespace MarkSFrancis.IO.Json.Streams
 
         public bool CloseBaseStreamWhenDisposed { get; set; }
 
-        public void Write(object o)
+        public virtual void WriteJson(string json)
         {
-            var newObj = JsonConverter.ToJObject(o);
+            var newObj = JObjectConverter.FromJson(json);
 
             WriteJObject(newObj);
         }
 
-        public void WrapAndWrite(Dictionary<string, string> data)
+        public virtual void WriteObject(object o)
         {
-            var loadedValue = Wrap(data);
+            var newObj = JObjectConverter.FromObject(o);
+
+            WriteJObject(newObj);
+        }
+
+        public virtual void WritePropertyDictionary(Dictionary<string, string> data)
+        {
+            var loadedValue = JObjectConverter.FromPropertyDictionary(data);
 
             WriteJObject(loadedValue);
         }
 
-        protected JObject Wrap(Dictionary<string, string> data)
-        {
-            return JsonWrapper.Wrap(data);
-        }
-
-        protected void WriteJObject(JObject jObject)
+        public virtual void WriteJObject(JObject jObject)
         {
             jObject.WriteTo(Writer);
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             Writer.Flush();
 

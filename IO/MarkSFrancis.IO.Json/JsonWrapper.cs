@@ -5,17 +5,17 @@ using Newtonsoft.Json.Linq;
 
 namespace MarkSFrancis.IO.Json
 {
-    public static class JsonWrapper
+    internal static class JsonWrapper
     {
+        public const string ChildPropertyDelimiter = ".";
+
         public static Dictionary<string, string> Unwrap(string json)
         {
-            var jObject = JsonConverter.ToJObject(json);
+            var jObject = JObjectConverter.FromJson(json);
 
             return Unwrap(jObject);
         }
-
-        public const string ChildPropertyDelimiter = ".";
-
+        
         public static Dictionary<string, string> Unwrap(JObject obj, string baseSource = "")
         {
             Dictionary<string, string> retValue = new Dictionary<string, string>();
@@ -49,7 +49,7 @@ namespace MarkSFrancis.IO.Json
             Dictionary<string, JObject> heirarchy = new Dictionary<string, JObject>();
             foreach (var dataProp in sortedData)
             {
-                if (!dataProp.Key.Contains("."))
+                if (!dataProp.Key.Contains(ChildPropertyDelimiter))
                 {
                     newJObj.Add(dataProp.Key, dataProp.Value);
                 }
@@ -65,7 +65,7 @@ namespace MarkSFrancis.IO.Json
 
         private static void AppendToHeirarchy(JObject baseObject, Dictionary<string, JObject> heirarchySoFar, string key, string value)
         {
-            string parentKey = key.Substring(0, key.LastIndexOf(".", StringComparison.Ordinal));
+            string parentKey = key.Substring(0, key.LastIndexOf(ChildPropertyDelimiter, StringComparison.Ordinal));
 
             if (!heirarchySoFar.ContainsKey(parentKey))
             {
@@ -108,7 +108,7 @@ namespace MarkSFrancis.IO.Json
             }
 
             // Append to parent jObject
-            heirarchySoFar[parentKey].Add(key.Substring(key.LastIndexOf('.') + 1), value);
+            heirarchySoFar[parentKey].Add(key.Substring(key.LastIndexOf(ChildPropertyDelimiter, StringComparison.Ordinal) + 1), value);
         }
 
         private static string GetJObjectKeyNameFromFullyQualifiedName(string fullyQualifiedName)
