@@ -1,4 +1,4 @@
-﻿namespace MarkSFrancis.Geometry.Shapes
+﻿namespace MarkSFrancis.Drawing.Shapes
 {
     public class Triangle : Polygon
     {

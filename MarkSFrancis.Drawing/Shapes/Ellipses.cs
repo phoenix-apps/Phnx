@@ -1,7 +1,7 @@
 ﻿using System;
-using MarkSFrancis.Geometry.Interfaces;
+using MarkSFrancis.Drawing.Interfaces;
 
-namespace MarkSFrancis.Geometry.Shapes
+namespace MarkSFrancis.Drawing.Shapes
 {
     public class Ellipse : IShape
     {

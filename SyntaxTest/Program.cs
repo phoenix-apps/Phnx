@@ -1,6 +1,6 @@
 ﻿using MarkSFrancis.Console;
-using MarkSFrancis.Geometry;
-using MarkSFrancis.Geometry.Shapes;
+using MarkSFrancis.Drawing;
+using MarkSFrancis.Drawing.Shapes;
 
 namespace SyntaxTest
 {

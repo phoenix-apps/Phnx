@@ -1,4 +1,4 @@
-﻿namespace MarkSFrancis.Geometry.Interfaces
+﻿namespace MarkSFrancis.Drawing.Interfaces
 {
     interface IShape
     {

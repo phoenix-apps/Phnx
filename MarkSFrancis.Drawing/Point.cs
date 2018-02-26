@@ -1,4 +1,4 @@
-﻿namespace MarkSFrancis.Geometry
+﻿namespace MarkSFrancis.Drawing
 {
     public struct Point
     {
