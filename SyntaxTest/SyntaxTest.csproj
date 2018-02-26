@@ -18,6 +18,7 @@
     <ProjectReference Include="..\MarkSFrancis.Configuration\MarkSFrancis.Configuration.csproj" />
     <ProjectReference Include="..\MarkSFrancis.Console\MarkSFrancis.Console.csproj" />
     <ProjectReference Include="..\MarkSFrancis.Data\MarkSFrancis.Data.csproj" />
+    <ProjectReference Include="..\MarkSFrancis.Drawing\MarkSFrancis.Drawing.csproj" />
     <ProjectReference Include="..\MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj" />
     <ProjectReference Include="..\MarkSFrancis.Security\MarkSFrancis.Security.csproj" />
     <ProjectReference Include="..\MarkSFrancis\MarkSFrancis.csproj" />

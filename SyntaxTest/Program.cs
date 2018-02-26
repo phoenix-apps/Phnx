@@ -1,5 +1,6 @@
-﻿using MarkSFrancis;
-using MarkSFrancis.Console;
+﻿using MarkSFrancis.Console;
+using MarkSFrancis.Geometry;
+using MarkSFrancis.Geometry.Shapes;
 
 namespace SyntaxTest
 {
@@ -9,11 +10,9 @@ namespace SyntaxTest
 
         static void Main()
         {
-            var converter = ConverterHelpers.GetDefaultConverter<string, int>();
+            Polygon p = new Square(new Point(0, 0), 5);
 
-            int converted = converter("1");
-
-            Console.WriteLine(converted);
+            Console.WriteLine(p.Area);
 
             Console.ReadKey();
         }

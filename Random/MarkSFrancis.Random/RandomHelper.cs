@@ -68,6 +68,8 @@ namespace MarkSFrancis.Random
             return new RandomDateTimeGenerator().Get(from, to);
         }
 
+        #endregion
+
         public static T OneOf<T>(T value, T value2, params T[] additionalValues)
         {
             var index = Random.Next(2 + additionalValues.Length);
@@ -122,7 +124,5 @@ namespace MarkSFrancis.Random
 
             throw new Exception("Program should have never reached this point");
         }
-
-        #endregion
     }
 }
