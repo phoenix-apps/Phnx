@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\MarkSFrancis.Windows.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,9 +50,15 @@
     <Compile Include="Extensions\Reflection\MemberInfoExtensions.cs" />
     <Compile Include="Extensions\Reflection\ObjectExtensions.cs" />
     <Compile Include="Extensions\Reflection\PropertyInfoExtensions.cs" />
-    <Compile Include="Extensions\Reflection\SerializeExtensions.cs" />
+    <Compile Include="Serialization\BinarySerializer.cs" />
+    <Compile Include="Serialization\Interfaces\ISerializer.cs" />
+    <Compile Include="Serialization\XmlSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\IO\MarkSFrancis.IO\MarkSFrancis.IO.csproj">
+      <Project>{DDCC1ECC-93ED-41FD-BEE0-8FAD52D50004}</Project>
+      <Name>MarkSFrancis.IO</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\MarkSFrancis.Collections\MarkSFrancis.Collections.csproj">
       <Project>{7e88d1f4-b07e-4e23-9f1b-a009911021ea}</Project>
       <Name>MarkSFrancis.Collections</Name>

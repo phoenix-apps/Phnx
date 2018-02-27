@@ -7,7 +7,17 @@ namespace MarkSFrancis.IO.Factory
 {
     public class MemoryStreamFactory
     {
-        protected readonly Encoding DefaultEncoding = Encoding.UTF8;
+        public Encoding DefaultEncoding { get; }
+
+        public MemoryStreamFactory()
+        {
+            DefaultEncoding = Encoding.UTF8;
+        }
+
+        public MemoryStreamFactory(Encoding defaultEncoding)
+        {
+            DefaultEncoding = defaultEncoding;
+        }
 
         public MemoryStream Create()
         {
