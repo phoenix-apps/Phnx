@@ -1,215 +1,72 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using MarkSFrancis.Collections.Extensions;
 
 namespace MarkSFrancis.Collections.Tree
 {
-    public class Tree<T> : ICollection<T>
+    /// <summary>
+    /// Manages a tree data structure of values, with each node having a many-to-many relationship with other nodes
+    /// </summary>
+    /// <typeparam name="T">The type of data to store in the tree</typeparam>
+    public class Tree<T>
     {
-        private List<TreeNode<T>> AllNodes { get; }
+        private readonly List<TreeNode<T>> _topNodes;
+        
+        /// <summary>
+        /// Get the top most nodes in the tree
+        /// </summary>
+        public IEnumerable<TreeNode<T>> TopNodes => _topNodes;
 
-        public T this[int index] => AllNodes[index].Value;
-
-        public TreeNode<T> this[T value] => AllNodes.First(x => x.Value.Equals(value));
-
+        /// <summary>
+        /// Create a new empty <see cref="Tree{T}"/>
+        /// </summary>
         public Tree()
         {
-            AllNodes = new List<TreeNode<T>>();
+            _topNodes = new List<TreeNode<T>>();
         }
 
-        public void Add(T value)
+        /// <summary>
+        /// Create a new <see cref="Tree{T}"/> with values as the top most nodes in the tree
+        /// </summary>
+        /// <param name="topNodes"></param>
+        public Tree(IEnumerable<T> topNodes)
         {
-            TreeNode<T> newNode = new TreeNode<T>(value);
-            AllNodes.Add(newNode);
+            _topNodes = new List<TreeNode<T>>(topNodes.Select(n => new TreeNode<T>(n)));
         }
 
-        public TreeNode<T> Add(T value, TreeNode<T> parentNode)
-        {
-            TreeNode<T> newNode = new TreeNode<T>(value);
-            AllNodes.Add(newNode);
-
-            parentNode.ImmediateChildren.Add(newNode);
-
-            return newNode;
-        }
-
-        public void Add(TreeNode<T> node, TreeNode<T> parentNode)
-        {
-            AllNodes.Add(node);
-
-            parentNode.ImmediateChildren.Add(node);
-        }
-
-        private void Clean()
-        {
-            foreach (TreeNode<T> node in TopNodes)
-            {
-                foreach (TreeNode<T> orphanedNode in node.AllChildren.Where(x => !AllNodes.Contains(x)))
-                {
-                    // Attached to a parent, but is deleted
-                    Remove(orphanedNode);
-                }
-            }
-        }
-
-        public int IndexOf(TreeNode<T> node)
-        {
-            for (int index = 0; index < AllNodes.Count; index++)
-            {
-                if (AllNodes[index] == node)
-                {
-                    return index;
-                }
-            }
-
-            return -1;
-        }
-
-        public void Remove(TreeNode<T> node)
-        {
-            foreach (TreeNode<T> treeNode in AllNodes)
-            {
-                treeNode.ImmediateChildren.RemoveAll(x => x == node);
-            }
-
-            AllNodes.RemoveAll(x => x == node);
-        }
-
-        public void RemoveAt(int index)
-        {
-            TreeNode<T> node = AllNodes[index];
-
-            foreach (TreeNode<T> treeNode in AllNodes)
-            {
-                treeNode.ImmediateChildren.RemoveAll(x => x == node);
-            }
-
-            AllNodes.RemoveAt(index);
-        }
-
-        public IEnumerable<TreeNode<T>> ParentsOf(TreeNode<T> node)
-        {
-            return AllNodes.Where(x => x.ImmediateChildren.Contains(node));
-        }
-
-        public IEnumerable<TreeNode<T>> TopNodes
+        /// <summary>
+        /// Get all data nodes in the tree
+        /// </summary>
+        public IEnumerable<TreeNode<T>> AllNodes
         {
             get
             {
-                List<TreeNode<T>> topNodes = new List<TreeNode<T>>();
-                foreach (TreeNode<T> treeNode in AllNodes)
-                {
-                    if (!AllNodes.Any(x => x.ImmediateChildren.Contains(treeNode)))
-                    {
-                        topNodes.Add(treeNode);
-                    }
-                }
-
-                return topNodes;
-            }
-        }
-
-        public int MaxGenerations
-        {
-            get
-            {
-                int maxSoFar = 0;
-                foreach (TreeNode<T> treeNode in AllNodes)
-                {
-                    maxSoFar = Math.Max(NumberOfChildGenerations(treeNode), maxSoFar);
-                }
-
-                return maxSoFar;
-            }
-        }
-
-        public int Count => AllNodes.Count;
-
-        public bool IsReadOnly => false;
-
-        private int NumberOfChildGenerations(TreeNode<T> node)
-        {
-            int maxSoFar = 0;
-            foreach (TreeNode<T> nodeChild in node.ImmediateChildren)
-            {
-                maxSoFar = Math.Max(maxSoFar, NumberOfChildGenerations(node));
-            }
-
-            return maxSoFar + 1;
-        }
-
-        public void Clear() => AllNodes.Clear();
-
-        public bool Contains(T value) => AllNodes.Any(x => (object)x.Value == (object)value);
-
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            if (array.Length + arrayIndex < AllNodes.Count)
-            {
-                throw new IndexOutOfRangeException(nameof(arrayIndex));
-            }
-
-            for (int index = arrayIndex; index - arrayIndex < AllNodes.Count; index++)
-            {
-                array[index] = AllNodes[index - arrayIndex].Value;
+                var allNodeRelationships = TopNodes.Flatten(TopNodes.Select(n => n.AllDescendants));
+                return allNodeRelationships.DistinctBy(rel => rel);
             }
         }
 
         /// <summary>
-        /// Removes the first occurance of a value from the tree
+        /// Get the total number of relationships between nodes
+        /// </summary>
+        public int TotalNodeRelationships => _topNodes.Count + TopNodes.Sum(n => n.AllDescendants.Count());
+
+        /// <summary>
+        /// Get the total number of data nodes in the tree
+        /// </summary>
+        public int TotalNodes => AllNodes.Count();
+
+        /// <summary>
+        /// Add a new top node to the tree
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool Remove(T value)
+        public TreeNode<T> AddTopNode(T value)
         {
-            int count = AllNodes.Count;
-            foreach (TreeNode<T> nodeToRemove in AllNodes.Where(x => (object)x.Value == (object)value))
-            {
-                Remove(nodeToRemove);
-                if (count != AllNodes.Count)
-                {
-                    return true;
-                }
-            }
+            var newNode = new TreeNode<T>(value);
+            _topNodes.Add(newNode);
 
-            return false;
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            foreach (TreeNode<T> treeNode in AllNodes)
-            {
-                yield return treeNode.Value;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public override string ToString()
-        {
-            StringBuilder returnString = new StringBuilder();
-            foreach (TreeNode<T> topNode in TopNodes)
-            {
-                returnString.AppendLine(topNode.Value.ToString());
-
-                WriteChildrenOf(topNode, 1, returnString);
-            }
-
-            return returnString.ToString();
-        }
-
-        private void WriteChildrenOf(TreeNode<T> node, int levelsDeep, StringBuilder stringBuilder)
-        {
-            foreach (TreeNode<T> nodeImmediateChild in node.ImmediateChildren)
-            {
-                stringBuilder.AppendLine(new string('\t', levelsDeep) + nodeImmediateChild.Value);
-                WriteChildrenOf(nodeImmediateChild, levelsDeep + 1, stringBuilder);
-            }
+            return newNode;
         }
     }
 }
