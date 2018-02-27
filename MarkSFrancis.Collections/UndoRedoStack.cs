@@ -1,106 +1,123 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MarkSFrancis.Collections.Extensions;
 
 namespace MarkSFrancis.Collections
 {
-    public class UndoRedoStack<T>
+    /// <summary>
+    /// Provides a way to manage undoing and redoing actions
+    /// </summary>
+    public class UndoRedoStack
     {
-        public T BaseValue { get; set; }
+        private Stack<UndoRedoAction> UndoActions { get; }
 
-        private List<UndoRedoAction> MyStack { get; set; }
+        private Stack<UndoRedoAction> RedoActions { get; }
 
-        private int ActiveStackIndex { get; set; }
+        /// <summary>
+        /// Whether there's an undo operation available
+        /// </summary>
+        public bool UndoAvailable => UndoActions.Count > 0;
 
-        public bool UndoAvailable => ActiveStackIndex > 0;
+        /// <summary>
+        /// Whether there's a redo operation available
+        /// </summary>
+        public bool RedoAvailable => RedoActions.Count > 0;
 
-        public bool RedoAvailable => ActiveStackIndex < MyStack.Count;
-
-        public UndoRedoStack(T context)
+        /// <summary>
+        /// Create a new stack
+        /// </summary>
+        public UndoRedoStack()
         {
-            BaseValue = context;
-            MyStack = new List<UndoRedoAction>();
-            ActiveStackIndex = 0;
+            UndoActions = new Stack<UndoRedoAction>();
+            RedoActions = new Stack<UndoRedoAction>();
         }
 
-        public void PerformNewAction(Action<T> actionToPerform, Action<T> undoAction, string taskDescription = "")
+        /// <summary>
+        /// A new action has been performed that should be added to the stack
+        /// </summary>
+        /// <param name="undoAction">The action to be returned when <see cref="Undo"/> is called for this entry</param>
+        /// <param name="redoAction">The action to be returned when <see cref="Redo"/> is called for this entry</param>
+        /// <param name="actionDescription">The description of the action</param>
+        /// <param name="clearRedo">Whether to clear all awaiting redo tasks</param>
+        public void NewAction(Action undoAction, Action redoAction, string actionDescription = "", bool clearRedo = true)
         {
-            while (MyStack.Count >= ActiveStackIndex)
+            if (clearRedo)
             {
-                MyStack = MyStack.CopyRange(0, ActiveStackIndex).ToList();
+                RedoActions.Clear();
             }
 
-            actionToPerform(BaseValue);
-
-            MyStack.Add(new UndoRedoAction(actionToPerform, undoAction, taskDescription, taskDescription));
-
-            ActiveStackIndex++;
+            UndoActions.Push(new UndoRedoAction(redoAction, undoAction, actionDescription, actionDescription));
         }
 
-        public void PerformNewAction(Action<T> actionToPerform, Action<T> undoAction, string undoDescription, string redoDescription)
+        /// <summary>
+        /// A new action has been performed that should be added to the stack
+        /// </summary>
+        /// <param name="undoAction">The action to be returned when <see cref="Undo"/> is called for this entry</param>
+        /// <param name="redoAction">The action to be returned when <see cref="Redo"/> is called for this entry</param>
+        /// <param name="undoActionDescription">The description of the undo action</param>
+        /// <param name="redoActionDescription">The description of the redo action</param>
+        /// <param name="clearRedo">Whether to clear all awaiting redo tasks</param>
+        public void NewAction(Action undoAction, Action redoAction, string undoActionDescription, string redoActionDescription, bool clearRedo = true)
         {
-            while (MyStack.Count > ActiveStackIndex)
+            if (clearRedo)
             {
-                MyStack = MyStack.CopyRange(0, ActiveStackIndex).ToList();
+                RedoActions.Clear();
             }
 
-            actionToPerform(BaseValue);
-
-            MyStack.Add(new UndoRedoAction(actionToPerform, undoAction, undoDescription, redoDescription));
-
-            ActiveStackIndex++;
+            UndoActions.Push(new UndoRedoAction(redoAction, undoAction, undoActionDescription, redoActionDescription));
         }
 
-        public void Undo()
+        /// <summary>
+        /// Get the next undo action, and move it to the redo collection
+        /// </summary>
+        /// <returns>The next undo action</returns>
+        public Action Undo()
         {
-            var actionToUndo = MyStack[ActiveStackIndex];
-            actionToUndo.Undo(BaseValue);
-
-            ActiveStackIndex--;
+            var actionToUndo = UndoActions.Pop();
+            RedoActions.Push(actionToUndo);
+            return actionToUndo.Undo;
         }
 
-        public void Redo()
+        /// <summary>
+        /// Get the next redo action, and move it to the undo collection
+        /// </summary>
+        /// <returns>The next redo action</returns>
+        public Action Redo()
         {
-            var actionToRedo = MyStack[ActiveStackIndex];
-            actionToRedo.Redo(BaseValue);
-
-            ActiveStackIndex++;
+            var actionToRedo = RedoActions.Pop();
+            UndoActions.Push(actionToRedo);
+            return actionToRedo.Redo;
         }
 
-        public string[] GetUndoTaskDescriptions()
+        /// <summary>
+        /// Get all the awaiting undo task descriptions
+        /// </summary>
+        /// <returns>A collection of the undo task descriptions</returns>
+        public IEnumerable<string> GetUndoTaskDescriptions()
         {
-            string[] stackDescriptions = new string[ActiveStackIndex];
-            for (int index = 0; index < ActiveStackIndex; index++)
-            {
-                stackDescriptions[index] = MyStack[index].UndoDescription;
-            }
-
-            return stackDescriptions;
+            return UndoActions.Select(a => a.UndoDescription);
         }
 
-        public string[] GetRedoTaskDescriptions()
+        /// <summary>
+        /// Get all the awaiting redo task descriptions
+        /// </summary>
+        /// <returns>A collection of the redo task descriptions</returns>
+        public IEnumerable<string> GetRedoTaskDescriptions()
         {
-            string[] stackDescriptions = new string[MyStack.Count - ActiveStackIndex];
-            for (int index = 0; index < MyStack.Count - ActiveStackIndex; index++)
-            {
-                stackDescriptions[index] = MyStack[ActiveStackIndex + index].RedoDescription;
-            }
-
-            return stackDescriptions;
+            return RedoActions.Select(a => a.RedoDescription);
         }
 
         private class UndoRedoAction
         {
-            public Action<T> Redo { get; }
+            public Action Redo { get; }
 
-            public Action<T> Undo { get; }
+            public Action Undo { get; }
 
             public string UndoDescription { get; }
 
             public string RedoDescription { get; }
 
-            public UndoRedoAction(Action<T> redo, Action<T> undo, string undoDescription, string redoDescription)
+            public UndoRedoAction(Action redo, Action undo, string undoDescription, string redoDescription)
             {
                 Redo = redo;
                 Undo = undo;

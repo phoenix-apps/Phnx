@@ -14,7 +14,14 @@ namespace MarkSFrancis.Configuration
     /// </summary>
     public class AppConfig : IReadOnlyDictionary<string, string>
     {
+        /// <summary>
+        /// The Application Settings collection
+        /// </summary>
         protected NameValueCollection AppSettings { get; }
+
+        /// <summary>
+        /// The Connection Strings collection
+        /// </summary>
         protected ConnectionStringSettingsCollection ConnectionStrings { get; }
 
         /// <summary>
