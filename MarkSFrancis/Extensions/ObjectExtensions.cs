@@ -17,12 +17,8 @@ namespace MarkSFrancis.Extensions
         public static bool Is(this object o, Type t)
         {
             Type oType = o.GetType();
-            if (oType == t)
-            {
-                return true;
-            }
 
-            return t.IsAssignableFrom(oType);
+            return oType.Is(t);
         }
         
         /// <summary>
