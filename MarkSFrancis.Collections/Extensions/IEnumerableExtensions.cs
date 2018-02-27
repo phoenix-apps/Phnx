@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MarkSFrancis.Collections.Extensions
 {
@@ -114,11 +113,39 @@ namespace MarkSFrancis.Collections.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="values"/> or <paramref name="keySelector"/> is null</exception>
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> values, Func<TSource, TKey> keySelector)
         {
+            if (values == null)
+            {
+                ErrorFactory.Default.ArgumentNull(nameof(values));
+            }
+            else if (keySelector == null)
+            {
+                ErrorFactory.Default.ArgumentNull(nameof(keySelector));
+            }
+
             return values.GroupBy(keySelector).Select(x => x.First());
         }
 
-        public static T MaxBy<T, TKey>(this IEnumerable<T> enumerable, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        /// <summary>
+        /// Get the value from a collection of values with the maximum value by a key
+        /// </summary>
+        /// <typeparam name="T">The type of values in the collection</typeparam>
+        /// <typeparam name="TKey">The type of the key to use for comparison</typeparam>
+        /// <param name="enumerable">The collection of values to get the maximum value from</param>
+        /// <param name="keySelector">The selector to get the key to use for comparing values</param>
+        /// <returns>The value from the collection with the maximum key value</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> is null or <paramref name="keySelector"/> is null</exception>
+        /// <exception cref="IndexOutOfRangeException"><paramref name="enumerable"/> was empty</exception>
+        public static T MaxBy<T, TKey>(this IEnumerable<T> enumerable, Func<T, TKey> keySelector) where TKey : IComparable<TKey>
         {
+            if (enumerable == null)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(enumerable));
+            }
+            else if (keySelector == null)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(keySelector));
+            }
+
             T curMax = default(T);
             TKey curMaxValue = default(TKey);
             bool firstRun = true;
@@ -128,12 +155,12 @@ namespace MarkSFrancis.Collections.Extensions
                 if (firstRun)
                 {
                     curMax = value;
-                    curMaxValue = selector(value);
+                    curMaxValue = keySelector(value);
                     firstRun = false;
                     continue;
                 }
 
-                TKey valueMaxBy = selector(value);
+                TKey valueMaxBy = keySelector(value);
                 if (valueMaxBy.CompareTo(curMaxValue) == 1)
                 {
                     // New max
@@ -150,8 +177,27 @@ namespace MarkSFrancis.Collections.Extensions
             return curMax;
         }
 
-        public static T MinBy<T, TKey>(this IEnumerable<T> enumerable, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        /// <summary>
+        /// Get the value from a collection of values with the minimum value by a key
+        /// </summary>
+        /// <typeparam name="T">The type of values in the collection</typeparam>
+        /// <typeparam name="TKey">The type of the key to use for comparison</typeparam>
+        /// <param name="enumerable">The collection of values to get the minimum value from</param>
+        /// <param name="keySelector">The selector to get the key to use for comparing values</param>
+        /// <returns>The value from the collection with the minimum key value</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> is null or <paramref name="keySelector"/> is null</exception>
+        /// <exception cref="IndexOutOfRangeException"><paramref name="enumerable"/> was empty</exception>
+        public static T MinBy<T, TKey>(this IEnumerable<T> enumerable, Func<T, TKey> keySelector) where TKey : IComparable<TKey>
         {
+            if (enumerable == null)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(enumerable));
+            }
+            else if (keySelector == null)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(keySelector));
+            }
+
             T curMin = default(T);
             TKey curMinValue = default(TKey);
             bool firstRun = true;
@@ -161,12 +207,12 @@ namespace MarkSFrancis.Collections.Extensions
                 if (firstRun)
                 {
                     curMin = value;
-                    curMinValue = selector(value);
+                    curMinValue = keySelector(value);
                     firstRun = false;
                     continue;
                 }
 
-                TKey valueMinBy = selector(value);
+                TKey valueMinBy = keySelector(value);
                 if (valueMinBy.CompareTo(curMinValue) == -1)
                 {
                     // New max
@@ -183,8 +229,19 @@ namespace MarkSFrancis.Collections.Extensions
             return curMin;
         }
 
+        /// <summary>
+        /// Fill this enumerable with a value
+        /// </summary>
+        /// <param name="enumerable">The enumerable to fill</param>
+        /// <param name="fillWith">The value to fill the enumerable with</param>
+        /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> is <see langword="null"/></exception>
         public static IEnumerable<T> Fill<T>(this IEnumerable<T> enumerable, T fillWith)
         {
+            if (enumerable == null)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(enumerable));
+            }
+
             using (var enumerator = enumerable.GetEnumerator())
             {
                 while (enumerator.MoveNext())
@@ -194,8 +251,20 @@ namespace MarkSFrancis.Collections.Extensions
             }
         }
 
-        public static bool IsEqualToRange<T>(this IEnumerable<T> enumerable, IEnumerable<T> rangeToCompare)
+        /// <summary>
+        /// Gets whether two collections contain the same data using <see cref="EqualityComparer{T}.Default"/>
+        /// </summary>
+        /// <typeparam name="T">The type of values to compare</typeparam>
+        /// <param name="enumerable">The first collection to compare</param>
+        /// <param name="rangeToCompare">The collection to compare with</param>
+        /// <returns>Whether the two collections contain the same data. Returns <see langword="false"/> if either collection is <see langword="null"/></returns>
+        public static bool EqualsRange<T>(this IEnumerable<T> enumerable, IEnumerable<T> rangeToCompare)
         {
+            if (enumerable == null || rangeToCompare == null)
+            {
+                return false;
+            }
+
             var comparer = EqualityComparer<T>.Default;
 
             using (var enumerator1 = enumerable.GetEnumerator())
@@ -226,6 +295,13 @@ namespace MarkSFrancis.Collections.Extensions
             }
         }
 
+        /// <summary>
+        /// Converts this collection to a <see cref="List{T}"/> with a given default capacity. Useful if you know how many values will be in <paramref name="enumerable"/>
+        /// </summary>
+        /// <typeparam name="T">The type of values in the collection</typeparam>
+        /// <param name="enumerable">The collection of values</param>
+        /// <param name="capacity">The capacity to assign to the new <see cref="List{T}"/></param>
+        /// <returns>A list of values as a copy of an <see cref="IEnumerable{T}"/></returns>
         public static List<T> ToList<T>(this IEnumerable<T> enumerable, int capacity)
         {
             var newList = new List<T>(capacity);
@@ -234,53 +310,107 @@ namespace MarkSFrancis.Collections.Extensions
             return newList;
         }
 
-        public static string ToString<T>(this IEnumerable<T> enumerable, string seperator, int startIndex = 0, Func<T, string> toString = null)
-        {
-            if (toString == null)
-            {
-                toString = new Func<T, string>(t => t.ToString());
-            }
-
-            enumerable = enumerable.Skip(startIndex);
-
-            StringBuilder str = new StringBuilder();
-
-            foreach (var obj in enumerable)
-            {
-                str.Append(toString(obj) + seperator);
-            }
-
-            if (str.Length > 0)
-            {
-                // Remove trailing seperator
-                str.Remove(str.Length - seperator.Length, seperator.Length);
-            }
-
-            return str.ToString();
-        }
-
-        public static string ToString<T>(this IEnumerable<T> enumerable, string seperator, int startIndex, int count, Func<T, string> toString = null)
+        /// <summary>
+        /// Concatenates a range of the members of a constructed <see cref="IEnumerable{T}"></see> collection, using <paramref name="toString"/> to convert each member to text, and then using the specified separator between each member
+        /// </summary>
+        /// <param name="enumerable">A collection that contains the values to concatenate</param>
+        /// <param name="separator">The string to use as a separator. The separator is included in the returned string only if values has more than one element</param>
+        /// <param name="startIndex">The index at which the members to concatenate begin. If this is beyond the end of the <paramref name="enumerable"/>, <see cref="string.Empty"/> is returned</param>
+        /// <param name="toString">The method to use to convert each member to a <see cref="string"/>. If this is <see langword="null"/>, <see cref="object.ToString"/> is used</param>
+        /// <returns>A string that consists of the members of <paramref name="enumerable"/> delimited by the <paramref name="separator"/> string. If <paramref name="enumerable"/> has no members, or the <paramref name="startIndex"/> is beyond the end of the <paramref name="enumerable"/>, the method returns <see cref="String.Empty"></see></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> is null</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero</exception>
+        public static string ToString<T>(this IEnumerable<T> enumerable, string separator, int startIndex = 0, Func<T, string> toString = null)
         {
             if (toString == null)
             {
                 toString = t => t.ToString();
             }
 
-            enumerable = enumerable.Skip(startIndex).Take(count);
-            StringBuilder str = new StringBuilder();
+            var newEnumerable = enumerable.Skip(startIndex).Select(toString);
 
-            foreach (var obj in enumerable)
+            return string.Join(separator, newEnumerable);
+        }
+
+        /// <summary>
+        /// Concatenates a range of the members of a constructed <see cref="IEnumerable{T}"></see> collection, using <paramref name="toString"/> to convert each member to text, and then using the specified separator between each member
+        /// </summary>
+        /// <param name="enumerable">A collection that contains the values to concatenate</param>
+        /// <param name="separator">The string to use as a separator. The separator is included in the returned string only if values has more than one element</param>
+        /// <param name="startIndex">The index at which the members to concatenate begin. If this is beyond the end of the <paramref name="enumerable"/>, <see cref="string.Empty"/> is returned</param>
+        /// <param name="count">The maximum number of values to concatenate. If this goes beyond the end of <paramref name="enumerable"/>, only the values up to the end will be concatenated</param>
+        /// <param name="toString">The method to use to convert each member to a <see cref="string"/>. If this is <see langword="null"/>, <see cref="object.ToString"/> is used</param>
+        /// <returns>A string that consists of the members of <paramref name="enumerable"/> delimited by the <paramref name="separator"/> string. If <paramref name="enumerable"/> has no members, or the <paramref name="startIndex"/> is beyond the end of the <paramref name="enumerable"/>, the method returns <see cref="String.Empty"></see></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> is null</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> or <paramref name="count"/> is less than zero</exception>
+        public static string ToString<T>(this IEnumerable<T> enumerable, string separator, int startIndex, int count, Func<T, string> toString = null)
+        {
+            if (startIndex < 0)
             {
-                str.Append(toString(obj) + seperator);
+                ErrorFactory.Default.ArgumentLessThanZero(nameof(startIndex));
+            }
+            if (count < 0)
+            {
+                ErrorFactory.Default.ArgumentLessThanZero(nameof(count));
             }
 
-            if (str.Length > 0)
+            if (toString == null)
             {
-                // Remove trailing seperator
-                str.Remove(str.Length - seperator.Length, seperator.Length);
+                toString = t => t.ToString();
             }
 
-            return str.ToString();
+            var newEnumerable = enumerable.Skip(startIndex).Take(count).Select(toString);
+
+            return string.Join(separator, newEnumerable);
+        }
+
+        /// <summary>
+        /// Flatten multiple collections of <see cref="IEnumerable{T}"/> into a single collection
+        /// </summary>
+        /// <typeparam name="T">The type of values in the collections</typeparam>
+        /// <param name="collection">The collection to extend</param>
+        /// <param name="collections">The collections to extend onto the <paramref name="collection"/></param>
+        /// <returns>A collection containing all other collection's values</returns>
+        public static IEnumerable<T> Flatten<T>(this IEnumerable<T> collection, params IEnumerable<T>[] collections)
+        {
+            return collection.Flatten((IEnumerable<IEnumerable<T>>)collections);
+        }
+
+        /// <summary>
+        /// Flatten multiple collections of <see cref="IEnumerable{T}"/> into a single collection
+        /// </summary>
+        /// <typeparam name="T">The type of values in the collections</typeparam>
+        /// <param name="collection">The collection to extend</param>
+        /// <param name="collections">The collections to extend onto the <paramref name="collection"/></param>
+        /// <returns>A collection containing all other collection's values</returns>
+        public static IEnumerable<T> Flatten<T>(this IEnumerable<T> collection, IEnumerable<IEnumerable<T>> collections)
+        {
+            foreach (var value in collection)
+            {
+                yield return value;
+            }
+
+            foreach (var value in collections.Flatten())
+            {
+                yield return value;
+            }
+        }
+
+        /// <summary>
+        /// Flatten a two dimensional collection into a single one dimensional collection
+        /// </summary>
+        /// <typeparam name="T">The type of values in the collection</typeparam>
+        /// <param name="collection">The collection to flatten</param>
+        /// <returns>A one dimensional collection containing all the two dimensional collection's values</returns>
+        public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> collection)
+        {
+            foreach (var subCollection in collection)
+            {
+                foreach (var value in subCollection)
+                {
+                    yield return value;
+                }
+            }
         }
     }
 }

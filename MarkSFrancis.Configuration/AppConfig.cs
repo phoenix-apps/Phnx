@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
 using MarkSFrancis.Collections;
+using MarkSFrancis.Collections.Extensions;
 
 namespace MarkSFrancis.Configuration
 {
