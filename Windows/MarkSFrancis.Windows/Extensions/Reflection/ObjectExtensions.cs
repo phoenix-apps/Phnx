@@ -42,10 +42,9 @@ namespace MarkSFrancis.Windows.Extensions.Reflection
 
             if (method == null)
             {
-                ErrorFactory.Default.OperationInvalidException("The MemberwiseClone method is missing for the type " + valueToCopy.GetType().FullName);
+                throw ErrorFactory.Default.OperationInvalidException("The MemberwiseClone method is missing for the type " + valueToCopy.GetType().FullName + " and therefore cannot be cloned");
             }
-
-            // ReSharper disable once PossibleNullReferenceException, cannot be null
+            
             return (T)method.Invoke(valueToCopy, null);
         }
     }

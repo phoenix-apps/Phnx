@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
@@ -54,6 +55,10 @@
     <ProjectReference Include="..\..\MarkSFrancis.Collections\MarkSFrancis.Collections.csproj">
       <Project>{7e88d1f4-b07e-4e23-9f1b-a009911021ea}</Project>
       <Name>MarkSFrancis.Collections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj">
+      <Project>{4b5795c8-b068-4c30-b782-bd842ffb7d6d}</Project>
+      <Name>MarkSFrancis.Reflection</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\MarkSFrancis\MarkSFrancis.csproj">
       <Project>{b6018d31-3f76-4558-8119-466314b7daef}</Project>
