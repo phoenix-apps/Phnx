@@ -36,7 +36,7 @@ namespace MarkSFrancis.Console
         /// Write a line of text to the <see cref="Output"/>, followed by a newline
         /// </summary>
         /// <param name="s">The text to write</param>
-        public void WriteLine(string s)
+        public void WriteLine(string s = "")
         {
             Output.WriteLine(s);
         }
@@ -81,9 +81,9 @@ namespace MarkSFrancis.Console
         /// Write a collection of objects to the <see cref="Output"/> using their default <see cref="object.ToString()"/>, with each value delimited by a newline
         /// </summary>
         /// <param name="collection">The collection of objects to write</param>
-        public void WriteCollection<T>(params T[] collection)
+        public void WriteCollection(params object[] collection)
         {
-            WriteCollection((IEnumerable<T>)collection);
+            WriteCollection((IEnumerable<object>)collection);
         }
         
         /// <summary>

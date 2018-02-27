@@ -83,5 +83,61 @@ namespace MarkSFrancis.Collections.Extensions
 
             return true;
         }
+        
+        /// <summary>
+        /// Performs a binary search using a given <see cref="Comparer{T}"/>. If the element is not found, it returns the flipped version of the index where the value should have been (for use in an insert). If the value is not found, the result will be negative. To restore the result to the index where it should have been found, use "~" to flip the resulting integer back
+        /// </summary>
+        /// <typeparam name="T">The type of values in the collection</typeparam>
+        /// <param name="values">The values to search</param>
+        /// <param name="searchFor">The value to search for</param>
+        /// <param name="comparer">The comparer to use when searching</param>
+        /// <returns>The index of the found item. If the element is not found, it returns the flipped version of the index where the value should have been (for use in an insert). If the value is not found, the result will be negative. To restore the result to the index where it should have been found, use "~" to flip the resulting integer back</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="values"/> or <paramref name="comparer"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="comparer"/> returned an invalid result. <paramref name="comparer"/> results can only be -1, 0 or 1</exception>
+        public static int BinarySearchBy<T>(this IList<T> values, T searchFor, Comparer<T> comparer)
+        {
+            if (values == null)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(values));
+            }
+            if (comparer == null)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(comparer));
+            }
+
+            int left = 0, right = values.Count - 1;
+
+            BinarySearchRangeStart:
+
+            if (left > right)
+            {
+                // Not found
+                return ~Math.Max(left, right);
+            }
+
+            int mid = (left + right) / 2;
+
+            var orderResult = comparer.Compare(searchFor, values[mid]);
+
+            switch (orderResult)
+            {
+                case 0:
+                    return mid;
+
+                case -1:
+                    // Value is lower than where we're looking. Move the range lower
+                    right = mid - 1;
+                    goto BinarySearchRangeStart;
+
+                case 1:
+                    // Value is higher than where we're looking. Move the range higher
+                    left = mid + 1;
+                    goto BinarySearchRangeStart;
+
+                default:
+                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(orderResult),
+                        "Comparer result was invalid. Value of result was " + orderResult);
+            }
+        }
     }
 }
