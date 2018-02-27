@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using System.IO;
+using MarkSFrancis.Collections.Extensions;
 
 namespace MarkSFrancis.Windows.Extensions.Drawing
 {
@@ -10,7 +10,7 @@ namespace MarkSFrancis.Windows.Extensions.Drawing
     {
         public static Image ToImage(this byte[] imgAsBytes)
         {
-            using (var ms = new MemoryStream(imgAsBytes))
+            using (var ms = imgAsBytes.ToMemoryStream())
             {
                 return Image.FromStream(ms);
             }

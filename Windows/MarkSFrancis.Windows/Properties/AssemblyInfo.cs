@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MarkSFrancis.Windows.DotNetExtensions")]
+[assembly: AssemblyTitle("MarkSFrancis.Windows")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MarkSFrancis.Windows.DotNetExtensions")]
+[assembly: AssemblyProduct("MarkSFrancis.Windows")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("241985ee-b9f2-40ec-a16d-b9ff3746da36")]
+[assembly: Guid("89d91d7d-5fbe-419d-ade1-d4501caaf352")]
 
 // Version information for an assembly consists of the following four values:
 //

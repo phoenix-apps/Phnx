@@ -10,13 +10,13 @@ namespace MarkSFrancis.Windows.Extensions.Reflection
     /// </summary>
     public static class SerializeExtensions
     {
+        private static readonly BinaryFormatter BinaryFormatter = new BinaryFormatter();
+
         public static byte[] SerializeBinary<T>(this T t)
         {
-            var binaryWrite = new BinaryFormatter();
-
             using (var memoryStream = new MemoryStream())
             {
-                binaryWrite.Serialize(memoryStream, t);
+                SerializeBinary(t, memoryStream);
                 return memoryStream.ToArray();
             }
         }
@@ -25,9 +25,18 @@ namespace MarkSFrancis.Windows.Extensions.Reflection
         {
             using (var memoryStream = new MemoryStream(bytes))
             {
-                var binaryRead = new BinaryFormatter();
-                return (T)binaryRead.Deserialize(memoryStream);
+                return memoryStream.DeserializeBinary<T>();
             }
+        }
+
+        public static void SerializeBinary<T>(this T t, Stream serializeTo)
+        {
+            BinaryFormatter.Serialize(serializeTo, t);
+        }
+
+        public static T DeserializeBinary<T>(this Stream serializeFrom)
+        {
+            return (T)BinaryFormatter.Deserialize(serializeFrom);
         }
 
         public static StringBuilder SerializeXml<T>(this T t)
