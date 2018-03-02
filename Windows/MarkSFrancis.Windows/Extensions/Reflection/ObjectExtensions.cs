@@ -40,12 +40,13 @@ namespace MarkSFrancis.Windows.Extensions.Reflection
         /// <returns>A shallow copy of <paramref name="valueToCopy"/></returns>
         public static T ShallowCopy<T>(this T valueToCopy)
         {
-            MethodInfo method = valueToCopy.GetType().GetMethod(MemberwiseCloneMethodName,
+            var tType = typeof(T);
+            MethodInfo method = tType.GetMethod(MemberwiseCloneMethodName,
                 BindingFlags.NonPublic | BindingFlags.Instance);
 
             if (method == null)
             {
-                throw ErrorFactory.Default.OperationInvalidException($"The {MemberwiseCloneMethodName} method is missing for the type {valueToCopy.GetType().FullName}, and therefore it cannot be shallow cloned");
+                throw ErrorFactory.Default.MemberwiseCloneNotAvailable(tType);
             }
             
             return (T)method.Invoke(valueToCopy, null);
