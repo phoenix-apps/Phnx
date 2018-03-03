@@ -4,9 +4,14 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj" />
     <ProjectReference Include="..\MarkSFrancis.IO.Threaded\MarkSFrancis.IO.Threaded.csproj" />
+    <ProjectReference Include="..\MarkSFrancis.IO\MarkSFrancis.IO.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using MarkSFrancis.IO.Extensions;
 using MarkSFrancis.IO.Threaded;
 
 namespace MarkSFrancis.IO.DelimitedData
@@ -9,6 +10,7 @@ namespace MarkSFrancis.IO.DelimitedData
     public class DelimitedDataReader : IDisposable
     {
         public string Splitter { get; }
+        private bool CloseStreamWhenDisposed { get; }
 
         private ThreadedReader<string> ThreadedReader { get; }
         private TextReader MyStream { get; }
@@ -25,7 +27,7 @@ namespace MarkSFrancis.IO.DelimitedData
 
                 lock (MyStream)
                 {
-                    if (ThreadedReader.CacheCount == 0 && MyStream.Peek() == -1)
+                    if (ThreadedReader.CacheCount == 0 && MyStream.ReachedEnd())
                     {
                         return _endOfStream = true;
                     }
@@ -35,7 +37,7 @@ namespace MarkSFrancis.IO.DelimitedData
             }
         }
 
-    public DelimitedDataReader(string textToRead, string splitter)
+        public DelimitedDataReader(string textToRead, string splitter)
         {
             Splitter = splitter;
             MyStream = CreateStreamReaderFromText(textToRead);
@@ -43,17 +45,18 @@ namespace MarkSFrancis.IO.DelimitedData
             ThreadedReader = new ThreadedReader<string>(ReadLineToBuffer);
         }
 
-        public DelimitedDataReader(Stream myStream, string splitter)
+        public DelimitedDataReader(Stream myStream, string splitter, bool closeStreamWhenDisposed = false)
         {
             MyStream = new StreamReader(myStream, EncodingHelper.DefaultEncoding);
             Splitter = splitter;
+            CloseStreamWhenDisposed = closeStreamWhenDisposed;
 
             ThreadedReader = new ThreadedReader<string>(ReadLineToBuffer);
         }
 
-        public static DelimitedDataReader CsvReader(Stream myStream)
+        public static DelimitedDataReader CsvReader(Stream myStream, bool closeStreamWhenDisposed = false)
         {
-            return new DelimitedDataReader(myStream, ",");
+            return new DelimitedDataReader(myStream, ",", closeStreamWhenDisposed);
         }
 
         public static DelimitedDataReader CsvReader(string textToRead)
@@ -61,9 +64,9 @@ namespace MarkSFrancis.IO.DelimitedData
             return new DelimitedDataReader(textToRead, ",");
         }
 
-        public static DelimitedDataReader TsvReader(Stream myStream)
+        public static DelimitedDataReader TsvReader(Stream myStream, bool closeStreamWhenDisposed = false)
         {
-            return new DelimitedDataReader(myStream, "\t");
+            return new DelimitedDataReader(myStream, "\t", closeStreamWhenDisposed);
         }
 
         public static DelimitedDataReader TsvReader(string textToRead)
@@ -125,7 +128,7 @@ namespace MarkSFrancis.IO.DelimitedData
                         break;
                     case '\'':
                         // Peek next char to see if it's also a ' character
-                        if (lineBuffer.Length > currentLineCharIndex + 1 && 
+                        if (lineBuffer.Length > currentLineCharIndex + 1 &&
                             lineBuffer[currentLineCharIndex + 1] == '\'')
                         {
                             currentField.Append('\'');
@@ -164,7 +167,7 @@ namespace MarkSFrancis.IO.DelimitedData
                         }
                         else
                         {
-                            if (lineBuffer.Length > currentLineCharIndex + 1 && 
+                            if (lineBuffer.Length > currentLineCharIndex + 1 &&
                                 lineBuffer[currentLineCharIndex + 1] == '\n')
                             {
                                 // Windows newline (\r\n), so skip \n
@@ -218,7 +221,7 @@ namespace MarkSFrancis.IO.DelimitedData
             }
         }
 
-        public string ReadLineToBuffer()
+        private string ReadLineToBuffer()
         {
             if (EndOfStream)
             {
@@ -234,7 +237,11 @@ namespace MarkSFrancis.IO.DelimitedData
         public void Dispose()
         {
             ThreadedReader?.Dispose();
-            MyStream?.Dispose();
+
+            if (CloseStreamWhenDisposed)
+            {
+                MyStream?.Dispose();
+            }
         }
     }
 }

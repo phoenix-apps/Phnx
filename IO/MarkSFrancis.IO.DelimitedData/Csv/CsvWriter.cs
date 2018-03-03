@@ -21,7 +21,10 @@ namespace MarkSFrancis.IO.DelimitedData.Csv
 
             ThreadedWriter = new ThreadedWriter<IList<string>>(WriteRecordThreaded);
 
-            SetColumnHeadings(columnHeadings);
+            if (columnHeadings != null && columnHeadings.Length > 0)
+            {
+                SetColumnHeadings(columnHeadings);
+            }
 
             CloseStreamWhenDisposed = true;
         }
@@ -32,7 +35,10 @@ namespace MarkSFrancis.IO.DelimitedData.Csv
 
             ThreadedWriter = new ThreadedWriter<IList<string>>(WriteRecordThreaded);
 
-            SetColumnHeadings(columnHeadings);
+            if (columnHeadings != null && columnHeadings.Length > 0)
+            {
+                SetColumnHeadings(columnHeadings);
+            }
 
             CloseStreamWhenDisposed = closeStreamWhenDisposed;
         }

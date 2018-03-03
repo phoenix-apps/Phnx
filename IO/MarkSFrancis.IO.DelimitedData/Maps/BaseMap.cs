@@ -8,7 +8,6 @@ using MarkSFrancis.Reflection;
 namespace MarkSFrancis.IO.DelimitedData.Maps
 {
     public abstract class BaseMap<TMap, T, TMapBy> where T : new()
-
     {
         private Type TType { get; }
         protected PropertyInfo[] TProperties { get; }
@@ -65,11 +64,11 @@ namespace MarkSFrancis.IO.DelimitedData.Maps
 
         public abstract TMap Map(PropertyFieldInfo<T, object> propFieldInfo, TMapBy mapBy);
 
-        public TMap Map(Expression<Func<T, object>> expression, TMapBy columnName)
+        public TMap Map(Expression<Func<T, object>> expression, TMapBy column)
         {
             var expressionInfo = new PropertyFieldInfo<T, object>(expression);
 
-            return Map(expressionInfo, columnName);
+            return Map(expressionInfo, column);
         }
 
         public TMap Map(MemberInfo member, TMapBy mapBy)
