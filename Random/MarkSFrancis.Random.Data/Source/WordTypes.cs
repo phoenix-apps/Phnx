@@ -1,7 +1,13 @@
 ﻿namespace MarkSFrancis.Random.Data.Source
 {
+    /// <summary>
+    /// A collection of words categorised by type
+    /// </summary>
     public static class WordTypes
     {
+        /// <summary>
+        /// A list of verbs
+        /// </summary>
         public static readonly string[] Verbs =
         {
             "abate",
@@ -2214,6 +2220,9 @@
             "yowl"
         };
 
+        /// <summary>
+        /// A collection of adjectives
+        /// </summary>
         public static readonly string[] Adjectives =
         {
             "abandoned",
@@ -2938,6 +2947,9 @@
             "zonked"
         };
 
+        /// <summary>
+        /// A collection of adverbs
+        /// </summary>
         public static readonly string[] Adverbs = {
             "abandonedly",
             "abasedly",
@@ -6530,6 +6542,9 @@
             "zestfully",
         };
 
+        /// <summary>
+        /// A collection of conjunctions
+        /// </summary>
         public static readonly string[] Conjunctions =
         {
             "after",
@@ -6584,6 +6599,9 @@
             "yet"
         };
 
+        /// <summary>
+        /// A collection of pronouns
+        /// </summary>
         public static readonly string[] Pronouns =
         {
             "all",
@@ -6662,6 +6680,9 @@
             "yourselves"
         };
 
+        /// <summary>
+        /// A collection of prepositions
+        /// </summary>
         public static readonly string[] Prepositions =
         {
             "abaft",

@@ -1,7 +1,13 @@
 ﻿namespace MarkSFrancis.Random.Data.Source
 {
-    public class ColorNames
+    /// <summary>
+    /// A collection of lists of color names
+    /// </summary>
+    public static class ColorNames
     {
+        /// <summary>
+        /// A list of simple color names
+        /// </summary>
         public static readonly string[] SimpleColors =
         {
             "Black",
@@ -17,6 +23,9 @@
             "Pink"
         };
         
+        /// <summary>
+        /// A list of web browser colors. Source: https://www.w3schools.com/colors/colors_names.asp
+        /// </summary>
         public static readonly string[] BrowserColors =
         {
             "AliceBlue",
@@ -169,7 +178,10 @@
             "YellowGreen"
         };
 
-        public static string[] ComplexColors =
+        /// <summary>
+        /// A list of complex color names. Source: https://en.wikipedia.org/wiki/List_of_colors_(compact)
+        /// </summary>
+        public static readonly string[] ComplexColors =
         {
             "Amaranth",
             "Amber",
