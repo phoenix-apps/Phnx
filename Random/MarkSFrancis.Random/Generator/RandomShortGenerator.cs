@@ -3,13 +3,26 @@ using MarkSFrancis.Random.Generator.Interfaces;
 
 namespace MarkSFrancis.Random.Generator
 {
+    /// <summary>
+    /// Provides methods for generating a random <see cref="short"/>
+    /// </summary>
     public class RandomShortGenerator : IRandomNumberGenerator<short>
     {
+        /// <summary>
+        /// Get a random <see cref="short"/>
+        /// </summary>
+        /// <returns>A random <see cref="short"/></returns>
         short IRandomGenerator<short>.Get()
         {
             return Get();
         }
-
+        
+        /// <summary>
+        /// Get a new random instance of <see cref="short"/> within a limited range
+        /// </summary>
+        /// <param name="inclusiveMinValue">The inclusive minimum value to generate</param>
+        /// <param name="inclusiveMaxValue">The inclusive maximum value to generate</param>
+        /// <returns>A random instance of <see cref="short"/> with the specified range</returns>
         public short Get(short inclusiveMinValue = short.MinValue, short inclusiveMaxValue = short.MaxValue)
         {
             byte[] buffer = new byte[2];
