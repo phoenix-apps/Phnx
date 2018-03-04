@@ -365,25 +365,25 @@ namespace MarkSFrancis.Collections.Extensions
         }
 
         /// <summary>
-        /// Flatten multiple collections of <see cref="IEnumerable{T}"/> into a single collection
+        /// Append multiple collections of <see cref="IEnumerable{T}"/> onto a single collection
         /// </summary>
         /// <typeparam name="T">The type of values in the collections</typeparam>
         /// <param name="collection">The collection to extend</param>
         /// <param name="collections">The collections to extend onto the <paramref name="collection"/></param>
-        /// <returns>A collection containing all other collection's values</returns>
-        public static IEnumerable<T> Flatten<T>(this IEnumerable<T> collection, params IEnumerable<T>[] collections)
+        /// <returns>A collection containing all given collection's values</returns>
+        public static IEnumerable<T> Append<T>(this IEnumerable<T> collection, params IEnumerable<T>[] collections)
         {
-            return collection.Flatten((IEnumerable<IEnumerable<T>>)collections);
+            return collection.Append((IEnumerable<IEnumerable<T>>)collections);
         }
 
         /// <summary>
-        /// Flatten multiple collections of <see cref="IEnumerable{T}"/> into a single collection
+        /// Append multiple collections of <see cref="IEnumerable{T}"/> onto a single collection
         /// </summary>
         /// <typeparam name="T">The type of values in the collections</typeparam>
         /// <param name="collection">The collection to extend</param>
         /// <param name="collections">The collections to extend onto the <paramref name="collection"/></param>
-        /// <returns>A collection containing all other collection's values</returns>
-        public static IEnumerable<T> Flatten<T>(this IEnumerable<T> collection, IEnumerable<IEnumerable<T>> collections)
+        /// <returns>A collection containing all given collection's values</returns>
+        public static IEnumerable<T> Append<T>(this IEnumerable<T> collection, IEnumerable<IEnumerable<T>> collections)
         {
             foreach (var value in collection)
             {

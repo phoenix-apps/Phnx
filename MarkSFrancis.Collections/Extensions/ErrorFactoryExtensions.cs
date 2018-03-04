@@ -41,5 +41,28 @@ namespace MarkSFrancis.Collections.Extensions
         {
             return new KeyNotFoundException($"The key \"{key}\" was not found in the collection \"{collectionName}\"");
         }
+        
+        /// <summary>
+        /// An error to describe that the key was already present within a collection
+        /// </summary>
+        /// <param name="factory">The factory to extend</param>
+        /// <param name="key">The name of the key</param>
+        /// <param name="collectionName">The name of the collection</param>
+        /// <returns></returns>
+        public static ArgumentException DuplicateKey(this ErrorFactory factory, string key, string collectionName)
+        {
+            return new ArgumentException($"The key \"{key}\" is already present in the collection \"{collectionName}\"", key);
+        }
+        
+        /// <summary>
+        /// An error to describe that the key was already present within a collection
+        /// </summary>
+        /// <param name="factory">The factory to extend</param>
+        /// <param name="key">The name of the key</param>
+        /// <returns></returns>
+        public static ArgumentException DuplicateKey(this ErrorFactory factory, string key)
+        {
+            return new ArgumentException($"The key \"{key}\" is already present in the collection", key);
+        }
     }
 }

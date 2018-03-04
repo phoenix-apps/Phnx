@@ -41,7 +41,7 @@ namespace MarkSFrancis.Collections.Tree
         {
             get
             {
-                var allNodeRelationships = TopNodes.Flatten(TopNodes.Select(n => n.AllDescendants));
+                var allNodeRelationships = TopNodes.Append(TopNodes.Select(n => n.AllDescendants));
                 return allNodeRelationships.DistinctBy(rel => rel);
             }
         }
