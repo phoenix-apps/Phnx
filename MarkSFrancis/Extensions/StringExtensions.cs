@@ -170,76 +170,83 @@ namespace MarkSFrancis.Extensions
                 return string.Empty;
             }
 
-            StringBuilder sb = new StringBuilder();
-            StringBuilder acronymBuffer = new StringBuilder();
-            bool inNumber = false;
-            bool inAcronym = false;
+            StringBuilder result = new StringBuilder();
+            StringBuilder acronymBuilder = new StringBuilder();
+            StringBuilder numberBuilder = new StringBuilder();
 
-            if (char.IsUpper(str[0]))
+            void EmptyAcronymBuilder()
             {
-                acronymBuffer.Append(str[0]);
-                inAcronym = true;
-            }
-            else if (char.IsNumber(str[0]))
-            {
-                sb.Append(str[0]);
-                inNumber = true;
-            }
-            else
-            {
+                if (acronymBuilder.Length == 0)
+                {
+                    // Already empty
+                    return;
+                }
+
+                var newWordChar = acronymBuilder[acronymBuilder.Length - 1];
                 if (startEachWordWithCapital)
                 {
-                    sb.Append(char.ToUpperInvariant(str[0]));
+                    newWordChar = char.ToUpperInvariant(newWordChar);
                 }
                 else
                 {
-                    sb.Append(char.ToLowerInvariant(str[0]));
+                    newWordChar = char.ToLowerInvariant(newWordChar);
+                }
+                acronymBuilder.Length--;
+
+                if (result.Length > 0)
+                {
+                    result.Append(" ");
+                }
+
+                if (acronymBuilder.Length > 0)
+                {
+                    // Append acronym
+                    result.Append(acronymBuilder.ToString().ToUpperInvariant());
+
+                    result.Append(" ");
+                }
+
+                result.Append(newWordChar);
+
+                acronymBuilder.Clear();
+            }
+
+            void EmptyNumberBuilder()
+            {
+                if (numberBuilder.Length > 0)
+                {
+                    result.Append(" ");
+                    result.Append(numberBuilder);
+
+                    numberBuilder.Clear();
                 }
             }
 
             for (int index = 0; index < str.Length; index++)
             {
-                if (char.IsUpper(str[index]) && !inAcronym)
-                {
-                    sb.Append(" ");
-                    acronymBuffer.Append(str[index]);
+                char curChar = str[index];
 
-                    inAcronym = true;
-                    continue;
-                }
+                if (char.IsNumber(curChar))
+                {
+                    EmptyAcronymBuilder();
 
-                // Empty acronym buffer
-                if (acronymBuffer.Length == 1 && !startEachWordWithCapital)
-                {
-                    sb.Append(acronymBuffer.ToString().ToLowerInvariant());
+                    numberBuilder.Append(curChar);
                 }
-                else if (acronymBuffer.Length > 1)
+                else if (index == 0 || char.IsUpper(curChar) || numberBuilder.Length > 0)
                 {
-                    sb.Append(acronymBuffer);
-                }
+                    EmptyNumberBuilder();
 
-                if (char.IsDigit(str[index]) && !inNumber)
-                {
-                    sb.Append(" ");
-                    sb.Append(str[index]);
-
-                    inNumber = true;
-                }
-                else if (char.IsDigit(str[index]) || char.IsUpper(str[index]))
-                {
-                    sb.Append(str[index]);
+                    acronymBuilder.Append(curChar);
                 }
                 else
                 {
-                    // Lowercase or unrecognised
-                    inNumber = false;
-                    inAcronym = false;
+                    EmptyAcronymBuilder();
 
-                    sb.Append(str[index]);
+                    result.Append(curChar);
                 }
             }
 
-            return sb.ToString();
+            return result.ToString();
         }
     }
 }
