@@ -2,12 +2,8 @@
 
 namespace MarkSFrancis.IO.DelimitedData.Maps
 {
-    public interface IMap<T>
+    public interface IMap<T, TMapBy> where T : new()
     {
         IEnumerable<string> ColumnHeadings { get; }
-
-        IList<string> MapFromObject(T record);
-
-        T MapToObject(IList<string> values);
     }
 }

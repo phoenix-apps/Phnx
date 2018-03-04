@@ -1,4 +1,5 @@
 ﻿using MarkSFrancis.Console;
+using MarkSFrancis.IO.DelimitedData.Maps;
 
 namespace SyntaxTest
 {
@@ -8,7 +9,7 @@ namespace SyntaxTest
 
         static void Main()
         {
-
+            new NameMapTest(Console).Run();
 
             Console.ReadKey();
         }
