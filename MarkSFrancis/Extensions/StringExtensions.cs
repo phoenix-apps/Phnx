@@ -241,10 +241,14 @@ namespace MarkSFrancis.Extensions
                 else
                 {
                     EmptyAcronymBuilder();
+                    EmptyNumberBuilder();
 
                     result.Append(curChar);
                 }
             }
+
+            EmptyAcronymBuilder();
+            EmptyNumberBuilder();
 
             return result.ToString();
         }

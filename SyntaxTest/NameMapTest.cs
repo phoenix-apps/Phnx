@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MarkSFrancis.Console;
-using MarkSFrancis.IO.DelimitedData.Maps;
+using MarkSFrancis.IO.DelimitedData.Maps.Interfaces;
 using MarkSFrancis.IO.DelimitedData.Maps.Read;
 using MarkSFrancis.IO.DelimitedData.Maps.Write;
 
@@ -18,7 +18,7 @@ namespace SyntaxTest
 
         public void Run()
         {
-            IWriteMap<ClassToMap, string> writeMap = WriteMapColumnName<ClassToMap>.AutoMap();
+            IWriteMap<ClassToMap> writeMap = WriteMapColumnName<ClassToMap>.AutoMap();
 
             var testClass = new ClassToMap
             {
@@ -30,7 +30,7 @@ namespace SyntaxTest
             var mappedResult = writeMap.MapFromObject(testClass);
             _console.WriteCollection(mappedResult);
 
-            IReadMap<ClassToMap, string> readMap = ReadMapColumnName<ClassToMap>.AutoMap(writeMap.ColumnHeadings.ToList());
+            IReadMap<ClassToMap> readMap = ReadMapColumnName<ClassToMap>.AutoMap(writeMap.ColumnHeadings.ToList());
             var testValues = new List<string>
             {
                 "asdfVal2",

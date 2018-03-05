@@ -1,5 +1,4 @@
 ﻿using MarkSFrancis.Console;
-using MarkSFrancis.IO.DelimitedData.Maps;
 
 namespace SyntaxTest
 {

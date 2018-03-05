@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace MarkSFrancis.IO.DelimitedData.Maps
+namespace MarkSFrancis.IO.DelimitedData.Maps.Interfaces
 {
-    public interface IMap<T, TMapBy> where T : new()
+    public interface IMap<T> where T : new()
     {
         IEnumerable<string> ColumnHeadings { get; }
     }

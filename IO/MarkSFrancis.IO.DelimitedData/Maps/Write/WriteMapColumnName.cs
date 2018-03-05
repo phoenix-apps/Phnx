@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using MarkSFrancis.Collections.Extensions;
 using MarkSFrancis.Extensions;
+using MarkSFrancis.IO.DelimitedData.Maps.Interfaces;
 using MarkSFrancis.Reflection;
 using MarkSFrancis.Reflection.Extensions;
 
 namespace MarkSFrancis.IO.DelimitedData.Maps.Write
 {
-    public class WriteMapColumnName<T> : BaseMapColumnName<T>, IWriteMap<T, string> where T : new()
+    public class WriteMapColumnName<T> : BaseMapColumnName<T>, IWriteMap<T> where T : new()
     {
         public static WriteMapColumnName<T> AutoMap(bool mapProperties = true, bool mapFields = false)
         {
@@ -54,12 +54,10 @@ namespace MarkSFrancis.IO.DelimitedData.Maps.Write
 
         public void AddColumnAndMap(PropertyFieldInfo<T, object> propFieldToMap, string mapTo)
         {
-            var colIndex = _intermediateColumnHeadings.IndexOf(ToMapIntermediateValue(mapTo));
-
             _columnHeadings.Add(mapTo);
-            _intermediateColumnHeadings.Add(ToMapIntermediateValue(mapTo));
+            IntermediateColumnHeadings.Add(ToMapIntermediateValue(mapTo));
 
-            _memberToColumn.Add(propFieldToMap, _columnHeadings.Count - 1);
+            MemberToColumn.Add(propFieldToMap, _columnHeadings.Count - 1);
         }
 
         public void AddColumnAndMap(KeyValuePair<PropertyFieldInfo<T, object>, string> propFieldToMap)
@@ -69,9 +67,9 @@ namespace MarkSFrancis.IO.DelimitedData.Maps.Write
 
         public string[] MapFromObject(T record)
         {
-            string[] values = new string[_memberToColumn.Count];
+            string[] values = new string[MemberToColumn.Count];
 
-            foreach (var mappedMember in _memberToColumn)
+            foreach (var mappedMember in MemberToColumn)
             {
                 values[mappedMember.Value] = mappedMember.Key.GetValue(record).ToString();
             }

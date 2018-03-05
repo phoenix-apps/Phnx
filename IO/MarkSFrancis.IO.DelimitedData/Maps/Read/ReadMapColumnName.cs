@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using MarkSFrancis.Extensions;
+using MarkSFrancis.IO.DelimitedData.Maps.Interfaces;
 using MarkSFrancis.Reflection;
 using MarkSFrancis.Reflection.Extensions;
 
 namespace MarkSFrancis.IO.DelimitedData.Maps.Read
 {
-    public class ReadMapColumnName<T> : BaseMapColumnName<T>, IReadMap<T, string> where T : new()
+    public class ReadMapColumnName<T> : BaseMapColumnName<T>, IReadMap<T> where T : new()
     {
         public ReadMapColumnName(params string[] columnHeadings) : this((IList<string>)columnHeadings)
         {
@@ -16,6 +17,13 @@ namespace MarkSFrancis.IO.DelimitedData.Maps.Read
 
         public ReadMapColumnName(IList<string> columnHeadings) : base(columnHeadings)
         {
+        }
+
+        #region Automap
+        public static ReadMapColumnName<T> AutoMap(bool mapProperties = true, bool mapFields = false,
+            params string[] columns)
+        {
+            return AutoMap(columns, mapProperties, mapFields);
         }
 
         public static ReadMapColumnName<T> AutoMap(IList<string> columns, bool mapProperties = true, bool mapFields = false)
@@ -32,10 +40,11 @@ namespace MarkSFrancis.IO.DelimitedData.Maps.Read
 
             return newMap;
         }
-        
+        #endregion
+
         public bool TryAddMap(Expression<Func<T, object>> propFieldToMap, string mapTo)
         {
-            var propField = new PropertyFieldInfo<T,object>(propFieldToMap);
+            var propField = new PropertyFieldInfo<T, object>(propFieldToMap);
 
             return TryAddMap(propField, mapTo);
         }
@@ -47,12 +56,7 @@ namespace MarkSFrancis.IO.DelimitedData.Maps.Read
 
         public bool TryAddMap(PropertyFieldInfo<T, object> propFieldToMap, string mapTo)
         {
-            if (_memberToColumn.ContainsKey(propFieldToMap))
-            {
-                return false;
-            }
-
-            var colIndex = _intermediateColumnHeadings.IndexOf(ToMapIntermediateValue(mapTo));
+            var colIndex = IntermediateColumnHeadings.IndexOf(ToMapIntermediateValue(mapTo));
 
             if (colIndex < 0)
             {
@@ -60,7 +64,7 @@ namespace MarkSFrancis.IO.DelimitedData.Maps.Read
                 return false;
             }
 
-            _memberToColumn.Add(propFieldToMap, colIndex);
+            MemberToColumn.Add(propFieldToMap, colIndex);
             return true;
         }
 
@@ -73,7 +77,7 @@ namespace MarkSFrancis.IO.DelimitedData.Maps.Read
         {
             T record = new T();
 
-            foreach (var mappedColumn in _memberToColumn)
+            foreach (var mappedColumn in MemberToColumn)
             {
                 if (values.Count <= mappedColumn.Value)
                 {

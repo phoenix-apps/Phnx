@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using MarkSFrancis.IO.Threaded;
 
 namespace MarkSFrancis.IO.DelimitedData.Csv
@@ -46,9 +47,9 @@ namespace MarkSFrancis.IO.DelimitedData.Csv
         /// <summary>
         /// This method only works if it's called before writing any records
         /// </summary>
-        protected void SetColumnHeadings(string[] columnHeadings)
+        protected void SetColumnHeadings(IList<string> columnHeadings)
         {
-            ColumnHeadings = columnHeadings;
+            ColumnHeadings = columnHeadings?.ToArray();
 
             if (ColumnHeadings != null && ColumnHeadings.Length > 0)
             {

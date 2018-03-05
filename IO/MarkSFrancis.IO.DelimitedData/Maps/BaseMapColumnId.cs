@@ -1,22 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MarkSFrancis.Collections;
+using MarkSFrancis.IO.DelimitedData.Maps.Interfaces;
 using MarkSFrancis.Reflection;
 
 namespace MarkSFrancis.IO.DelimitedData.Maps
 {
-    public abstract class BaseMapColumnId<T> : IMap<T, int> where T : new()
+    public abstract class BaseMapColumnId<T> : IMap<T> where T : new()
     {
         protected BaseMapColumnId()
         {
-            _memberToColumn = new MultiKeyDictionary<PropertyFieldInfo<T, object>, int>();
+            MemberToColumn = new MultiKeyDictionary<PropertyFieldInfo<T, object>, int>();
         }
 
         public IEnumerable<string> ColumnHeadings
         {
             get
             {
-                var totalColumns = _memberToColumn.Max(m => m.Value);
+                var totalColumns = MemberToColumn.Max(m => m.Value);
 
                 for (int index = 0; index < totalColumns; index++)
                 {
@@ -25,6 +26,6 @@ namespace MarkSFrancis.IO.DelimitedData.Maps
             }
         }
 
-        protected readonly MultiKeyDictionary<PropertyFieldInfo<T, object>, int> _memberToColumn;
+        protected readonly MultiKeyDictionary<PropertyFieldInfo<T, object>, int> MemberToColumn;
     }
 }
