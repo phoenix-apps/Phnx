@@ -24,5 +24,22 @@ namespace MarkSFrancis
 
             return convertFrom => (TConvertTo)Convert.ChangeType(convertFrom, TGetAsType);
         }
+        
+        /// <summary>
+        /// If <paramref name="convertFrom"/> implements <paramref name="convertTo"/>, it returns a method that simply casts between the two. If not, this gets the default <see cref="IConvertible"/> implementation for converting to <paramref name="convertTo"/>
+        /// </summary>
+        /// <param name="convertFrom">The type to convert from</param>
+        /// <param name="convertTo">The type to convert to</param>
+        /// <returns></returns>
+        public static Func<object, object> GetDefaultConverter(Type convertFrom, Type convertTo)
+        {
+            if (convertFrom.Is(convertTo))
+            {
+                // Already of relevant type
+                return from => from;
+            }
+
+            return from => Convert.ChangeType(from, convertTo);
+        }
     }
 }

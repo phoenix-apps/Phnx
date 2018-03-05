@@ -1,15 +1,23 @@
 ﻿namespace MarkSFrancis.Random.Data.Source
 {
+    /// <summary>
+    /// A collection of lists of jobs and experience levels
+    /// </summary>
     public static class Jobs
     {
+        /// <summary>
+        /// A list of experience levels including an empty string (to represent no experience prefix)
+        /// </summary>
         public static readonly string[] ExperiencePrefix =
         {
-            "",
-            "Apprentice ",
-            "Junior ",
-            "Senior "
+            "Apprentice",
+            "Junior",
+            "Senior"
         };
 
+        /// <summary>
+        /// A list of job titles
+        /// </summary>
         public static readonly string[] Titles =
         {
             "Academic librarian",

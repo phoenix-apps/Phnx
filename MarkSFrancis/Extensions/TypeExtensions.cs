@@ -3,7 +3,7 @@
 namespace MarkSFrancis.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="Type"/> objects
+    /// Extensions for <see cref="Type"/>
     /// </summary>
     public static class TypeExtensions
     {

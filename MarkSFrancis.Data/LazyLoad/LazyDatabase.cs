@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace MarkSFrancis.Data.LazyLoad
 {
     /// <summary>
-    /// A three-dimensional cache that can store up to an entire database including all its tables using each type and key to get each item from the cache
+    /// A three-dimensional cache that can store up to an entire database including all its tables using each type and key to get each value from the cache
     /// </summary>
     public static class LazyDatabase
     {
@@ -28,9 +28,9 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// The total number of records across all types stored in the cache
+        /// The total number of values across all types stored in the cache
         /// </summary>
-        public static int TotalItemsCached
+        public static int TotalValuesCached
         {
             get
             {
@@ -71,11 +71,11 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Gets the total number of items cached for a type
+        /// Gets the total number of values cached for a type
         /// </summary>
-        /// <param name="type">The type to get the number of records cached for</param>
+        /// <param name="type">The type to get the number of values cached for</param>
         /// <returns></returns>
-        public static int TotalItemsCachedForType(Type type)
+        public static int TotalValuesCachedForType(Type type)
         {
             lock (CacheLock)
             {
@@ -84,7 +84,7 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Clear all items from the cache, forcing all new requests to be reloaded into the cache
+        /// Clear all values from the cache, forcing all new requests to be reloaded into the cache
         /// </summary>
         public static void ClearAllCache()
         {
@@ -96,7 +96,7 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Clear all items from the cache for a type, forcing all new requests for that type to be reloaded into the cache when their values are requested
+        /// Clear all values from the cache for a type, forcing all new requests for that type to be reloaded into the cache when their values are requested
         /// </summary>
         /// <param name="typeToClear"></param>
         public static void ClearAllCache(Type typeToClear)

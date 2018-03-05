@@ -63,6 +63,21 @@ namespace MarkSFrancis.Benchmark
         /// Create a new <see cref="Benchmark{T}"/> without writing steps to the log
         /// </summary>
         /// <param name="computeMethods">The methods to benchmark</param>
+        /// <param name="benchmarkWithValues">The values to pass to the <see cref="ComputeMethods"/> when benchmarking</param>
+        /// <param name="log">The function called when events such as "values generated" occur, with the event description passed in</param>
+        public Benchmark(Action<T>[] computeMethods, T[] benchmarkWithValues, Action<string> log)
+        {
+            ComputeMethods = computeMethods;
+
+            BenchmarkWithValues = benchmarkWithValues;
+
+            Log = log;
+        }
+
+        /// <summary>
+        /// Create a new <see cref="Benchmark{T}"/> without writing steps to the log
+        /// </summary>
+        /// <param name="computeMethods">The methods to benchmark</param>
         /// <param name="numberOfValuesToCompute">The number of values to be computed by each of the <see cref="ComputeMethods"/></param>
         /// <param name="generateValue">The function used to generate values. The number generated so far is passed in</param>
         /// <param name="log">The function called when events such as "values generated" occur, with the event description passed in</param>

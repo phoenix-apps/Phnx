@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
 using MarkSFrancis.Collections;
+using MarkSFrancis.Collections.Extensions;
 
 namespace MarkSFrancis.Configuration
 {
@@ -13,7 +14,14 @@ namespace MarkSFrancis.Configuration
     /// </summary>
     public class AppConfig : IReadOnlyDictionary<string, string>
     {
+        /// <summary>
+        /// The Application Settings collection
+        /// </summary>
         protected NameValueCollection AppSettings { get; }
+
+        /// <summary>
+        /// The Connection Strings collection
+        /// </summary>
         protected ConnectionStringSettingsCollection ConnectionStrings { get; }
 
         /// <summary>
@@ -139,9 +147,9 @@ namespace MarkSFrancis.Configuration
         {
             get
             {
-                foreach(var item in new EnumerableEnumerator<KeyValuePair<string, string>>(GetEnumerator()))
+                foreach(var keyValue in new EnumerableEnumerator<KeyValuePair<string, string>>(GetEnumerator()))
                 {
-                    yield return item.Value;
+                    yield return keyValue.Value;
                 }
             }
         }

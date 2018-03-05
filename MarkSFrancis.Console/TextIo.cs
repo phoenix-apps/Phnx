@@ -36,7 +36,7 @@ namespace MarkSFrancis.Console
         /// Write a line of text to the <see cref="Output"/>, followed by a newline
         /// </summary>
         /// <param name="s">The text to write</param>
-        public void WriteLine(string s)
+        public void WriteLine(string s = "")
         {
             Output.WriteLine(s);
         }
@@ -69,7 +69,7 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
-        /// Write a collection of text to the <see cref="Output"/>, with each item delimited by a newline
+        /// Write a collection of text to the <see cref="Output"/>, with each value delimited by a newline
         /// </summary>
         /// <param name="collection">The collection of text to write</param>
         public void WriteCollection(params string[] collection)
@@ -78,16 +78,16 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
-        /// Write a collection of objects to the <see cref="Output"/> using their default <see cref="object.ToString()"/>, with each item delimited by a newline
+        /// Write a collection of objects to the <see cref="Output"/> using their default <see cref="object.ToString()"/>, with each value delimited by a newline
         /// </summary>
         /// <param name="collection">The collection of objects to write</param>
-        public void WriteCollection<T>(params T[] collection)
+        public void WriteCollection(params object[] collection)
         {
-            WriteCollection((IEnumerable<T>)collection);
+            WriteCollection((IEnumerable<object>)collection);
         }
         
         /// <summary>
-        /// Write a collection of text to the <see cref="Output"/>, with each item delimited by a newline
+        /// Write a collection of text to the <see cref="Output"/>, with each value delimited by a newline
         /// </summary>
         /// <param name="collection">The collection of text to write</param>
         public void WriteCollection(IEnumerable<string> collection)
@@ -96,17 +96,17 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
-        /// Write a collection of text to the <see cref="Output"/>, with each item delimited with custom text
+        /// Write a collection of text to the <see cref="Output"/>, with each value delimited with custom text
         /// </summary>
         /// <param name="collection">The collection of text to write</param>
-        /// <param name="delimiter">The delimiter to write between each item in the collection</param>
+        /// <param name="delimiter">The delimiter to write between each value in the collection</param>
         public void WriteCollection(IEnumerable<string> collection, string delimiter)
         {
             WriteLine(string.Join(delimiter, collection));
         }
 
         /// <summary>
-        /// Write a collection of objects to the <see cref="Output"/> using their default <see cref="object.ToString()"/>, with each item delimited by a newline
+        /// Write a collection of objects to the <see cref="Output"/> using their default <see cref="object.ToString()"/>, with each value delimited by a newline
         /// </summary>
         /// <param name="collection">The collection of objects to write</param>
         public void WriteCollection<T>(IEnumerable<T> collection)
@@ -115,10 +115,10 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
-        /// Write a collection of objects to the <see cref="Output"/> using their default <see cref="object.ToString()"/>, with each item delimited with custom text
+        /// Write a collection of objects to the <see cref="Output"/> using their default <see cref="object.ToString()"/>, with each value delimited with text
         /// </summary>
         /// <param name="collection">The collection of objects to write</param>
-        /// <param name="delimiter">The delimiter to write between each item in the collection</param>
+        /// <param name="delimiter">The delimiter to write between each value in the collection</param>
         public void WriteCollection<T>(IEnumerable<T> collection, string delimiter)
         {
             WriteCollection(collection.Select(o => o.ToString()), delimiter);

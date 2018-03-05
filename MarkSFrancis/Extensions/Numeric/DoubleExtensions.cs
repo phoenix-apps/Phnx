@@ -3,7 +3,7 @@
 namespace MarkSFrancis.Extensions.Numeric
 {
     /// <summary>
-    /// Extension methods for the base type <see cref="double"/>
+    /// Extensions for <see cref="double"/>
     /// </summary>
     public static class DoubleExtensions
     {

@@ -5,12 +5,12 @@ namespace MarkSFrancis.AspNet.Windows.Services.Context
 {
     public class HeadersService : BaseContextService, IContextMetaService<string, string>
     {
+        protected NameValueCollection RequestHeaders => Request.Headers;
+        protected NameValueCollection ResponseHeaders => Request.Headers;
+
         public HeadersService(HttpRequestBase request, HttpResponseBase response) : base(request, response)
         {
         }
-
-        protected NameValueCollection RequestHeaders => Request.Headers;
-        protected NameValueCollection ResponseHeaders => Request.Headers;
 
         public string Get(string key)
         {

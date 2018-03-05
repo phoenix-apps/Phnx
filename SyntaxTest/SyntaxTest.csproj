@@ -23,7 +23,6 @@
     <ProjectReference Include="..\MarkSFrancis.Security\MarkSFrancis.Security.csproj" />
     <ProjectReference Include="..\MarkSFrancis\MarkSFrancis.csproj" />
     <ProjectReference Include="..\Random\MarkSFrancis.Random\MarkSFrancis.Random.csproj" />
-    <ProjectReference Include="..\Windows\MarkSFrancis.Windows.DotNetExtensions\MarkSFrancis.Windows.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

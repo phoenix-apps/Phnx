@@ -14,7 +14,7 @@ namespace MarkSFrancis.Reflection
         /// <summary>
         /// Whether this is a <see cref="PropertyInfo"/>
         /// </summary>
-        public bool IsProperty => Property == null;
+        public bool IsProperty => Property != null;
         private PropertyInfo Property { get; }
         
         private FieldInfo Field { get; }

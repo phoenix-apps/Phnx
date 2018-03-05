@@ -1,7 +1,7 @@
 ﻿namespace MarkSFrancis.Extensions
 {
     /// <summary>
-    /// Extension methods for the base type <see cref="char"/>
+    /// Extensions for <see cref="char"/>
     /// </summary>
     public static class CharExtensions
     {

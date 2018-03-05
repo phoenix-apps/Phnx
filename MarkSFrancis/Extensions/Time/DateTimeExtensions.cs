@@ -3,7 +3,7 @@
 namespace MarkSFrancis.Extensions.Time
 {
     /// <summary>
-    /// Extension methods for <see cref="DateTime"/> objects
+    /// Extensions for <see cref="DateTime"/>
     /// </summary>
     public static class DateTimeExtensions
     {

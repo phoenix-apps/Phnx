@@ -3,7 +3,7 @@
 namespace MarkSFrancis.Extensions.Numeric
 {
     /// <summary>
-    /// Extension methods for the base type <see cref="byte"/>
+    /// Extensions for <see cref="byte"/>
     /// </summary>
     public static class ByteExtensions
     {

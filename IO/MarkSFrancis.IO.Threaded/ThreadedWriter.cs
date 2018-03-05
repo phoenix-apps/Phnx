@@ -31,9 +31,9 @@ namespace MarkSFrancis.IO.Threaded
             TaskRunner.Start();
         }
 
-        public void Write(T itemToWrite)
+        public void Write(T valueToWrite)
         {
-            WriteQueue.Enqueue(itemToWrite);
+            WriteQueue.Enqueue(valueToWrite);
         }
 
         private void TaskRunnerMethod()

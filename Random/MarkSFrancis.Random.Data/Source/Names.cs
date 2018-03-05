@@ -1,17 +1,13 @@
 ﻿namespace MarkSFrancis.Random.Data.Source
 {
     /// <summary>
-    /// Source: https://www.ssa.gov/OACT/babynames/decades/names2000s.html
+    /// A collection of lists of popular first names and surnames. Source: https://www.ssa.gov/OACT/babynames/decades/names2000s.html
     /// </summary>
     public static class Names
     {
-        // To log all names to the console in that table, use a command like 
-        // For male:
-        // $('.border.table tr td:nth-child(2)').each(function(){console.log('"' + $(this).text() + '",')})
-        // For female:
-        // $('.border.table tr td:nth-child(4)').each(function(){console.log('"' + $(this).text() + '",')})
-        // in the browser console
-        
+        /// <summary>
+        /// A list of male first names
+        /// </summary>
         public static readonly string[] MaleFirstNames = {
             "Jacob",
             "Michael",
@@ -214,8 +210,11 @@
             "Bryson",
             "Martin"
         };
-        
-        public static string[] FemaleFirstNames =
+
+        /// <summary>
+        /// A list of female first names
+        /// </summary>
+        public static readonly string[] FemaleFirstNames =
         {
             "Emily",
             "Madison",
@@ -419,7 +418,10 @@
             "Jasmin"
         };
 
-        public static string[] Surnames =
+        /// <summary>
+        /// A list of surnames
+        /// </summary>
+        public static readonly string[] Surnames =
         {
             "Smith",
             "Jones",

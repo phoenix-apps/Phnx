@@ -1,22 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace MarkSFrancis.Extensions
 {
     /// <summary>
-    /// Extension methods for the base type <see cref="string"/>
+    /// Extensions for <see cref="string"/>
     /// </summary>
     public static class StringExtensions
     {
 
-    /// <summary>Concatenates the members of a collection, using the specified separator between each member</summary>
-    /// <param name="separator">The string to use as a separator. The separator is only included in the returned string if <paramref name="values"/> has more than one element</param>
-    /// <param name="values">A collection that contains the objects to concatenate</param>
-    /// <typeparam name="T">The type of the members of <paramref name="values"/></typeparam>
-    /// <returns>A string that consists of the members of <paramref name="values"/> delimited by the <paramref name="separator">separator</paramref> string. If <paramref name="values"/> has no members, the method returns <see cref="String.Empty"></see></returns>
-    /// <exception cref="System.ArgumentNullException"><paramref name="values"/> is null.</exception>
+        /// <summary>Concatenates the members of a collection, using the specified separator between each member</summary>
+        /// <param name="separator">The string to use as a separator. The separator is only included in the returned string if <paramref name="values"/> has more than one element</param>
+        /// <param name="values">A collection that contains the objects to concatenate</param>
+        /// <typeparam name="T">The type of the members of <paramref name="values"/></typeparam>
+        /// <returns>A string that consists of the members of <paramref name="values"/> delimited by the <paramref name="separator">separator</paramref> string. If <paramref name="values"/> has no members, the method returns <see cref="String.Empty"></see></returns>
+        /// <exception cref="System.ArgumentNullException"><paramref name="values"/> is null.</exception>
         public static string Join<T>(this IEnumerable<T> values, string separator)
         {
             return string.Join(separator, values);
@@ -52,7 +51,7 @@ namespace MarkSFrancis.Extensions
         {
             return Remove(s, (IEnumerable<char>)charsToRemove);
         }
-        
+
         /// <summary>
         /// Removes a series of characters from a string
         /// </summary>
@@ -69,7 +68,18 @@ namespace MarkSFrancis.Extensions
 
             return retString;
         }
-        
+
+        /// <summary>
+        /// Removes a string from another string
+        /// </summary>
+        /// <param name="s">The string to remove from</param>
+        /// <param name="textToRemove">The string to remove</param>
+        /// <returns></returns>
+        public static string Remove(this string s, string textToRemove)
+        {
+            return s.Replace(textToRemove, string.Empty);
+        }
+
         /// <summary>
         /// Removes a series of strings from a string
         /// </summary>
@@ -80,7 +90,7 @@ namespace MarkSFrancis.Extensions
         {
             return Remove(s, (IEnumerable<string>)textToRemove);
         }
-        
+
         /// <summary>
         /// Removes a series of strings from a string
         /// </summary>
@@ -99,18 +109,14 @@ namespace MarkSFrancis.Extensions
         }
 
         /// <summary>
-        /// Converts a string to camel case, using <paramref name="wordDelimiters"/> to indicate where each word begins
+        /// Converts a string to camel case
         /// </summary>
         /// <param name="str">The string to convert</param>
         /// <param name="firstCharIsUpper">Whether the first character should be upper case. Setting this to true is the same as <see cref="ToPascalCase"/></param>
-        /// <param name="wordDelimiters">The strings that seperate each word. If none are given, this is set to "-", "_" and " "</param>
         /// <returns></returns>
-        public static string ToCamelCase(this string str, bool firstCharIsUpper, params string[] wordDelimiters)
+        public static string ToCamelCase(this string str, bool firstCharIsUpper)
         {
-            if ( wordDelimiters == null || wordDelimiters.Length == 0)
-            {
-                wordDelimiters = new[] { " ", "-", "_" };
-            }
+            var wordDelimiters = new[] { " ", "-", "_" };
 
             var words = str.Split(wordDelimiters, StringSplitOptions.RemoveEmptyEntries);
 
@@ -133,7 +139,7 @@ namespace MarkSFrancis.Extensions
 
             camelCase.Append(firstCharIsUpper ? MakeWordCamelCase(words[0]) : words[0].ToLower());
 
-            for(int wordIndex = 1; wordIndex < words.Length; ++wordIndex)
+            for (int wordIndex = 1; wordIndex < words.Length; ++wordIndex)
             {
                 camelCase.Append(MakeWordCamelCase(words[wordIndex]));
             }
@@ -142,14 +148,105 @@ namespace MarkSFrancis.Extensions
         }
 
         /// <summary>
-        /// Converts a string to camel case, using <paramref name="wordDelimiters"/> to indicate where each word begins
+        /// Converts a string to camel case
         /// </summary>
         /// <param name="str">The string to convert</param>
-        /// <param name="wordDelimiters">The strings that seperate each word. If none are given, this is set to "-", "_" and " "</param>
         /// <returns></returns>
-        public static string ToPascalCase(this string str, params string[] wordDelimiters)
+        public static string ToPascalCase(this string str)
         {
-            return ToCamelCase(str, true, wordDelimiters);
+            return ToCamelCase(str, true);
+        }
+
+        /// <summary>
+        /// Converts a camel case or pascal case formatted string to a normal string
+        /// </summary>
+        /// <param name="str">The string to convert</param>
+        /// <param name="startEachWordWithCapital">Whether to start each word with a capital letter, such as in a title</param>
+        /// <returns></returns>
+        public static string FromCamelAndPascalCase(this string str, bool startEachWordWithCapital = false)
+        {
+            if (str.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            StringBuilder result = new StringBuilder();
+            StringBuilder acronymBuilder = new StringBuilder();
+            StringBuilder numberBuilder = new StringBuilder();
+
+            void EmptyAcronymBuilder()
+            {
+                if (acronymBuilder.Length == 0)
+                {
+                    // Already empty
+                    return;
+                }
+
+                var newWordChar = acronymBuilder[acronymBuilder.Length - 1];
+                if (startEachWordWithCapital)
+                {
+                    newWordChar = char.ToUpperInvariant(newWordChar);
+                }
+                else
+                {
+                    newWordChar = char.ToLowerInvariant(newWordChar);
+                }
+                acronymBuilder.Length--;
+
+                if (result.Length > 0)
+                {
+                    result.Append(" ");
+                }
+
+                if (acronymBuilder.Length > 0)
+                {
+                    // Append acronym
+                    result.Append(acronymBuilder.ToString().ToUpperInvariant());
+
+                    result.Append(" ");
+                }
+
+                result.Append(newWordChar);
+
+                acronymBuilder.Clear();
+            }
+
+            void EmptyNumberBuilder()
+            {
+                if (numberBuilder.Length > 0)
+                {
+                    result.Append(" ");
+                    result.Append(numberBuilder);
+
+                    numberBuilder.Clear();
+                }
+            }
+
+            for (int index = 0; index < str.Length; index++)
+            {
+                char curChar = str[index];
+
+                if (char.IsNumber(curChar))
+                {
+                    EmptyAcronymBuilder();
+
+                    numberBuilder.Append(curChar);
+                }
+                else if (index == 0 || char.IsUpper(curChar) || numberBuilder.Length > 0)
+                {
+                    EmptyNumberBuilder();
+
+                    acronymBuilder.Append(curChar);
+                }
+                else
+                {
+                    EmptyAcronymBuilder();
+
+                    result.Append(curChar);
+                }
+            }
+
+            return result.ToString();
         }
     }
 }

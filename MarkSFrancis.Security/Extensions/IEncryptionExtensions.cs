@@ -4,7 +4,7 @@ using MarkSFrancis.Security.Interfaces;
 namespace MarkSFrancis.Security.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="IEncryption"/>
+    /// Extension for <see cref="IEncryption"/>
     /// </summary>
     public static class IEncryptionExtensions
     {

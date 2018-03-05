@@ -1,6 +1,5 @@
 ﻿using MarkSFrancis.Console;
-using MarkSFrancis.Geometry;
-using MarkSFrancis.Geometry.Shapes;
+using MarkSFrancis.IO.DelimitedData.Maps;
 
 namespace SyntaxTest
 {
@@ -10,11 +9,15 @@ namespace SyntaxTest
 
         static void Main()
         {
-            Polygon p = new Square(new Point(0, 0), 5);
-
-            Console.WriteLine(p.Area);
+            new NameMapTest(Console).Run();
 
             Console.ReadKey();
+        }
+
+        static void RunThreadsDemo()
+        {
+            ThreadsDemo threads = new ThreadsDemo(Console);
+            threads.Run();
         }
     }
 }

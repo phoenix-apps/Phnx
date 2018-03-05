@@ -10,45 +10,24 @@ namespace MarkSFrancis.IO.DelimitedData.Csv
     public class CsvReader : IDisposable
     {
         private DelimitedDataReader ReaderStream { get; }
-        private Stream SourceStream { get; }
-        private bool CloseStreamWhenDisposed { get; }
 
-        public bool EndOfData
-        {
-            get
-            {
-                lock (ReaderStream)
-                {
-                    return ReaderStream.EndOfStream;
-                }
-            }
-        }
+        public bool EndOfData => ReaderStream.EndOfStream;
 
         public List<string> ColumnHeadings { get; }
 
-        public CsvReader(string fileLocation, bool fileHasHeaders = true)
+        public CsvReader(string fileLocation, bool fileHasHeaders = true) :
+            this(new FileStream(fileLocation, FileMode.Open, FileAccess.Read), fileHasHeaders, true)
         {
-            SourceStream = new FileStream(fileLocation, FileMode.Open, FileAccess.Read);
-            ReaderStream = DelimitedDataReader.CsvReader(SourceStream);
-
-            if (fileHasHeaders)
-            {
-                ColumnHeadings = ReadLine();
-            }
-
-            CloseStreamWhenDisposed = true;
         }
 
         public CsvReader(Stream source, bool fileHasHeaders = true, bool closeStreamWhenDisposed = false)
         {
-            ReaderStream = DelimitedDataReader.CsvReader(source);
+            ReaderStream = DelimitedDataReader.CsvReader(source, closeStreamWhenDisposed);
 
             if (fileHasHeaders)
             {
                 ColumnHeadings = ReadLine();
             }
-
-            CloseStreamWhenDisposed = closeStreamWhenDisposed;
         }
 
         public List<string> ReadLine()
@@ -56,27 +35,9 @@ namespace MarkSFrancis.IO.DelimitedData.Csv
             return ReaderStream.ReadRow().ToList();
         }
 
-        private List<string> ReadLineThreaded()
-        {
-            if (EndOfData)
-            {
-                throw new EndOfStreamException();
-            }
-
-            lock (ReaderStream)
-            {
-                return ReaderStream.ReadRow().ToList();
-            }
-        }
-
         public void Dispose()
         {
             ReaderStream.Dispose();
-
-            if (CloseStreamWhenDisposed)
-            {
-                SourceStream.Dispose();
-            }
         }
     }
 }

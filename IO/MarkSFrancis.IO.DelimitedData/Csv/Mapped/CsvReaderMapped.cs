@@ -5,24 +5,63 @@ namespace MarkSFrancis.IO.DelimitedData.Csv.Mapped
 {
     public class CsvReaderMapped<T> : CsvReader where T : new()
     {
-        private NameMap<T> Map { get; }
+        private NameMap<T> NameMap { get; }
+        private NumberMap<T> NumberMap { get; }
+        public bool MappedByNames => NameMap != null;
 
-        public CsvReaderMapped(string fileLocation)
+        public CsvReaderMapped(string fileLocation, NameMap<T> map)
             : base(fileLocation, fileHasHeaders: true)
         {
-            Map = NameMap<T>.FromProperties();
+            NameMap = map;
         }
 
-        public CsvReaderMapped(Stream source, bool closeSourceWhenDisposed = false)
-            : base(source, closeStreamWhenDisposed: closeSourceWhenDisposed, fileHasHeaders: true)
+        public CsvReaderMapped(string fileLocation, NumberMap<T> map, bool fileHasHeaders = false)
+            : base(fileLocation, fileHasHeaders: fileHasHeaders)
         {
-            Map = NameMap<T>.FromProperties();
+            NumberMap = map;
         }
 
         public CsvReaderMapped(Stream source, NameMap<T> map, bool closeSourceWhenDisposed = false)
             : base(source, closeStreamWhenDisposed: closeSourceWhenDisposed, fileHasHeaders: true)
         {
-            Map = map;
+            NameMap = map;
+        }
+
+        public CsvReaderMapped(Stream source, NumberMap<T> map, bool closeSourceWhenDisposed = false,
+            bool fileHasHeaders = false)
+            : base(source, closeStreamWhenDisposed: closeSourceWhenDisposed, fileHasHeaders: fileHasHeaders)
+        {
+            NumberMap = map;
+        }
+
+        public static CsvReaderMapped<T> AutoMapped(Stream source, bool closeSourceWhenDisposed = false,
+            bool autoMapProperties = true, bool autoMapFields = false)
+        {
+            var map = AutoMap(autoMapProperties, autoMapFields);
+            return new CsvReaderMapped<T>(source, map, closeSourceWhenDisposed);
+        }
+
+        public static CsvReaderMapped<T> AutoMapped(string fileLocation, bool autoMapProperties = true,
+            bool autoMapFields = false)
+        {
+            var map = AutoMap(autoMapProperties, autoMapFields);
+            return new CsvReaderMapped<T>(fileLocation, map);
+        }
+
+        private static NameMap<T> AutoMap(bool autoMapProperties, bool autoMapFields)
+        {
+            var map = new NameMap<T>();
+
+            if (autoMapFields)
+            {
+                map.AutoMapFields();
+            }
+            if (autoMapProperties)
+            {
+                map.AutoMapProperties();
+            }
+
+            return map;
         }
 
         public T ReadRecord()
@@ -34,9 +73,19 @@ namespace MarkSFrancis.IO.DelimitedData.Csv.Mapped
                 throw new EndOfStreamException();
             }
 
-            lock (Map)
+            if (MappedByNames)
             {
-                return Map.MapToObject(values, ColumnHeadings);
+                lock (NameMap)
+                {
+                    return NameMap.MapToObject(values, ColumnHeadings);
+                }
+            }
+            else
+            {
+                lock (NumberMap)
+                {
+                    return NumberMap.MapToObject(values);
+                }
             }
         }
     }

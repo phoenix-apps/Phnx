@@ -34,7 +34,7 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
                 writer.WriteLine(testText);
 
                 Stream.Position = 0;
-                Reader = new CsvReaderMapped<T>(Stream);
+                Reader = CsvReaderMapped<T>.AutoMapped(Stream);
             }
         }
 

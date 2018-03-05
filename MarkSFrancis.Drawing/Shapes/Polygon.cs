@@ -1,14 +1,24 @@
 ﻿using System;
 
-namespace MarkSFrancis.Geometry.Shapes
+namespace MarkSFrancis.Drawing.Shapes
 {
+    /// <summary>
+    /// A shape with an edge defined by a series of straight edges
+    /// </summary>
     public class Polygon
     {
+        /// <summary>
+        /// Create a new <see cref="Polygon"/> with a range of corners as <see cref="Point"/>
+        /// </summary>
+        /// <param name="points">The corners</param>
         public Polygon(Point[] points)
         {
             Points = points;
         }
 
+        /// <summary>
+        /// The area of this <see cref="Polygon"/>
+        /// </summary>
         public double Area
         {
             get
@@ -30,8 +40,14 @@ namespace MarkSFrancis.Geometry.Shapes
             }
         }
 
+        /// <summary>
+        /// The number of sides in this <see cref="Polygon"/>
+        /// </summary>
         public int SidesCount => Points.Length;
 
-        public Point[] Points { get; private set; }
+        /// <summary>
+        /// The corners in this <see cref="Polygon"/>
+        /// </summary>
+        public Point[] Points { get; }
     }
 }

@@ -3,46 +3,71 @@ using System.Collections.Generic;
 
 namespace MarkSFrancis.Collections
 {
+    /// <summary>
+    /// Provides a way to enumerator over an <see cref="IEnumerator{T}"/>
+    /// </summary>
+    /// <typeparam name="T">The type of value to enumerate over</typeparam>
     public class EnumerableEnumerator<T> : IEnumerable<T>
     {
+        /// <summary>
+        /// Create a new <see cref="EnumerableEnumerator{T}"/> from an <see cref="IEnumerator{T}"/>
+        /// </summary>
+        /// <param name="enumerator">The enumerator to enumerate over</param>
         public EnumerableEnumerator(IEnumerator<T> enumerator)
         {
             Enumerator = enumerator;
         }
 
-        public IEnumerator<T> Enumerator { get; set; }
+        /// <summary>
+        /// Gets the <see cref="IEnumerator{T}"/>
+        /// </summary>
+        public IEnumerator<T> Enumerator { get; }
 
+        /// <summary>
+        /// Gets <see cref="Enumerator"/>
+        /// </summary>
+        /// <returns><see cref="Enumerator"/></returns>
         public IEnumerator<T> GetEnumerator()
         {
             return Enumerator;
         }
-
+        
+        /// <summary>
+        /// Gets <see cref="Enumerator"/>
+        /// </summary>
+        /// <returns><see cref="Enumerator"/></returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return Enumerator;
+            return GetEnumerator();
         }
     }
-
+    
+    /// <summary>
+    /// Provides a way to enumerator over an <see cref="IEnumerator"/>
+    /// </summary>
     public class EnumerableEnumerator : IEnumerable
     {
+        /// <summary>
+        /// Create a new <see cref="EnumerableEnumerator"/> from an <see cref="IEnumerator"/>
+        /// </summary>
+        /// <param name="enumerator">The enumerator to enumerate over</param>
         public EnumerableEnumerator(IEnumerator enumerator)
         {
             Enumerator = enumerator;
         }
 
-        public IEnumerator Enumerator { get; set; }
-
+        /// <summary>
+        /// Gets the <see cref="IEnumerator{T}"/>
+        /// </summary>
+        public IEnumerator Enumerator { get; }
+        
+        /// <summary>
+        /// Gets <see cref="Enumerator"/>
+        /// </summary>
+        /// <returns><see cref="Enumerator"/></returns>
         public IEnumerator GetEnumerator()
         {
             return Enumerator;
-        }
-    }
-
-    public static class IEnumeratorExtensions
-    {
-        public static EnumerableEnumerator<T> ToEnumerable<T>(this IEnumerator<T> enumerator)
-        {
-            return new EnumerableEnumerator<T>(enumerator);
         }
     }
 }

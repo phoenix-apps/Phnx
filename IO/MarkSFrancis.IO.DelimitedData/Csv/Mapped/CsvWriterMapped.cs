@@ -7,63 +7,111 @@ namespace MarkSFrancis.IO.DelimitedData.Csv.Mapped
 {
     public class CsvWriterMapped<T> : CsvWriter where T : new()
     {
-        private NameMap<T> Map { get; }
+        private NameMap<T> NameMap { get; }
+        private NumberMap<T> NumberMap { get; }
+        public bool MappedByNames => NameMap != null;
 
-        public CsvWriterMapped(string fileLocation, bool autoMapProperties = true, bool autoMapFields = false)
+        public CsvWriterMapped(string fileLocation, NameMap<T> map)
             : base(fileLocation)
         {
-            Map = AutoMap(autoMapProperties, autoMapFields);
-
-            var columnHeadings = Map.GetColumnHeadings();
-
-            SetColumnHeadings(columnHeadings.ToArray());
+            NameMap = map;
+            WriteHeaders();
         }
 
-        public CsvWriterMapped(Stream source, bool closeStreamWhenDisposed = false, bool autoMapProperties = true, bool autoMapFields = false)
+        public CsvWriterMapped(string fileLocation, NumberMap<T> map, bool writeColumnHeaders = false)
+            : base(fileLocation)
+        {
+            NumberMap = map;
+
+            if (writeColumnHeaders)
+            {
+                WriteHeaders();
+            }
+        }
+
+        public CsvWriterMapped(Stream source, NameMap<T> map, bool closeStreamWhenDisposed = false)
             : base(source, closeStreamWhenDisposed)
         {
-            Map = AutoMap(autoMapProperties, autoMapFields);
+            NameMap = map;
+            
+            WriteHeaders();
+        }
 
-            var columnHeadings = Map.GetColumnHeadings();
+        public CsvWriterMapped(Stream source, NumberMap<T> map, bool closeStreamWhenDisposed = false, bool writeColumnHeaders = false)
+            : base(source, closeStreamWhenDisposed)
+        {
+            NumberMap = map;
+
+            if (writeColumnHeaders)
+            {
+                WriteHeaders();
+            }
+        }
+
+        public static CsvWriterMapped<T> AutoMapped(Stream source, bool closeSourceWhenDisposed = false,
+            bool autoMapProperties = true, bool autoMapFields = false)
+        {
+            var map = AutoMap(autoMapProperties, autoMapFields);
+            return new CsvWriterMapped<T>(source, map, closeSourceWhenDisposed);
+        }
+
+        public static CsvWriterMapped<T> AutoMapped(string fileLocation, bool autoMapProperties = true,
+            bool autoMapFields = false)
+        {
+            var map = AutoMap(autoMapProperties, autoMapFields);
+            return new CsvWriterMapped<T>(fileLocation, map);
+        }
+
+        private void WriteHeaders()
+        {
+            IEnumerable<string> columnHeadings;
+            if (MappedByNames)
+            {
+                columnHeadings = NameMap.GetColumnHeadings();
+            }
+            else
+            {
+                columnHeadings = NumberMap.GetColumnHeadings();
+            }
+
             SetColumnHeadings(columnHeadings.ToArray());
         }
 
-        public CsvWriterMapped(Stream source, NameMap<T> map, bool closeSourceWhenDisposed)
-            : base(source, closeSourceWhenDisposed)
+        private static NameMap<T> AutoMap(bool autoMapProperties, bool autoMapFields)
         {
-            var headers = map.GetColumnHeadings();
-            SetColumnHeadings(headers.ToArray());
-
-            Map = map;
-        }
-
-        private NameMap<T> AutoMap(NameMap<T> map, bool autoMapProperties, bool autoMapFields)
-        {
-            if (autoMapProperties)
-            {
-                map.AutoMapProperties();
-            }
+            var map = new NameMap<T>();
 
             if (autoMapFields)
             {
                 map.AutoMapFields();
             }
+            if (autoMapProperties)
+            {
+                map.AutoMapProperties();
+            }
 
             return map;
         }
 
-        private NameMap<T> AutoMap(bool autoMapProperties, bool autoMapFields) =>
-            AutoMap(new NameMap<T>(), autoMapProperties, autoMapFields);
-
         public void WriteRecord(T data)
         {
-            IList<string> values;
-            lock (Map)
+            IList<string> recordToWrite;
+            if (MappedByNames)
             {
-                values = Map.MapFromObject(data);
+                lock (NameMap)
+                {
+                    recordToWrite = NameMap.MapFromObject(data);
+                }
+            }
+            else
+            {
+                lock (NumberMap)
+                {
+                    recordToWrite = NumberMap.MapFromObject(data);
+                }
             }
 
-            WriteRecord(values);
+            WriteRecord(recordToWrite);
         }
     }
 }

@@ -6,4 +6,8 @@
     <RootNamespace>MarkSFrancis.Drawing</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\MarkSFrancis.Drawing.xml</DocumentationFile>
+  </PropertyGroup>
+
 </Project>

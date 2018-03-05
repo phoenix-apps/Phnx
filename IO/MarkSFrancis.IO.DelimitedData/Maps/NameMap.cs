@@ -116,7 +116,6 @@ namespace MarkSFrancis.IO.DelimitedData.Maps
         {
             if (!SpaceSensitiveMap)
             {
-                // ReSharper disable once PossiblyMistakenUseOfParamsMethod
                 name = name.Remove(" ");
             }
 

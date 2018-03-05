@@ -113,7 +113,7 @@ namespace MarkSFrancis.Security.Passwords
         /// <returns></returns>
         protected bool HashesMatch(byte[] hash1, byte[] hash2)
         {
-            return hash1.IsEqualToRange(hash2);
+            return hash1.EqualsRange(hash2);
         }
     }
 }
