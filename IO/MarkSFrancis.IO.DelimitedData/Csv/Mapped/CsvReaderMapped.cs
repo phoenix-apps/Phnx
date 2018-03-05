@@ -10,7 +10,7 @@ namespace MarkSFrancis.IO.DelimitedData.Csv.Mapped
 
         private CsvReaderMapped(string fileLocation, bool autoMapProperties, bool autoMapFields) : base(fileLocation, fileHasHeaders: true)
         {
-            Map = AutoMap(autoMapProperties, autoMapFields);
+            Map = ReadMapColumnName<T>.AutoMap(autoMapProperties, autoMapFields);
         }
 
         public CsvReaderMapped(string fileLocation, ReadMapColumnName<T> map)
@@ -34,7 +34,7 @@ namespace MarkSFrancis.IO.DelimitedData.Csv.Mapped
         private CsvReaderMapped(Stream source, bool autoMapProperties, bool autoMapFields, bool closeSourceWhenDisposed = false)
             : base(source, closeStreamWhenDisposed: closeSourceWhenDisposed, fileHasHeaders: true)
         {
-            Map = AutoMap(autoMapProperties, autoMapFields);
+            Map = ReadMapColumnName<T>.AutoMap(ColumnHeadings, autoMapProperties, autoMapFields);
         }
 
         public CsvReaderMapped(Stream source, ReadMapColumnId<T> map, bool closeSourceWhenDisposed = false, bool fileHasHeaders = false)
@@ -51,11 +51,6 @@ namespace MarkSFrancis.IO.DelimitedData.Csv.Mapped
         public static CsvReaderMapped<T> AutoMapped(string fileLocation, bool autoMapProperties = true, bool autoMapFields = false)
         {
             return new CsvReaderMapped<T>(fileLocation, autoMapProperties, autoMapFields);
-        }
-
-        private ReadMapColumnName<T> AutoMap(bool autoMapProperties, bool autoMapFields)
-        {
-            return ReadMapColumnName<T>.AutoMap(ColumnHeadings, autoMapProperties, autoMapFields);
         }
 
         public T ReadRecord()
