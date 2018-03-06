@@ -3,37 +3,69 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MarkSFrancis.IO.Factory;
+using MarkSFrancis.IO.Threaded;
 
 namespace MarkSFrancis.IO.DelimitedData
 {
-    public class DelimitedDataWriter
+    public class DelimitedDataWriter : IDisposable
     {
-        public string Splitter { get; }
-        private StreamWriter MyStream { get; }
+        public char Splitter { get; }
+        private bool CloseStreamWhenDisposed { get; }
 
-        public DelimitedDataWriter(Stream myStream, string splitter)
+        private ThreadedWriter<string> ThreadedWriter { get; }
+        private TextWriter MyStream { get; }
+
+        public string[] Headings => headings?.ToArray();
+        private readonly IList<string> headings;
+        public bool FileHasHeadings => headings != null;
+
+        public DelimitedDataWriter(string fileLocation, char splitter, params string[] headings)
+            : this(new FileStream(fileLocation, FileMode.Create, FileAccess.Write), splitter, true, headings)
         {
-            MyStream = new StreamWriter(myStream, EncodingHelper.DefaultEncoding) { AutoFlush = true };
+        }
+
+        public DelimitedDataWriter(Stream myStream, char splitter, bool closeStreamWhenDisposed = false, params string[] headings)
+        {
             Splitter = splitter;
+
+            var streamFactory = new MemoryStreamFactory();
+            MyStream = new StreamWriter(myStream, streamFactory.DefaultEncoding);
+
+            CloseStreamWhenDisposed = closeStreamWhenDisposed;
+            ThreadedWriter = new ThreadedWriter<string>(WriteLineFromBuffer);
+
+            this.headings = headings;
+            WriteRecord(headings);
         }
 
-        public static DelimitedDataWriter CsvWriter(Stream myStream)
+        public static DelimitedDataWriter CsvWriter(Stream myStream, bool closeStreamWhenDisposed = false, params string[] headings)
         {
-            return new DelimitedDataWriter(myStream, ",");
+            return new DelimitedDataWriter(myStream, ',', closeStreamWhenDisposed, headings);
+        }
+        
+        public static DelimitedDataWriter TsvWriter(Stream myStream, bool closeStreamWhenDisposed = false, params string[] headings)
+        {
+            return new DelimitedDataWriter(myStream, '\t', closeStreamWhenDisposed, headings);
         }
 
-        public static DelimitedDataWriter TsvWriter(Stream myStream)
+        public static DelimitedDataWriter CsvWriter(string fileLocation, params string[] headings)
         {
-            return new DelimitedDataWriter(myStream, "\t");
+            return new DelimitedDataWriter(fileLocation, ',', headings);
         }
 
-        public void WriteRow(IList<string> values)
+        public static DelimitedDataWriter TsvWriter(string fileLocation, params string[] headings)
         {
-            StringBuilder textToWrite = new StringBuilder(values.Sum(x => x?.Length ?? 0) + values.Count);
+            return new DelimitedDataWriter(fileLocation, '\t', headings);
+        }
+
+        public void WriteRecord(IList<string> values)
+        {
+            StringBuilder textToWrite = new StringBuilder();
 
             for (int valueIndex = 0; valueIndex < values.Count; valueIndex++)
             {
-                var sanitisedField = SanitiseForWriting(values[valueIndex], Splitter);
+                var sanitisedField = SanitiseFieldForWriting(values[valueIndex], Splitter);
 
                 textToWrite.Append(sanitisedField);
                 textToWrite.Append(Splitter);
@@ -41,17 +73,28 @@ namespace MarkSFrancis.IO.DelimitedData
 
             if (textToWrite.Length > 0)
             {
-                MyStream.Write(textToWrite.ToString(0, textToWrite.Length - Splitter.Length));
+                ThreadedWriter.Write(textToWrite.ToString(0, textToWrite.Length - 1 /* Remove trailing splitter */));
             }
             else
             {
-                MyStream.Write("");
+                ThreadedWriter.Write("");
             }
-
-            MyStream.Write(Environment.NewLine);
         }
 
-        public static string SanitiseForWriting(string field, string fieldSplitter)
+        public void WriteRecord(params string[] values)
+        {
+            WriteRecord((IList<string>)values);
+        }
+
+        private void WriteLineFromBuffer(string data)
+        {
+            lock (MyStream)
+            {
+                MyStream.WriteLine(data);
+            }
+        }
+
+        public static string SanitiseFieldForWriting(string field, char fieldSplitter)
         {
             string valueToPrint = field ?? "";
 
@@ -67,9 +110,14 @@ namespace MarkSFrancis.IO.DelimitedData
             return valueToPrint;
         }
 
-        public void WriteRow(params string[] values)
+        public void Dispose()
         {
-            WriteRow((IList<string>)values);
+            ThreadedWriter?.Dispose();
+
+            if (CloseStreamWhenDisposed)
+            {
+                MyStream?.Dispose();
+            }
         }
     }
 }

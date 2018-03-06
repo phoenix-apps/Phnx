@@ -4,44 +4,48 @@ using MarkSFrancis.IO.DelimitedData.Maps.Interfaces;
 
 namespace MarkSFrancis.IO.DelimitedData.Csv.Mapped
 {
-    public class CsvReaderMapped<T> : CsvReader where T : new()
+    public class CsvReaderMapped<T> where T : new()
     {
         private IMap<T> Map { get; }
+        private DelimitedDataReader DataReader { get; }
+
+        public string[] Headings => DataReader.Headings;
+        public bool FileHasHeadings => DataReader.FileHasHeadings;
 
         public CsvReaderMapped(string fileLocation, MapColumnName<T> map)
-            : base(fileLocation, fileHasHeaders: true)
         {
             Map = map;
+            DataReader = DelimitedDataReader.CsvReader(fileLocation, true);
         }
 
-        public CsvReaderMapped(string fileLocation, MapColumnId<T> map, bool fileHasHeaders = false)
-            : base(fileLocation, fileHasHeaders: fileHasHeaders)
+        public CsvReaderMapped(string fileLocation, MapColumnId<T> map, bool fileHasHeaders = true)
         {
             Map = map;
+            DataReader = DelimitedDataReader.CsvReader(fileLocation, fileHasHeaders);
         }
 
         public CsvReaderMapped(Stream source, MapColumnName<T> map, bool closeSourceWhenDisposed = false)
-            : base(source, closeStreamWhenDisposed: closeSourceWhenDisposed, fileHasHeaders: true)
         {
             Map = map;
+            DataReader = DelimitedDataReader.CsvReader(source, true, closeSourceWhenDisposed);
         }
         
-        public CsvReaderMapped(Stream source, MapColumnId<T> map, bool closeSourceWhenDisposed = false, bool fileHasHeaders = false)
-            : base(source, closeStreamWhenDisposed: closeSourceWhenDisposed, fileHasHeaders: fileHasHeaders)
+        public CsvReaderMapped(Stream source, MapColumnId<T> map, bool fileHasHeaders = true, bool closeSourceWhenDisposed = false)
         {
             Map = map;
+            DataReader = DelimitedDataReader.CsvReader(source, fileHasHeaders, closeSourceWhenDisposed);
         }
 
         public T ReadRecord()
         {
-            var values = ReadLine();
+            var values = DataReader.ReadRecord();
 
             if (values == null)
             {
                 throw new EndOfStreamException();
             }
 
-            return Map.MapToObject(values, ColumnHeadings);
+            return Map.MapToObject(values, DataReader.Headings);
         }
     }
 }

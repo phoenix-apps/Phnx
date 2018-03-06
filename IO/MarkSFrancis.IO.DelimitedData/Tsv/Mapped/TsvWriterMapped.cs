@@ -1,8 +1,8 @@
 ﻿namespace MarkSFrancis.IO.DelimitedData.Tsv.Mapped
 {
-    public class TsvWriterMapped<T> : TsvWriter where T : new()
+    public class TsvWriterMapped<T> where T : new()
     {
-        public TsvWriterMapped() : base(fileLocation: null)
+        public TsvWriterMapped()
         {
             throw ErrorFactory.Default.NotImplemented("Refactor class");
         }

@@ -5,57 +5,51 @@ using MarkSFrancis.IO.DelimitedData.Maps.Interfaces;
 
 namespace MarkSFrancis.IO.DelimitedData.Csv.Mapped
 {
-    public class CsvWriterMapped<T> : CsvWriter where T : new()
+    public class DataWriterMapped<T> where T : new()
     {
         private IMap<T> Map { get; }
+        private DelimitedDataWriter DataWriter { get; }
 
-        public CsvWriterMapped(string fileLocation, MapColumnName<T> map)
-            : base(fileLocation)
-        {
-            Map = map;
-            WriteHeaders();
-        }
+        public string[] Headings => DataWriter.Headings;
+        public bool FileHasHeadings => DataWriter.FileHasHeadings;
 
-        public CsvWriterMapped(string fileLocation, MapColumnId<T> map, bool writeColumnHeaders = false)
-            : base(fileLocation)
+        public DataWriterMapped(string fileLocation, MapColumnName<T> map)
         {
             Map = map;
 
-            if (writeColumnHeaders)
-            {
-                WriteHeaders();
-            }
+            DataWriter = DelimitedDataWriter.CsvWriter(fileLocation, map.MappedColumnNames.ToArray());
         }
 
-        public CsvWriterMapped(Stream source, MapColumnName<T> map, bool closeStreamWhenDisposed = false)
-            : base(source, closeStreamWhenDisposed)
-        {
-            Map = map;
-            
-            WriteHeaders();
-        }
-
-        public CsvWriterMapped(Stream source, MapColumnId<T> map, bool closeStreamWhenDisposed = false, bool writeColumnHeaders = false)
-            : base(source, closeStreamWhenDisposed)
+        public DataWriterMapped(string fileLocation, MapColumnId<T> map, bool writeColumnHeaders = false)
         {
             Map = map;
 
-            if (writeColumnHeaders)
-            {
-                WriteHeaders();
-            }
+            DataWriter = writeColumnHeaders ? 
+                DelimitedDataWriter.CsvWriter(fileLocation, map.MappedColumnNames.ToArray()) : 
+                DelimitedDataWriter.CsvWriter(fileLocation);
         }
 
-        private void WriteHeaders()
+        public DataWriterMapped(Stream source, MapColumnName<T> map, bool closeStreamWhenDisposed = false)
         {
-            SetColumnHeadings(Map.MappedColumnNames.ToList());
+            Map = map;
+
+            DataWriter = DelimitedDataWriter.CsvWriter(source, closeStreamWhenDisposed, map.MappedColumnNames.ToArray());
+        }
+
+        public DataWriterMapped(Stream source, MapColumnId<T> map, bool closeStreamWhenDisposed = false, bool writeColumnHeaders = false)
+        {
+            Map = map;
+
+            DataWriter = writeColumnHeaders ? 
+                DelimitedDataWriter.CsvWriter(source, closeStreamWhenDisposed, map.MappedColumnNames.ToArray()) : 
+                DelimitedDataWriter.CsvWriter(source, closeStreamWhenDisposed);
         }
 
         public void WriteRecord(T data)
         {
-            var values = Map.MapFromObject(data, ColumnHeadings);
+            var values = Map.MapFromObject(data, DataWriter.Headings);
 
-            WriteRecord(values);
+            DataWriter.WriteRecord(values);
         }
     }
 }

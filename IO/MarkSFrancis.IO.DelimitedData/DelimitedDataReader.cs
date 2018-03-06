@@ -1,19 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using MarkSFrancis.IO.Extensions;
+using MarkSFrancis.IO.Factory;
 using MarkSFrancis.IO.Threaded;
 
 namespace MarkSFrancis.IO.DelimitedData
 {
     public class DelimitedDataReader : IDisposable
     {
-        public string Splitter { get; }
+        public char Splitter { get; }
         private bool CloseStreamWhenDisposed { get; }
 
         private ThreadedReader<string> ThreadedReader { get; }
         private TextReader MyStream { get; }
+
+        public string[] Headings => headings?.ToArray();
+        private readonly IList<string> headings;
+        public bool FileHasHeadings => headings != null;
 
         private bool _endOfStream;
         public bool EndOfStream
@@ -37,56 +43,54 @@ namespace MarkSFrancis.IO.DelimitedData
             }
         }
 
-        public DelimitedDataReader(string textToRead, string splitter)
+        public DelimitedDataReader(string fileLocation, char splitter, bool dataHasHeadings = true) : 
+            this(
+                new FileStream(fileLocation, FileMode.Open, FileAccess.Read), 
+                splitter, 
+                dataHasHeadings,
+                true)
         {
-            Splitter = splitter;
-            MyStream = CreateStreamReaderFromText(textToRead);
-
-            ThreadedReader = new ThreadedReader<string>(ReadLineToBuffer);
         }
 
-        public DelimitedDataReader(Stream myStream, string splitter, bool closeStreamWhenDisposed = false)
+        public DelimitedDataReader(Stream myStream, char splitter, bool dataHasHeadings = true, bool closeStreamWhenDisposed = false)
         {
-            MyStream = new StreamReader(myStream, EncodingHelper.DefaultEncoding);
             Splitter = splitter;
+
+            var streamFactory = new MemoryStreamFactory();
+            MyStream = new StreamReader(myStream, streamFactory.DefaultEncoding);
+
             CloseStreamWhenDisposed = closeStreamWhenDisposed;
-
             ThreadedReader = new ThreadedReader<string>(ReadLineToBuffer);
+
+            if (dataHasHeadings)
+            {
+                headings = ReadRecord();
+            }
         }
 
-        public static DelimitedDataReader CsvReader(Stream myStream, bool closeStreamWhenDisposed = false)
+        public static DelimitedDataReader CsvReader(Stream myStream, bool dataHasHeadings = true, bool closeStreamWhenDisposed = false)
         {
-            return new DelimitedDataReader(myStream, ",", closeStreamWhenDisposed);
+            return new DelimitedDataReader(myStream, ',', dataHasHeadings, closeStreamWhenDisposed);
         }
 
-        public static DelimitedDataReader CsvReader(string textToRead)
+        public static DelimitedDataReader CsvReader(string fileLocation, bool dataHasHeadings = true)
         {
-            return new DelimitedDataReader(textToRead, ",");
+            return new DelimitedDataReader(fileLocation, ',', dataHasHeadings);
         }
 
-        public static DelimitedDataReader TsvReader(Stream myStream, bool closeStreamWhenDisposed = false)
+        public static DelimitedDataReader TsvReader(Stream myStream, bool dataHasHeadings = true, bool closeStreamWhenDisposed = false)
         {
-            return new DelimitedDataReader(myStream, "\t", closeStreamWhenDisposed);
+            return new DelimitedDataReader(myStream, '\t', dataHasHeadings, closeStreamWhenDisposed);
         }
 
-        public static DelimitedDataReader TsvReader(string textToRead)
+        public static DelimitedDataReader TsvReader(string fileLocation, bool dataHasHeadings = true)
         {
-            return new DelimitedDataReader(textToRead, "\t");
+            return new DelimitedDataReader(fileLocation, '\t', dataHasHeadings);
         }
 
-        private static StreamReader CreateStreamReaderFromText(string text)
+        public List<string> ReadRecord()
         {
-            MemoryStream ms = new MemoryStream();
-            StreamWriter writer = new StreamWriter(ms);
-            writer.Write(text);
-            writer.Flush();
-            ms.Position = 0;
-
-            return new StreamReader(ms, EncodingHelper.DefaultEncoding);
-        }
-
-        public IEnumerable<string> ReadRow()
-        {
+            List<string> readRecord = new List<string>();
             StringBuilder currentField = new StringBuilder();
 
             bool insideDoubleQuotes = false;
@@ -97,7 +101,10 @@ namespace MarkSFrancis.IO.DelimitedData
             string lineRead = ThreadedReader.Read();
 
             char[] lineBuffer = lineRead?.ToCharArray();
-            if (lineBuffer == null) yield break;
+            if (lineBuffer == null)
+            {
+                return new List<string>();
+            }
 
             int currentLineCharIndex = 0;
 
@@ -147,19 +154,6 @@ namespace MarkSFrancis.IO.DelimitedData
 
                         lastCharWasSplitter = false;
                         break;
-                    case ',':
-                        if (insideSingleQuotes || insideDoubleQuotes)
-                        {
-                            currentField.Append(',');
-                        }
-                        else
-                        {
-                            lastCharWasSplitter = true;
-
-                            yield return currentField.ToString();
-                            currentField.Clear();
-                        }
-                        break;
                     case '\r':
                         if (insideSingleQuotes || insideDoubleQuotes)
                         {
@@ -177,8 +171,8 @@ namespace MarkSFrancis.IO.DelimitedData
                             }
                             // else Linux newline (\r), no extra action needed
 
-                            yield return currentField.ToString();
-                            yield break;
+                            readRecord.Add(currentField.ToString());
+                            return readRecord;
                         }
 
                         lastCharWasSplitter = false;
@@ -191,13 +185,28 @@ namespace MarkSFrancis.IO.DelimitedData
                         else
                         {
                             // OS X newline (\n)
-                            yield return currentField.ToString();
-                            yield break;
+                            readRecord.Add(currentField.ToString());
+                            return readRecord;
                         }
 
                         lastCharWasSplitter = false;
                         break;
                     default:
+                        if (lineBuffer[currentLineCharIndex] == Splitter)
+                        {
+                            if (insideSingleQuotes || insideDoubleQuotes)
+                            {
+                                currentField.Append(Splitter);
+                            }
+                            else
+                            {
+                                lastCharWasSplitter = true;
+
+                                readRecord.Add(currentField.ToString());
+                                currentField.Clear();
+                            }
+                        }
+
                         currentField.Append(lineBuffer[currentLineCharIndex]);
 
                         lastCharWasSplitter = false;
@@ -214,8 +223,8 @@ namespace MarkSFrancis.IO.DelimitedData
                     if (lineBuffer == null)
                     {
                         // End of file
-                        yield return currentField.ToString();
-                        yield break;
+                        readRecord.Add(currentField.ToString());
+                        return readRecord;
                     }
                 }
             }
