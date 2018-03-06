@@ -1,4 +1,5 @@
-﻿using MarkSFrancis.IO.DelimitedData.Maps.Read;
+﻿using MarkSFrancis.IO.DelimitedData.Maps;
+using MarkSFrancis.IO.DelimitedData.Maps.Extensions;
 using NUnit.Framework;
 
 namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
@@ -22,11 +23,11 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         public void AssigningField_WhenMapContainsField_SetsValue()
         {
             // Arrange
-            var map = new ReadMapColumnName<MapTest>("asdf");
-            map.TryAddMap(test => test.asdf, "asdf");
+            var map = new MapColumnName<MapTest>();
+            map.Map(test => test.asdf, "asdf");
 
             // Act
-            var mapTest = map.MapToObject(new[] { "exampleValue" });
+            var mapTest = map.MapToObject(new[] { "exampleValue" }, new[] { "asdf" });
 
             // Assert
             Assert.AreEqual("exampleValue", mapTest.asdf);
@@ -36,11 +37,11 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         public void AssigningProperty_WhenMapContainsProperty_SetsValue()
         {
             // Arrange
-            var map = new ReadMapColumnName<MapTest>("asdf");
-            map.TryAddMap(test => test.Asdf2, "asdf");
+            var map = new MapColumnName<MapTest>();
+            map.Map(test => test.Asdf2, "asdf");
 
             // Act
-            var mapTest = map.MapToObject(new[] { "exampleValue" });
+            var mapTest = map.MapToObject(new[] { "exampleValue" }, new[] { "asdf" });
 
             // Assert
             Assert.AreEqual("exampleValue", mapTest.Asdf2);
@@ -50,12 +51,12 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         public void AssigningProperty_WhenMapContainsMany_SetsValue()
         {
             // Arrange
-            var map = new ReadMapColumnName<MapTest>("asdf");
-            map.TryAddMap(test => test.Asdf2, "asdf");
-            map.TryAddMap(test => test.asdf, "asdf2");
+            var map = new MapColumnName<MapTest>();
+            map.Map(test => test.Asdf2, "asdf");
+            map.Map(test => test.asdf, "asdf2");
 
             // Act
-            var mapTest = map.MapToObject(new[] { "exampleValue" });
+            var mapTest = map.MapToObject(new[] { "exampleValue" }, new[] { "asdf" });
 
             // Assert
             Assert.AreEqual("exampleValue", mapTest.Asdf2);
@@ -65,12 +66,12 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         public void AssigningField_WhenMapContainsNumberedField_SetsValue()
         {
             // Arrange
-            var map = new ReadMapColumnId<MapTest>();
-            map.TryAddMap(test => test.asdf, 4);
+            var map = new MapColumnId<MapTest>();
+            map.Map(test => test.asdf, 4);
 
             // Act
             var mapTest = map.MapToObject(
-                new[] { null, null, null, null, "exampleValue" });
+                new[] { null, null, null, null, "exampleValue" }, null);
 
             // Assert
             Assert.AreEqual("exampleValue", mapTest.asdf);
@@ -80,12 +81,12 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         public void AssigningProperty_WhenMapContainsNumberedProperty_SetsValue()
         {
             // Arrange
-            var map = new ReadMapColumnId<MapTest>();
-            map.TryAddMap(test => test.Asdf2, 7);
+            var map = new MapColumnId<MapTest>();
+            map.Map(test => test.Asdf2, 7);
 
             // Act
             var mapTest = map.MapToObject(
-                new[] { null, null, null, null, null, null, null, "exampleValue" });
+                new[] { null, null, null, null, null, null, null, "exampleValue" }, null);
 
             // Assert
             Assert.AreEqual("exampleValue", mapTest.Asdf2);
@@ -95,10 +96,10 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         public void AssigningProperty_WhenMapIsAuto_SetsValue()
         {
             // Arrange
-            var map = ReadMapColumnName<MapTest>.AutoMap(columns: "asdf2");
+            var map = MapColumnName<MapTest>.AutoMap();
 
             // Act
-            var mapTest = map.MapToObject(new[] { "exampleValue" });
+            var mapTest = map.MapToObject(new[] { "exampleValue" }, new[] { "asdf2" });
 
             // Assert
             Assert.AreEqual("exampleValue", mapTest.Asdf2);
@@ -108,10 +109,10 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         public void AssigningField_WhenMapIsAuto_SetsValue()
         {
             // Arrange
-            ReadMapColumnName<MapTest> map = ReadMapColumnName<MapTest>.AutoMap(false, true, "asdf");
+            MapColumnName<MapTest> map = MapColumnName<MapTest>.AutoMap(false, true);
 
             // Act
-            var mapTest = map.MapToObject(new[] { "exampleValue" });
+            var mapTest = map.MapToObject(new[] { "exampleValue" }, new[] { "asdf" });
 
             // Assert
             Assert.AreEqual("exampleValue", mapTest.asdf);

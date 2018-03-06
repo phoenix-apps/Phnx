@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\IO\MarkSFrancis.IO.DelimitedData\MarkSFrancis.IO.DelimitedData.csproj" />
+    <ProjectReference Include="..\..\..\MarkSFrancis.Collections\MarkSFrancis.Collections.csproj" />
     <ProjectReference Include="..\..\..\MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj" />
   </ItemGroup>
 

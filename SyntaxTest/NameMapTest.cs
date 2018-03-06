@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MarkSFrancis.Console;
-using MarkSFrancis.IO.DelimitedData.Maps.Interfaces;
-using MarkSFrancis.IO.DelimitedData.Maps.Read;
-using MarkSFrancis.IO.DelimitedData.Maps.Write;
+using MarkSFrancis.IO.DelimitedData.Maps;
 
 namespace SyntaxTest
 {
@@ -18,7 +16,7 @@ namespace SyntaxTest
 
         public void Run()
         {
-            IWriteMap<ClassToMap> writeMap = WriteMapColumnName<ClassToMap>.AutoMap();
+            var writeMap = MapColumnName<ClassToMap>.AutoMap();
 
             var testClass = new ClassToMap
             {
@@ -27,10 +25,11 @@ namespace SyntaxTest
                 ThisIsAPascalCaseTest = "Pascal test val"
             };
 
-            var mappedResult = writeMap.MapFromObject(testClass);
+            var columns = writeMap.MappedColumnNames.ToList();
+            var mappedResult = writeMap.MapFromObject(testClass, columns);
             _console.WriteCollection(mappedResult);
 
-            IReadMap<ClassToMap> readMap = ReadMapColumnName<ClassToMap>.AutoMap(writeMap.ColumnHeadings.ToList());
+            MapColumnName<ClassToMap> readMap = MapColumnName<ClassToMap>.AutoMap();
             var testValues = new List<string>
             {
                 "asdfVal2",
@@ -38,7 +37,7 @@ namespace SyntaxTest
                 "Pascal test val 2"
             };
 
-            var mappedObject = readMap.MapToObject(testValues);
+            var mappedObject = readMap.MapToObject(testValues, columns);
             _console.WriteLine(mappedObject);
         }
 

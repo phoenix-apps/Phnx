@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MarkSFrancis.Collections;
+using MarkSFrancis.Collections.Extensions;
 using MarkSFrancis.Extensions;
 using MarkSFrancis.IO.DelimitedData.Maps.Interfaces;
 using MarkSFrancis.Reflection;
@@ -64,6 +65,12 @@ namespace MarkSFrancis.IO.DelimitedData.Maps
             {
                 // Map to columns
                 var columnId = columnHeadings.IndexOf(mappedColumn.Value);
+
+                if (columnId < 0)
+                {
+                    // Not found
+                    ErrorFactory.Default.KeyNotFound(mappedColumn.Value, nameof(MappedColumnNames));
+                }
 
                 var converter = ConverterHelpers.GetDefaultConverter(typeof(string), mappedColumn.Key.Type);
                 var convertedValue = converter(values[columnId]);
