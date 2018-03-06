@@ -96,10 +96,10 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         public void AssigningProperty_WhenMapIsAuto_SetsValue()
         {
             // Arrange
-            var map = MapColumnName<MapTest>.AutoMap();
+            var map = MapColumnName<MapTest>.AutoMap(false);
 
             // Act
-            var mapTest = map.MapToObject(new[] { "exampleValue" }, new[] { "asdf2" });
+            var mapTest = map.MapToObject(new[] { "exampleValue" }, new[] { "Asdf2" });
 
             // Assert
             Assert.AreEqual("exampleValue", mapTest.Asdf2);
@@ -109,7 +109,7 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         public void AssigningField_WhenMapIsAuto_SetsValue()
         {
             // Arrange
-            MapColumnName<MapTest> map = MapColumnName<MapTest>.AutoMap(false, true);
+            MapColumnName<MapTest> map = MapColumnName<MapTest>.AutoMap(false, false, true);
 
             // Act
             var mapTest = map.MapToObject(new[] { "exampleValue" }, new[] { "asdf" });

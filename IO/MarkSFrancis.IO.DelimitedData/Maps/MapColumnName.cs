@@ -19,7 +19,7 @@ namespace MarkSFrancis.IO.DelimitedData.Maps
         protected readonly MultiKeyDictionary<PropertyFieldInfo<T, object>, string> MemberToColumn;
         public IEnumerable<string> MappedColumnNames => MemberToColumn.Values;
 
-        public static MapColumnName<T> AutoMap(bool mapProperties = true, bool mapFields = false)
+        public static MapColumnName<T> AutoMap(bool niceFormatHeading = true, bool mapProperties = true, bool mapFields = false)
         {
             var membersToMap = typeof(T)
                 .GetPropertyFieldInfos<T>(mapProperties, mapFields)
@@ -28,9 +28,9 @@ namespace MarkSFrancis.IO.DelimitedData.Maps
 
             var newMap = new MapColumnName<T>();
 
-            foreach(var member in membersToMap)
+            foreach (var member in membersToMap)
             {
-                var formattedHeading = member.Name.FromCamelAndPascalCase(true);
+                var formattedHeading = niceFormatHeading ? member.Name.FromCamelAndPascalCase(true) : member.Name;
 
                 newMap.Map(member, formattedHeading);
             }
@@ -69,7 +69,7 @@ namespace MarkSFrancis.IO.DelimitedData.Maps
                 if (columnId < 0)
                 {
                     // Not found
-                    ErrorFactory.Default.KeyNotFound(mappedColumn.Value, nameof(MappedColumnNames));
+                    continue;
                 }
 
                 var converter = ConverterHelpers.GetDefaultConverter(typeof(string), mappedColumn.Key.Type);
