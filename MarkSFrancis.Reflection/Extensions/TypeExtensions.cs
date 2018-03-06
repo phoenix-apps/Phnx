@@ -12,6 +12,7 @@ namespace MarkSFrancis.Reflection.Extensions
         /// Get all properties and fields for <typeparamref name="T"/>
         /// </summary>
         /// <typeparam name="T">The type to get all properties and fields of</typeparam>
+        /// <param name="tType">The type to get all properties and fields of</param>
         /// <returns>All properties and fields for <typeparamref name="T"/></returns>
         public static IEnumerable<PropertyFieldInfo<T, object>> GetPropertyFieldInfos<T>(this Type tType)
         {
@@ -23,6 +24,33 @@ namespace MarkSFrancis.Reflection.Extensions
             foreach (var field in tType.GetFields())
             {
                 yield return new PropertyFieldInfo<T, object>(field);
+            }
+        }
+
+        /// <summary>
+        /// Get all properties and fields for <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T">The type to get all properties and fields of</typeparam>
+        /// <param name="tType">The type to get all properties and fields of</param>
+        /// <param name="getProperties">Whether to get all the properties of the given type</param>
+        /// <param name="getFields">Whether to get all the fields of the given type</param>
+        /// <returns>All properties and fields for <typeparamref name="T"/></returns>
+        public static IEnumerable<PropertyFieldInfo<T, object>> GetPropertyFieldInfos<T>(this Type tType, bool getProperties, bool getFields)
+        {
+            if (getProperties)
+            {
+                foreach (var property in tType.GetProperties())
+                {
+                    yield return new PropertyFieldInfo<T, object>(property);
+                }
+            }
+
+            if (getFields)
+            {
+                foreach (var field in tType.GetFields())
+                {
+                    yield return new PropertyFieldInfo<T, object>(field);
+                }
             }
         }
     }

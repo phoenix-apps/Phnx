@@ -8,14 +8,15 @@ namespace SyntaxTest
 
         static void Main()
         {
-            new NameMapTest(Console).Run();
+            RunThreadsDemo();
+            // new NameMapTest(Console).Run();
 
             Console.ReadKey();
         }
 
         static void RunThreadsDemo()
         {
-            ThreadsDemo threads = new ThreadsDemo(Console);
+            ThreadsDemo threads = new ThreadsDemo(Console, ThreadsDemo.Mode.Interlocked);
             threads.Run();
         }
     }
