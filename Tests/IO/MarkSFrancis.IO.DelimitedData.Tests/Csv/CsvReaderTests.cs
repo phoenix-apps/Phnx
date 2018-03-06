@@ -43,7 +43,7 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         {
             // Arrange
             string csvData = 
-                "NameProperty1,NameProperty2" + Environment.NewLine + 
+                "Name Property 1,Name Property 2" + Environment.NewLine + 
                 "value,value2";
 
             StringClass ExpectedResult = new StringClass { NameProperty1 = "value", NameProperty2 = "value2" };
@@ -62,7 +62,7 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         {
             // Arrange
             string csvData = 
-                "Name,DateTime" + Environment.NewLine + 
+                "Name,Date Time" + Environment.NewLine + 
                 "value,2001/01/01";
 
             DateClass ExpectedResult = new DateClass { Name = "value", DateTime = new DateTime(2001, 1, 1) };
