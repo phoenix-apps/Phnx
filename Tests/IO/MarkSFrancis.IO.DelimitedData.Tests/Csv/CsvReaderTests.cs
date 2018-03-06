@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using MarkSFrancis.IO.DelimitedData.Csv.Mapped;
+using MarkSFrancis.IO.DelimitedData.Maps;
 using NUnit.Framework;
 
 namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
@@ -34,7 +35,8 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
                 writer.WriteLine(testText);
 
                 Stream.Position = 0;
-                Reader = CsvReaderMapped<T>.AutoMapped(Stream);
+                var map = MapColumnName<T>.AutoMap();
+                Reader = new CsvReaderMapped<T>(Stream, map);
             }
         }
 

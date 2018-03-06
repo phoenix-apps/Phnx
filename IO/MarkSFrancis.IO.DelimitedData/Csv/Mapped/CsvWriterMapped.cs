@@ -46,20 +46,6 @@ namespace MarkSFrancis.IO.DelimitedData.Csv.Mapped
             }
         }
 
-        public static CsvWriterMapped<T> AutoMapped(Stream source, bool closeSourceWhenDisposed = false,
-            bool autoMapProperties = true, bool autoMapFields = false)
-        {
-            var map = MapColumnName<T>.AutoMap(true, autoMapProperties, autoMapFields);
-            return new CsvWriterMapped<T>(source, map, closeSourceWhenDisposed);
-        }
-
-        public static CsvWriterMapped<T> AutoMapped(string fileLocation, bool autoMapProperties = true,
-            bool autoMapFields = false)
-        {
-            var map = MapColumnName<T>.AutoMap(true, autoMapProperties, autoMapFields);
-            return new CsvWriterMapped<T>(fileLocation, map);
-        }
-
         private void WriteHeaders()
         {
             SetColumnHeadings(Map.MappedColumnNames.ToList());
