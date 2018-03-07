@@ -241,5 +241,53 @@ namespace MarkSFrancis.Collections.Extensions
                 }
             }
         }
+
+        /// <summary>
+        /// Get the index of an item that matches a criteria
+        /// </summary>
+        /// <typeparam name="T">The type of values in the collection</typeparam>
+        /// <param name="collection">The collection to search</param>
+        /// <param name="isMatch">The criteria that the value must pass in order to be a match</param>
+        /// <returns>The index of the first occurance of an item within <paramref name="collection"/> that passes <paramref name="isMatch"/>. If the item is not found, this returns -1</returns>
+        public static int IndexOf<T>(this IEnumerable<T> collection, Func<T, bool> isMatch)
+        {
+            int index = 0;
+            foreach (var item in collection)
+            {
+                if (isMatch(item))
+                {
+                    return index;
+                }
+
+                ++index;
+            }
+
+            // Not found
+            return -1;
+        }
+
+        /// <summary>
+        /// Get the index of an item that matches a criteria
+        /// </summary>
+        /// <typeparam name="T">The type of values in the collection</typeparam>
+        /// <param name="collection">The collection to search</param>
+        /// <param name="isMatch">The criteria that the value must pass in order to be a match</param>
+        /// <returns>The index of the first occurance of an item within <paramref name="collection"/> that passes <paramref name="isMatch"/>. If the item is not found, this returns -1</returns>
+        public static long IndexOfLong<T>(this IEnumerable<T> collection, Func<T, bool> isMatch)
+        {
+            long index = 0;
+            foreach (var item in collection)
+            {
+                if (isMatch(item))
+                {
+                    return index;
+                }
+
+                ++index;
+            }
+
+            // Not found
+            return -1;
+        }
     }
 }
