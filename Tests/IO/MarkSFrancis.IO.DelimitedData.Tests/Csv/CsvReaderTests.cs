@@ -26,7 +26,7 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
         private class CsvBuilder<T> where T : new()
         {
             private MemoryStream Stream { get; }
-            public CsvReaderMapped<T> Reader { get; }
+            public CsvReader<T> Reader { get; }
 
             public CsvBuilder(string testText)
             {
@@ -36,7 +36,7 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
 
                 Stream.Position = 0;
                 var map = MapColumnName<T>.AutoMap();
-                Reader = new CsvReaderMapped<T>(Stream, map);
+                Reader = new CsvReader<T>(Stream, map);
             }
         }
 
@@ -49,7 +49,7 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
                 "value,value2";
 
             StringClass ExpectedResult = new StringClass { NameProperty1 = "value", NameProperty2 = "value2" };
-            CsvReaderMapped<StringClass> reader = new CsvBuilder<StringClass>(csvData).Reader;
+            CsvReader<StringClass> reader = new CsvBuilder<StringClass>(csvData).Reader;
 
             // Act
             StringClass result = reader.ReadRecord();
@@ -69,7 +69,7 @@ namespace MarkSFrancis.IO.DelimitedData.Tests.Csv
 
             DateClass ExpectedResult = new DateClass { Name = "value", DateTime = new DateTime(2001, 1, 1) };
 
-            CsvReaderMapped<DateClass> reader = new CsvBuilder<DateClass>(csvData).Reader;
+            CsvReader<DateClass> reader = new CsvBuilder<DateClass>(csvData).Reader;
 
             // Act
             DateClass result = reader.ReadRecord();

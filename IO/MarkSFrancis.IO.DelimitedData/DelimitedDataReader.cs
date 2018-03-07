@@ -68,7 +68,7 @@ namespace MarkSFrancis.IO.DelimitedData
             }
         }
 
-        public static DelimitedDataReader CsvReader(Stream myStream, bool dataHasHeadings = true, bool closeStreamWhenDisposed = false)
+        public static DelimitedDataReader CsvReader(Stream myStream, bool closeStreamWhenDisposed = false, bool dataHasHeadings = true)
         {
             return new DelimitedDataReader(myStream, ',', dataHasHeadings, closeStreamWhenDisposed);
         }
@@ -78,7 +78,7 @@ namespace MarkSFrancis.IO.DelimitedData
             return new DelimitedDataReader(fileLocation, ',', dataHasHeadings);
         }
 
-        public static DelimitedDataReader TsvReader(Stream myStream, bool dataHasHeadings = true, bool closeStreamWhenDisposed = false)
+        public static DelimitedDataReader TsvReader(Stream myStream, bool closeStreamWhenDisposed = false, bool dataHasHeadings = true)
         {
             return new DelimitedDataReader(myStream, '\t', dataHasHeadings, closeStreamWhenDisposed);
         }

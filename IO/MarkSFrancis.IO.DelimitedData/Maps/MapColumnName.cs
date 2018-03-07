@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MarkSFrancis.Collections;
-using MarkSFrancis.Collections.Extensions;
 using MarkSFrancis.Extensions;
 using MarkSFrancis.IO.DelimitedData.Maps.Interfaces;
 using MarkSFrancis.Reflection;
