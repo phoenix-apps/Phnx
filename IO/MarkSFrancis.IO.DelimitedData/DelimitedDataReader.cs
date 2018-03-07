@@ -206,10 +206,13 @@ namespace MarkSFrancis.IO.DelimitedData
                                 currentField.Clear();
                             }
                         }
+                        else
+                        {
+                            currentField.Append(lineBuffer[currentLineCharIndex]);
 
-                        currentField.Append(lineBuffer[currentLineCharIndex]);
+                            lastCharWasSplitter = false;
+                        }
 
-                        lastCharWasSplitter = false;
                         break;
                 }
 
