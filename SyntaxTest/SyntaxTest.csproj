@@ -9,7 +9,6 @@
     <ProjectReference Include="..\AspNet\Windows\MarkSFrancis.AspNet.Windows.Extensions\MarkSFrancis.AspNet.Windows.Extensions.csproj" />
     <ProjectReference Include="..\AspNet\Windows\MarkSFrancis.AspNet.Windows.Modals\MarkSFrancis.AspNet.Windows.Modals.csproj" />
     <ProjectReference Include="..\AspNet\Windows\MarkSFrancis.AspNet.Windows\MarkSFrancis.AspNet.Windows.csproj" />
-    <ProjectReference Include="..\IO\MarkSFrancis.IO.DelimitedData\MarkSFrancis.IO.DelimitedData.csproj" />
     <ProjectReference Include="..\IO\MarkSFrancis.IO.Json\MarkSFrancis.IO.Json.csproj" />
     <ProjectReference Include="..\IO\MarkSFrancis.IO.Threaded\MarkSFrancis.IO.Threaded.csproj" />
     <ProjectReference Include="..\IO\MarkSFrancis.IO\MarkSFrancis.IO.csproj" />
