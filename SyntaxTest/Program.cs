@@ -8,7 +8,8 @@ namespace SyntaxTest
 
         static void Main()
         {
-            RunThreadsDemo();
+            new ElderAgePuzzle(Console).Run();
+            // RunThreadsDemo();
 
             Console.ReadKey();
         }

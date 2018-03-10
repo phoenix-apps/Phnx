@@ -1,3 +1,0 @@
-﻿Use something like this if you're extracting data from an online site. Change the querySelectorAll to select wherever the data is that you need
-
-[].forEach.call(document.querySelectorAll('.table-to-search tr td:nth-child(2) a'), function(data){console.log('"' + data.innerHTML + '",')})

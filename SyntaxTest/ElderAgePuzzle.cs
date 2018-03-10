@@ -36,7 +36,10 @@ namespace SyntaxTest
 
         static long ElderAge2(long n, long m, long k, long newp)
         {
-            var sum = (((n * (n - 1)) / 2) - (k * (n - k))) * m;
+            var lower = Math.Min(n, m);
+            var higher = Math.Max(n, m);
+
+            var sum = (((higher * (higher - 1)) / 2) - (k * (higher - k))) * lower;
 
             return sum % newp;
         }
