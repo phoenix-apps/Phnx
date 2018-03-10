@@ -9,7 +9,7 @@ namespace MarkSFrancis.Security
     public class RsaEncryption : IAsymmetricEncryption
     {
         /// <summary>
-        /// The 
+        /// The key size of the RSA Encryption used
         /// </summary>
         public const int KeyLength = 4096;
         
