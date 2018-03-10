@@ -9,7 +9,6 @@ namespace SyntaxTest
         static void Main()
         {
             RunThreadsDemo();
-            // new NameMapTest(Console).Run();
 
             Console.ReadKey();
         }
