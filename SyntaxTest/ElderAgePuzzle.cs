@@ -17,6 +17,8 @@ namespace SyntaxTest
 
             _console.WriteLine(ElderAge1(8, 5, 1, 100)); // 5
             _console.WriteLine(ElderAge2(8, 5, 1, 100)); // 5
+            _console.WriteLine(ElderAge1(5, 6, 0, 1000007)); // 4323
+            _console.WriteLine(ElderAge2(5, 6, 0, 1000007)); // 4323
             _console.WriteLine(ElderAge1(5, 45, 3, 1000007)); // 4323
             _console.WriteLine(ElderAge2(5, 45, 3, 1000007)); // 4323
 

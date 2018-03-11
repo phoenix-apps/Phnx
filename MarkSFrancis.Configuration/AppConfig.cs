@@ -25,7 +25,7 @@ namespace MarkSFrancis.Configuration
         protected ConnectionStringSettingsCollection ConnectionStrings { get; }
 
         /// <summary>
-        /// Create a new ApplicationConfiguration reader from the app.config or web.config
+        /// Create a new application configuration reader from the app.config or web.config
         /// </summary>
         public AppConfig() : this(ConfigurationManager.AppSettings, ConfigurationManager.ConnectionStrings)
         {
