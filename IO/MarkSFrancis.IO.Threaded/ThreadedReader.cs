@@ -6,20 +6,20 @@ namespace MarkSFrancis.IO.Threaded
 {
     public class ThreadedReader<T> : IDisposable
     {
-        private ConcurrentQueue<T> ResultQueue { get; }
-        private Func<T> ReadFunc { get; }
-        public int CacheCount => ResultQueue.Count;
+        private readonly ConcurrentQueue<T> _resultQueue;
+        private readonly Func<T> _readFunc;
+        public int CacheCount => _resultQueue.Count;
 
-        private bool ReadNext => _manualReadNext > 0 || (!SuppressLookAhead && LookAheadCount > ResultQueue.Count);
+        private bool ReadNext => _manualReadNext > 0 || (!_suppressLookAhead && LookAheadCount > _resultQueue.Count);
         private int _manualReadNext;
-        public int LookAheadCount { get; set; }
-        private bool SuppressLookAhead { get; set; }
-        private Exception ReadException { get; set; }
+        public int LookAheadCount { get; }
+        private bool _suppressLookAhead;
+        private Exception _readException;
 
-        private bool SafeExit { get; set; }
-        public int SleepTime { get; set; }
+        private bool _safeExit;
+        public int SleepTime { get; }
 
-        private Thread TaskRunner { get; }
+        private readonly Thread _taskRunner;
 
         /// <summary>
         /// 
@@ -29,36 +29,36 @@ namespace MarkSFrancis.IO.Threaded
         /// <param name="lookAheadCount">Number of values to pre-load</param>
         public ThreadedReader(Func<T> readFunc, int sleepTime = 20, int lookAheadCount = 100)
         {
-            ResultQueue = new ConcurrentQueue<T>();
-            ReadFunc = readFunc;
+            _resultQueue = new ConcurrentQueue<T>();
+            _readFunc = readFunc;
             LookAheadCount = lookAheadCount;
             SleepTime = sleepTime;
 
-            TaskRunner = new Thread(TaskRunnerMethod);
-            TaskRunner.Start();
+            _taskRunner = new Thread(TaskRunnerMethod);
+            _taskRunner.Start();
         }
 
         public T Read()
         {
             T returnT;
-            if (ResultQueue.Count > 0)
+            if (_resultQueue.Count > 0)
             {
-                ResultQueue.TryDequeue(out returnT);
+                _resultQueue.TryDequeue(out returnT);
             }
             else
             {
                 Interlocked.Increment(ref _manualReadNext);
-                while (ResultQueue.Count == 0 && ReadException == null)
+                while (_resultQueue.Count == 0 && _readException == null)
                 {
                     Thread.Sleep(SleepTime);
                 }
 
-                if (ReadException != null)
+                if (_readException != null)
                 {
-                    throw ReadException;
+                    throw _readException;
                 }
 
-                ResultQueue.TryDequeue(out returnT);
+                _resultQueue.TryDequeue(out returnT);
                 return returnT;
             }
             return returnT;
@@ -66,7 +66,7 @@ namespace MarkSFrancis.IO.Threaded
 
         private void TaskRunnerMethod()
         {
-            while (!SafeExit)
+            while (!_safeExit)
             {
                 if (ReadNext)
                 {
@@ -79,18 +79,18 @@ namespace MarkSFrancis.IO.Threaded
 
                     try
                     {
-                        ResultQueue.Enqueue(ReadFunc());
+                        _resultQueue.Enqueue(_readFunc());
                     }
                     catch (Exception ex)
                     {
                         if (manualRead)
                         {
-                            ReadException = ex;
+                            _readException = ex;
                         }
                         else
                         {
                             // ignore exception
-                            SuppressLookAhead = true;
+                            _suppressLookAhead = true;
                         }
                     }
                 }
@@ -103,9 +103,9 @@ namespace MarkSFrancis.IO.Threaded
 
         public void Dispose()
         {
-            SafeExit = true;
+            _safeExit = true;
 
-            while (TaskRunner.IsAlive)
+            while (_taskRunner.IsAlive)
             {
                 Thread.Sleep(SleepTime);
             }
