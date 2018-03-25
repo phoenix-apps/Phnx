@@ -6,15 +6,15 @@ namespace MarkSFrancis.IO.Threaded
 {
     public class ThreadedWriter<T> : IDisposable
     {
-        private ConcurrentQueue<T> WriteQueue { get; }
+        private readonly ConcurrentQueue<T> _writeQueue;
 
-        private Action<T> WriteFunc { get; }
+        private readonly Action<T> _writeFunc;
 
-        private bool SafeExit { get; set; }
+        private bool _safeExit;
 
-        public int SleepTime { get; set; }
+        public int SleepTime { get; }
 
-        private Thread TaskRunner { get; }
+        private readonly Thread _taskRunner;
 
         /// <summary>
         /// 
@@ -23,32 +23,32 @@ namespace MarkSFrancis.IO.Threaded
         /// <param name="sleepTime">How long in ms to sleep if there are no queued tasks</param>
         public ThreadedWriter(Action<T> writeFunc, int sleepTime = 20)
         {
-            WriteQueue = new ConcurrentQueue<T>();
-            WriteFunc = writeFunc;
+            _writeQueue = new ConcurrentQueue<T>();
+            _writeFunc = writeFunc;
             SleepTime = sleepTime;
 
-            TaskRunner = new Thread(TaskRunnerMethod);
-            TaskRunner.Start();
+            _taskRunner = new Thread(_taskRunnerMethod);
+            _taskRunner.Start();
         }
 
         public void Write(T valueToWrite)
         {
-            WriteQueue.Enqueue(valueToWrite);
+            _writeQueue.Enqueue(valueToWrite);
         }
 
-        private void TaskRunnerMethod()
+        private void _taskRunnerMethod()
         {
-            while (!SafeExit)
+            while (!_safeExit)
             {
-                if (WriteQueue.Count > 0)
+                if (_writeQueue.Count > 0)
                 {
                     // Write
-                    if (!WriteQueue.TryDequeue(out var objectToWrite))
+                    if (!_writeQueue.TryDequeue(out var objectToWrite))
                     {
                         continue;
                     }
 
-                    WriteFunc(objectToWrite);
+                    _writeFunc(objectToWrite);
                 }
                 else
                 {
@@ -66,15 +66,15 @@ namespace MarkSFrancis.IO.Threaded
         {
             if (finishWriting)
             {
-                while (WriteQueue.Count > 0)
+                while (_writeQueue.Count > 0)
                 {
                     Thread.Sleep(SleepTime);
                 }
             }
 
-            SafeExit = true;
+            _safeExit = true;
 
-            while (TaskRunner.IsAlive)
+            while (_taskRunner.IsAlive)
             {
                 Thread.Sleep(SleepTime);
             }
