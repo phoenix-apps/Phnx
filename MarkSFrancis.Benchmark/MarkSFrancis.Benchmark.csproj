@@ -8,4 +8,8 @@
     <DocumentationFile>bin\Debug\netstandard2.0\MarkSFrancis.Benchmark.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MarkSFrancis\MarkSFrancis.csproj" />
+  </ItemGroup>
+
 </Project>
