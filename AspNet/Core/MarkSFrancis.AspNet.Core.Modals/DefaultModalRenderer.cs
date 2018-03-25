@@ -1,13 +1,13 @@
 ﻿using System.Text;
-using System.Web;
-using MarkSFrancis.AspNet.Windows.Extensions;
-using MarkSFrancis.AspNet.Windows.Modals.Interfaces;
+using MarkSFrancis.AspNet.Core.Extensions;
+using MarkSFrancis.AspNet.Core.Modals.Interfaces;
+using Microsoft.AspNetCore.Html;
 
-namespace MarkSFrancis.AspNet.Windows.Modals
+namespace MarkSFrancis.AspNet.Core.Modals
 {
     public class DefaultModalRenderer : IModalRenderer<ModalModel>
     {
-        public virtual IHtmlString RenderHtml(ModalModel messageToRender)
+        public virtual HtmlString RenderHtml(ModalModel messageToRender)
         {
             if (messageToRender == null)
             {
@@ -19,7 +19,6 @@ namespace MarkSFrancis.AspNet.Windows.Modals
             var modalStart = @"
     <div id=""" + messageToRender.Id.HtmlSanitise() + @""" class=""modal fade"" role=""dialog"">
         <div class=""modal-dialog"">
-            <!-- Modal content-->
             <div class=""modal-content"">
                 <div class=""modal-header"">
                     <h5 class=""modal-title"">";
@@ -58,7 +57,7 @@ namespace MarkSFrancis.AspNet.Windows.Modals
             return html.ToHtmlString();
         }
 
-        public virtual IHtmlString RenderJs(ModalModel messageViewModal)
+        public virtual HtmlString RenderJs(ModalModel messageViewModal)
         {
             var html = @"$('#" + messageViewModal.Id.HtmlSanitise() + @"').modal('show');";
             return html.ToHtmlString();

@@ -1,6 +1,6 @@
-﻿using MarkSFrancis.AspNet.Windows.Modals.Interfaces;
+﻿using MarkSFrancis.AspNet.Core.Modals.Interfaces;
 
-namespace MarkSFrancis.AspNet.Windows.Modals
+namespace MarkSFrancis.AspNet.Core.Modals
 {
     public class ModalModel : IModalModel
     {
@@ -22,7 +22,7 @@ namespace MarkSFrancis.AspNet.Windows.Modals
 
         public string IconColor { get; set; }
 
-        public string IconHtml
+        public virtual string IconHtml
         {
             get
             {
