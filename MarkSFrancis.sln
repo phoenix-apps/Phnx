@@ -57,11 +57,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Windows", "Win
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{A54A0BB0-30D3-47A5-93E2-715BE2DF16A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.AspNet.Core", "AspNet\Core\MarkSFrancis.AspNet.Core\MarkSFrancis.AspNet.Core.csproj", "{CF79BC1C-AD9D-4808-B189-868FB1A20E38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.AspNet.Core", "AspNet\Core\MarkSFrancis.AspNet.Core\MarkSFrancis.AspNet.Core.csproj", "{CF79BC1C-AD9D-4808-B189-868FB1A20E38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Serialization", "MarkSFrancis.Serialization\MarkSFrancis.Serialization.csproj", "{E0490383-A0E5-4AB7-91E8-DC208BC90D9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Serialization", "MarkSFrancis.Serialization\MarkSFrancis.Serialization.csproj", "{E0490383-A0E5-4AB7-91E8-DC208BC90D9F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.AspNet.Core.Modals", "AspNet\Core\MarkSFrancis.AspNet.Core.Modals\MarkSFrancis.AspNet.Core.Modals.csproj", "{1D8C1AD0-960A-4A8F-871C-088754B8DFA6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Serialization.Tests", "Tests\MarkSFrancis.Serialization.Tests\MarkSFrancis.Serialization.Tests.csproj", "{A4D1DBD9-5097-4A5E-B9CF-121AD6C997D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -157,6 +159,10 @@ Global
 		{1D8C1AD0-960A-4A8F-871C-088754B8DFA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D8C1AD0-960A-4A8F-871C-088754B8DFA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D8C1AD0-960A-4A8F-871C-088754B8DFA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4D1DBD9-5097-4A5E-B9CF-121AD6C997D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4D1DBD9-5097-4A5E-B9CF-121AD6C997D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4D1DBD9-5097-4A5E-B9CF-121AD6C997D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4D1DBD9-5097-4A5E-B9CF-121AD6C997D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -176,6 +182,7 @@ Global
 		{A54A0BB0-30D3-47A5-93E2-715BE2DF16A1} = {4B6BDD07-EAB4-4323-B045-B0BFC494756B}
 		{CF79BC1C-AD9D-4808-B189-868FB1A20E38} = {A54A0BB0-30D3-47A5-93E2-715BE2DF16A1}
 		{1D8C1AD0-960A-4A8F-871C-088754B8DFA6} = {A54A0BB0-30D3-47A5-93E2-715BE2DF16A1}
+		{A4D1DBD9-5097-4A5E-B9CF-121AD6C997D5} = {CE6AC12D-8738-4F9A-A14D-25E96EDD57BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E3ED0F5-43F9-42B8-AA5D-CBA97B7F130F}
