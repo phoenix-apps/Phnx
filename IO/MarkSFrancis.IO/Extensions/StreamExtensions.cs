@@ -13,6 +13,8 @@ namespace MarkSFrancis.IO.Extensions
         /// </summary>
         /// <param name="stream">The stream to read all data from</param>
         /// <returns>A <see cref="T:byte"/> containing all the data read from the <paramref name="stream"/></returns>
+        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="ObjectDisposedException">Methods were called after the stream was closed</exception>
         public static byte[] ReadToEnd(this Stream stream)
         {
             byte[] data = new byte[stream.Length - stream.Position];
@@ -28,7 +30,6 @@ namespace MarkSFrancis.IO.Extensions
         /// <param name="stream">The stream to check</param>
         /// <returns>Whether this stream has been read to the end</returns>
         /// <exception cref="IOException">An I/O error occurs</exception>
-        /// <exception cref="NotSupportedException">The stream does not support seeking</exception>
         /// <exception cref="ObjectDisposedException">Methods were called after the stream was closed</exception>
         public static bool ReachedEnd(this Stream stream)
         {
