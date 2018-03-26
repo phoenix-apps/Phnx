@@ -3,16 +3,16 @@ using MarkSFrancis.AspNet.Windows.Cache.Interfaces;
 
 namespace MarkSFrancis.AspNet.Windows.Cache
 {
-    public class CacheService : ICacheService
+    public class LazyMemoryCache : ILazyMemoryCache
     {
         protected ObjectCache Cache { get; }
 
-        public CacheService()
+        public LazyMemoryCache()
         {
             Cache = MemoryCache.Default;
         }
 
-        public CacheService(ObjectCache cacheToUse)
+        public LazyMemoryCache(ObjectCache cacheToUse)
         {
             Cache = cacheToUse;
         }

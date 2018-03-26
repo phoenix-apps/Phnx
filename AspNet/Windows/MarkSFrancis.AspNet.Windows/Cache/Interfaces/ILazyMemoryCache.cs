@@ -1,6 +1,6 @@
 ﻿namespace MarkSFrancis.AspNet.Windows.Cache.Interfaces
 {
-    public interface ICacheService
+    public interface ILazyMemoryCache
     {
         /// <summary>
         /// Get a value from the cache, or load it from the external source if it is not yet loaded into the cache

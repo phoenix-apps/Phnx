@@ -56,10 +56,13 @@ namespace MarkSFrancis.Serialization.Extensions
         /// <returns>A shallow copy of <paramref name="valueToCopy"/></returns>
         public static T ShallowCopy<T>(this T valueToCopy)
         {
-            var tMembers = typeof(T).GetFields(
-                BindingFlags.NonPublic | 
-                BindingFlags.Public | 
-                BindingFlags.Instance);
+            var tMembers =
+                typeof(T).GetFields(
+                    BindingFlags.NonPublic |
+                    BindingFlags.Public |
+                    BindingFlags.Instance |
+                    BindingFlags.FlattenHierarchy
+                );
 
             T shallowCopy = default(T);
 

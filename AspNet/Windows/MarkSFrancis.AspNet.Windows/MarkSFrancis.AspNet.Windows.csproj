@@ -64,9 +64,9 @@
     <Compile Include="HttpContextAccessor.cs" />
     <Compile Include="Interfaces\IHttpContextAccessor.cs" />
     <Compile Include="Cache\CachePolicyHelper.cs" />
-    <Compile Include="Cache\CacheService.cs" />
+    <Compile Include="Cache\LazyMemoryCache.cs" />
     <Compile Include="Cache\Interfaces\ICacheEntry.cs" />
-    <Compile Include="Cache\Interfaces\ICacheService.cs" />
+    <Compile Include="Cache\Interfaces\ILazyMemoryCache.cs" />
     <Compile Include="Context\BaseContextService.cs" />
     <Compile Include="ErrorFactoryExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
