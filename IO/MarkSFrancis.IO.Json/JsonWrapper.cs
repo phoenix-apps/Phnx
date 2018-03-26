@@ -5,6 +5,9 @@ using Newtonsoft.Json.Linq;
 
 namespace MarkSFrancis.IO.Json
 {
+    /// <summary>
+    /// Provides methods for converting between a property dictionary and json
+    /// </summary>
     internal static class JsonWrapper
     {
         public const string ChildPropertyDelimiter = ".";
