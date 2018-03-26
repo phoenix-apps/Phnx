@@ -44,7 +44,7 @@ namespace MarkSFrancis.IO.Json.Streams
         protected bool CloseStreamWhenDisposed { get; }
 
         /// <summary>
-        /// Read and deserialize a Json object from the stream as <typeparam name="T"></typeparam>
+        /// Read and deserialize a Json object from the stream as <typeparamref name="T"/>
         /// </summary>
         /// <typeparam name="T">The type of object to deserialize to</typeparam>
         /// <returns>A deseriliazed object from the stream</returns>
