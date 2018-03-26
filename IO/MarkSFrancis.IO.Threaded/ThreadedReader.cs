@@ -64,7 +64,7 @@ namespace MarkSFrancis.IO.Threaded
         /// <param name="sleepTime">How long in ms to sleep if the look ahead is full, and no tasks are waiting</param>
         public ThreadedReader(Func<T> readFunc, int lookAheadCount = 100, int sleepTime = 20)
         {
-            _manualReadNextSyncContext = null;
+            _manualReadNextSyncContext = new object();
 
             _readFunc = readFunc;
             _resultQueue = new ConcurrentQueue<ThreadReadResult<T>>();

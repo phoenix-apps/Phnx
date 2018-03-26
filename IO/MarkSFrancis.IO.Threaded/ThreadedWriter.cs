@@ -24,9 +24,14 @@ namespace MarkSFrancis.IO.Threaded
         public int WriteQueueCount { get; }
 
         /// <summary>
-        /// The most recent writing error. This will be thrown either when the object is disposed, or when the next write is called
+        /// The most recent writing error. This will be thrown either when the object is disposed, or when the next write is called. Lock <see cref="_errorSyncContext"/> before accessing this member
         /// </summary>
         private Exception _error;
+
+        /// <summary>
+        /// The sync context for <see cref="_error"/>
+        /// </summary>
+        private readonly object _errorSyncContext;
 
         /// <summary>
         /// The number of milliseconds to sleep if the cache is empty
@@ -43,6 +48,8 @@ namespace MarkSFrancis.IO.Threaded
         /// <param name="sleepTime">How long in ms to sleep if there are no queued tasks</param>
         public ThreadedWriter(Action<T> writeFunc, int writeQueueCount = 100, int sleepTime = 20)
         {
+            _errorSyncContext = new object();
+
             _writeQueue = new ConcurrentQueue<T>();
             _writeFunc = writeFunc;
             WriteQueueCount = writeQueueCount;
@@ -58,7 +65,7 @@ namespace MarkSFrancis.IO.Threaded
         /// <param name="valueToWrite">The value to write</param>
         public void Write(T valueToWrite)
         {
-            lock (_error)
+            lock (_errorSyncContext)
             {
                 if (_error != null)
                 {
@@ -70,7 +77,7 @@ namespace MarkSFrancis.IO.Threaded
             {
                 Thread.Sleep(SleepTime);
 
-                lock (_error)
+                lock (_errorSyncContext)
                 {
                     if (_error != null)
                     {
@@ -79,7 +86,7 @@ namespace MarkSFrancis.IO.Threaded
                 }
             }
 
-            lock (_error)
+            lock (_errorSyncContext)
             {
                 if (_error != null)
                 {
@@ -95,7 +102,7 @@ namespace MarkSFrancis.IO.Threaded
             while (!_safeExit)
             {
                 bool hasError;
-                lock (_error)
+                lock (_errorSyncContext)
                 {
                     hasError = _error != null;
                 }
@@ -111,7 +118,7 @@ namespace MarkSFrancis.IO.Threaded
                     }
                     catch (Exception ex)
                     {
-                        lock (_error)
+                        lock (_errorSyncContext)
                         {
                             _error = ex;
                         }
@@ -130,7 +137,7 @@ namespace MarkSFrancis.IO.Threaded
         /// <param name="finishWriting">Whether to finish writing to all background threads</param>
         public void Dispose(bool finishWriting)
         {
-            lock (_error)
+            lock (_errorSyncContext)
             {
                 if (_error != null)
                 {
@@ -142,7 +149,7 @@ namespace MarkSFrancis.IO.Threaded
             {
                 while (_writeQueue.Count > 0)
                 {
-                    lock (_error)
+                    lock (_errorSyncContext)
                     {
                         if (_error != null)
                         {
@@ -160,7 +167,7 @@ namespace MarkSFrancis.IO.Threaded
             {
                 Thread.Sleep(SleepTime);
 
-                lock (_error)
+                lock (_errorSyncContext)
                 {
                     if (_error != null)
                     {
@@ -169,7 +176,7 @@ namespace MarkSFrancis.IO.Threaded
                 }
             }
 
-            lock (_error)
+            lock (_errorSyncContext)
             {
                 if (_error != null)
                 {
