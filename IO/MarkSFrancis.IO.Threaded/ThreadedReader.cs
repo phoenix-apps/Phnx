@@ -4,108 +4,156 @@ using System.Threading;
 
 namespace MarkSFrancis.IO.Threaded
 {
+    /// <summary>
+    /// A threaded reader which reads ahead on a seperate thread, caching records ready for consumption
+    /// </summary>
+    /// <typeparam name="T">The type of data to read</typeparam>
     public class ThreadedReader<T> : IDisposable
     {
-        private readonly ConcurrentQueue<T> _resultQueue;
         private readonly Func<T> _readFunc;
-        public int CacheCount => _resultQueue.Count;
+        private readonly ConcurrentQueue<ThreadReadResult<T>> _resultQueue;
 
-        private bool ReadNext => _manualReadNext > 0 || (!_suppressLookAhead && LookAheadCount > _resultQueue.Count);
+        /// <summary>
+        /// The number of items currently cached
+        /// </summary>
+        public int CachedCount => _resultQueue.Count;
+
+        /// <summary>
+        /// Whether to read the next value
+        /// </summary>
+        private bool ReadNext => _manualReadNext > 0 ||
+                                 (!_errorOccured && LookAheadCount > _resultQueue.Count);
+
+        /// <summary>
+        /// The number of times that a manual read has been requested. This only happens if the user has emptied the cache. Lock <see cref="_manualReadNextSyncContext"/> before accessing this member
+        /// </summary>
         private int _manualReadNext;
-        public int LookAheadCount { get; }
-        private bool _suppressLookAhead;
-        private Exception _readException;
 
+        /// <summary>
+        /// The sync context for <see cref="_manualReadNext"/>
+        /// </summary>
+        private readonly object _manualReadNextSyncContext;
+
+        /// <summary>
+        /// The maximum number of items to cache
+        /// </summary>
+        public int LookAheadCount { get; }
+
+        /// <summary>
+        /// Whether an error has occured with the reading thread
+        /// </summary>
+        private bool _errorOccured;
+
+        /// <summary>
+        /// Whether the parent thread has asked to have the read thread exit
+        /// </summary>
         private bool _safeExit;
+
+        /// <summary>
+        /// The number of milliseconds to sleep if the cache is full, or if the main thread is waiting for an entry in the cache
+        /// </summary>
         public int SleepTime { get; }
 
-        private readonly Thread _taskRunner;
+        private readonly Thread _readThread;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="readFunc"></param>
+        /// <param name="lookAheadCount">The maximum number of values to cache</param>
         /// <param name="sleepTime">How long in ms to sleep if the look ahead is full, and no tasks are waiting</param>
-        /// <param name="lookAheadCount">Number of values to pre-load</param>
-        public ThreadedReader(Func<T> readFunc, int sleepTime = 20, int lookAheadCount = 100)
+        public ThreadedReader(Func<T> readFunc, int lookAheadCount = 100, int sleepTime = 20)
         {
-            _resultQueue = new ConcurrentQueue<T>();
+            _manualReadNextSyncContext = null;
+
             _readFunc = readFunc;
+            _resultQueue = new ConcurrentQueue<ThreadReadResult<T>>();
             LookAheadCount = lookAheadCount;
             SleepTime = sleepTime;
 
-            _taskRunner = new Thread(TaskRunnerMethod);
-            _taskRunner.Start();
+            _readThread = new Thread(ReadThreadMethod);
+            _readThread.Start();
         }
 
+        /// <summary>
+        /// Read the next object
+        /// </summary>
+        /// <returns>The object read from the data source</returns>
         public T Read()
         {
-            T returnT;
+            ThreadReadResult<T> returnT;
             if (_resultQueue.Count > 0)
             {
                 _resultQueue.TryDequeue(out returnT);
             }
             else
             {
-                Interlocked.Increment(ref _manualReadNext);
-                while (_resultQueue.Count == 0 && _readException == null)
+                lock (_manualReadNextSyncContext)
+                {
+                    ++_manualReadNext;
+                }
+
+                // Wait for read
+                while (_resultQueue.Count == 0)
                 {
                     Thread.Sleep(SleepTime);
                 }
 
-                if (_readException != null)
-                {
-                    throw _readException;
-                }
-
                 _resultQueue.TryDequeue(out returnT);
-                return returnT;
             }
-            return returnT;
+
+            if (returnT.Faulted)
+            {
+                throw returnT.Error;
+            }
+
+            return returnT.Data;
         }
 
-        private void TaskRunnerMethod()
+        private void ReadThreadMethod()
         {
             while (!_safeExit)
             {
                 if (ReadNext)
                 {
-                    bool manualRead = false;
-                    if (_manualReadNext > 0)
+                    lock (_manualReadNextSyncContext)
                     {
-                        manualRead = true;
-                        Interlocked.Decrement(ref _manualReadNext);
+                        if (_manualReadNext > 0)
+                        {
+                            --_manualReadNext;
+                        }
                     }
 
                     try
                     {
-                        _resultQueue.Enqueue(_readFunc());
+                        lock (_readFunc)
+                        {
+                            T data = _readFunc();
+                            _resultQueue.Enqueue(new ThreadReadResult<T>(data));
+                        }
                     }
                     catch (Exception ex)
                     {
-                        if (manualRead)
-                        {
-                            _readException = ex;
-                        }
-                        else
-                        {
-                            // ignore exception
-                            _suppressLookAhead = true;
-                        }
+                        _errorOccured = true;
+                        _resultQueue.Enqueue(new ThreadReadResult<T>(ex));
                     }
                 }
                 else
                 {
+                    // Sleep thread briefly as no reads are needed right now
                     Thread.Sleep(SleepTime);
                 }
             }
         }
 
+        /// <summary>
+        /// Cleans up the reading resource thread, finishing any currently active reads, then safely exits the reading thread
+        /// </summary>
         public void Dispose()
         {
             _safeExit = true;
 
-            while (_taskRunner.IsAlive)
+            while (_readThread.IsAlive)
             {
                 Thread.Sleep(SleepTime);
             }
