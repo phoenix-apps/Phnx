@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 namespace MarkSFrancis.Serialization
 {
+    /// <summary>
+    /// Provides extension methods for serializing and deserializing objects and <see cref="T:byte[]"/>
+    /// </summary>
     public static class Serializer
     {
         /// <summary>
