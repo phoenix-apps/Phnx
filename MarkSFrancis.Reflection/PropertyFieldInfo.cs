@@ -16,7 +16,7 @@ namespace MarkSFrancis.Reflection
         /// </summary>
         public bool IsProperty => Property != null;
         private PropertyInfo Property { get; }
-        
+
         private FieldInfo Field { get; }
 
         /// <summary>
@@ -35,41 +35,30 @@ namespace MarkSFrancis.Reflection
         public Type Type => Property?.PropertyType ?? Field.FieldType;
 
         /// <summary>
+        /// Whether you can get the member's value
+        /// </summary>
+        public bool CanGet => !IsProperty || Property.CanRead;
+
+        /// <summary>
+        /// Whether you can set the member's value
+        /// </summary>
+        public bool CanSet => IsProperty ? Property.CanWrite : !Field.IsInitOnly;
+
+        /// <summary>
         /// Create a new <see cref="PropertyFieldInfo{T,U}"/> from a function expression
         /// </summary>
         /// <param name="expression">The expression that points to a property/ field</param>
+        /// <exception cref="ArgumentException">The expression is not a property or field access</exception>
         public PropertyFieldInfo(Expression<Func<T, U>> expression)
         {
             MemberInfo member;
-            if (expression.Body.NodeType == ExpressionType.Convert)
+            if (expression.Body is MemberExpression memberExpression)
             {
-                //expression.Body = expression.Body as Convert;
-                if (expression.Body is UnaryExpression unEx)
-                {
-                    if (unEx.Operand is MemberExpression memberExpression)
-                    {
-                        member = memberExpression.Member;
-                    }
-                    else
-                    {
-                        throw ErrorFactory.Default.ExpressionIsNotPropertyOrFieldAccess(nameof(expression));
-                    }
-                }
-                else
-                {
-                    throw ErrorFactory.Default.ExpressionIsNotPropertyOrFieldAccess(nameof(expression));
-                }
+                member = memberExpression.Member;
             }
             else
             {
-                if (expression.Body is MemberExpression memberExpression)
-                {
-                    member = memberExpression.Member;
-                }
-                else
-                {
-                    throw ErrorFactory.Default.ExpressionIsNotPropertyOrFieldAccess(nameof(expression));
-                }
+                throw ErrorFactory.Default.ExpressionIsNotPropertyOrFieldAccess(nameof(expression));
             }
 
             var propField = LoadMember(member);
@@ -81,6 +70,7 @@ namespace MarkSFrancis.Reflection
         /// Create a new <see cref="PropertyFieldInfo{T,U}"/> from a <see cref="MemberInfo"/>
         /// </summary>
         /// <param name="member">The meber (must be either a <see cref="PropertyInfo"/> or a <see cref="FieldInfo"/>)</param>
+        /// <exception cref="ArgumentException">The member is not a property or field</exception>
         public PropertyFieldInfo(MemberInfo member)
         {
             var propField = LoadMember(member);
@@ -106,6 +96,12 @@ namespace MarkSFrancis.Reflection
             Property = property;
         }
 
+        /// <summary>
+        /// Converts a <see cref="MemberInfo"/> to a <see cref="PropertyInfo"/> or <see cref="FieldInfo"/> depending on whichever it represents
+        /// </summary>
+        /// <param name="member">The member to convert</param>
+        /// <returns>The property or field of the member. Whichever the member is, gets set, and whichever it is not is set to <see langword="null"/></returns>
+        /// <exception cref="ArgumentException">The member is not a property or field</exception>
         private static (PropertyInfo Property, FieldInfo Field) LoadMember(MemberInfo member)
         {
             if (member is PropertyInfo property)
@@ -126,6 +122,10 @@ namespace MarkSFrancis.Reflection
         /// </summary>
         /// <param name="baseObject">The base object to set the member of</param>
         /// <param name="valueToAssign">The value to assign to the member</param>
+        /// <exception cref="ArgumentException">The property's <see langword="set" /> accessor is not found</exception>
+        /// <exception cref="TargetException"> The member is an instance member but <paramref name="baseObject" /> is <see langword="null" /></exception>
+        /// <exception cref="MethodAccessException">There was an illegal attempt to access a private or protected method inside a class</exception>
+        /// <exception cref="TargetInvocationException">An error occurred while setting the property value. The <see cref="P:Exception.InnerException" /> property indicates the reason for the error</exception>
         public virtual void SetValue(T baseObject, U valueToAssign)
         {
             Property?.SetValue(baseObject, valueToAssign);
@@ -138,15 +138,20 @@ namespace MarkSFrancis.Reflection
         /// </summary>
         /// <param name="baseObject">The base object to get the member of</param>
         /// <returns>The value of the member</returns>
+        /// <exception cref="ArgumentException">The property's <see langword="get" /> accessor is not found</exception>
+        /// <exception cref="TargetException">In the .NET for Windows Store apps or the Portable Class Library, catch <see cref="Exception" /> instead. The member is an instance member but <paramref name="baseObject" /> is <see langword="null" /></exception>
+        /// <exception cref="MethodAccessException">There was an illegal attempt to access a private or protected method inside a class</exception>
+        /// <exception cref="TargetInvocationException">An error occurred while retrieving the property value. The <see cref="P:Exception.InnerException" /> property indicates the reason for the error</exception>
         public U GetValue(T baseObject)
         {
             return (U)(Property?.GetValue(baseObject) ?? Field?.GetValue(baseObject));
         }
 
         /// <summary>
-        /// Converts this <see cref="PropertyFieldInfo{T,U}"/> to a <see cref="PropertyInfo"/>. If the <see cref="PropertyFieldInfo{T,U}"/> is a <see cref="FieldInfo"/>, an <see cref="InvalidCastException"/> is thrown
+        /// Converts this <see cref="PropertyFieldInfo{T,U}"/> to a <see cref="PropertyInfo"/>
         /// </summary>
         /// <param name="propFieldInfo">The <see cref="PropertyFieldInfo{T,U}"/> to convert</param>
+        /// <exception cref="InvalidCastException">The member was not a property</exception>
         public static explicit operator PropertyInfo(PropertyFieldInfo<T, U> propFieldInfo)
         {
             var prop = propFieldInfo.Property;
@@ -160,9 +165,10 @@ namespace MarkSFrancis.Reflection
         }
 
         /// <summary>
-        /// Converts this <see cref="PropertyFieldInfo{T,U}"/> to a <see cref="FieldInfo"/>. If the <see cref="PropertyFieldInfo{T,U}"/> is a <see cref="PropertyInfo"/>, an <see cref="InvalidCastException"/> is thrown
+        /// Converts this <see cref="PropertyFieldInfo{T,U}"/> to a <see cref="FieldInfo"/>
         /// </summary>
         /// <param name="propFieldInfo">The <see cref="PropertyFieldInfo{T,U}"/> to convert</param>
+        /// <exception cref="InvalidCastException">The member was not a field</exception>
         public static explicit operator FieldInfo(PropertyFieldInfo<T, U> propFieldInfo)
         {
             var field = propFieldInfo.Field;
