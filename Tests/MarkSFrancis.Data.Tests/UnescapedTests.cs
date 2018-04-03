@@ -15,7 +15,7 @@ namespace MarkSFrancis.Data.Tests
         }
 
         [Test]
-        public void UnescapingText_WithContentAndNoEscapeChars_ReturnsContent()
+        public void UnescapingText_WithContentAndNoEscapeChar_ReturnsContent()
         {
             string text = "asdf";
 
@@ -35,7 +35,7 @@ namespace MarkSFrancis.Data.Tests
         }
 
         [Test]
-        public void UnescapingText_WithCharsToEscape_ReturnsUnescaped()
+        public void UnescapingText_WithCharToEscape_ReturnsUnescaped()
         {
             string text = "\0asdf";
 
@@ -45,11 +45,21 @@ namespace MarkSFrancis.Data.Tests
         }
 
         [Test]
-        public void UnescapingText_WithEscapeCharAndCharsToEscape_ReturnsUnescaped()
+        public void UnescapingText_WithEscapeCharAndCharToEscape_ReturnsUnescaped()
         {
             string text = "\0as\0\0df";
 
             string result = Escaped.Unescape(text, '\0', 'a');
+
+            Assert.AreEqual("as\0df", result);
+        }
+
+        [Test]
+        public void UnescapingText_WithEscapeCharAndCharsToEscape_ReturnsUnescaped()
+        {
+            string text = "\0as\0\0\0df";
+
+            string result = Escaped.Unescape(text, '\0', 'a', 'd');
 
             Assert.AreEqual("as\0df", result);
         }

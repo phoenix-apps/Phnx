@@ -1,4 +1,7 @@
-﻿namespace MarkSFrancis.Data
+﻿using System.Linq;
+using System.Text;
+
+namespace MarkSFrancis.Data
 {
     /// <summary>
     /// Generate escaped, or unescaped data such as escaping commas or speech marks in csv files
@@ -14,14 +17,19 @@
         /// <returns></returns>
         public static string Escape(string textToEscape, char escapeChar, params char[] escapeTheseChars)
         {
-            textToEscape = textToEscape.Replace(new string(escapeChar, 1), new string(escapeChar, 2));
+            StringBuilder escaped = new StringBuilder();
 
-            foreach(var charToEscape in escapeTheseChars)
+            foreach(var @char in textToEscape)
             {
-                textToEscape = textToEscape.Replace(new string(charToEscape, 1), escapeChar.ToString() + charToEscape);
+                if (@char == escapeChar || escapeTheseChars.Contains(@char))
+                {
+                    escaped.Append(escapeChar);
+                }
+
+                escaped.Append(@char);
             }
 
-            return textToEscape;
+            return escaped.ToString();
         }
 
         /// <summary>
@@ -33,14 +41,29 @@
         /// <returns></returns>
         public static string Unescape(string escapedText, char escapeChar, params char[] escapedTheseChars)
         {
-            foreach (var charEscaped in escapedTheseChars)
+            StringBuilder unescaped = new StringBuilder();
+
+            bool lastCharWasEscapeChar = false;
+            foreach (var @char in escapedText)
             {
-                escapedText = escapedText.Replace(escapeChar.ToString() + charEscaped, new string(charEscaped, 1));
+                if (@char == escapeChar)
+                {
+                    if (lastCharWasEscapeChar)
+                    {
+                        unescaped.Append(@char);
+                    }
+
+                    lastCharWasEscapeChar = !lastCharWasEscapeChar;
+
+                    continue;
+                }
+
+                unescaped.Append(@char);
+
+                lastCharWasEscapeChar = false;
             }
 
-            escapedText = escapedText.Replace(new string(escapeChar, 2), new string(escapeChar, 1));
-
-            return escapedText;
+            return unescaped.ToString();
         }
     }
 }
