@@ -1,4 +1,5 @@
 ﻿using System;
+using MarkSFrancis.Data.Extensions;
 
 namespace MarkSFrancis.Data.LazyLoad
 {
@@ -104,7 +105,7 @@ namespace MarkSFrancis.Data.LazyLoad
             {
                 if (!CanSet)
                 {
-                    throw new InvalidOperationException($"Cannot set {typeof(Lazy<T>).Name} value");
+                    throw ErrorFactory.Default.CannotSetValue();
                 }
 
                 _setFunc.Invoke(value);
@@ -112,7 +113,8 @@ namespace MarkSFrancis.Data.LazyLoad
                 _valueIsCached = true;
                 _valueChangedInLife = true;
 
-                ValueSet?.Invoke(this, Value);
+                ValueSet?.Invoke(this, _cachedValue);
+                ValueCached?.Invoke(this, _cachedValue);
             }
         }
 

@@ -14,7 +14,7 @@ namespace MarkSFrancis.Data
         /// <param name="textToEscape">The text to escape</param>
         /// <param name="escapeChar">The character to use when escaping</param>
         /// <param name="escapeTheseChars">The characters that will be escaped</param>
-        /// <returns></returns>
+        /// <returns>The escaped string</returns>
         public static string Escape(string textToEscape, char escapeChar, params char[] escapeTheseChars)
         {
             StringBuilder escaped = new StringBuilder();
@@ -38,7 +38,7 @@ namespace MarkSFrancis.Data
         /// <param name="escapedText">The text to unescape</param>
         /// <param name="escapeChar">The character that's been used when escaping</param>
         /// <param name="escapedTheseChars">The characters that have be escaped</param>
-        /// <returns></returns>
+        /// <returns>The restored (unescaped) string</returns>
         public static string Unescape(string escapedText, char escapeChar, params char[] escapedTheseChars)
         {
             StringBuilder unescaped = new StringBuilder();
