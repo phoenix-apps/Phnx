@@ -15,7 +15,7 @@ namespace MarkSFrancis.Drawing
         /// Create a hex structre from a <see cref="T:char[]"/>
         /// </summary>
         /// <param name="data">The data to build the hex structure from</param>
-        /// <exception cref="FormatException"><paramref name="data"/> contains a character that is not a valid digit in hex</exception>
+        /// <exception cref="FormatException"><paramref name="data"/> contains one or more characters that are not a valid digit in hex</exception>
         public Hexadecimal(char[] data)
         {
             HexCode = HexStringToBytes(new string(data));
@@ -43,7 +43,7 @@ namespace MarkSFrancis.Drawing
         /// Create a hex structre from a <see cref="string"/>
         /// </summary>
         /// <param name="data">The data to build the hex structure from</param>
-        /// <exception cref="FormatException"><paramref name="data"/> contains a character that is not a valid digit in hex</exception>
+        /// <exception cref="FormatException"><paramref name="data"/> contains one or more characters that are not a valid digit in hex</exception>
         public Hexadecimal(string data)
         {
             HexCode = HexStringToBytes(data);

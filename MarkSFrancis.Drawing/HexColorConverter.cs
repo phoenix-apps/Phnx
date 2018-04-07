@@ -4,9 +4,9 @@ using System.Drawing;
 namespace MarkSFrancis.Drawing
 {
     /// <summary>
-    /// Provides methods for converting to and from <see cref="Color"/>
+    /// Provides methods for converting to and from <see cref="Color"/> and hex
     /// </summary>
-    public static class ColorConverter
+    public static class HexColorConverter
     {
         /// <summary>
         /// Get the hex code for the color. Does not include a leading "#"
