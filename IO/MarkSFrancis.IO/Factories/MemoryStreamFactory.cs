@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MarkSFrancis.IO.Factory
+namespace MarkSFrancis.IO.Factories
 {
     /// <summary>
     /// A factory for creating new instances of <see cref="MemoryStream"/>

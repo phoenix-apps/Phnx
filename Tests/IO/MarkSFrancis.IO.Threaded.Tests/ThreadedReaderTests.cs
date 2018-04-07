@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using MarkSFrancis.IO.Factory;
+using MarkSFrancis.IO.Factories;
 using NUnit.Framework;
 
 namespace MarkSFrancis.IO.Threaded.Tests

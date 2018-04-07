@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Text;
-using MarkSFrancis.IO.Factory;
+using MarkSFrancis.IO.Factories;
 using MarkSFrancis.Windows.Serialization.Interfaces;
 using XmlFormatter = System.Xml.Serialization.XmlSerializer;
 
