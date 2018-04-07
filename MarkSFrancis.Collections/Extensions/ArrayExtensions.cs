@@ -84,6 +84,26 @@ namespace MarkSFrancis.Collections.Extensions
         }
 
         /// <summary>
+        /// Creates a shallow copy of the given array
+        /// </summary>
+        /// <typeparam name="T">The type of entries within the array</typeparam>
+        /// <param name="array">The array to copy</param>
+        /// <returns>A shallow copy of <paramref name="array"/></returns>
+        public static T[] ShallowCopy<T>(this T[] array)
+        {
+            if (array == null)
+            {
+                return null;
+            }
+
+            T[] copy = new T[array.Length];
+
+            Array.Copy(array, copy, array.Length);
+
+            return copy;
+        }
+
+        /// <summary>
         /// Returns the number of bytes in the array
         /// </summary>
         /// <param name="array">The array to get the length of</param>

@@ -1,4 +1,6 @@
-﻿namespace MarkSFrancis.Drawing.Shapes
+﻿using System.Drawing;
+
+namespace MarkSFrancis.Drawing.Shapes
 {
     /// <summary>
     /// A circle shape

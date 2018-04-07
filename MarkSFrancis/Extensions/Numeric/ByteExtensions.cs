@@ -17,5 +17,30 @@ namespace MarkSFrancis.Extensions.Numeric
         {
             return (byte)(Math.Round((decimal)valueToRound / toNearest, MidpointRounding.AwayFromZero) * toNearest);
         }
+
+        /// <summary>
+        /// Converts the byte to a hex code equivalent
+        /// </summary>
+        /// <param name="b">The byte to convert to hex</param>
+        /// <returns>The equivalent hex code</returns>
+        public static string ToHex(this byte b)
+        {
+            return BitConverter.ToString(new[] { b });
+        }
+
+        /// <summary>
+        /// Converts the bytes to a hex code equivalent
+        /// </summary>
+        /// <param name="b">The bytes to convert to hex</param>
+        /// <returns>The equivalent hex code</returns>
+        public static string ToHex(this byte[] b)
+        {
+            if (b == null || b.Length == 0)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(b));
+            }
+
+            return BitConverter.ToString(b).Replace("-", string.Empty);
+        }
     }
 }

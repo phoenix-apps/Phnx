@@ -36,7 +36,7 @@ namespace MarkSFrancis.IO.Threaded.Tests
         }
 
         [Test]
-        public void ReadFromStreamUsingLookAhead_WithValidEntries_ReturnsAllValues()
+        public void WriteToStreamUsingLookAhead_WithValidEntries_ReturnsAllValues()
         {
             // Arrange
             List<string> values = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
