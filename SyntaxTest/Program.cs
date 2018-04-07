@@ -1,4 +1,7 @@
-﻿using MarkSFrancis.Console;
+﻿using System.IO;
+using MarkSFrancis.Console;
+using MarkSFrancis.IO.Factory;
+using MarkSFrancis.IO.Json.Streams;
 
 namespace SyntaxTest
 {
@@ -8,8 +11,6 @@ namespace SyntaxTest
 
         static void Main()
         {
-            RunThreadsDemo();
-
             Console.ReadKey();
         }
 

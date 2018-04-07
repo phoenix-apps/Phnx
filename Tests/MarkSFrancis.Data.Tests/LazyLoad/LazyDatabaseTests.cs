@@ -1,57 +1,44 @@
 ﻿using MarkSFrancis.Data.LazyLoad;
+using MarkSFrancis.Data.Tests.LazyLoad.TestData;
+using NUnit.Framework;
 
 namespace MarkSFrancis.Data.Tests.LazyLoad
 {
     public class LazyDatabaseTests
     {
-        class Person : IPrimaryKeyDataModel<int>
+        // NOTE: The LazyDatabase must be cleared before each test, and tests cannot be ran in parallel
+
+        [Test]
+        public void SubmittingEntry_ToTheCache_IncreasesCacheCountByOne()
         {
-            public int Id { get; set; }
+            LazyDatabase.Clear();
 
-            public string FirstName { get; set; }
+            var person = PersonRepository.GetSingle(1);
 
-            public string LastName { get; set; }
+            LazyDatabase.AddOrUpdate(1, person);
+
+            Assert.AreEqual(1, LazyDatabase.TotalItemsCachedCount);
+
+            Assert.AreEqual(1, LazyDatabase.TableItemsCachedCount(typeof(Person)));
         }
 
-        static class PersonRepository
+        [Test]
+        public void SubmittingCrossTypeEntries_ToTheCache_IncreasesCacheCountByTwo()
         {
-            public static Person GetSingle(int id)
-            {
-                return new Person
-                {
-                    FirstName = "John",
-                    LastName = "Smith",
-                    Id = id
-                };
-            }
-        }
+            LazyDatabase.Clear();
 
-        class Role : IPrimaryKeyDataModel<int>
-        {
-            public int Id { get; set; }
+            var person = PersonRepository.GetSingle(1);
+            var role = RoleRepository.GetSingle(1);
 
-            public string Name { get; set; }
-        }
+            LazyDatabase.AddOrUpdate(1, person);
+            LazyDatabase.AddOrUpdate(1, role);
 
-        static class RoleRepository
-        {
-            public static Role GetSingle(int id)
-            {
-                return new Role
-                {
-                    Name = "Test",
-                    Id = id
-                };
-            }
-        }
+            LazyDatabase.Get(1, PersonRepository.GetSingle);
 
-        void asdf()
-        {
-            var loadedPerson = LazyDatabase.Get(1, PersonRepository.GetSingle);
+            Assert.AreEqual(2, LazyDatabase.TotalItemsCachedCount);
 
-            var loadedRole = LazyDatabase.Get(1, RoleRepository.GetSingle);
-
-            LazyDatabase.AddOrUpdate(loadedPerson.Id, loadedPerson);
+            Assert.AreEqual(1, LazyDatabase.TableItemsCachedCount(typeof(Person)));
+            Assert.AreEqual(1, LazyDatabase.TableItemsCachedCount(typeof(Role)));
         }
     }
 }

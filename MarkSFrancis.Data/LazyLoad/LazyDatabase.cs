@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 
 namespace MarkSFrancis.Data.LazyLoad
 {
     /// <summary>
-    /// A lazy loaded database, with tables seperated by model types
+    /// A thread-safe lazy loaded database, with tables seperated by model types
     /// </summary>
     public static class LazyDatabase
     {
         private static readonly ConcurrentDictionary<Type, ConcurrentDictionary<object, object>> Cache =
-                new ConcurrentDictionary<Type, ConcurrentDictionary<object, object>>();
+            new ConcurrentDictionary<Type, ConcurrentDictionary<object, object>>();
+
+        private static readonly object SyncContext = new object();
 
         private static ConcurrentDictionary<object, object> GetTable(Type type)
         {
@@ -26,9 +29,12 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <returns>The lazy loaded value with the primary key of <paramref name="id"/></returns>
         public static TEntry Get<TId, TEntry>(TId id, Func<TId, TEntry> load)
         {
-            var table = GetTable(typeof(TEntry));
+            lock (SyncContext)
+            {
+                var table = GetTable(typeof(TEntry));
 
-            return (TEntry)table.GetOrAdd(id, load);
+                return (TEntry)table.GetOrAdd(id, load);
+            }
         }
 
         /// <summary>
@@ -40,9 +46,12 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <param name="value">The value to add or update</param>
         public static void AddOrUpdate<TId, TEntry>(TId id, TEntry value)
         {
-            var table = GetTable(typeof(TEntry));
+            lock (SyncContext)
+            {
+                var table = GetTable(typeof(TEntry));
 
-            table.AddOrUpdate(id, value, (a, b) => value);
+                table.AddOrUpdate(id, value, (a, b) => value);
+            }
         }
 
         /// <summary>
@@ -53,9 +62,12 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <param name="id">The id of the entry to remove</param>
         public static void Remove<TId, TEntry>(TId id)
         {
-            var table = GetTable(typeof(TEntry));
+            lock (SyncContext)
+            {
+                var table = GetTable(typeof(TEntry));
 
-            table.TryRemove(id, out _);
+                table.TryRemove(id, out _);
+            }
         }
 
         /// <summary>
@@ -64,7 +76,10 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <param name="tableType">The type of the table to clear</param>
         public static void Clear(Type tableType)
         {
-            Cache.TryRemove(tableType, out _);
+            lock (SyncContext)
+            {
+                Cache.TryRemove(tableType, out _);
+            }
         }
 
         /// <summary>
@@ -72,7 +87,39 @@ namespace MarkSFrancis.Data.LazyLoad
         /// </summary>
         public static void Clear()
         {
-            Cache.Clear();
+            lock (SyncContext)
+            {
+                Cache.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Get the total number of items cached
+        /// </summary>
+        public static long TotalItemsCachedCount
+        {
+            get
+            {
+                lock (SyncContext)
+                {
+                    return Cache.Sum(c => (long)c.Value.Count);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get the number of items cached in a specific table
+        /// </summary>
+        /// <param name="tableType"></param>
+        /// <returns></returns>
+        public static int TableItemsCachedCount(Type tableType)
+        {
+            lock (SyncContext)
+            {
+                var table = GetTable(tableType);
+
+                return table.Count;
+            }
         }
     }
 }

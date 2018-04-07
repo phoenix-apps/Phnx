@@ -8,16 +8,11 @@ namespace MarkSFrancis.Data.LazyLoad
     /// </summary>
     /// <typeparam name="TKey">The type of identifier for this entry</typeparam>
     /// <typeparam name="TEntry">The type of data in this table</typeparam>
-    public class LazyTable<TKey, TEntry> where TEntry : IPrimaryKeyDataModel<TKey>
+    public class LazyData<TKey, TEntry> where TEntry : IPrimaryKeyDataModel<TKey>
     {
-        /// <summary>
-        /// The name of the lazy loaded table
-        /// </summary>
-        public string UniqueTableName { get; }
-
         private readonly ConcurrentDictionary<TKey, TEntry> _cache;
 
-        private readonly Func<TKey, TEntry> _getSingleFromDatabase;
+        private readonly Func<TKey, TEntry> _getSingleFromTable;
 
         /// <summary>
         /// The number of items cached
@@ -25,14 +20,12 @@ namespace MarkSFrancis.Data.LazyLoad
         public int CachedCount => _cache.Count;
 
         /// <summary>
-        /// Create a new <see cref="LazyTable{TId,TEntry}"/>
+        /// Create a new <see cref="LazyData{TKey,TEntry}"/>
         /// </summary>
-        /// <param name="uniqueTableName">The name of this table</param>
         /// <param name="getSingleFromDatabase">The method to use when getting an item for the first time from the database</param>
-        public LazyTable(string uniqueTableName, Func<TKey, TEntry> getSingleFromDatabase)
+        public LazyData(Func<TKey, TEntry> getSingleFromDatabase)
         {
-            UniqueTableName = uniqueTableName;
-            _getSingleFromDatabase = getSingleFromDatabase;
+            _getSingleFromTable = getSingleFromDatabase;
             _cache = new ConcurrentDictionary<TKey, TEntry>();
         }
 
@@ -52,7 +45,7 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <returns></returns>
         public TEntry Get(TKey id)
         {
-            return _cache.GetOrAdd(id, _getSingleFromDatabase);
+            return _cache.GetOrAdd(id, _getSingleFromTable);
         }
 
         /// <summary>
@@ -70,29 +63,6 @@ namespace MarkSFrancis.Data.LazyLoad
         public void Clear()
         {
             _cache.Clear();
-        }
-
-        /// <summary>
-        /// Get the hash code for this <see cref="object"/>. Based on the <see cref="UniqueTableName"/>
-        /// </summary>
-        /// <returns>A hash code for this <see cref="object"/></returns>
-        public override int GetHashCode()
-        {
-            return UniqueTableName.GetHashCode();
-        }
-
-        /// <summary>
-        /// Check whether this item matches another. Based on the <see cref="UniqueTableName"/>. Returns <see langword="false"/> if the object being compared to is not a <see cref="LazyTable{TKey,TEntry}"/>
-        /// </summary>
-        /// <returns>Whether this matches another <see cref="object"/></returns>
-        public override bool Equals(object obj)
-        {
-            if (!(obj is LazyTable<TKey, TEntry> table))
-            {
-                return false;
-            }
-
-            return table.UniqueTableName == UniqueTableName;
         }
     }
 }
