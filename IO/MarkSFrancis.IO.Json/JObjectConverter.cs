@@ -28,6 +28,7 @@ namespace MarkSFrancis.IO.Json
         /// </summary>
         /// <param name="json">The json to convert</param>
         /// <returns><paramref name="json"/> as a <see cref="JObject"/></returns>
+        /// <exception cref="Newtonsoft.Json.JsonReaderException"></exception>
         public static JObject FromJson(string json)
         {
             return JObject.Parse(json);

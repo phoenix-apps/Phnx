@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using MarkSFrancis.Collections.Extensions;
-using MarkSFrancis.Windows.Serialization.Interfaces;
+using MarkSFrancis.Serialization.Interfaces;
 
-namespace MarkSFrancis.Windows.Serialization
+namespace MarkSFrancis.Serialization
 {
     /// <summary>
     /// Binary serialization for transferring a value and its members to and from a <see cref="T:byte[]"/>

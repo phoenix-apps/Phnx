@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace MarkSFrancis.Windows.Serialization.Interfaces
+namespace MarkSFrancis.Serialization.Interfaces
 {
     /// <summary>
     /// Represents a serializer for objects, such as XML, Json and binary

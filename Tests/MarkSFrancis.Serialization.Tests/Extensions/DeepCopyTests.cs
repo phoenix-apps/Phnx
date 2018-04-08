@@ -2,7 +2,7 @@
 using MarkSFrancis.Serialization.Tests.TestClasses;
 using NUnit.Framework;
 
-namespace MarkSFrancis.Serialization.Tests
+namespace MarkSFrancis.Serialization.Tests.Extensions
 {
     public class DeepCopyTests
     {

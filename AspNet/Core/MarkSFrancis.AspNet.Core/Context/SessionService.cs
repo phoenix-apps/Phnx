@@ -1,6 +1,6 @@
 ﻿using MarkSFrancis.AspNet.Core.Context.Interfaces;
 using MarkSFrancis.Collections.Extensions;
-using MarkSFrancis.Serialization;
+using MarkSFrancis.Serialization.Extensions;
 using Microsoft.AspNetCore.Http;
 
 namespace MarkSFrancis.AspNet.Core.Context

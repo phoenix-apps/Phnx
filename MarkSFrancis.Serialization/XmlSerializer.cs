@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Text;
 using MarkSFrancis.IO.Factories;
-using MarkSFrancis.Windows.Serialization.Interfaces;
+using MarkSFrancis.Serialization.Interfaces;
 
-namespace MarkSFrancis.Windows.Serialization
+namespace MarkSFrancis.Serialization
 {
     /// <summary>
     /// XML (Extensible Markup Language) serialization for transferring a value and its members to and from a <see cref="string"/>

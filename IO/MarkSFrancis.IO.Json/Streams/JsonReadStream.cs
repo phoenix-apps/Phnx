@@ -48,6 +48,7 @@ namespace MarkSFrancis.IO.Json.Streams
         /// </summary>
         /// <typeparam name="T">The type of object to deserialize to</typeparam>
         /// <returns>A deseriliazed object from the stream</returns>
+        /// <exception cref="System.ArgumentException">Object is not of type <typeparamref name="T"/></exception>
         public virtual T ReadObject<T>()
         {
             var loadedValue = ReadJObject();
