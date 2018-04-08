@@ -2,9 +2,9 @@
 
 namespace MarkSFrancis.AspNet.Windows.Modals
 {
-    public class ModalModel : IModalModel
+    public class ModalViewModel : IModalViewModel
     {
-        public ModalModel()
+        public ModalViewModel()
         {
             Id = System.Guid.NewGuid().ToString();
         }
@@ -21,25 +21,5 @@ namespace MarkSFrancis.AspNet.Windows.Modals
         public string IconClass { get; set; }
 
         public string IconColor { get; set; }
-
-        public string IconHtml
-        {
-            get
-            {
-                if (string.IsNullOrWhiteSpace(IconClass))
-                {
-                    return "";
-                }
-
-                string icon = "<i class=\"" + IconClass + "\"";
-
-                if (!string.IsNullOrWhiteSpace(IconColor))
-                {
-                    icon += " style=\"color:" + IconColor + ";\"";
-                }
-
-                return icon + "></i>";
-            }
-        }
     }
 }

@@ -56,10 +56,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Interfaces\IModalManager.cs" />
-    <Compile Include="Interfaces\IModalModel.cs" />
-    <Compile Include="Interfaces\IModalRenderer.cs" />
-    <Compile Include="DefaultModalRenderer.cs" />
+    <Compile Include="Interfaces\IModalViewModel.cs" />
     <Compile Include="ModalManager.cs" />
     <Compile Include="ModalViewModal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

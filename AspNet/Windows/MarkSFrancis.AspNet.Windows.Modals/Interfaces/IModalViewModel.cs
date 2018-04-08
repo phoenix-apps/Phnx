@@ -1,6 +1,6 @@
 ﻿namespace MarkSFrancis.AspNet.Windows.Modals.Interfaces
 {
-    public interface IModalModel
+    public interface IModalViewModel
     {
         string Id { get; }
     }
