@@ -2,7 +2,6 @@
 using System.Text;
 using MarkSFrancis.IO.Factories;
 using MarkSFrancis.Windows.Serialization.Interfaces;
-using XmlFormatter = System.Xml.Serialization.XmlSerializer;
 
 namespace MarkSFrancis.Windows.Serialization
 {
@@ -27,13 +26,13 @@ namespace MarkSFrancis.Windows.Serialization
         }
 
         /// <summary>
-        /// Create a new <see cref="XmlFormatter"/> for a given type
+        /// Create a new <see cref="System.Xml.Serialization.XmlSerializer"/> for a given type
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        private XmlFormatter CreateSerializer<T>()
+        private System.Xml.Serialization.XmlSerializer CreateSerializer<T>()
         {
-            return new XmlFormatter(typeof(T));
+            return new System.Xml.Serialization.XmlSerializer(typeof(T));
         }
 
         /// <summary>
