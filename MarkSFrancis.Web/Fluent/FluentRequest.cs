@@ -132,10 +132,9 @@ namespace MarkSFrancis.Web.Fluent
         /// <typeparam name="TResponse">The format of the data to send</typeparam>
         /// <param name="method">The HTTP method to use when sending the request</param>
         /// <returns>The response from the API in a format ready for JSON deserialization</returns>
-        public async Task<ApiJsonResponseMessage<TResponse>> Send<TResponse>(HttpMethod method)
+        public async Task<ApiJsonResponseMessage<TResponse>> SendWithJsonResponse<TResponse>(HttpMethod method)
         {
             _apiRequest.Method = method;
-            _apiRequest.ContentType = "application/json";
 
             var response = await ApiRequestService.SendAsync(_apiRequest);
 
