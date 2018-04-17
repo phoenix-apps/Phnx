@@ -103,7 +103,16 @@ namespace MarkSFrancis.Web.Services
                 baseUrl += "/";
             }
 
-            return baseUrl + String.Join("/", escapedPathSegments);
+            var url = baseUrl + string.Join("/", escapedPathSegments);
+
+            // Check if there were any path segments
+            if (url == baseUrl)
+            {
+                // Remove trailing "/"
+                return url.Substring(0, url.Length - 1);
+            }
+
+            return url;
         }
     }
 }

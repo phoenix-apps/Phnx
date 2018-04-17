@@ -99,6 +99,19 @@ namespace MarkSFrancis.Web.Fluent
         }
 
         /// <summary>
+        /// Use an url-encoded form format body content, with a specified body
+        /// </summary>
+        /// <param name="body">The data to send as body content</param>
+        /// <returns>This <see cref="FluentRequest"/></returns>
+        public FluentRequest WithUrlFormBody(object body)
+        {
+            _apiRequest.ContentType = ContentType.Form;
+            _apiRequest.Content = UrlBuilder.ToQueryString(body);
+
+            return this;
+        }
+
+        /// <summary>
         /// Use a specified content type, with a specified body
         /// </summary>
         /// <param name="contentType">The type of content to use</param>

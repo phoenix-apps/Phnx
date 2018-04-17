@@ -14,5 +14,10 @@
         /// JSON content type
         /// </summary>
         public const string Json = "application/json";
+
+        /// <summary>
+        /// Form content type
+        /// </summary>
+        public const string Form = "application/x-www-form-urlencoded";
     }
 }

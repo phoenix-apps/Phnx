@@ -1,5 +1,6 @@
 ﻿using MarkSFrancis.Console;
 using MarkSFrancis.Web.Fluent;
+using System.IO;
 using System.Net.Http;
 
 namespace SyntaxTest
@@ -12,15 +13,23 @@ namespace SyntaxTest
         {
             var client = new ApiClient();
 
-            var task = client.CreateRequest("http://www.google.com")
+            var task = client.CreateRequest("https://www.google.com/search")
+                .WithQuery(new
+                {
+                    q = "test"
+                })
                 .Send(HttpMethod.Get);
 
             task.Wait();
 
-            var result = task.Result;
+            var result = task.Result.Body;
 
             Console.WriteLine("Response: ");
-            Console.WriteLine(result.Body);
+            Console.WriteLine(result);
+
+            Console.WriteLine("Saving response...");
+            File.WriteAllText(@"C:\Users\MarkFrancis\Documents\result.html", result);
+            Console.WriteLine("Response saved");
 
             Console.GetString();
         }
