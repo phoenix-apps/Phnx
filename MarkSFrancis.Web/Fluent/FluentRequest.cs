@@ -113,6 +113,18 @@ namespace MarkSFrancis.Web.Fluent
         }
 
         /// <summary>
+        /// Use a specified collection of headers
+        /// </summary>
+        /// <param name="headers">The headers to send with the request</param>
+        /// <returns>This <see cref="FluentRequest"/></returns>
+        public FluentRequest UseHeaders(IReadOnlyDictionary<string, string> headers)
+        {
+            _apiRequest.Headers = headers;
+
+            return this;
+        }
+
+        /// <summary>
         /// Send the request
         /// </summary>
         /// <param name="method">The HTTP method to use when sending the request</param>
