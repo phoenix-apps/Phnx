@@ -1,8 +1,9 @@
-﻿using MarkSFrancis.Web.Client;
-using MarkSFrancis.Web.Models;
+﻿using MarkSFrancis.Web.Models;
 using MarkSFrancis.Web.Models.Request;
 using MarkSFrancis.Web.Models.Response;
+using MarkSFrancis.Web.Services;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -13,13 +14,10 @@ namespace MarkSFrancis.Web.Fluent
     /// </summary>
     public class FluentRequest
     {
-        private readonly ApiClientCore _apiClient;
         private readonly ApiRequestMessage _apiRequest;
 
-        internal FluentRequest(ApiClientCore apiClient)
+        internal FluentRequest()
         {
-            _apiClient = apiClient;
-
             _apiRequest = new ApiRequestMessage
             {
                 Content = string.Empty
@@ -33,6 +31,17 @@ namespace MarkSFrancis.Web.Fluent
         /// <param name="urlSegments">The URL path segments to add to the base url. These segments are escaped, and then joined with "/"</param>
         /// <returns>This <see cref="FluentRequest"/></returns>
         public FluentRequest UseUrl(string baseUrl, params string[] urlSegments)
+        {
+            return UseUrl(baseUrl, (IEnumerable<string>)urlSegments);
+        }
+
+        /// <summary>
+        /// Set the url to send the request to
+        /// </summary>
+        /// <param name="baseUrl">The base url to send to, or the full url</param>
+        /// <param name="urlSegments">The URL path segments to add to the base url. These segments are escaped, and then joined with "/"</param>
+        /// <returns>This <see cref="FluentRequest"/></returns>
+        public FluentRequest UseUrl(string baseUrl, IEnumerable<string> urlSegments)
         {
             _apiRequest.Url = UrlBuilder.ToUrl(baseUrl, urlSegments);
 
@@ -112,7 +121,7 @@ namespace MarkSFrancis.Web.Fluent
         {
             _apiRequest.Method = method;
 
-            var response = await _apiClient.SendAsync(_apiRequest);
+            var response = await ApiRequestService.SendAsync(_apiRequest);
 
             return new ApiResponseMessage(response);
         }
@@ -128,7 +137,7 @@ namespace MarkSFrancis.Web.Fluent
             _apiRequest.Method = method;
             _apiRequest.ContentType = "application/json";
 
-            var response = await _apiClient.SendAsync(_apiRequest);
+            var response = await ApiRequestService.SendAsync(_apiRequest);
 
             return new ApiJsonResponseMessage<TResponse>(response);
         }

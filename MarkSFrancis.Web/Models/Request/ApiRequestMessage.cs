@@ -4,18 +4,40 @@ using System.Text;
 
 namespace MarkSFrancis.Web.Models.Request
 {
+    /// <summary>
+    /// Represents the core features of an API request
+    /// </summary>
     public class ApiRequestMessage
     {
+        /// <summary>
+        /// The body content
+        /// </summary>
         public string Content { get; set; }
 
+        /// <summary>
+        /// The body content type
+        /// </summary>
         public string ContentType { get; set; }
 
+        /// <summary>
+        /// The URL to send this request to
+        /// </summary>
         public string Url { get; set; }
 
+        /// <summary>
+        /// The <see cref="HttpMethod"/> to use when sending this request
+        /// </summary>
         public HttpMethod Method { get; set; }
 
+        /// <summary>
+        /// The headers to use in this request
+        /// </summary>
         public IReadOnlyDictionary<string, string> Headers { get; set; }
 
+        /// <summary>
+        /// Convert this object to a <see cref="HttpRequestMessage"/>
+        /// </summary>
+        /// <returns></returns>
         public HttpRequestMessage ToRequestMessage()
         {
             var request = new HttpRequestMessage(Method, Url);

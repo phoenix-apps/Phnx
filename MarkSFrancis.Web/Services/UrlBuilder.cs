@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace MarkSFrancis.Web
+namespace MarkSFrancis.Web.Services
 {
     /// <summary>
     /// Helps to build URLs from query strings and URL path segments
@@ -76,6 +77,17 @@ namespace MarkSFrancis.Web
         /// <param name="pathSegments">The URL segments to append to the base URL</param>
         /// <returns>The fully qualified URL with all the path segments escaped and appended</returns>
         public static string ToUrl(string baseUrl, params string[] pathSegments)
+        {
+            return ToUrl(baseUrl, (IEnumerable<string>)pathSegments);
+        }
+
+        /// <summary>
+        /// Join url path segments together, sanitising their values to URL segments, and joining them up with "/" inbetween each
+        /// </summary>
+        /// <param name="baseUrl">The base URL to append to (e.g http://www.contoso.com)</param>
+        /// <param name="pathSegments">The URL segments to append to the base URL</param>
+        /// <returns>The fully qualified URL with all the path segments escaped and appended</returns>
+        public static string ToUrl(string baseUrl, IEnumerable<string> pathSegments)
         {
             var escapedPathSegments = pathSegments.Select(Uri.EscapeDataString);
 
