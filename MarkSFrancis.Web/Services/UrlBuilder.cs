@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarkSFrancis.Reflection.Extensions;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,9 @@ namespace MarkSFrancis.Web.Services
             }
 
             // Get all properties on the object
-            var properties = query.GetType().GetProperties()
-                .Where(x => x.CanRead)
+            var properties = query.GetType()
+                .GetPropertyFieldInfos(getFields: false)
+                .Where(x => x.CanGet)
                 .ToDictionary(x => x.Name, x => x.GetValue(query));
 
             // Get names for all IEnumerable properties (excl. string)
@@ -67,7 +69,12 @@ namespace MarkSFrancis.Web.Services
                 url = url.Substring(0, url.IndexOf('?'));
             }
 
-            return url + "?" + queryString;
+            if (queryString == null)
+            {
+                return url;
+            }
+
+            return url + "?" + (queryString ?? "");
         }
 
         /// <summary>

@@ -20,6 +20,7 @@
     <ProjectReference Include="..\MarkSFrancis.Random\MarkSFrancis.Random.csproj" />
     <ProjectReference Include="..\MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj" />
     <ProjectReference Include="..\MarkSFrancis.Security\MarkSFrancis.Security.csproj" />
+    <ProjectReference Include="..\MarkSFrancis.Web\MarkSFrancis.Web.csproj" />
     <ProjectReference Include="..\MarkSFrancis\MarkSFrancis.csproj" />
   </ItemGroup>
 
