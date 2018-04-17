@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MarkSFrancis.Collections\MarkSFrancis.Collections.csproj" />
-    <ProjectReference Include="..\..\MarkSFrancis\MarkSFrancis.csproj" />
+    <ProjectReference Include="..\MarkSFrancis.Collections\MarkSFrancis.Collections.csproj" />
+    <ProjectReference Include="..\MarkSFrancis\MarkSFrancis.csproj" />
   </ItemGroup>
 
 </Project>
