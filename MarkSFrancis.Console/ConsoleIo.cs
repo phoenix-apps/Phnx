@@ -35,6 +35,19 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
+        /// Get or set the title to display in the console's title bar
+        /// </summary>
+        /// <exception cref="InvalidOperationException">In a get operation, the retrieved title is longer than 24500 characters</exception>
+        /// <exception cref="ArgumentOutOfRangeException">In a set operation, the specified title is longer than 24500 characters</exception>
+        /// <exception cref="ArgumentNullException">In a set operation, the specified title is <see langword="null" /></exception>
+        /// <exception cref="System.IO.IOException">An I/O error occurred</exception>
+        public string Title
+        {
+            get => System.Console.Title;
+            set => System.Console.Title = value;
+        }
+
+        /// <summary>
         /// Resets the console text and background color to their default values
         /// </summary>
         public void ResetColor()

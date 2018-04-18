@@ -34,19 +34,14 @@ namespace SyntaxTest
                 Console.ResetColor();
             }
 
-            if (Console.YesNo("Run threads demo?"))
+            if (Console.YesNo($"Run {nameof(ThreadsDemo)}?"))
             {
-                RunThreadsDemo();
+                ThreadsDemo threads = new ThreadsDemo(Console, ThreadsDemo.Mode.Interlocked);
+                threads.Run();
             }
 
             Console.WriteLine("Waiting for keypress to close...");
             Console.ReadKey();
-        }
-
-        static void RunThreadsDemo()
-        {
-            ThreadsDemo threads = new ThreadsDemo(Console, ThreadsDemo.Mode.Interlocked);
-            threads.Run();
         }
     }
 }
