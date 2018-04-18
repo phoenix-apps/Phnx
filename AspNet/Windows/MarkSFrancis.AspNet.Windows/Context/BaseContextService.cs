@@ -1,12 +1,10 @@
 ﻿using System.Web;
-using MarkSFrancis.AspNet.Windows.Interfaces;
 
 namespace MarkSFrancis.AspNet.Windows.Context
 {
     public abstract class BaseContextMetaService
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        protected HttpContext Context => _httpContextAccessor.HttpContext;
+        protected HttpContext Context => HttpContext.Current;
 
         protected HttpRequest Request
         {
@@ -32,11 +30,6 @@ namespace MarkSFrancis.AspNet.Windows.Context
 
                 return Context.Response;
             }
-        }
-
-        protected BaseContextMetaService(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
         }
     }
 }

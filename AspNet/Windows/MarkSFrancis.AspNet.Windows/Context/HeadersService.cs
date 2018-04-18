@@ -1,6 +1,5 @@
-﻿using System.Collections.Specialized;
-using MarkSFrancis.AspNet.Windows.Context.Interfaces;
-using MarkSFrancis.AspNet.Windows.Interfaces;
+﻿using MarkSFrancis.AspNet.Windows.Context.Interfaces;
+using System.Collections.Specialized;
 
 namespace MarkSFrancis.AspNet.Windows.Context
 {
@@ -8,10 +7,6 @@ namespace MarkSFrancis.AspNet.Windows.Context
     {
         protected NameValueCollection RequestHeaders => Request.Headers;
         protected NameValueCollection ResponseHeaders => Request.Headers;
-
-        public HeadersService(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
-        {
-        }
 
         public string Get(string key)
         {

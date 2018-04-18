@@ -7,6 +7,9 @@ using System.Web.Mvc.Html;
 
 namespace MarkSFrancis.AspNet.Windows.Modals.Extensions
 {
+    /// <summary>
+    /// Extensions for <see cref="HtmlHelper"/> related to modals
+    /// </summary>
     public static class HtmlHelperExtensions
     {
         /// <summary>

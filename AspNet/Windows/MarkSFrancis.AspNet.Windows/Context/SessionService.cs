@@ -1,20 +1,14 @@
-﻿using System.Web;
+﻿using MarkSFrancis.AspNet.Windows.Context.Interfaces;
+using System.Web;
 using System.Web.SessionState;
-using MarkSFrancis.AspNet.Windows.Context.Interfaces;
 
 namespace MarkSFrancis.AspNet.Windows.Context
 {
     public class SessionService : ISessionService
     {
-        private readonly HttpContextAccessor _httpContextAccessor;
-        protected HttpContext HttpContext => _httpContextAccessor.HttpContext;
+        protected HttpContext HttpContext => HttpContext.Current;
 
         protected HttpSessionState Session => HttpContext.Session;
-
-        public SessionService(HttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
 
         public T Get<T>(string key)
         {

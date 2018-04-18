@@ -61,8 +61,6 @@
     <Compile Include="Extensions\StringBuilderExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TagBuilderExtensions.cs" />
-    <Compile Include="HttpContextAccessor.cs" />
-    <Compile Include="Interfaces\IHttpContextAccessor.cs" />
     <Compile Include="Cache\CachePolicyHelper.cs" />
     <Compile Include="Cache\LazyMemoryCache.cs" />
     <Compile Include="Cache\Interfaces\ICacheEntry.cs" />

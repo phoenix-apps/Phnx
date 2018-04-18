@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MarkSFrancis.AspNet.Core.Modals.Extensions
 {
+    /// <summary>
+    /// Extensions for <see cref="IHtmlHelper"/> related to modals
+    /// </summary>
     public static class HtmlHelperExtensions
     {
         /// <summary>

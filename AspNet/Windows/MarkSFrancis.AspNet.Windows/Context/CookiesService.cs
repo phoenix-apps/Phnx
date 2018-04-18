@@ -1,7 +1,6 @@
-﻿using System.Linq;
+﻿using MarkSFrancis.AspNet.Windows.Context.Interfaces;
+using System.Linq;
 using System.Web;
-using MarkSFrancis.AspNet.Windows.Context.Interfaces;
-using MarkSFrancis.AspNet.Windows.Interfaces;
 
 namespace MarkSFrancis.AspNet.Windows.Context
 {
@@ -9,10 +8,6 @@ namespace MarkSFrancis.AspNet.Windows.Context
     {
         protected HttpCookieCollection RequestCookies => Request.Cookies;
         protected HttpCookieCollection ResponseCookies => Response.Cookies;
-
-        public CookiesService(IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
-        {
-        }
 
         public HttpCookie Get(string cookieKey)
         {
