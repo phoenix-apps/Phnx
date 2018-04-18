@@ -1,6 +1,6 @@
 ﻿using MarkSFrancis.Console;
 using MarkSFrancis.Web.Fluent;
-using System.IO;
+using System;
 using System.Net.Http;
 
 namespace SyntaxTest
@@ -11,27 +11,36 @@ namespace SyntaxTest
 
         static void Main()
         {
-            var client = new ApiClient();
+            if (Console.YesNo($"Run {nameof(ApiClient)} demo?"))
+            {
+                var client = new ApiClient();
 
-            var task = client.CreateRequest("https://www.google.com/search")
-                .WithQuery(new
-                {
-                    q = "test"
-                })
-                .Send(HttpMethod.Get);
+                var task = client.CreateRequest("https://www.google.com/search")
+                    .WithQuery(new
+                    {
+                        q = "test"
+                    })
+                    .Send(HttpMethod.Get);
 
-            task.Wait();
+                task.Wait();
 
-            var result = task.Result.Body;
+                var result = task.Result.Body;
 
-            Console.WriteLine("Response: ");
-            Console.WriteLine(result);
+                Console.FontColor = ConsoleColor.Yellow;
 
-            Console.WriteLine("Saving response...");
-            File.WriteAllText(@"C:\Users\MarkFrancis\Documents\result.html", result);
-            Console.WriteLine("Response saved");
+                Console.WriteLine("Response: ");
+                Console.WriteLine(result);
 
-            Console.GetString();
+                Console.ResetColor();
+            }
+
+            if (Console.YesNo("Run threads demo?"))
+            {
+                RunThreadsDemo();
+            }
+
+            Console.WriteLine("Waiting for keypress to close...");
+            Console.ReadKey();
         }
 
         static void RunThreadsDemo()

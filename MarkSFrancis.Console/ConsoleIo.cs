@@ -17,6 +17,32 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
+        /// Get or set the output font color
+        /// </summary>
+        public ConsoleColor FontColor
+        {
+            get => System.Console.ForegroundColor;
+            set => System.Console.ForegroundColor = value;
+        }
+
+        /// <summary>
+        /// Get or set the console background color
+        /// </summary>
+        public ConsoleColor BackgroundColor
+        {
+            get => System.Console.BackgroundColor;
+            set => System.Console.BackgroundColor = value;
+        }
+
+        /// <summary>
+        /// Resets the console text and background color to their default values
+        /// </summary>
+        public void ResetColor()
+        {
+            System.Console.ResetColor();
+        }
+
+        /// <summary>
         /// Clear the console
         /// </summary>
         public void Clear() => System.Console.Clear();
