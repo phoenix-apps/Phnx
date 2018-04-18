@@ -6,7 +6,16 @@ namespace MarkSFrancis.AspNet.Core.Modals.Extensions
 {
     public static class HtmlHelperExtensions
     {
-        public static IHtmlContent RenderModals<TModal>(this IHtmlHelper helper, IModalManager<TModal> modalManager, string partialViewName) where TModal : IModalViewModel
+        /// <summary>
+        /// Render all session modals using a partial view
+        /// </summary>
+        /// <typeparam name="TModal">The type of modal to render</typeparam>
+        /// <param name="helper">The <see cref="IHtmlHelper"/> to extend rendering</param>
+        /// <param name="modalManager">The modal manager which contains all the modals to render</param>
+        /// <param name="partialViewName">The name of the partial view to use when rendering</param>
+        /// <param name="clearModalsAfterRendering">Whether to clear the modals from the session after they have all been rendered</param>
+        /// <returns>All the modals rendered as HTML</returns>
+        public static IHtmlContent RenderModals<TModal>(this IHtmlHelper helper, IModalManager<TModal> modalManager, string partialViewName, bool clearModalsAfterRendering = true) where TModal : IModalViewModel
         {
             if (string.IsNullOrWhiteSpace(partialViewName))
             {
@@ -18,6 +27,11 @@ namespace MarkSFrancis.AspNet.Core.Modals.Extensions
             foreach (var modal in modalManager.Modals)
             {
                 content.AppendHtml(helper.Partial(partialViewName, modal));
+            }
+
+            if (clearModalsAfterRendering)
+            {
+                modalManager.Clear();
             }
 
             return content;
