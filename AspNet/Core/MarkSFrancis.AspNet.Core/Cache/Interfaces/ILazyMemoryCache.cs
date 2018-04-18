@@ -1,5 +1,8 @@
 ﻿namespace MarkSFrancis.AspNet.Core.Cache.Interfaces
 {
+    /// <summary>
+    /// A memory cache with lazy loading features
+    /// </summary>
     public interface ILazyMemoryCache
     {
         /// <summary>

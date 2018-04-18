@@ -3,13 +3,23 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace MarkSFrancis.AspNet.Core.Cache
 {
+    /// <summary>
+    /// A memory cache with lazy loading features
+    /// </summary>
     public class LazyMemoryCache : ILazyMemoryCache
     {
+        /// <summary>
+        /// Create a new <see cref="LazyMemoryCache"/> using an <see cref="IMemoryCache"/> for the cache storage
+        /// </summary>
+        /// <param name="cache"></param>
         public LazyMemoryCache(IMemoryCache cache)
         {
             Cache = cache;
         }
 
+        /// <summary>
+        /// The cache used by this <see cref="LazyMemoryCache"/>, where values are cached after loading
+        /// </summary>
         protected IMemoryCache Cache { get; }
 
         /// <summary>

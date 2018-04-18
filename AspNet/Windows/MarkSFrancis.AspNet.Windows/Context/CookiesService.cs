@@ -1,34 +1,52 @@
 ﻿using MarkSFrancis.AspNet.Windows.Context.Interfaces;
-using System.Linq;
 using System.Web;
 
 namespace MarkSFrancis.AspNet.Windows.Context
 {
+    /// <summary>
+    /// A service for managing getting cookies from a request, and adding cookies to a response
+    /// </summary>
     public class CookiesService : BaseContextMetaService, ICookiesService
     {
+        /// <summary>
+        /// The cookies contained within the request
+        /// </summary>
         protected HttpCookieCollection RequestCookies => Request.Cookies;
+
+        /// <summary>
+        /// The cookies contained within the response
+        /// </summary>
         protected HttpCookieCollection ResponseCookies => Response.Cookies;
 
-        public HttpCookie Get(string cookieKey)
+        /// <summary>
+        /// Get a cookie by key from the request
+        /// </summary>
+        /// <param name="key">The key to the cookie to get</param>
+        /// <returns>The value of the specified cookie</returns>
+        public HttpCookie Get(string key)
         {
-            return RequestCookies[cookieKey];
+            return RequestCookies[key];
         }
 
-        public void Set(string cookieKey, HttpCookie cookie)
+        /// <summary>
+        /// Append a cookie to the response
+        /// </summary>
+        /// <param name="cookie">The cookie to append</param>
+        public void Append(HttpCookie cookie)
         {
-            if (cookieKey != cookie.Name)
-            {
-                throw ErrorFactory.Default.InvalidCookieKey(cookieKey, cookie.Name);
-            }
+            ResponseCookies.Add(cookie);
+        }
 
-            if (ResponseCookies.AllKeys.Contains(cookieKey))
-            {
-                ResponseCookies.Set(cookie);
-            }
-            else
-            {
-                ResponseCookies.Add(cookie);
-            }
+        /// <summary>
+        /// Append a cookie with a key to the response
+        /// </summary>
+        /// <param name="key">The key to store the cookie with</param>
+        /// <param name="value">The value of the cookie</param>
+        public void Append(string key, string value)
+        {
+            HttpCookie cookie = new HttpCookie(key, value);
+
+            Append(cookie);
         }
     }
 }
