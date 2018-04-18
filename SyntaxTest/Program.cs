@@ -1,47 +1,48 @@
-﻿using MarkSFrancis.Console;
-using MarkSFrancis.Web.Fluent;
-using System;
-using System.Net.Http;
+﻿using MarkSFrancis;
+using MarkSFrancis.Console;
+using SyntaxTest.Demos;
+using SyntaxTest.Demos.Interfaces;
 
 namespace SyntaxTest
 {
     class Program
     {
-        public static readonly ConsoleIo Console = new ConsoleIo();
+        private static readonly ConsoleIo Console = new ConsoleIo();
 
         static void Main()
         {
-            if (Console.YesNo($"Run {nameof(ApiClient)} demo?"))
+            Console.Title = "Syntax Test for " + nameof(MarkSFrancis);
+
+            do
             {
-                var client = new ApiClient();
+                IDemo selectedDemo = GetSelectedDemo();
 
-                var task = client.CreateRequest("https://www.google.com/search")
-                    .WithQuery(new
-                    {
-                        q = "test"
-                    })
-                    .Send(HttpMethod.Get);
+                Console.WriteLine("Starting demo...");
 
-                task.Wait();
+                selectedDemo.Run();
 
-                var result = task.Result.Body;
+                Console.WriteLine("Demo finished");
 
-                Console.FontColor = ConsoleColor.Yellow;
+            } while (Console.YesNo("Run another demo?"));
+        }
 
-                Console.WriteLine("Response: ");
-                Console.WriteLine(result);
-
-                Console.ResetColor();
-            }
-
-            if (Console.YesNo($"Run {nameof(ThreadsDemo)}?"))
+        private static IDemo GetSelectedDemo()
+        {
+            var selectedDemo = Console.GetSelection(new[]
             {
-                ThreadsDemo threads = new ThreadsDemo(Console, ThreadsDemo.Mode.Interlocked);
-                threads.Run();
-            }
+                "Api Demo",
+                "Threads Demo"
+            }, "Select a demo to run");
 
-            Console.WriteLine("Waiting for keypress to close...");
-            Console.ReadKey();
+            switch (selectedDemo)
+            {
+                case 1:
+                    return new ApiClientDemo(Console);
+                case 2:
+                    return new ThreadsDemo(Console, ThreadsDemo.Mode.Synced);
+                default:
+                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(selectedDemo));
+            }
         }
     }
 }

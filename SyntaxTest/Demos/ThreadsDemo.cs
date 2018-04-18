@@ -1,19 +1,13 @@
-﻿using System;
+﻿using MarkSFrancis.Console;
+using SyntaxTest.Demos.Interfaces;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MarkSFrancis.Console;
 
-namespace SyntaxTest
+namespace SyntaxTest.Demos
 {
-    class ThreadsDemo
+    public class ThreadsDemo : IDemo
     {
-        public enum Mode
-        {
-            Unsafe,
-            Interlocked,
-            Synced
-        }
-
         public ThreadsDemo(ConsoleIo console, Mode mode)
         {
             _console = console;
@@ -86,6 +80,13 @@ namespace SyntaxTest
             {
                 Interlocked.Increment(ref value);
             }
+        }
+
+        public enum Mode
+        {
+            Unsafe,
+            Interlocked,
+            Synced
         }
     }
 }

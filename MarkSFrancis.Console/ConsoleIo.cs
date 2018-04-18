@@ -73,8 +73,6 @@ namespace MarkSFrancis.Console
                 throw new ArgumentNullException(nameof(converter));
             }
 
-            question = FormatQuestion(question);
-
             T returnValue = default(T);
 
             {
@@ -115,7 +113,7 @@ namespace MarkSFrancis.Console
         /// <returns></returns>
         public bool YesNo(string question)
         {
-            Write(question + " (y/n): ");
+            Write(question.Trim() + " (y/n): ");
 
             ConsoleKeyInfo keyInfo;
 
@@ -137,7 +135,7 @@ namespace MarkSFrancis.Console
         /// <returns></returns>
         public bool? YesNoCancel(string question)
         {
-            Write(question + " (y/n/escape): ");
+            Write(question.Trim() + " (y/n/escape): ");
 
             ConsoleKeyInfo keyInfo;
 

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using MarkSFrancis.Collections.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace MarkSFrancis.Console
 {
@@ -85,7 +87,7 @@ namespace MarkSFrancis.Console
         {
             WriteCollection((IEnumerable<object>)collection);
         }
-        
+
         /// <summary>
         /// Write a collection of text to the <see cref="Output"/>, with each value delimited by a newline
         /// </summary>
@@ -137,11 +139,9 @@ namespace MarkSFrancis.Console
         /// Write a question to the <see cref="Output"/>, and then get a line of text from the <see cref="Input"/>
         /// </summary>
         /// <param name="question">The question to write</param>
-        /// <returns></returns>
+        /// <returns>The line of text entered by the user</returns>
         public string GetString(string question)
         {
-            question = FormatQuestion(question);
-
             Write(question);
             return GetString();
         }
@@ -150,17 +150,60 @@ namespace MarkSFrancis.Console
         /// Write a question to the <see cref="Output"/>, and then get attempt to get an <see cref="int"/> from the <see cref="Input"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
         /// </summary>
         /// <param name="question">The question to write</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="int"/> entered by the user</returns>
         public int GetInt(string question = null)
         {
             return Get(int.Parse, question);
         }
 
         /// <summary>
+        /// Write a question to the <see cref="Output"/>, and then get attempt to get an <see cref="int"/> from the <see cref="Input"/> of the index of the selected option. This process repeats if the received input is invalid or out of range of the options. Any errors are written to <see cref="Debug"/>
+        /// </summary>
+        /// <param name="options">The range of options to choose from</param>
+        /// <param name="question">The question to write</param>
+        /// <returns>The index of the selected option</returns>
+        public int GetSelection(IEnumerable<string> options, string question = null)
+        {
+            // Format question
+            var questionWithRange = new StringBuilder();
+
+            if (question != null)
+            {
+                questionWithRange.AppendLine(question);
+            }
+
+            var optionCount = 0;
+
+            foreach (var option in options)
+            {
+                ++optionCount;
+                questionWithRange.AppendLine(optionCount + ": " + option);
+            }
+
+            if (optionCount == 0)
+            {
+                throw ErrorFactory.Default.CollectionEmpty(nameof(options));
+            }
+
+            var questionWithRangeAsString = questionWithRange.ToString();
+
+            // Ask question
+            int selectedOption;
+            do
+            {
+                selectedOption = GetInt(questionWithRangeAsString);
+
+                // Ensure question is within selection range
+            } while (selectedOption <= 0 || selectedOption > optionCount);
+
+            return selectedOption;
+        }
+
+        /// <summary>
         /// Write a question to the <see cref="Output"/>, and then get attempt to get a <see cref="long"/> from the <see cref="Input"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
         /// </summary>
         /// <param name="question">The question to write</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="long"/> entered by the user</returns>
         public long GetLong(string question = null)
         {
             return Get(long.Parse, question);
@@ -170,7 +213,7 @@ namespace MarkSFrancis.Console
         /// Write a question to the <see cref="Output"/>, and then get attempt to get a <see cref="decimal"/> from the <see cref="Input"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
         /// </summary>
         /// <param name="question">The question to write</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="decimal"/> entered by the user</returns>
         public decimal GetDecimal(string question = null)
         {
             return Get(decimal.Parse, question);
@@ -180,7 +223,7 @@ namespace MarkSFrancis.Console
         /// Write a question to the <see cref="Output"/>, and then get attempt to get a <see cref="DateTime"/> from the <see cref="Input"/> using <see cref="DateTime.Parse(string)"/>. This process repeats if the received input is invalid. Any errors are written to <see cref="Debug"/>
         /// </summary>
         /// <param name="question">The question to write</param>
-        /// <returns></returns>
+        /// <returns>The <see cref="DateTime"/> entered by the user</returns>
         public DateTime GetDateTime(string question = null)
         {
             return Get(DateTime.Parse, question);
@@ -191,15 +234,13 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="converter">The method to use when converting from the text to the desired type</param>
         /// <param name="question">The question to write</param>
-        /// <returns></returns>
+        /// <returns>The <typeparamref name="T"/> entered by the user</returns>
         public virtual T Get<T>(Func<string, T> converter, string question = null)
         {
             if (converter == null)
             {
                 throw new ArgumentNullException(nameof(converter));
             }
-
-            question = FormatQuestion(question);
 
             T returnValue = default(T);
 
@@ -230,30 +271,6 @@ namespace MarkSFrancis.Console
             }
 
             return returnValue;
-        }
-
-        /// <summary>
-        /// Format a question for displaying on the console by adding a ": " to the end of the question if it does not already contain one
-        /// </summary>
-        /// <param name="question">The question to format</param>
-        /// <returns></returns>
-        protected string FormatQuestion(string question)
-        {
-            if (!string.IsNullOrEmpty(question))
-            {
-                question = question.Trim();
-
-                if (question.EndsWith(":"))
-                {
-                    question += " ";
-                }
-                else
-                {
-                    question += ": ";
-                }
-            }
-
-            return question;
         }
     }
 }

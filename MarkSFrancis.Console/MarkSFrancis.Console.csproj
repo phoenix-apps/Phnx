@@ -8,4 +8,9 @@
     <DocumentationFile>bin\Debug\netstandard2.0\MarkSFrancis.Console.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MarkSFrancis.Collections\MarkSFrancis.Collections.csproj" />
+    <ProjectReference Include="..\MarkSFrancis\MarkSFrancis.csproj" />
+  </ItemGroup>
+
 </Project>
