@@ -11,7 +11,7 @@ namespace MarkSFrancis.AspNet.Core.Cache
         /// <summary>
         /// Create a new <see cref="LazyMemoryCache"/> using an <see cref="IMemoryCache"/> for the cache storage
         /// </summary>
-        /// <param name="cache"></param>
+        /// <param name="cache">The cache to load from and to</param>
         public LazyMemoryCache(IMemoryCache cache)
         {
             Cache = cache;

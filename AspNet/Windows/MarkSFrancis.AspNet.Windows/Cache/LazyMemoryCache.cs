@@ -1,20 +1,33 @@
-﻿using System.Runtime.Caching;
-using MarkSFrancis.AspNet.Windows.Cache.Interfaces;
+﻿using MarkSFrancis.AspNet.Windows.Cache.Interfaces;
+using System.Runtime.Caching;
 
 namespace MarkSFrancis.AspNet.Windows.Cache
 {
+    /// <summary>
+    /// A memory cache with lazy loading features
+    /// </summary>
     public class LazyMemoryCache : ILazyMemoryCache
     {
+        /// <summary>
+        /// The cache used by this <see cref="LazyMemoryCache"/>, where values are cached after loading
+        /// </summary>
         protected ObjectCache Cache { get; }
 
+        /// <summary>
+        /// Create a new <see cref="LazyMemoryCache"/> using <see cref="MemoryCache.Default"/>
+        /// </summary>
         public LazyMemoryCache()
         {
             Cache = MemoryCache.Default;
         }
 
-        public LazyMemoryCache(ObjectCache cacheToUse)
+        /// <summary>
+        /// Create a new <see cref="LazyMemoryCache"/> using an <see cref="ObjectCache"/> for the cache storage
+        /// </summary>
+        /// <param name="cache">The cache to load from and to</param>
+        public LazyMemoryCache(ObjectCache cache)
         {
-            Cache = cacheToUse;
+            Cache = cache;
         }
 
         /// <summary>

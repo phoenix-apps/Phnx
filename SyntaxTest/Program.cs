@@ -11,8 +11,6 @@ namespace SyntaxTest
 
         static void Main()
         {
-            Console.Title = "Syntax Test for " + nameof(MarkSFrancis);
-
             do
             {
                 IDemo selectedDemo = GetSelectedDemo();

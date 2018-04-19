@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\MarkSFrancis.AspNet.Windows.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -64,7 +65,7 @@
     <Compile Include="Cache\LazyMemoryCache.cs" />
     <Compile Include="Cache\Interfaces\ICacheEntry.cs" />
     <Compile Include="Cache\Interfaces\ILazyMemoryCache.cs" />
-    <Compile Include="Context\BaseContextService.cs" />
+    <Compile Include="Context\BaseContextMetaService.cs" />
     <Compile Include="ErrorFactoryExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Context\CookiesService.cs" />
