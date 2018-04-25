@@ -76,6 +76,8 @@ namespace MarkSFrancis.Console.Progress
             string lastWrite = string.Empty;
             string newWrite;
 
+            _console.FontColor = ConsoleColor.Yellow;
+
             while (!_safeExit && !IsComplete)
             {
                 lock (_bar)
@@ -99,8 +101,19 @@ namespace MarkSFrancis.Console.Progress
                 newWrite = _bar.ToString(false);
             }
 
-            OverwriteLastWrite(lastWrite, newWrite);
-            _console.WriteLine();
+            _console.FontColor = ConsoleColor.Green;
+
+            StringBuilder output = new StringBuilder();
+            output.Append('\b', lastWrite.Length);
+            output.Append(newWrite);
+
+            if (lastWrite.Length > newWrite.Length)
+            {
+                output.Append(' ', lastWrite.Length - newWrite.Length);
+            }
+
+            _console.WriteLine(output);
+            _console.ResetColor();
         }
 
         private string OverwriteLastWrite(string lastWrite, string newWrite)
