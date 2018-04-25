@@ -14,6 +14,14 @@ namespace MarkSFrancis.Console.Progress
 
         private const int BlockCount = 10;
 
+        private static readonly char[] Frames = {
+
+            '|',
+            '/',
+            '-',
+            '\\'
+        };
+
         /// <summary>
         /// Create a new <see cref="ProgressBarRenderer"/>
         /// </summary>
@@ -21,10 +29,10 @@ namespace MarkSFrancis.Console.Progress
         public ProgressBarRenderer(decimal maxValue)
         {
             MaxValue = maxValue;
-            _currentAnimationChar = '|';
+            _currentAnimationFrame = 0;
         }
 
-        private char _currentAnimationChar;
+        private int _currentAnimationFrame;
 
         private decimal _progress;
 
@@ -52,22 +60,9 @@ namespace MarkSFrancis.Console.Progress
 
         private void UpdateAnimationChar()
         {
-            switch (_currentAnimationChar)
+            if (++_currentAnimationFrame >= Frames.Length)
             {
-                case '|':
-                    _currentAnimationChar = '/';
-                    break;
-                case '/':
-                    _currentAnimationChar = '-';
-                    break;
-                case '-':
-                    _currentAnimationChar = '\\';
-                    break;
-                case '\\':
-                    _currentAnimationChar = '|';
-                    break;
-                default:
-                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(_currentAnimationChar));
+                _currentAnimationFrame = 0;
             }
         }
 
@@ -102,7 +97,8 @@ namespace MarkSFrancis.Console.Progress
 
             if (renderSpinner)
             {
-                renderedBar += $" {_currentAnimationChar}";
+                var frame = Frames[_currentAnimationFrame];
+                renderedBar += $" {frame}";
             }
 
             return renderedBar;
