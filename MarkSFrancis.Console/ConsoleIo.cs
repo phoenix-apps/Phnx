@@ -70,7 +70,7 @@ namespace MarkSFrancis.Console
         /// <returns></returns>
         public ConsoleProgress ProgressBar(int maxValue, Func<decimal, string> writeProgressMessage = null, bool writeMessageToLeftOfBar = false)
         {
-            var bar = new ConsoleProgressBar(maxValue);
+            var bar = new ProgressBarRenderer(maxValue);
 
             return new ConsoleProgress(this, bar, writeProgressMessage, writeMessageToLeftOfBar);
         }

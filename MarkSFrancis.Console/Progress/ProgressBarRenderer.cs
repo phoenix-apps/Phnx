@@ -5,7 +5,7 @@ namespace MarkSFrancis.Console.Progress
     /// <summary>
     /// Provides a way of writing the progress of an operation to the console
     /// </summary>
-    internal class ConsoleProgressBar
+    internal class ProgressBarRenderer
     {
         /// <summary>
         /// The maximum value of progress possible
@@ -15,10 +15,10 @@ namespace MarkSFrancis.Console.Progress
         private const int BlockCount = 10;
 
         /// <summary>
-        /// Create a new <see cref="ConsoleProgressBar"/>
+        /// Create a new <see cref="ProgressBarRenderer"/>
         /// </summary>
         /// <param name="maxValue">The maximum value, representing the progress bar at its completed state</param>
-        public ConsoleProgressBar(decimal maxValue)
+        public ProgressBarRenderer(decimal maxValue)
         {
             MaxValue = maxValue;
             _currentAnimationChar = '|';
@@ -72,19 +72,19 @@ namespace MarkSFrancis.Console.Progress
         }
 
         /// <summary>
-        /// Return this <see cref="ConsoleProgressBar"/> formatted as a progress bar, with the spinner
+        /// Return this <see cref="ProgressBarRenderer"/> formatted as a progress bar, with the spinner
         /// </summary>
-        /// <returns>This <see cref="ConsoleProgressBar"/> formatted as a progress bar</returns>
+        /// <returns>This <see cref="ProgressBarRenderer"/> formatted as a progress bar</returns>
         public override string ToString()
         {
             return ToString(true);
         }
 
         /// <summary>
-        /// Return this <see cref="ConsoleProgressBar"/> formatted as a progress bar
+        /// Return this <see cref="ProgressBarRenderer"/> formatted as a progress bar
         /// </summary>
         /// <param name="renderSpinner">Whether to render the spinner</param>
-        /// <returns>This <see cref="ConsoleProgressBar"/> formatted as a progress bar</returns>
+        /// <returns>This <see cref="ProgressBarRenderer"/> formatted as a progress bar</returns>
         public string ToString(bool renderSpinner)
         {
             if (renderSpinner)
