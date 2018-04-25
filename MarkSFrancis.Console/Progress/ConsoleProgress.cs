@@ -96,7 +96,7 @@ namespace MarkSFrancis.Console.Progress
             // Write finished line
             lock (_bar)
             {
-                newWrite = _bar.ToString();
+                newWrite = _bar.ToString(false);
             }
 
             OverwriteLastWrite(lastWrite, newWrite);
@@ -119,13 +119,11 @@ namespace MarkSFrancis.Console.Progress
                 outputBuilder.Append(_writeProgressMessage(Progress));
             }
 
-            string output = outputBuilder.ToString();
-
             int commonStartLength = 0;
 
-            for (; commonStartLength < lastWrite.Length && commonStartLength < output.Length; ++commonStartLength)
+            for (; commonStartLength < lastWrite.Length && commonStartLength < outputBuilder.Length; ++commonStartLength)
             {
-                if (lastWrite[commonStartLength] != output[commonStartLength])
+                if (lastWrite[commonStartLength] != outputBuilder[commonStartLength])
                 {
                     break;
                 }
@@ -136,14 +134,13 @@ namespace MarkSFrancis.Console.Progress
             // Remove differing characters
             cleanup.Append('\b', lastWrite.Length - commonStartLength);
 
-            _console.Write(cleanup);
-
-            _console.Write(output.Substring(commonStartLength));
-
-            if (output.Length < lastWrite.Length)
+            if (outputBuilder.Length < lastWrite.Length)
             {
-                _console.Write(new string(' ', lastWrite.Length - output.Length));
+                outputBuilder.Append(' ', lastWrite.Length - outputBuilder.Length);
             }
+
+            string output = outputBuilder.ToString();
+            _console.Write(cleanup.Append(output.Substring(commonStartLength)));
 
             return output;
         }

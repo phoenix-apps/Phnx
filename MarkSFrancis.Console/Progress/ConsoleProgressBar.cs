@@ -72,12 +72,25 @@ namespace MarkSFrancis.Console.Progress
         }
 
         /// <summary>
-        /// Return this <see cref="ConsoleProgressBar"/> formatted as a progress bar
+        /// Return this <see cref="ConsoleProgressBar"/> formatted as a progress bar, with the spinner
         /// </summary>
         /// <returns>This <see cref="ConsoleProgressBar"/> formatted as a progress bar</returns>
         public override string ToString()
         {
-            UpdateAnimationChar();
+            return ToString(true);
+        }
+
+        /// <summary>
+        /// Return this <see cref="ConsoleProgressBar"/> formatted as a progress bar
+        /// </summary>
+        /// <param name="renderSpinner">Whether to render the spinner</param>
+        /// <returns>This <see cref="ConsoleProgressBar"/> formatted as a progress bar</returns>
+        public string ToString(bool renderSpinner)
+        {
+            if (renderSpinner)
+            {
+                UpdateAnimationChar();
+            }
 
             var percProgress = (Progress / MaxValue) * 100;
             var blocksToPrint = (int)Math.Truncate(percProgress / BlockCount);
@@ -85,7 +98,14 @@ namespace MarkSFrancis.Console.Progress
             var progressDoneIndicator = new string('#', blocksToPrint);
             var progressToGoIndicator = new string('-', BlockCount - blocksToPrint);
 
-            return $"[{progressDoneIndicator}{progressToGoIndicator}] {percProgress,3}% {_currentAnimationChar}";
+            string renderedBar = $"[{progressDoneIndicator}{progressToGoIndicator}] {percProgress,3}%";
+
+            if (renderSpinner)
+            {
+                renderedBar += $" {_currentAnimationChar}";
+            }
+
+            return renderedBar;
         }
     }
 }

@@ -17,28 +17,26 @@ namespace SyntaxTest.Demos
         private readonly ConsoleIo _console;
         private readonly object _syncContext = new object();
         public Mode ThreadMode { get; }
+        private int _val = 0;
+        private const int IncCount = 100000000;
 
         private delegate void Incrementer<T1, in T2>(ref T1 value, T2 timesToIncrement);
 
         public void Run()
         {
-            int val = 0, incCount = 100000000;
             var delegateMethod = GetMethodToRun();
 
-            Task thd1 = new Task(() => delegateMethod(ref val, incCount / 2));
-            Task thd2 = new Task(() => delegateMethod(ref val, incCount / 2));
+            Task thd1 = new Task(() => delegateMethod(ref _val, IncCount / 2));
+            Task thd2 = new Task(() => delegateMethod(ref _val, IncCount / 2));
             thd1.Start();
             thd2.Start();
 
-            using (var progress = _console.ProgressBar(100))
+            using (var progress = _console.ProgressBar(IncCount))
             {
                 while (!thd1.IsCompleted && !thd2.IsCompleted)
                 {
-                    while (progress.Progress < 90)
-                    {
-                        progress.Progress += 10;
-                        Thread.Sleep(100);
-                    }
+                    progress.Progress = _val;
+                    Thread.Sleep(100);
                 }
 
                 progress.WriteCompleted();
@@ -47,11 +45,11 @@ namespace SyntaxTest.Demos
             Task.WaitAll(thd1, thd2);
 
             _console.WriteLine("Value of val: ");
-            _console.WriteLine(val);
+            _console.WriteLine(_val);
             _console.WriteLine();
 
             _console.WriteLine("Value should be: ");
-            _console.WriteLine(incCount);
+            _console.WriteLine(IncCount);
         }
 
         private Incrementer<int, int> GetMethodToRun()
