@@ -39,7 +39,7 @@ namespace MarkSFrancis.Web.Services
             {
                 var enumerable = (IEnumerable)key.Value;
 
-                properties[key.Key] = string.Join(",", enumerable);
+                properties[key.Key] = string.Join(",", (string[])enumerable);
             }
 
             // Concat all key/value pairs into a string separated by ampersand
@@ -81,11 +81,23 @@ namespace MarkSFrancis.Web.Services
         /// Join url path segments together, sanitising their values to URL segments, and joining them up with "/" inbetween each
         /// </summary>
         /// <param name="baseUrl">The base URL to append to (e.g http://www.contoso.com)</param>
-        /// <param name="pathSegments">The URL segments to append to the base URL</param>
+        /// <param name="pathSegments">The URL segments to append to the base URL</param>=
         /// <returns>The fully qualified URL with all the path segments escaped and appended</returns>
         public static string ToUrl(string baseUrl, params string[] pathSegments)
         {
-            return ToUrl(baseUrl, (IEnumerable<string>)pathSegments);
+            return ToUrl(baseUrl, true, pathSegments);
+        }
+
+        /// <summary>
+        /// Join url path segments together, sanitising their values to URL segments, and joining them up with "/" inbetween each
+        /// </summary>
+        /// <param name="baseUrl">The base URL to append to (e.g http://www.contoso.com)</param>
+        /// <param name="sanitisePathSegments">Whether to sanitise path segments</param>
+        /// <param name="pathSegments">The URL segments to append to the base URL</param>=
+        /// <returns>The fully qualified URL with all the path segments escaped and appended</returns>
+        public static string ToUrl(string baseUrl, bool sanitisePathSegments, params string[] pathSegments)
+        {
+            return ToUrl(baseUrl, sanitisePathSegments, (IEnumerable<string>)pathSegments);
         }
 
         /// <summary>
@@ -96,7 +108,28 @@ namespace MarkSFrancis.Web.Services
         /// <returns>The fully qualified URL with all the path segments escaped and appended</returns>
         public static string ToUrl(string baseUrl, IEnumerable<string> pathSegments)
         {
-            var escapedPathSegments = pathSegments.Select(Uri.EscapeDataString);
+            return ToUrl(baseUrl, true, pathSegments);
+        }
+
+        /// <summary>
+        /// Join url path segments together, optionally sanitising their values to URL segments, and joining them up with "/" inbetween each
+        /// </summary>
+        /// <param name="baseUrl">The base URL to append to (e.g http://www.contoso.com)</param>
+        /// <param name="sanitisePathSegments">Whether to sanitise path segments</param>
+        /// <param name="pathSegments">The URL segments to append to the base URL</param>
+        /// <returns>The fully qualified URL with all the path segments escaped and appended</returns>
+        public static string ToUrl(string baseUrl, bool sanitisePathSegments, IEnumerable<string> pathSegments)
+        {
+            IEnumerable<string> escapedPathSegments;
+
+            if (sanitisePathSegments)
+            {
+                escapedPathSegments = pathSegments.Select(Uri.EscapeDataString);
+            }
+            else
+            {
+                escapedPathSegments = pathSegments;
+            }
 
             if (!baseUrl.EndsWith("/"))
             {

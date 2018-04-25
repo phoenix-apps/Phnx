@@ -2,6 +2,7 @@
 using MarkSFrancis.Web.Models.Request;
 using MarkSFrancis.Web.Models.Response;
 using MarkSFrancis.Web.Services;
+using MarkSFrancis.Web.Services.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -14,10 +15,12 @@ namespace MarkSFrancis.Web.Fluent
     /// </summary>
     public class FluentRequest
     {
+        private readonly IHttpRequestService _apiRequestService;
         private readonly ApiRequestMessage _apiRequest;
 
-        internal FluentRequest()
+        internal FluentRequest(IHttpRequestService apiRequestService)
         {
+            _apiRequestService = apiRequestService;
             _apiRequest = new ApiRequestMessage
             {
                 Content = string.Empty
@@ -142,11 +145,21 @@ namespace MarkSFrancis.Web.Fluent
         /// </summary>
         /// <param name="method">The HTTP method to use when sending the request</param>
         /// <returns>The response from the API in plaintext format</returns>
-        public async Task<ApiResponseMessage> Send(HttpMethod method)
+        public Task<ApiResponseMessage> Send(HttpMethod method)
+        {
+            return Send(method.ToString());
+        }
+
+        /// <summary>
+        /// Send the request
+        /// </summary>
+        /// <param name="method">The HTTP method to use when sending the request</param>
+        /// <returns>The response from the API in plaintext format</returns>
+        public async Task<ApiResponseMessage> Send(string method)
         {
             _apiRequest.Method = method;
 
-            var response = await ApiRequestService.SendAsync(_apiRequest);
+            var response = await _apiRequestService.SendAsync(_apiRequest);
 
             return new ApiResponseMessage(response);
         }
@@ -157,11 +170,22 @@ namespace MarkSFrancis.Web.Fluent
         /// <typeparam name="TResponse">The format of the data to send</typeparam>
         /// <param name="method">The HTTP method to use when sending the request</param>
         /// <returns>The response from the API in a format ready for JSON deserialization</returns>
-        public async Task<ApiJsonResponseMessage<TResponse>> SendWithJsonResponse<TResponse>(HttpMethod method)
+        public Task<ApiJsonResponseMessage<TResponse>> SendWithJsonResponse<TResponse>(HttpMethod method)
+        {
+            return SendWithJsonResponse<TResponse>(method.ToString());
+        }
+
+        /// <summary>
+        /// Send the request with a JSON format response
+        /// </summary>
+        /// <typeparam name="TResponse">The format of the data to send</typeparam>
+        /// <param name="method">The HTTP method to use when sending the request</param>
+        /// <returns>The response from the API in a format ready for JSON deserialization</returns>
+        public async Task<ApiJsonResponseMessage<TResponse>> SendWithJsonResponse<TResponse>(string method)
         {
             _apiRequest.Method = method;
 
-            var response = await ApiRequestService.SendAsync(_apiRequest);
+            var response = await _apiRequestService.SendAsync(_apiRequest);
 
             return new ApiJsonResponseMessage<TResponse>(response);
         }

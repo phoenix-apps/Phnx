@@ -27,7 +27,8 @@ namespace MarkSFrancis.Web.Models.Request
         /// <summary>
         /// The <see cref="HttpMethod"/> to use when sending this request
         /// </summary>
-        public HttpMethod Method { get; set; }
+        /// <remarks>HTTP verbs are case sensitive. <see href="http://www.ietf.org/rfc/rfc2616.txt"/></remarks>
+        public string Method { get; set; }
 
         /// <summary>
         /// The headers to use in this request
@@ -40,7 +41,9 @@ namespace MarkSFrancis.Web.Models.Request
         /// <returns></returns>
         public HttpRequestMessage ToRequestMessage()
         {
-            var request = new HttpRequestMessage(Method, Url);
+            var method = new HttpMethod(Method);
+
+            var request = new HttpRequestMessage(method, Url);
 
             if (Headers != null)
             {

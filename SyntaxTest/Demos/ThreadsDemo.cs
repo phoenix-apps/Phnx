@@ -30,6 +30,20 @@ namespace SyntaxTest.Demos
             thd1.Start();
             thd2.Start();
 
+            using (var progress = _console.ProgressBar(100))
+            {
+                while (!thd1.IsCompleted && !thd2.IsCompleted)
+                {
+                    while (progress.Progress < 90)
+                    {
+                        progress.Progress += 10;
+                        Thread.Sleep(100);
+                    }
+                }
+
+                progress.WriteCompleted();
+            }
+
             Task.WaitAll(thd1, thd2);
 
             _console.WriteLine("Value of val: ");

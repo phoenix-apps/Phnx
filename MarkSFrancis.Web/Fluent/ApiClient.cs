@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using MarkSFrancis.Web.Services;
+using MarkSFrancis.Web.Services.Interfaces;
+using System.Collections.Generic;
 
 namespace MarkSFrancis.Web.Fluent
 {
@@ -7,6 +9,25 @@ namespace MarkSFrancis.Web.Fluent
     /// </summary>
     public class ApiClient
     {
+        private readonly IHttpRequestService _apiRequestService;
+
+        /// <summary>
+        /// Create a new <see cref="ApiClient"/> using <see cref="HttpRequestService"/> to handle sending and recieving over HTTP
+        /// </summary>
+        public ApiClient()
+        {
+            _apiRequestService = new HttpRequestService();
+        }
+
+        /// <summary>
+        /// Create a new <see cref="ApiClient"/> with a custom or test implementation of <see cref="IHttpRequestService"/>
+        /// </summary>
+        /// <param name="apiRequestService"></param>
+        public ApiClient(IHttpRequestService apiRequestService)
+        {
+            _apiRequestService = apiRequestService;
+        }
+
         /// <summary>
         /// Create a new API request
         /// </summary>
@@ -15,7 +36,7 @@ namespace MarkSFrancis.Web.Fluent
         /// <returns>A fluent request builder</returns>
         public FluentRequest CreateRequest(string url, params string[] urlSegments)
         {
-            return new FluentRequest()
+            return new FluentRequest(_apiRequestService)
                 .UseUrl(url, urlSegments);
         }
 
@@ -27,7 +48,7 @@ namespace MarkSFrancis.Web.Fluent
         /// <returns>A fluent request builder</returns>
         public FluentRequest CreateRequest(string url, IEnumerable<string> urlSegments)
         {
-            return new FluentRequest()
+            return new FluentRequest(_apiRequestService)
                 .UseUrl(url, urlSegments);
         }
     }

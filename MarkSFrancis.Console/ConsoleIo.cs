@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarkSFrancis.Console.Progress;
+using System;
 using System.Diagnostics;
 
 namespace MarkSFrancis.Console
@@ -59,6 +60,20 @@ namespace MarkSFrancis.Console
         /// Clear the console
         /// </summary>
         public void Clear() => System.Console.Clear();
+
+        /// <summary>
+        /// Create and use a new progress bar
+        /// </summary>
+        /// <param name="maxValue">The highest value that the progress bar can represent</param>
+        /// <param name="writeProgressMessage">The text to write with the progress bar. This method must be thread-safe</param>
+        /// <param name="writeMessageToLeftOfBar">Whether to write the extra text to the left or right of the progress bar</param>
+        /// <returns></returns>
+        public ConsoleProgress ProgressBar(int maxValue, Func<decimal, string> writeProgressMessage = null, bool writeMessageToLeftOfBar = false)
+        {
+            var bar = new ConsoleProgressBar(maxValue);
+
+            return new ConsoleProgress(this, bar, writeProgressMessage, writeMessageToLeftOfBar);
+        }
 
         /// <summary>
         /// Write a question to the <see cref="System.Console"/>, and then get attempt to get a value from the <see cref="System.Console"/> using <paramref name="converter"/>. If the received input is invalid, <see cref="Clear"/> is called, and the process repeats. Any errors are written to <see cref="Debug"/>
