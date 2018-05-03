@@ -71,7 +71,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Data.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Web", "MarkSFrancis.Web\MarkSFrancis.Web.csproj", "{E04DD111-C29A-43C3-9F16-DD7164E0F2A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Web.Tests", "MarkSFrancis.Web.Tests\MarkSFrancis.Web.Tests.csproj", "{587BA08E-B852-4A60-8878-501762F48432}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Web.Tests", "Tests\MarkSFrancis.Web.Tests\MarkSFrancis.Web.Tests.csproj", "{587BA08E-B852-4A60-8878-501762F48432}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
