@@ -10,6 +10,7 @@
     <RepositoryType>Git</RepositoryType>
     <Copyright>Mark Francis</Copyright>
     <Description>Core parts of the MarkSFrancis framework, shared across all components</Description>
+    <PackageIconUrl />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
