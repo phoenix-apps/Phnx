@@ -18,7 +18,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             return new IndexOutOfRangeException($"{paramName} cannot be an empty collection");
         }
-        
+
         /// <summary>
         /// An error to describe that the key was not found within a collection
         /// </summary>
@@ -29,7 +29,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             return new KeyNotFoundException($"The key \"{key}\" was not found in the collection");
         }
-        
+
         /// <summary>
         /// An error to describe that the key was not found within a collection
         /// </summary>
@@ -41,7 +41,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             return new KeyNotFoundException($"The key \"{key}\" was not found in the collection \"{collectionName}\"");
         }
-        
+
         /// <summary>
         /// An error to describe that the key was already present within a collection
         /// </summary>
@@ -53,7 +53,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             return new ArgumentException($"The key \"{key}\" is already present in the collection \"{collectionName}\"", key);
         }
-        
+
         /// <summary>
         /// An error to describe that the key was already present within a collection
         /// </summary>

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using MarkSFrancis.Collections.Extensions;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MarkSFrancis.Collections.Tree
 {
@@ -34,25 +36,109 @@ namespace MarkSFrancis.Collections.Tree
         /// <summary>
         /// The immediate children of this node
         /// </summary>
-        public List<TreeNode<T>> Children { get; }
+        public List<TreeNode<T>> Children { get; set; }
 
         /// <summary>
-        /// All descendants including this node's children, their children etc.
+        /// Add a child to this tree node
         /// </summary>
-        public IEnumerable<TreeNode<T>> AllDescendants
+        /// <param name="child">The child to add</param>
+        /// <returns>The node after adding to this tree</returns>
+        public TreeNode<T> AddChild(TreeNode<T> child)
         {
-            get
-            {
-                foreach (var child in Children)
-                {
-                    yield return child;
+            Children.Add(child);
 
-                    foreach (var subChild in child.AllDescendants)
-                    {
-                        yield return subChild;
-                    }
+            return child;
+        }
+
+        /// <summary>
+        /// Add a value as a child to this tree node
+        /// </summary>
+        /// <param name="child">The value to add</param>
+        /// <returns>The value as a tree node</returns>
+        public TreeNode<T> AddChild(T child)
+        {
+            var node = new TreeNode<T>(child);
+
+            return AddChild(node);
+        }
+
+        /// <summary>
+        /// Removes the given child node from this node
+        /// </summary>
+        /// <param name="childToRemove">The child node to remove</param>
+        /// <param name="removeAllOccurences">Whether to remove all occurences, or just the first occurence</param>
+        public void RemoveChild(TreeNode<T> childToRemove, bool removeAllOccurences = true)
+        {
+            Children = Children.RemoveBy(
+                    c => c == childToRemove,
+                    removeAllOccurences)
+                .ToList();
+        }
+
+        /// <summary>
+        /// Removes the given child node from this node
+        /// </summary>
+        /// <param name="childToRemove">The child node to remove</param>
+        /// <param name="removeAllOccurences">Whether to remove all occurences, or just the first occurence</param>
+        public void RemoveChild(T childToRemove, bool removeAllOccurences = true)
+        {
+            Children = Children.RemoveBy(
+                    c => c.Value.Equals(childToRemove),
+                    removeAllOccurences)
+                .ToList();
+        }
+
+        /// <summary>
+        /// All descendants including this node's children, their children etc. Self-referencing nodes are automatically skipped
+        /// </summary>
+        public IEnumerable<TreeNode<T>> AllDescendants => GetAllDescendants(out _);
+
+        /// <summary>
+        /// Get all descendants, counting the number of self referencing nodes, which are skipped in the returned descendants
+        /// </summary>
+        /// <param name="totalParentReferencingNodesFound">The total number of self-referencing nodes found</param>
+        /// <returns>A collection of all descendants, except for self referencing nodes</returns>
+        public List<TreeNode<T>> GetAllDescendants(out int totalParentReferencingNodesFound)
+        {
+            return GetAllDescendants(new List<TreeNode<T>> { this }, out totalParentReferencingNodesFound);
+        }
+
+        /// <summary>
+        /// Get all descendants, marking any nodes in the <paramref name="parents"/> as self referencing nodes, which are then skipped in the returned descendants
+        /// </summary>
+        /// <param name="parents">Any direct parents of this node</param>
+        /// <param name="totalParentReferencingNodesFound">The total number of self-referencing nodes found</param>
+        /// <returns></returns>
+        public List<TreeNode<T>> GetAllDescendants(List<TreeNode<T>> parents, out int totalParentReferencingNodesFound)
+        {
+            List<TreeNode<T>> childNodes = new List<TreeNode<T>>();
+            totalParentReferencingNodesFound = 0;
+
+            foreach (var child in Children)
+            {
+                if (parents.Contains(child))
+                {
+                    ++totalParentReferencingNodesFound;
+                    continue;
                 }
+
+                parents.Add(child);
+
+                childNodes.Add(child);
+
+                int totalParentReferencingChildNodesFound;
+
+                foreach (var subChild in child.GetAllDescendants(parents, out totalParentReferencingChildNodesFound))
+                {
+                    childNodes.Add(subChild);
+                }
+
+                totalParentReferencingNodesFound += totalParentReferencingChildNodesFound;
+
+                parents.RemoveAt(parents.Count - 1);
             }
+
+            return childNodes;
         }
     }
 }

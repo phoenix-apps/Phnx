@@ -134,6 +134,36 @@ namespace MarkSFrancis.Collections.Extensions
             return curMin;
         }
 
+
+        /// <summary>
+        /// Removes the first occurrence of an object which matches a given query from the collection
+        /// </summary>
+        /// <param name="enumerable">The collection</param>
+        /// <param name="removeBy">The selector for the object to remove from the collection</param>
+        /// <param name="removeAllOccurences">Whether to remove all occurences, or just the first occurence</param>
+        /// <returns>
+        /// <see langword="true"/> if an entry is successfully removed; otherwise, <see langword="false"/>.  This method also returns <see langword="false"/> if no entries matching <paramref name="removeBy"/> were found in the collection</returns>
+        public static IEnumerable<T> RemoveBy<T>(this IEnumerable<T> enumerable, Func<T, bool> removeBy, bool removeAllOccurences = true)
+        {
+            bool foundFirst = false;
+            foreach (var entry in enumerable)
+            {
+                if (foundFirst)
+                {
+                    yield return entry;
+                    continue;
+                }
+
+                if (removeBy(entry))
+                {
+                    if (!removeAllOccurences)
+                    {
+                        foundFirst = true;
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Gets whether two collections contain the same data using <see cref="EqualityComparer{T}.Default"/>
         /// </summary>

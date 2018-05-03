@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using MarkSFrancis.Collections.Extensions;
+using System.Collections.Generic;
 using System.Linq;
-using MarkSFrancis.Collections.Extensions;
 
 namespace MarkSFrancis.Collections.Tree
 {
@@ -11,7 +11,7 @@ namespace MarkSFrancis.Collections.Tree
     public class Tree<T>
     {
         private readonly List<TreeNode<T>> _topNodes;
-        
+
         /// <summary>
         /// Get the top most nodes in the tree
         /// </summary>
@@ -49,7 +49,12 @@ namespace MarkSFrancis.Collections.Tree
         /// <summary>
         /// Get the total number of relationships between nodes
         /// </summary>
-        public int TotalNodeRelationships => _topNodes.Count + TopNodes.Sum(n => n.AllDescendants.Count());
+        public int TotalNodeRelationships => TopNodes.Sum(n =>
+        {
+            var allDescendants = n.GetAllDescendants(out int totalParentReferencingNodesFound);
+
+            return allDescendants.DistinctBy(node => node).Count() + totalParentReferencingNodesFound;
+        });
 
         /// <summary>
         /// Get the total number of data nodes in the tree
