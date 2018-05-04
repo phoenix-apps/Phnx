@@ -5,6 +5,12 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>1.1.0-beta2</Version>
     <Description>A collection of extensions and classes for making managing collections of data easier</Description>
+    <Copyright>Mark Francis</Copyright>
+    <PackageLicenseUrl>https://github.com/MarkSFrancis/MarkSFrancis/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/MarkSFrancis/MarkSFrancis</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MarkSFrancis/MarkSFrancis</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/MarkSFrancis/MarkSFrancis/master/qrcode-link-to-github.png</PackageIconUrl>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
