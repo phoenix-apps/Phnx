@@ -11,6 +11,7 @@
     <Copyright>Mark Francis</Copyright>
     <Description>Core parts of the MarkSFrancis framework, shared across all components</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/MarkSFrancis/MarkSFrancis/master/qrcode-link-to-github.png</PackageIconUrl>
+    <Authors>MarkSFrancis</Authors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
