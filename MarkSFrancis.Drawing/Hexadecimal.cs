@@ -90,13 +90,18 @@ namespace MarkSFrancis.Drawing
         /// Whether the color represented by this hex structure has a data segment that represents alpha
         /// </summary>
         /// <exception cref="InvalidCastException">This hexidecimal value does not represent a color</exception>
-        public bool ColorHasAlpha {get{
-            if(!IsValidColor){
-                throw ErrorFactory.Default.HexIsNotAColor(this);
-            }
+        public bool ColorHasAlpha 
+        {
+            get
+            {
+                if(!IsValidColor)
+                {
+                    throw ErrorFactory.Default.HexIsNotAColor(this);
+                }
 
-            return HexCode.Length == 4;
-        }}
+                return HexCode.Length == 4;
+            }
+        }
 
         /// <summary>
         /// Converts to a <see cref="T:byte[]"/>
