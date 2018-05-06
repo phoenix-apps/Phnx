@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MarkSFrancis.Collections.Extensions;
+using System;
 using System.Collections.Specialized;
 using System.Configuration;
-using MarkSFrancis.Collections.Extensions;
 
 namespace MarkSFrancis.Configuration
 {
@@ -19,7 +19,7 @@ namespace MarkSFrancis.Configuration
         /// The Connection Strings collection
         /// </summary>
         protected ConnectionStringSettingsCollection ConnectionStrings { get; }
-        
+
         /// <summary>
         /// Create a new application configuration reader from the app.config or web.config
         /// </summary>
@@ -60,6 +60,31 @@ namespace MarkSFrancis.Configuration
         }
 
         /// <summary>
+        /// Get a key's value from the application settings, converting it from a string to the given type
+        /// </summary>
+        /// <param name="key">The key for the connection string to retrieve</param>
+        /// <returns></returns>
+        public T GetAppSetting<T>(string key)
+        {
+            var converter = ConverterHelpers.GetDefaultConverter<string, T>();
+
+            return GetAppSetting(key, converter);
+        }
+
+        /// <summary>
+        /// Get a key's value from the application settings, converting it from a string to the given type
+        /// </summary>
+        /// <param name="key">The key for the connection string to retrieve</param>
+        /// <param name="converter">The converter to use to convert from the loaded value to <typeparamref name="T"/></param>
+        /// <returns></returns>
+        public T GetAppSetting<T>(string key, Func<string, T> converter)
+        {
+            var val = GetAppSetting(key);
+
+            return converter(val);
+        }
+
+        /// <summary>
         /// Gets the value that is associated with the specified key from the application settings
         /// </summary>
         /// <param name="key">The key to locate</param>
@@ -71,7 +96,7 @@ namespace MarkSFrancis.Configuration
         {
             if (key == null)
             {
-                throw new ArgumentNullException(nameof(key));
+                throw ErrorFactory.Default.ArgumentNull(nameof(key));
             }
 
             if (!AppSettingsContainsKey(key))
