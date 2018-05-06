@@ -2,6 +2,9 @@ using System;
 
 namespace MarkSFrancis.Drawing.Extensions
 {
+    /// <summary>
+    /// Extensions for <see cref="ErrorFactory"/>
+    /// </summary>
     public static class ErrorFactoryExtensions
     {
         /// <summary>
