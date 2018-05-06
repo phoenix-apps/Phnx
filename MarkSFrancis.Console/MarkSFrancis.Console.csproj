@@ -2,6 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Provides helpers for writing and reading to/ from the console (and any text stream). This includes progress bars, font colors, asking questions, getting certain value types from input and more</Description>
+    <Authors>MarkSFrancis</Authors>
+    <Company>MarkSFrancis</Company>
+    <Product>MarkSFrancis</Product>
+    <Version>1.1.0-beta</Version>
+    <Copyright>Mark Francis</Copyright>
+    <PackageLicenseUrl>https://github.com/MarkSFrancis/MarkSFrancis/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/MarkSFrancis/MarkSFrancis</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/MarkSFrancis/MarkSFrancis/master/qrcode-link-to-github.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/MarkSFrancis/MarkSFrancis</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
