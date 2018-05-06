@@ -2,6 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.1.0-beta</Version>
+    <Authors>MarkSFrancis</Authors>
+    <Company>MarkSFrancis</Company>
+    <Description>Helpers for encryption including AES, RSA, SHA and PBKDF2, as well as password management</Description>
+    <Copyright>Mark Francis</Copyright>
+    <PackageLicenseUrl>https://github.com/MarkSFrancis/MarkSFrancis/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/MarkSFrancis/MarkSFrancis</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/MarkSFrancis/MarkSFrancis/master/qrcode-link-to-github.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/MarkSFrancis/MarkSFrancis</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
