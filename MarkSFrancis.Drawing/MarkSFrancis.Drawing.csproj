@@ -4,6 +4,17 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>MarkSFrancis.Drawing</AssemblyName>
     <RootNamespace>MarkSFrancis.Drawing</RootNamespace>
+    <Version>1.1.0-beta</Version>
+    <Description>A series of helpers for drawing, including helpers for Hexidecimal types, and basic 2D shape geometry</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>MarkSFrancis</Authors>
+    <Company>MarkSFrancis</Company>
+    <Copyright>Mark Francis</Copyright>
+    <PackageLicenseUrl>https://github.com/MarkSFrancis/MarkSFrancis/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/MarkSFrancis/MarkSFrancis</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/MarkSFrancis/MarkSFrancis/master/qrcode-link-to-github.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/MarkSFrancis/MarkSFrancis</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
