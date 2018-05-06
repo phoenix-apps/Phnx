@@ -21,8 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MarkSFrancis.Collections\MarkSFrancis.Collections.csproj" />
-    <ProjectReference Include="..\MarkSFrancis\MarkSFrancis.csproj" />
+    <PackageReference Include="MarkSFrancis.Collections" Version="1.1.0-beta2" />
   </ItemGroup>
 
 </Project>
