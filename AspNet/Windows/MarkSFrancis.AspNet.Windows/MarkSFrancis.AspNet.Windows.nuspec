@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>MarkSFrancis.AspNet.Windows</id>
-    <version>1.1.0-beta</version>
+    <version>1.1.0-beta2</version>
     <authors>MarkSFrancis</authors>
     <owners>MarkSFrancis</owners>
     <licenseUrl>https://github.com/MarkSFrancis/MarkSFrancis/blob/master/LICENSE</licenseUrl>
