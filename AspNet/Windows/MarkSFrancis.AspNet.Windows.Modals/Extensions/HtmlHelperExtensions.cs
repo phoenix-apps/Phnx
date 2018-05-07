@@ -25,7 +25,7 @@ namespace MarkSFrancis.AspNet.Windows.Modals.Extensions
         {
             if (string.IsNullOrWhiteSpace(partialViewName))
             {
-                ErrorFactory.Default.ArgumentNull(nameof(partialViewName));
+                throw ErrorFactory.Default.ArgumentNull(nameof(partialViewName));
             }
 
             StringBuilder content = new StringBuilder();

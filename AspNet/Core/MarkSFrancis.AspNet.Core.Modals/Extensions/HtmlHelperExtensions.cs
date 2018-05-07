@@ -22,7 +22,7 @@ namespace MarkSFrancis.AspNet.Core.Modals.Extensions
         {
             if (string.IsNullOrWhiteSpace(partialViewName))
             {
-                ErrorFactory.Default.ArgumentNull(nameof(partialViewName));
+                throw ErrorFactory.Default.ArgumentNull(nameof(partialViewName));
             }
 
             IHtmlContentBuilder content = new HtmlContentBuilder();
