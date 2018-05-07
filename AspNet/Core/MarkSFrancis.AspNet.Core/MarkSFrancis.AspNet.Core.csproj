@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>1.1.0-beta</Version>
     <PackageProjectUrl>https://github.com/MarkSFrancis/MarkSFrancis</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/MarkSFrancis/MarkSFrancis/blob/master/LICENSE</PackageLicenseUrl>
@@ -11,6 +11,8 @@
     <Copyright>Mark Francis</Copyright>
     <Company>MarkSFrancis</Company>
     <Authors>MarkSFrancis</Authors>
+    <PackageIconUrl>https://raw.githubusercontent.com/MarkSFrancis/MarkSFrancis/master/qrcode-link-to-github.png</PackageIconUrl>
+    <Description>Provides helpers for request and response meta (such as cookies and headers), session helpers, HTML encoding helpers and more for ASP.NET Core</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
