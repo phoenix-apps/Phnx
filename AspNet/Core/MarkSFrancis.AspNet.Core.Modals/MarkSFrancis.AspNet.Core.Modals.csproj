@@ -9,13 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MarkSFrancis.AspNet.Core" Version="1.1.0-beta2" />
     <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Runtime" Version="2.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\MarkSFrancis.AspNet.Core\MarkSFrancis.AspNet.Core.csproj" />
   </ItemGroup>
 
 </Project>
