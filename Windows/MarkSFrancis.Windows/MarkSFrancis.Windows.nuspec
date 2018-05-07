@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>MarkSFrancis.Windows</id>
+    <version>1.1.0-beta</version>
+    <authors>MarkSFrancis</authors>
+    <owners>MarkSFrancis</owners>
+    <licenseUrl>https://github.com/MarkSFrancis/MarkSFrancis/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/MarkSFrancis/MarkSFrancis</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/MarkSFrancis/MarkSFrancis/master/qrcode-link-to-github.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides helpers for drawing and scaling images and windows-specific reflection (such as detecting whether a property is an auto-property)</description>
+    <copyright>Mark Francis</copyright>
+  </metadata>
+</package>
