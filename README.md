@@ -2,7 +2,7 @@
 This is the home of the open source MarkSFrancis framework
 
 ## What is it?
-MarkSFrancis is a framework designed to take common tasks, and simplify them into easy to use and implement code, from simplifying password hasing, to creating API clients.
+MarkSFrancis is a framework designed to take common tasks, and simplify them into easy to use and implement code, from simplifying password hashing, to creating API clients.
 
 The framework is split into multiple packages, which match the projects within this repository. 
 
