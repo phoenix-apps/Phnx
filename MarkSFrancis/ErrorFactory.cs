@@ -5,6 +5,24 @@ namespace MarkSFrancis
     /// <summary>
     /// An exception factory which contains a series of common errors and messages. To extend this object, use extension methods instead of inheriting
     /// </summary>
+    /// <example>
+    /// To use an error from the <see cref="ErrorFactory"/>
+    /// <code>
+    /// throw MarkSFrancis.ErrorFactory.Default.ArgumentNullException("index");
+    /// </code>
+    /// 
+    /// To add more errors to the error factory, and improve it within your own applications with new standardised error messages, add an extension method onto the error factory. 
+    /// Don't throw the exception within the factory, as this will affect the stack trace.
+    /// <code>
+    /// public static class ErrorFactoryExtensions
+    /// {
+    ///     public static Exception MyCustomError(this ErrorFactory error)
+    ///     {
+    ///         return new Exception("This is a custom error");
+    ///     }
+    /// }
+    /// </code>
+    /// </example>
     public sealed class ErrorFactory
     {
         /// <summary>
