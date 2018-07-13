@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Reflection", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Collections", "MarkSFrancis.Collections\MarkSFrancis.Collections.csproj", "{7E88D1F4-B07E-4E23-9F1B-A009911021EA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Data", "MarkSFrancis.Data\MarkSFrancis.Data.csproj", "{F90EE708-3E55-48F1-8B73-AE56F635CF3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Data", "Data\MarkSFrancis.Data\MarkSFrancis.Data.csproj", "{F90EE708-3E55-48F1-8B73-AE56F635CF3F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyntaxTest", "SyntaxTest\SyntaxTest.csproj", "{F062FCD7-19F1-4B66-BCAB-C0FB1DB7B30B}"
 EndProject
@@ -79,7 +79,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Windows", "Windows", "{B076
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Windows.Tests", "Tests\Windows\MarkSFrancis.Windows.Tests\MarkSFrancis.Windows.Tests.csproj", "{430B367A-194E-41D5-A41B-DA29B2DA61A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.AspNet.Core.Rest", "AspNet\Core\MarkSFrancis.AspNet.Core.Rest\MarkSFrancis.AspNet.Core.Rest.csproj", "{1216E8EB-E25D-48C0-BECB-487A33136329}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.AspNet.Core.Rest", "AspNet\Core\MarkSFrancis.AspNet.Core.Rest\MarkSFrancis.AspNet.Core.Rest.csproj", "{1216E8EB-E25D-48C0-BECB-487A33136329}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{90A8A18A-9295-4D94-AEB6-CE6D327A108C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EntityFramework", "EntityFramework", "{E3263183-C7A8-4852-AD60-9E37E0348A18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarkSFrancis.Data.EntityFrameworkCore", "Data\EntityFramework\Core\MarkSFrancis.Data.EntityFrameworkCore\MarkSFrancis.Data.EntityFrameworkCore.csproj", "{05AED5A1-1B2D-4E00-97F6-4C87D9BC3DE5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{EB079205-D275-4CF3-A719-35911F260FE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -211,11 +219,16 @@ Global
 		{1216E8EB-E25D-48C0-BECB-487A33136329}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1216E8EB-E25D-48C0-BECB-487A33136329}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1216E8EB-E25D-48C0-BECB-487A33136329}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05AED5A1-1B2D-4E00-97F6-4C87D9BC3DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05AED5A1-1B2D-4E00-97F6-4C87D9BC3DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05AED5A1-1B2D-4E00-97F6-4C87D9BC3DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05AED5A1-1B2D-4E00-97F6-4C87D9BC3DE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{F90EE708-3E55-48F1-8B73-AE56F635CF3F} = {90A8A18A-9295-4D94-AEB6-CE6D327A108C}
 		{B3BF9EDB-75C5-4946-BA49-A6E6BD463758} = {4B6BDD07-EAB4-4323-B045-B0BFC494756B}
 		{9A59E360-31F3-40C3-93C0-497A5A5D99ED} = {B3BF9EDB-75C5-4946-BA49-A6E6BD463758}
 		{4AD2C111-CB5A-4A14-A62F-66E85D175E32} = {B3BF9EDB-75C5-4946-BA49-A6E6BD463758}
@@ -238,6 +251,9 @@ Global
 		{B07684F4-EBCB-44F9-9749-8FB71AF17AB2} = {CE6AC12D-8738-4F9A-A14D-25E96EDD57BE}
 		{430B367A-194E-41D5-A41B-DA29B2DA61A3} = {B07684F4-EBCB-44F9-9749-8FB71AF17AB2}
 		{1216E8EB-E25D-48C0-BECB-487A33136329} = {A54A0BB0-30D3-47A5-93E2-715BE2DF16A1}
+		{E3263183-C7A8-4852-AD60-9E37E0348A18} = {90A8A18A-9295-4D94-AEB6-CE6D327A108C}
+		{05AED5A1-1B2D-4E00-97F6-4C87D9BC3DE5} = {EB079205-D275-4CF3-A719-35911F260FE4}
+		{EB079205-D275-4CF3-A719-35911F260FE4} = {E3263183-C7A8-4852-AD60-9E37E0348A18}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E3ED0F5-43F9-42B8-AA5D-CBA97B7F130F}
