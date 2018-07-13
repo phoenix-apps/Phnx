@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MarkSFrancis.Collections\MarkSFrancis.Collections.csproj" />
+    <ProjectReference Include="..\..\..\MarkSFrancis.Collections\MarkSFrancis.Collections.csproj" />
     <ProjectReference Include="..\..\MarkSFrancis.Data\MarkSFrancis.Data.csproj" />
-    <ProjectReference Include="..\..\MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj" />
+    <ProjectReference Include="..\..\..\MarkSFrancis.Reflection\MarkSFrancis.Reflection.csproj" />
   </ItemGroup>
 
 </Project>
