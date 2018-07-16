@@ -6,6 +6,7 @@ using MarkSFrancis.Web.Services.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace MarkSFrancis.Web.Fluent
@@ -133,9 +134,49 @@ namespace MarkSFrancis.Web.Fluent
         /// </summary>
         /// <param name="headers">The headers to send with the request</param>
         /// <returns>This <see cref="FluentRequest"/></returns>
-        public FluentRequest UseHeaders(IReadOnlyDictionary<string, string> headers)
+        public FluentRequest UseHeaders(HttpRequestHeaders headers)
         {
             _apiRequest.Headers = headers;
+
+            return this;
+        }
+
+        /// <summary>
+        /// Use a specified collection of headers
+        /// </summary>
+        /// <param name="headers">The headers to send with the request</param>
+        /// <returns>This <see cref="FluentRequest"/></returns>
+        public FluentRequest UseHeaders(IEnumerable<KeyValuePair<string, string>> headers)
+        {
+            _apiRequest.Headers.Clear();
+
+            return AppendHeaders(headers);
+        }
+
+        /// <summary>
+        /// Add a specified collection of headers
+        /// </summary>
+        /// <param name="headers">The headers to append to the current headers in the request</param>
+        /// <returns>This <see cref="FluentRequest"/></returns>
+        public FluentRequest AppendHeaders(IEnumerable<KeyValuePair<string, string>> headers)
+        {
+            foreach (var header in headers)
+            {
+                _apiRequest.Headers.Add(header.Key, header.Value);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Add a specified header
+        /// </summary>
+        /// <param name="key">The key for the header to append to the current headers in the request</param>
+        /// <param name="value">The value for the header to append to the current headers in the request</param>
+        /// <returns>This <see cref="FluentRequest"/></returns>
+        public FluentRequest AppendHeader(string key, string value)
+        {
+            _apiRequest.Headers.Add(key, value);
 
             return this;
         }

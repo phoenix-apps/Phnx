@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Net.Http;
+﻿using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace MarkSFrancis.Web.Models.Request
@@ -33,7 +33,7 @@ namespace MarkSFrancis.Web.Models.Request
         /// <summary>
         /// The headers to use in this request
         /// </summary>
-        public IReadOnlyDictionary<string, string> Headers { get; set; }
+        public HttpRequestHeaders Headers { get; set; }
 
         /// <summary>
         /// Convert this object to a <see cref="HttpRequestMessage"/>
