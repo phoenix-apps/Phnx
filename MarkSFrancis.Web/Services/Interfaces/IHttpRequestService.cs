@@ -1,4 +1,5 @@
-﻿using MarkSFrancis.Web.Models.Request;
+﻿using MarkSFrancis.Web.Fluent;
+using MarkSFrancis.Web.Models.Request;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -9,6 +10,12 @@ namespace MarkSFrancis.Web.Services.Interfaces
     /// </summary>
     public interface IHttpRequestService
     {
+        /// <summary>
+        /// Create a new fluent HTTP request
+        /// </summary>
+        /// <returns>A new fluent HTTP request</returns>
+        FluentRequest NewRequest();
+
         /// <summary>
         /// Send the <see cref="ApiRequestMessage"/> over HTTP
         /// </summary>
