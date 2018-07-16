@@ -7,10 +7,10 @@ namespace MarkSFrancis.Web.Tests.Fluent
 {
     public class ApiClientTests
     {
-        public ApiClient CreateTestApiClient(out HttpRequestServiceMock mock)
+        public FluentRequest CreateTestApiClient(out HttpRequestServiceMock mock)
         {
             mock = new HttpRequestServiceMock();
-            return new ApiClient(mock);
+            return mock.CreateRequest();
         }
 
         [Test]
@@ -18,12 +18,12 @@ namespace MarkSFrancis.Web.Tests.Fluent
         {
             var apiRequestService = CreateTestApiClient(out var mock);
 
-            var task = apiRequestService.CreateRequest("http://www.google.com")
+            var task = apiRequestService.UseUrl("http://www.google.com/")
                 .Send(HttpMethod.Get);
 
             task.Wait();
 
-            Assert.AreEqual("http://www.google.com", mock.Request.Url);
+            Assert.AreEqual("http://www.google.com/", mock.Request.RequestUri.ToString());
         }
 
         [Test]
@@ -31,12 +31,12 @@ namespace MarkSFrancis.Web.Tests.Fluent
         {
             var apiRequestService = CreateTestApiClient(out var mock);
 
-            var task = apiRequestService.CreateRequest("http://www.google.com")
+            var task = apiRequestService.UseUrl("http://www.google.com/")
                 .Send("PATCH");
 
             task.Wait();
 
-            Assert.AreEqual("PATCH", mock.Request.Method);
+            Assert.AreEqual("PATCH", mock.Request.Method.ToString());
         }
 
         [Test]
@@ -44,17 +44,22 @@ namespace MarkSFrancis.Web.Tests.Fluent
         {
             var apiRequestService = CreateTestApiClient(out var mock);
 
-            var task = apiRequestService.CreateRequest("http://www.google.com")
-                .WithQuery(new
+            var task = apiRequestService
+                .UseUrl(builder =>
                 {
-                    q = "test",
-                    date = new DateTime(2001, 1, 1)
+                    builder
+                        .Base("http://www.google.com")
+                        .Query(new
+                        {
+                            q = "test",
+                            date = new DateTime(2001, 1, 1)
+                        });
                 })
                 .Send(HttpMethod.Get);
 
             task.Wait();
 
-            Assert.AreEqual("http://www.google.com?q=test&date=01%2F01%2F2001%2000%3A00%3A00", mock.Request.Url);
+            Assert.AreEqual("http://www.google.com/?q=test&date=01%2F01%2F2001%2000%3A00%3A00", mock.Request.RequestUri.AbsoluteUri);
         }
 
         [Test]
@@ -62,8 +67,9 @@ namespace MarkSFrancis.Web.Tests.Fluent
         {
             var apiRequestService = CreateTestApiClient(out var mock);
 
-            var task = apiRequestService.CreateRequest("http://www.google.com")
-                .WithJsonBody(new
+            var task = apiRequestService.UseUrl("http://www.google.com/")
+                .WithBody()
+                .Json(new
                 {
                     q = "test"
                 })
@@ -71,8 +77,8 @@ namespace MarkSFrancis.Web.Tests.Fluent
 
             task.Wait();
 
-            Assert.AreEqual("{\"q\":\"test\"}", mock.Request.Content);
-            Assert.AreEqual("application/json", mock.Request.ContentType);
+            Assert.AreEqual("{\"q\":\"test\"}", mock.Request.Content.ReadAsStringAsync().Result);
+            Assert.AreEqual("application/json", mock.Request.Content.Headers.ContentType.MediaType);
         }
 
         [Test]
@@ -80,14 +86,15 @@ namespace MarkSFrancis.Web.Tests.Fluent
         {
             var apiRequestService = CreateTestApiClient(out var mock);
 
-            var task = apiRequestService.CreateRequest("http://www.google.com")
-                .WithPlainTextBody("test")
+            var task = apiRequestService.UseUrl("http://www.google.com/")
+                .WithBody()
+                .PlainText("test")
                 .Send(HttpMethod.Get);
 
             task.Wait();
 
-            Assert.AreEqual("test", mock.Request.Content);
-            Assert.AreEqual("text/plain", mock.Request.ContentType);
+            Assert.AreEqual("test", mock.Request.Content.ReadAsStringAsync().Result);
+            Assert.AreEqual("text/plain", mock.Request.Content.Headers.ContentType.MediaType);
         }
 
         [Test]
@@ -95,8 +102,9 @@ namespace MarkSFrancis.Web.Tests.Fluent
         {
             var apiRequestService = CreateTestApiClient(out var mock);
 
-            var task = apiRequestService.CreateRequest("http://www.google.com")
-                .WithUrlFormBody(new
+            var task = apiRequestService.UseUrl("http://www.google.com/")
+                .WithBody()
+                .Form(new
                 {
                     q = "test"
                 })
@@ -104,8 +112,8 @@ namespace MarkSFrancis.Web.Tests.Fluent
 
             task.Wait();
 
-            Assert.AreEqual("q=test", mock.Request.Content);
-            Assert.AreEqual("application/x-www-form-urlencoded", mock.Request.ContentType);
+            Assert.AreEqual("q=test", mock.Request.Content.ReadAsStringAsync().Result);
+            Assert.AreEqual("application/x-www-form-urlencoded", mock.Request.Content.Headers.ContentType.MediaType);
         }
     }
 }

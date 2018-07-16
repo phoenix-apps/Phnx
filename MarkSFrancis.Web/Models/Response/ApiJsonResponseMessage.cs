@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace MarkSFrancis.Web.Models.Response
 {
@@ -12,25 +13,19 @@ namespace MarkSFrancis.Web.Models.Response
         /// <summary>
         /// Create a <see cref="ApiJsonResponseMessage{T}"/> from a <see cref="HttpResponseMessage"/>
         /// </summary>
-        /// <param name="msg"></param>
-        public ApiJsonResponseMessage(HttpResponseMessage msg) : base(msg)
+        /// <param name="message">The message to create the response from</param>
+        public ApiJsonResponseMessage(HttpResponseMessage message) : base(message)
         {
         }
 
         /// <summary>
         /// Load and deserialize the body to <typeparamref name="T"/>
         /// </summary>
-        public T BodyDeserialized
+        public async Task<T> GetBodyAsync()
         {
-            get
-            {
-                if (string.IsNullOrEmpty(Body))
-                {
-                    return default(T);
-                }
+            var bodyString = await GetBodyAsStringAsync();
 
-                return JsonConvert.DeserializeObject<T>(Body);
-            }
+            return JsonConvert.DeserializeObject<T>(bodyString);
         }
     }
 }

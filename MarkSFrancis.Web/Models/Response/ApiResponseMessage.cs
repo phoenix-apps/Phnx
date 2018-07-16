@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace MarkSFrancis.Web.Models.Response
 {
@@ -18,40 +19,48 @@ namespace MarkSFrancis.Web.Models.Response
         /// <param name="message">The message to create the response from</param>
         public ApiResponseMessage(HttpResponseMessage message)
         {
-            _message = message;
-            _body = new Lazy<string>(LoadBody);
+            Message = message;
         }
 
-        private readonly HttpResponseMessage _message;
+        /// <summary>
+        /// The HTTP response message
+        /// </summary>
+        public HttpResponseMessage Message { get; }
 
-        private readonly Lazy<string> _body;
+        private string body;
+        private bool bodyHasBeenLoaded;
 
         /// <summary>
         /// The status code of the response message
         /// </summary>
-        public HttpStatusCode StatusCode => _message.StatusCode;
+        public HttpStatusCode StatusCode => Message.StatusCode;
 
         /// <summary>
         /// Whether the status code is a sucess status code (200-299)
         /// </summary>
-        public bool IsSuccessStatusCode => _message.IsSuccessStatusCode;
+        public bool IsSuccessStatusCode => Message.IsSuccessStatusCode;
 
         /// <summary>
         /// The headers contained within the response
         /// </summary>
-        public HttpResponseHeaders Headers => _message.Headers;
+        public HttpResponseHeaders Headers => Message.Headers;
 
         /// <summary>
-        /// The body of the response
+        /// Get the body of the response asyncronously
         /// </summary>
-        public string Body => _body.Value;
-
-        private string LoadBody()
+        public async Task<string> GetBodyAsStringAsync()
         {
-            using (HttpContent content1 = _message.Content)
+            if (!bodyHasBeenLoaded)
             {
-                return content1.ReadAsStringAsync().Result;
+                using (HttpContent content = Message.Content)
+                {
+                    body = await content.ReadAsStringAsync();
+                }
+
+                bodyHasBeenLoaded = true;
             }
+
+            return body;
         }
 
         /// <summary>
@@ -91,8 +100,17 @@ namespace MarkSFrancis.Web.Models.Response
 
         private HttpRequestException CreateError()
         {
-            return new HttpRequestException(
-                $"{(int)StatusCode} ({StatusCode}), Body: {Body}");
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.Append($"{(int)StatusCode} ({StatusCode}");
+
+            if (bodyHasBeenLoaded)
+            {
+                var body = GetBodyAsStringAsync().Result;
+
+                errorMessage.Append($", Body: {body}");
+            }
+
+            return new HttpRequestException(errorMessage.ToString());
         }
     }
 }

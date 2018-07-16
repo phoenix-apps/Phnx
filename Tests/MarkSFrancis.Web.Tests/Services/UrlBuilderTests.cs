@@ -7,19 +7,8 @@ namespace MarkSFrancis.Web.Tests.Services
     public class UrlBuilderTests
     {
         [Test]
-        public void RenderingAnUrl_WithoutSegments_ReturnsUrl()
-        {
-            string url = "http://www.test.com";
-
-            var formattedUrl = UrlBuilder.ToUrl(url);
-
-            Assert.AreEqual(url, formattedUrl);
-        }
-
-        [Test]
         public void RenderingAnUrl_WithValidSegments_ReturnsUrl()
         {
-            string url = "http://www.test.com";
             var segments = new[]
             {
                 "asdf",
@@ -27,9 +16,9 @@ namespace MarkSFrancis.Web.Tests.Services
                 "wo2"
             };
 
-            string finalUrl = url + "/" + string.Join("/", segments);
+            string finalUrl = string.Join("/", segments);
 
-            var formattedUrl = UrlBuilder.ToUrl(url, segments);
+            var formattedUrl = UrlSerializer.ToUrl(segments, true);
 
             Assert.AreEqual(finalUrl, formattedUrl);
         }
@@ -37,7 +26,6 @@ namespace MarkSFrancis.Web.Tests.Services
         [Test]
         public void RenderingAnUrl_WithInvalidSegments_ReturnsEscapedUrl()
         {
-            string url = "http://www.test.com";
             var segments = new[]
             {
                 "as d f",
@@ -45,9 +33,9 @@ namespace MarkSFrancis.Web.Tests.Services
                 "wo2"
             };
 
-            string finalUrl = url + "/as%20d%20f/g%20oog/wo2";
+            string finalUrl = "as%20d%20f/g%20oog/wo2";
 
-            var formattedUrl = UrlBuilder.ToUrl(url, segments);
+            var formattedUrl = UrlSerializer.ToUrl(segments, true);
 
             Assert.AreEqual(finalUrl, formattedUrl);
         }
@@ -57,7 +45,7 @@ namespace MarkSFrancis.Web.Tests.Services
         {
             string queryString = String.Empty;
 
-            var formattedUrl = UrlBuilder.ToQueryString(null);
+            var formattedUrl = UrlSerializer.ToQueryString(null);
 
             Assert.AreEqual(queryString, formattedUrl);
         }
@@ -73,7 +61,7 @@ namespace MarkSFrancis.Web.Tests.Services
                 dob = new DateTime(2000, 1, 1)
             };
 
-            var formattedUrl = UrlBuilder.ToQueryString(query);
+            var formattedUrl = UrlSerializer.ToQueryString(query);
 
             Assert.AreEqual(queryString, formattedUrl);
         }
@@ -94,37 +82,9 @@ namespace MarkSFrancis.Web.Tests.Services
                 dob = new DateTime(2000, 1, 1)
             };
 
-            var formattedUrl = UrlBuilder.ToQueryString(query);
+            var formattedUrl = UrlSerializer.ToQueryString(query);
 
             Assert.AreEqual(queryString, formattedUrl);
-        }
-
-        [Test]
-        public void SetQueryString_OnUrlWithoutQuery_AppendsQuery()
-        {
-            string url = "http://www.test.com";
-
-            string queryString = "names=John%20Smith%2CDavid%20Jones%2CSam%20Smith&dob=01%2F01%2F2000%2000%3A00%3A00";
-
-            string completeUrl = url + "?" + queryString;
-
-            var formattedUrl = UrlBuilder.SetQueryString(url, queryString);
-
-            Assert.AreEqual(completeUrl, formattedUrl);
-        }
-
-        [Test]
-        public void SetQueryString_OnUrlWithQuery_ReplacesQuery()
-        {
-            string url = "http://www.test.com?test=asdf";
-
-            string queryString = "names=John%20Smith%2CDavid%20Jones%2CSam%20Smith&dob=01%2F01%2F2000%2000%3A00%3A00";
-
-            string completeUrl = "http://www.test.com" + "?" + queryString;
-
-            var formattedUrl = UrlBuilder.SetQueryString(url, queryString);
-
-            Assert.AreEqual(completeUrl, formattedUrl);
         }
     }
 }
