@@ -15,5 +15,14 @@ namespace MarkSFrancis.Tests.Extensions.Time
 
             Assert.AreEqual(testDate, firstDayOfWeek);
         }
+
+        [Test]
+        public void GettingFirstDayOfWeek_WhenFirstDayIsSundayAndDateIsSaturday_ReturnsWeekEndingInDate()
+        {
+            DateTime testDate = new DateTime(2000, 1, 1);
+            var firstDayOfWeek = testDate.StartOfWeek(false);
+
+            Assert.AreEqual(testDate.AddDays(-6), firstDayOfWeek);
+        }
     }
 }

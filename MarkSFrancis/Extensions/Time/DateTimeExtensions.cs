@@ -37,7 +37,7 @@ namespace MarkSFrancis.Extensions.Time
             {
                 return (now.Year + 1) - dob.Year;
             }
-            
+
             return now.Year - dob.Year;
         }
 
@@ -134,7 +134,7 @@ namespace MarkSFrancis.Extensions.Time
                 }
             }
 
-            return new DateTime(dt.Year, dt.Month, dt.Day - daysToSubtract);
+            return dt.AddDays(-daysToSubtract).Date;
         }
 
         /// <summary>
@@ -155,7 +155,8 @@ namespace MarkSFrancis.Extensions.Time
                     daysToAdd = 0;
                 }
             }
-            return new DateTime(dt.Year, dt.Month, dt.Day + daysToAdd + 1).AddTicks(-1);
+
+            return dt.AddDays(daysToAdd + 1).Date.AddTicks(-1);
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace MarkSFrancis.Extensions.Time
         {
             return !IsAfternoon(dt);
         }
-        
+
         /// <summary>
         /// Gets whether <paramref name="dt"/> (localized) is in the future
         /// </summary>
@@ -188,7 +189,7 @@ namespace MarkSFrancis.Extensions.Time
         {
             return IsInTheFutureUtc(dt.ToUtc(dtTimeZone));
         }
-        
+
         /// <summary>
         /// Gets whether <paramref name="dt"/> (UTC) is in the future
         /// </summary>
@@ -198,7 +199,7 @@ namespace MarkSFrancis.Extensions.Time
         {
             return dt > DateTime.UtcNow;
         }
-        
+
         /// <summary>
         /// Gets whether <paramref name="dt"/> (localized) is in the past
         /// </summary>
@@ -209,7 +210,7 @@ namespace MarkSFrancis.Extensions.Time
         {
             return IsInThePastUtc(dt.ToUtc(dtTimeZone));
         }
-        
+
         /// <summary>
         /// Gets whether <paramref name="dt"/> (UTC) is in the past
         /// </summary>
@@ -219,7 +220,7 @@ namespace MarkSFrancis.Extensions.Time
         {
             return dt < DateTime.UtcNow;
         }
-        
+
         /// <summary>
         /// Gets whether <paramref name="dt"/> (localized) is within today
         /// </summary>
@@ -230,7 +231,7 @@ namespace MarkSFrancis.Extensions.Time
         {
             return IsTodayUtc(dt.ToUtc(dtTimeZone));
         }
-        
+
         /// <summary>
         /// Gets whether <paramref name="dt"/> (UTC) is within today
         /// </summary>
