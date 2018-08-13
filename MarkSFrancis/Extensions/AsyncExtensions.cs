@@ -13,7 +13,7 @@ namespace MarkSFrancis.Extensions
         /// Invoke a method asynchronously
         /// </summary>
         /// <param name="action">The method to invoke</param>
-        /// <param name="withContext">Whether to preserve the <see cref="SynchronizationContext.Current"/>. This should generally be set to <see langword="true"/> if you're writing a library</param>
+        /// <param name="withContext">Whether to preserve the <see cref="SynchronizationContext.Current"/>. This should generally be set to <see langword="false"/> if you're writing a library</param>
         /// <returns></returns>
         public static Task InvokeAsync(this Action action, bool withContext = true)
         {
@@ -23,7 +23,7 @@ namespace MarkSFrancis.Extensions
 
             return task;
         }
-        
+
         /// <summary>
         /// Invoke a method asynchronously
         /// </summary>
