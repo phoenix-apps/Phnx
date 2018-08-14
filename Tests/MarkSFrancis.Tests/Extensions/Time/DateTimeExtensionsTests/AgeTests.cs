@@ -36,19 +36,10 @@ namespace MarkSFrancis.Tests.Extensions.Time.DateTimeExtensionsTests
         [Test]
         public void GetAge_WhenDobIsInFuture_Returns0()
         {
-            DateTime dob = new DateTime(2014, 1, 1);
+            DateTime dob = Sample.DateTime.AddYears(3).AddMonths(3).AddDays(6);
             var age = dob.Age(Sample.DateTime);
 
             Assert.AreEqual(0, age);
-        }
-
-        [Test]
-        public void GettingFirstDayOfWeek_WhenFirstDayIsSundayAndDateIsSunday_ReturnsSameDate()
-        {
-            DateTime testDate = new DateTime(2000, 1, 2);
-            var firstDayOfWeek = testDate.StartOfWeek(false);
-
-            Assert.AreEqual(testDate, firstDayOfWeek);
         }
     }
 }
