@@ -13,7 +13,7 @@ namespace MarkSFrancis.Extensions
         /// <returns>A reference to the newly created object.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="type"/> is null.</exception>
         /// <exception cref="ArgumentException"><paramref name="type"/> is not a RuntimeType or <paramref name="type"/> is an open generic type (that is, the <see cref="Type.ContainsGenericParameters"/> property returns <see langword="true"/>).</exception>
-        /// <exception cref="NotSupportedException"><paramref name="type"/> cannot be a <see cref="T:System.Reflection.Emit.TypeBuilder"/> or creation of <see cref="System.TypedReference"/>, <see cref="T:System.ArgIterator"/>, <see cref="Void"/>, and <see cref="RuntimeArgumentHandle"/> types, or arrays of those types, is not supported, or the assembly that contains <paramref name="type"/> is a dynamic assembly that was created with <see cref="F:System.Reflection.Emit.AssemblyBuilderAccess.Save"/>, or the constructor that best matches <paramref name="args"/> has varargs arguments.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="type"/> cannot be a <see cref="T:System.Reflection.Emit.TypeBuilder"/> or creation of <see cref="TypedReference"/>, <see cref="T:System.ArgIterator"/>, <see cref="Void"/>, and <see cref="RuntimeArgumentHandle"/> types, or arrays of those types, is not supported, or the assembly that contains <paramref name="type"/> is a dynamic assembly that was created with <see cref="F:System.Reflection.Emit.AssemblyBuilderAccess.Save"/>, or the constructor that best matches <paramref name="args"/> has varargs arguments.</exception>
         /// <exception cref="System.Reflection.TargetInvocationException">The constructor being called throws an exception.</exception>
         /// <exception cref="MethodAccessException">
         /// The caller does not have permission to call this constructor.</exception>
@@ -27,6 +27,11 @@ namespace MarkSFrancis.Extensions
         /// <exception cref="TypeLoadException"><paramref name="type"/> is not a valid type.</exception>
         public static object CreateInstance(this Type type, params object[] args)
         {
+            if (type == null)
+            {
+                ErrorFactory.Default.ArgumentNull(nameof(type));
+            }
+
             return Activator.CreateInstance(type, args);
         }
     }

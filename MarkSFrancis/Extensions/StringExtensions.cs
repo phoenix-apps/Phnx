@@ -154,9 +154,9 @@ namespace MarkSFrancis.Extensions
                 throw ErrorFactory.Default.ArgumentNull(nameof(stringToConvert));
             }
 
-            var wordDelimiters = new[] { " ", "-", "_" };
+            var wordDelimiters = new[] { ' ', '-', '_' };
 
-            var words = stringToConvert.Split(wordDelimiters, StringSplitOptions.RemoveEmptyEntries);
+            var words = stringToConvert.Split(wordDelimiters, StringSplitOptions.None);
 
             if (words.Length == 0)
             {
