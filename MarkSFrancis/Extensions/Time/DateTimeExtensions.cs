@@ -55,7 +55,11 @@ namespace MarkSFrancis.Extensions.Time
         /// <returns></returns>
         public static string AsDateString(this DateTime dt, IFormatProvider formatProvider, bool shortFormat = true)
         {
-            formatProvider = formatProvider ?? CultureInfo.CurrentCulture.DateTimeFormat;
+            if (formatProvider == null)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(formatProvider));
+            }
+
             return shortFormat ? dt.ToString("d", formatProvider) : dt.ToString("D", formatProvider);
         }
 
@@ -65,7 +69,7 @@ namespace MarkSFrancis.Extensions.Time
         /// <param name="dt">The <see cref="DateTime"/> to convert</param>
         /// <param name="shortFormat">Whether to show the time in a short format (e.g 00:00 vs 00:00:00)</param>
         /// <returns></returns>
-        public static string AsTimeString(this DateTime dt, bool shortFormat = false)
+        public static string AsTimeString(this DateTime dt, bool shortFormat = true)
         {
             return shortFormat ? dt.ToString("t") : dt.ToString("T");
         }
@@ -79,7 +83,11 @@ namespace MarkSFrancis.Extensions.Time
         /// <returns></returns>
         public static string AsTimeString(this DateTime dt, IFormatProvider formatProvider, bool shortFormat = true)
         {
-            formatProvider = formatProvider ?? CultureInfo.CurrentCulture.DateTimeFormat;
+            if (formatProvider == null)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(formatProvider));
+            }
+
             return shortFormat ? dt.ToString("t", formatProvider) : dt.ToString("T", formatProvider);
         }
 
