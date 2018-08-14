@@ -7,8 +7,6 @@ namespace MarkSFrancis.Extensions.Time
     /// </summary>
     public static class DateTimeExtensions
     {
-        private const string TimeZoneInfoObsoleteMessage = "Time zones are not cross-platform compatible. It is suggested that you use a library like NodaTime if you need localization. See https://nodatime.org";
-
         /// <summary>
         /// 1st of January, 1970. Used by JavaScript to represent when time began
         /// </summary>
