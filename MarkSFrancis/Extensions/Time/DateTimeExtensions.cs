@@ -21,12 +21,16 @@ namespace MarkSFrancis.Extensions.Time
         /// <returns></returns>
         public static int Age(this DateTime dob, DateTime now)
         {
+            int age;
+
             if (now.DayOfYear < dob.DayOfYear)
             {
-                return (now.Year - 1) - dob.Year;
+                age = (now.Year - 1) - dob.Year;
             }
-
-            var age = now.Year - dob.Year;
+            else
+            {
+                age = now.Year - dob.Year;
+            }
 
             return age < 0 ? 0 : age;
         }
