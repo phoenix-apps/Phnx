@@ -21,7 +21,33 @@ namespace MarkSFrancis.Extensions.Numeric
                 throw ErrorFactory.Default.ArgumentNull(nameof(currencySymbol));
             }
 
-            var roundedValue = Math.Round(value, 2);
+            var roundedValue = Math.Round(value, 2).ToString();
+
+            int decimalsToPad;
+            {
+                var dotIndex = roundedValue.IndexOf('.');
+                if (dotIndex < 0)
+                {
+                    decimalsToPad = 2;
+                }
+                else if (dotIndex == roundedValue.Length - 2)
+                {
+                    decimalsToPad = 1;
+                }
+                else
+                {
+                    decimalsToPad = 0;
+                }
+            }
+
+            if (decimalsToPad == 2)
+            {
+                roundedValue += ".00";
+            }
+            else if (decimalsToPad == 1)
+            {
+                roundedValue += "0";
+            }
 
             return symbolBeforeValue ? currencySymbol + roundedValue :
                 roundedValue + currencySymbol;
