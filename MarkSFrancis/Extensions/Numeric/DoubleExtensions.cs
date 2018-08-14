@@ -16,10 +16,17 @@ namespace MarkSFrancis.Extensions.Numeric
         /// <returns></returns>
         public static string ToMoney(this double value, string currencySymbol, bool symbolBeforeValue = true)
         {
-            return symbolBeforeValue ? currencySymbol + Math.Round(value, 2) :
-                Math.Round(value, 2) + currencySymbol;
+            if (currencySymbol == null)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(currencySymbol));
+            }
+
+            var roundedValue = Math.Round(value, 2);
+
+            return symbolBeforeValue ? currencySymbol + roundedValue :
+                roundedValue + currencySymbol;
         }
-        
+
         /// <summary>
         /// Round to the nearest value
         /// </summary>
