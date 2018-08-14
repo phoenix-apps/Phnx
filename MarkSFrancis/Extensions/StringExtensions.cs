@@ -170,7 +170,7 @@ namespace MarkSFrancis.Extensions
                     return string.Empty;
                 }
 
-                return char.ToUpper(word[0]) + word.Substring(1, word.Length - 1).ToLower();
+                return char.ToUpper(word[0]) + word.Substring(1).ToLower();
             }
 
             StringBuilder camelCase = new StringBuilder(stringToConvert.Length);
@@ -244,7 +244,17 @@ namespace MarkSFrancis.Extensions
                 if (acronymBuilder.Length > 0)
                 {
                     // Append acronym
-                    result.Append(acronymBuilder.ToString().ToUpperInvariant());
+                    string acronym = acronymBuilder.ToString();
+
+                    if (acronym.Length > 1 || startEachWordWithCapital)
+                    {
+                        result.Append(acronym.ToUpper());
+                    }
+                    else
+                    {
+                        // 1 long, and is a single letter word
+                        result.Append(acronym.ToLower());
+                    }
 
                     result.Append(" ");
                 }
