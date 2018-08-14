@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace MarkSFrancis.Extensions.Time
 {
@@ -31,25 +32,51 @@ namespace MarkSFrancis.Extensions.Time
         }
 
         /// <summary>
-        /// Converts <paramref name="dt"/> to a string, displaying only the <see cref="DateTime.Date"/> component
+        /// Converts <paramref name="dt"/> to a string, displaying only the <see cref="DateTime.Date"/> component, using the <see cref="CultureInfo.CurrentCulture"/> for formatting
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to convert</param>
-        /// <param name="numericDate">Whether to show the date in a numeric format (e.g 1/1/2001) or a text format (e.g 1st January 2001)</param>
+        /// <param name="shortDate">Whether to show the date in a short format (e.g 1/1/2001) or a long format (e.g 1st January 2001)</param>
         /// <returns></returns>
-        public static string AsDateString(this DateTime dt, bool numericDate = true)
+        public static string AsDateString(this DateTime dt, bool shortDate = true)
         {
-            return numericDate ? dt.ToString("d") : dt.ToString("D");
+            return shortDate ? dt.ToString("d") : dt.ToString("D");
         }
 
         /// <summary>
-        /// Converts <paramref name="dt"/> to a string, displaying only the <see cref="DateTime.TimeOfDay"/> component
+        /// Converts <paramref name="dt"/> to a string, displaying only the <see cref="DateTime.Date"/> component
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to convert</param>
-        /// <param name="includeSeconds">Whether to include seconds in the time format (e.g 00:00 vs 00:00:00)</param>
+        /// <param name="formatProvider">The format provider to define how the date will be formatted</param>
+        /// <param name="shortFormat">Whether to show the date in a short format (e.g 1/1/2001) or a long format (e.g 1st January 2001)</param>
         /// <returns></returns>
-        public static string AsTimeString(this DateTime dt, bool includeSeconds = false)
+        public static string AsDateString(this DateTime dt, IFormatProvider formatProvider, bool shortFormat = true)
         {
-            return includeSeconds ? dt.ToString("T") : dt.ToString("t");
+            formatProvider = formatProvider ?? CultureInfo.CurrentCulture.DateTimeFormat;
+            return shortFormat ? dt.ToString("d", formatProvider) : dt.ToString("D", formatProvider);
+        }
+
+        /// <summary>
+        /// Converts <paramref name="dt"/> to a string, displaying only the <see cref="DateTime.TimeOfDay"/> component, using the <see cref="CultureInfo.CurrentCulture"/> for formatting
+        /// </summary>
+        /// <param name="dt">The <see cref="DateTime"/> to convert</param>
+        /// <param name="shortFormat">Whether to show the time in a short format (e.g 00:00 vs 00:00:00)</param>
+        /// <returns></returns>
+        public static string AsTimeString(this DateTime dt, bool shortFormat = false)
+        {
+            return shortFormat ? dt.ToString("t") : dt.ToString("T");
+        }
+
+        /// <summary>
+        /// Converts <paramref name="dt"/> to a string, displaying only the <see cref="DateTime.Date"/> component
+        /// </summary>
+        /// <param name="dt">The <see cref="DateTime"/> to convert</param>
+        /// <param name="formatProvider">The format provider to define how the date will be formatted</param>
+        /// <param name="shortFormat">Whether to show the time in a short format (e.g 00:00 vs 00:00:00)</param>
+        /// <returns></returns>
+        public static string AsTimeString(this DateTime dt, IFormatProvider formatProvider, bool shortFormat = true)
+        {
+            formatProvider = formatProvider ?? CultureInfo.CurrentCulture.DateTimeFormat;
+            return shortFormat ? dt.ToString("t", formatProvider) : dt.ToString("T", formatProvider);
         }
 
         /// <summary>
