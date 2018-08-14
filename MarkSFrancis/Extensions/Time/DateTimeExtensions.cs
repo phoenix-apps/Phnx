@@ -1,5 +1,4 @@
-﻿using MarkSFrancis.Abstractions.CurrentDateTime;
-using System;
+﻿using System;
 
 namespace MarkSFrancis.Extensions.Time
 {
@@ -8,67 +7,29 @@ namespace MarkSFrancis.Extensions.Time
     /// </summary>
     public static class DateTimeExtensions
     {
+        private const string TimeZoneInfoObsoleteMessage = "Time zones are not cross-platform compatible. It is suggested that you use a library like NodaTime if you need localization. See https://nodatime.org";
+
         /// <summary>
         /// 1st of January, 1970. Used by JavaScript to represent when time began
         /// </summary>
         public static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0);
 
         /// <summary>
-        /// The service used by <see cref="DateTimeExtensions"/> to get the current <see cref="DateTime"/>
-        /// </summary>
-        public static ICurrentDateTimeService Now = new CurrentDateTimeService();
-
-        /// <summary>
-        /// Get a person's age from their date of birth and the time zone they were born in
+        /// Get a person's age from their date of birth
         /// </summary>
         /// <param name="dob">The person's date of birth</param>
-        /// <param name="dobTimeZone">The time zone that the person was born in</param>
+        /// <param name="now">The current <see cref="DateTime"/></param>
         /// <returns></returns>
-        public static int Age(this DateTime dob, TimeZoneInfo dobTimeZone)
+        public static int Age(this DateTime dob, DateTime now)
         {
-            DateTime dobUtc = dob.ToUtc(dobTimeZone);
-
-            return AgeUtc(dobUtc);
-        }
-
-        /// <summary>
-        /// Get a person's age from their date of birth in UTC time zone
-        /// </summary>
-        /// <param name="dob">The person's date of birth in UTC time zone</param>
-        /// <returns></returns>
-        public static int AgeUtc(this DateTime dob)
-        {
-            DateTime now = Now.UtcNow.Date;
             if (now.DayOfYear < dob.DayOfYear)
             {
-                return (now.Year + 1) - dob.Year;
+                return (now.Year - 1) - dob.Year;
             }
 
             var age = now.Year - dob.Year;
 
             return age < 0 ? 0 : age;
-        }
-
-        /// <summary>
-        /// Convert <paramref name="dt"/> to UTC given its <see cref="TimeZoneInfo"/>
-        /// </summary>
-        /// <param name="dt">The <see cref="DateTime"/> to convert</param>
-        /// <param name="timeZone">The time zone to convert from</param>
-        /// <returns></returns>
-        public static DateTime ToUtc(this DateTime dt, TimeZoneInfo timeZone)
-        {
-            return TimeZoneInfo.ConvertTime(dt, timeZone, TimeZoneInfo.Utc);
-        }
-
-        /// <summary>
-        /// Convert <paramref name="dt"/> from UTC to a time zone
-        /// </summary>
-        /// <param name="dt">The <see cref="DateTime"/> to convert</param>
-        /// <param name="timeZone">The time zone to convert to</param>
-        /// <returns></returns>
-        public static DateTime ToLocal(this DateTime dt, TimeZoneInfo timeZone)
-        {
-            return TimeZoneInfo.ConvertTime(dt, TimeZoneInfo.Utc, timeZone);
         }
 
         /// <summary>
@@ -188,66 +149,36 @@ namespace MarkSFrancis.Extensions.Time
         }
 
         /// <summary>
-        /// Gets whether <paramref name="dt"/> (localized) is in the future
-        /// </summary>
-        /// <param name="dt">The <see cref="DateTime"/> to check</param>
-        /// <param name="dtTimeZone">The time zone that <paramref name="dt"/> is in</param>
-        /// <returns></returns>
-        public static bool IsInTheFuture(this DateTime dt, TimeZoneInfo dtTimeZone)
-        {
-            return IsInTheFutureUtc(dt.ToUtc(dtTimeZone));
-        }
-
-        /// <summary>
         /// Gets whether <paramref name="dt"/> (UTC) is in the future
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to check</param>
+        /// <param name="afterThis">The <see cref="DateTime"/> to check whether <paramref name="dt"/> is after</param>
         /// <returns></returns>
-        public static bool IsInTheFutureUtc(this DateTime dt)
+        public static bool IsAfter(this DateTime dt, DateTime afterThis)
         {
-            return dt > Now.UtcNow;
-        }
-
-        /// <summary>
-        /// Gets whether <paramref name="dt"/> (localized) is in the past
-        /// </summary>
-        /// <param name="dt">The <see cref="DateTime"/> to check</param>
-        /// <param name="dtTimeZone">The time zone that <paramref name="dt"/> is in</param>
-        /// <returns></returns>
-        public static bool IsInThePast(this DateTime dt, TimeZoneInfo dtTimeZone)
-        {
-            return IsInThePastUtc(dt.ToUtc(dtTimeZone));
+            return dt > afterThis;
         }
 
         /// <summary>
         /// Gets whether <paramref name="dt"/> (UTC) is in the past
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to check</param>
+        /// <param name="beforeThis">The <see cref="DateTime"/> to check whether <paramref name="dt"/> is before</param>
         /// <returns></returns>
-        public static bool IsInThePastUtc(this DateTime dt)
+        public static bool IsBefore(this DateTime dt, DateTime beforeThis)
         {
-            return dt < Now.UtcNow;
-        }
-
-        /// <summary>
-        /// Gets whether <paramref name="dt"/> (localized) is within today
-        /// </summary>
-        /// <param name="dt">The <see cref="DateTime"/> to check</param>
-        /// <param name="dtTimeZone">The time zone that <paramref name="dt"/> is in</param>
-        /// <returns></returns>
-        public static bool IsToday(this DateTime dt, TimeZoneInfo dtTimeZone)
-        {
-            return IsTodayUtc(dt.ToUtc(dtTimeZone));
+            return dt < beforeThis;
         }
 
         /// <summary>
         /// Gets whether <paramref name="dt"/> (UTC) is within today
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to check</param>
+        /// <param name="sameDayAs">The <see cref="DateTime"/> to check whether <paramref name="dt"/> is on the same day as</param>
         /// <returns></returns>
-        public static bool IsTodayUtc(this DateTime dt)
+        public static bool IsSameDay(this DateTime dt, DateTime sameDayAs)
         {
-            return dt.Date == Now.UtcNow.Date;
+            return dt.Date == sameDayAs.Date;
         }
 
         /// <summary>
@@ -283,7 +214,7 @@ namespace MarkSFrancis.Extensions.Time
         /// <returns></returns>
         public static TimeSpan ToEpochTimeSpan(this DateTime dt)
         {
-            return dt.Subtract(Epoch);
+            return dt - Epoch;
         }
     }
 }
