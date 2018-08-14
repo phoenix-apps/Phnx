@@ -1,5 +1,5 @@
-﻿using System;
-using MarkSFrancis.Extensions;
+﻿using MarkSFrancis.Extensions;
+using System;
 
 namespace MarkSFrancis
 {
@@ -24,7 +24,7 @@ namespace MarkSFrancis
 
             return convertFrom => (TConvertTo)Convert.ChangeType(convertFrom, TGetAsType);
         }
-        
+
         /// <summary>
         /// If <paramref name="convertFrom"/> implements <paramref name="convertTo"/>, it returns a method that simply casts between the two. If not, this gets the default <see cref="IConvertible"/> implementation for converting to <paramref name="convertTo"/>
         /// </summary>

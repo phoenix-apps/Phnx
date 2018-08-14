@@ -20,7 +20,7 @@ namespace MarkSFrancis.Extensions
 
             return oType.Is(t);
         }
-        
+
         /// <summary>
         /// Check whether a type is assignable to a type
         /// </summary>
@@ -38,7 +38,7 @@ namespace MarkSFrancis.Extensions
         }
 
         /// <summary>
-        /// Allow an action to be chained onto this object. Useful for chaining methods all related to the same object onto a single line
+        /// Allow an action to be chained onto this object. Useful for chaining mutation methods, or methods all related to the same object onto a single line
         /// </summary>
         /// <typeparam name="T">The type of object to chain actions to</typeparam>
         /// <param name="t">The object to chain actions to</param>
