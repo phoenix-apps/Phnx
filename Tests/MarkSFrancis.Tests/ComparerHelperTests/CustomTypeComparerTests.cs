@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using System;
+﻿using MarkSFrancis.Tests.Fakes.TypeFakes;
+using NUnit.Framework;
 
 namespace MarkSFrancis.Tests.ComparerHelperTests
 {
@@ -8,7 +8,7 @@ namespace MarkSFrancis.Tests.ComparerHelperTests
         [Test]
         public void GettingComparer_ForCustomType_ReturnsComparer()
         {
-            var customTypeComparer = ComparerHelpers.DefaultComparer<CustomTypeWithComparer>();
+            var customTypeComparer = ComparerHelpers.DefaultComparer<TypeWithComparer>();
 
             Assert.IsNotNull(customTypeComparer);
         }
@@ -16,11 +16,11 @@ namespace MarkSFrancis.Tests.ComparerHelperTests
         [Test]
         public void GettingComparer_ForCustomType_ReturnsValidComparer()
         {
-            var customTypeComparer = ComparerHelpers.DefaultComparer<CustomTypeWithComparer>();
+            var customTypeComparer = ComparerHelpers.DefaultComparer<TypeWithComparer>();
 
-            var neg1 = new CustomTypeWithComparer(-1);
-            var zero = new CustomTypeWithComparer(0);
-            var pos1 = new CustomTypeWithComparer(1);
+            var neg1 = new TypeWithComparer(-1);
+            var zero = new TypeWithComparer(0);
+            var pos1 = new TypeWithComparer(1);
 
             Assert.AreEqual(-1, customTypeComparer.Compare(zero, pos1));
             Assert.AreEqual(0, customTypeComparer.Compare(zero, zero));
@@ -28,45 +28,25 @@ namespace MarkSFrancis.Tests.ComparerHelperTests
         }
 
         [Test]
-        public void GettingEqualityComparer_ForCustomType_ReturnsComparer()
+        public void GettingEqualityComparer_ForCustomType_ReturnsEqualityComparer()
         {
-            var customTypeComparer = ComparerHelpers.DefaultEqualityComparer<CustomTypeWithComparer>();
+            var customTypeComparer = ComparerHelpers.DefaultEqualityComparer<TypeWithComparer>();
 
             Assert.IsNotNull(customTypeComparer);
         }
 
         [Test]
-        public void GettingEqualityComparer_ForCustomType_ReturnsValidComparer()
+        public void GettingEqualityComparer_ForCustomType_ReturnsValidEqualityComparer()
         {
-            var customTypeComparer = ComparerHelpers.DefaultEqualityComparer<CustomTypeWithComparer>();
+            var customTypeComparer = ComparerHelpers.DefaultEqualityComparer<TypeWithComparer>();
 
-            var neg1 = new CustomTypeWithComparer(-1);
-            var zero = new CustomTypeWithComparer(0);
-            var pos1 = new CustomTypeWithComparer(1);
+            var neg1 = new TypeWithComparer(-1);
+            var zero = new TypeWithComparer(0);
+            var pos1 = new TypeWithComparer(1);
 
             Assert.AreEqual(false, customTypeComparer.Equals(zero, pos1));
             Assert.AreEqual(true, customTypeComparer.Equals(zero, zero));
             Assert.AreEqual(false, customTypeComparer.Equals(zero, neg1));
-        }
-
-        private class CustomTypeWithComparer : IComparable<CustomTypeWithComparer>, IEquatable<CustomTypeWithComparer>
-        {
-            public CustomTypeWithComparer(int value)
-            {
-                Value = value;
-            }
-
-            public int Value { get; }
-
-            public int CompareTo(CustomTypeWithComparer obj)
-            {
-                return Value.CompareTo(obj.Value);
-            }
-
-            public bool Equals(CustomTypeWithComparer other)
-            {
-                return Value.Equals(other.Value);
-            }
         }
     }
 }

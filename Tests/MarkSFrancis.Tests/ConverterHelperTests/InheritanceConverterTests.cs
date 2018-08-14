@@ -1,51 +1,73 @@
 ﻿using NUnit.Framework;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 
 namespace MarkSFrancis.Tests.ConverterHelperTests
 {
+    using ChildType = Fakes.TypeFakes.ChildClass;
+    using ParentType = Fakes.TypeFakes.ParentClass;
+
     public class InheritanceConverterTests
     {
         [Test]
-        public void Converting_FromChildTypeToParent_Converts()
+        public void ConvertingFromChildTypeToParent_UsingGenerics_Converts()
         {
-            var converter = ConverterHelpers.GetDefaultConverter<CustomType, IEnumerable<string>>();
+            var converter = ConverterHelpers.GetDefaultConverter<ChildType, ParentType>();
 
-            var resultShouldBe = new CustomType();
+            var resultShouldBe = new ChildType();
             var result = converter(resultShouldBe);
 
-            Assert.AreEqual(resultShouldBe, result);
+            Assert.IsInstanceOf<ParentType>(result);
         }
 
         [Test]
-        public void Converting_FromParentTypeToChild_Converts()
+        public void ConvertingFromParentTypeToChild_UsingGenerics_Converts()
         {
-            var converter = ConverterHelpers.GetDefaultConverter<IEnumerable<string>, CustomType>();
+            var converter = ConverterHelpers.GetDefaultConverter<ParentType, ChildType>();
 
-            var resultShouldBe = new CustomType();
+            ParentType resultShouldBe = new ChildType();
             var result = converter(resultShouldBe);
 
-            Assert.AreEqual(resultShouldBe, result);
+            Assert.IsInstanceOf<ChildType>(result);
         }
 
-        private class CustomType : IEnumerable<string>
+        [Test]
+        public void MakingInvalidCast_UsingGenerics_ThrowsInvalidCastException()
         {
-            IEnumerable<string> Items { get; }
+            var converter = ConverterHelpers.GetDefaultConverter<ParentType, int>();
 
-            public CustomType()
-            {
-                Items = new string[0];
-            }
+            var resultShouldBe = new ChildType();
+            Assert.Throws<InvalidCastException>(() => converter(resultShouldBe));
+        }
 
-            public IEnumerator<string> GetEnumerator()
-            {
-                return Items.GetEnumerator();
-            }
+        [Test]
+        public void ConvertingFromChildTypeToParent_UsingTypes_Converts()
+        {
+            var converter = ConverterHelpers.GetDefaultConverter(typeof(ChildType), typeof(ParentType));
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
+            ParentType resultShouldBe = new ChildType();
+            var result = converter(resultShouldBe);
+
+            Assert.IsInstanceOf<ParentType>(result);
+        }
+
+        [Test]
+        public void ConvertingFromParentTypeToChild_UsingTypes_Converts()
+        {
+            var converter = ConverterHelpers.GetDefaultConverter(typeof(ParentType), typeof(ChildType));
+
+            ParentType resultShouldBe = new ChildType();
+            var result = converter(resultShouldBe);
+
+            Assert.IsInstanceOf<ChildType>(result);
+        }
+
+        [Test]
+        public void MakingInvalidCast_UsingTypes_ThrowsInvalidCastException()
+        {
+            var converter = ConverterHelpers.GetDefaultConverter(typeof(ParentType), typeof(int));
+
+            var resultShouldBe = new ChildType();
+            Assert.Throws<InvalidCastException>(() => converter(resultShouldBe));
         }
     }
 }

@@ -23,7 +23,7 @@ namespace MarkSFrancis.Tests.ComparerHelperTests
         }
 
         [Test]
-        public void GettingEqualityComparer_ForInts_ReturnsComparer()
+        public void GettingEqualityComparer_ForInts_ReturnsEqualityComparer()
         {
             var intComparer = ComparerHelpers.DefaultEqualityComparer<int>();
 
@@ -31,7 +31,7 @@ namespace MarkSFrancis.Tests.ComparerHelperTests
         }
 
         [Test]
-        public void GettingEqualityComparer_ForInts_ReturnsValidComparer()
+        public void GettingEqualityComparer_ForInts_ReturnsValidEqualityComparer()
         {
             var intComparer = ComparerHelpers.DefaultEqualityComparer<int>();
 
