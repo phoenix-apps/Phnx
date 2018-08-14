@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MarkSFrancis.Abstractions.CurrentDateTime;
+using System;
 
 namespace MarkSFrancis.Extensions.Time
 {
@@ -11,6 +12,11 @@ namespace MarkSFrancis.Extensions.Time
         /// 1st of January, 1970. Used by JavaScript to represent when time began
         /// </summary>
         public static readonly DateTime Epoch = new DateTime(1970, 1, 1, 0, 0, 0);
+
+        /// <summary>
+        /// The service used by <see cref="DateTimeExtensions"/> to get the current <see cref="DateTime"/>
+        /// </summary>
+        public static ICurrentDateTimeService Now = new CurrentDateTimeService();
 
         /// <summary>
         /// Get a person's age from their date of birth and the time zone they were born in
@@ -32,13 +38,15 @@ namespace MarkSFrancis.Extensions.Time
         /// <returns></returns>
         public static int AgeUtc(this DateTime dob)
         {
-            DateTime now = DateTime.UtcNow.Date;
+            DateTime now = Now.UtcNow.Date;
             if (now.DayOfYear < dob.DayOfYear)
             {
                 return (now.Year + 1) - dob.Year;
             }
 
-            return now.Year - dob.Year;
+            var age = now.Year - dob.Year;
+
+            return age < 0 ? 0 : age;
         }
 
         /// <summary>
@@ -197,7 +205,7 @@ namespace MarkSFrancis.Extensions.Time
         /// <returns></returns>
         public static bool IsInTheFutureUtc(this DateTime dt)
         {
-            return dt > DateTime.UtcNow;
+            return dt > Now.UtcNow;
         }
 
         /// <summary>
@@ -218,7 +226,7 @@ namespace MarkSFrancis.Extensions.Time
         /// <returns></returns>
         public static bool IsInThePastUtc(this DateTime dt)
         {
-            return dt < DateTime.UtcNow;
+            return dt < Now.UtcNow;
         }
 
         /// <summary>
@@ -239,7 +247,7 @@ namespace MarkSFrancis.Extensions.Time
         /// <returns></returns>
         public static bool IsTodayUtc(this DateTime dt)
         {
-            return dt.Date == DateTime.UtcNow.Date;
+            return dt.Date == Now.UtcNow.Date;
         }
 
         /// <summary>
