@@ -2,20 +2,10 @@
 using NUnit.Framework;
 using System;
 
-namespace MarkSFrancis.Tests.Extensions.Time
+namespace MarkSFrancis.Tests.Extensions.Time.DateTimeExtensionsTests
 {
-    [TestFixture]
-    public class DateTimeExtensionsTests
+    public class FirstDayOfWeekTests
     {
-        [Test]
-        public void GettingFirstDayOfWeek_WhenFirstDayIsSundayAndDateIsSunday_ReturnsSameDate()
-        {
-            DateTime testDate = new DateTime(2000, 1, 2);
-            var firstDayOfWeek = testDate.StartOfWeek(false);
-
-            Assert.AreEqual(testDate, firstDayOfWeek);
-        }
-
         [Test]
         public void GettingFirstDayOfWeek_WhenFirstDayIsSundayAndDateIsSaturday_ReturnsWeekEndingInDate()
         {
