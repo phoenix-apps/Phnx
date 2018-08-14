@@ -35,7 +35,7 @@ namespace MarkSFrancis.Extensions.Numeric
         /// <returns>The equivalent hex code</returns>
         public static string ToHex(this byte[] b)
         {
-            if (b == null || b.Length == 0)
+            if (b == null)
             {
                 throw ErrorFactory.Default.ArgumentNull(nameof(b));
             }
