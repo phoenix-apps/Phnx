@@ -252,7 +252,7 @@ namespace MarkSFrancis.Extensions
                     }
                     else
                     {
-                        // 1 long, and is a single letter word
+                        // Single letter word
                         result.Append(acronym.ToLower());
                     }
 
