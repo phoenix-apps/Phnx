@@ -1,14 +1,14 @@
 ﻿using MarkSFrancis.Extensions.Time;
 using NUnit.Framework;
+using System;
 using System.Globalization;
 
 namespace MarkSFrancis.Tests.Extensions.Time.DateTimeExtensionsTests
 {
     public class AsDateStringTests
     {
-
         [Test]
-        public void AsDateString_WithoutFormatProviderAndShortFormat_FormatsAsLocal()
+        public void AsDateString_WithoutFormatProviderAndShortFormat_FormatsAsShortLocalDate()
         {
             var formatProvider = CultureInfo.CurrentCulture.DateTimeFormat;
 
@@ -19,7 +19,7 @@ namespace MarkSFrancis.Tests.Extensions.Time.DateTimeExtensionsTests
         }
 
         [Test]
-        public void AsDateString_WithoutFormatProviderAndLongFormat_FormatsAsLocal()
+        public void AsDateString_WithoutFormatProviderAndLongFormat_FormatsAsLongLocalDate()
         {
             var formatProvider = CultureInfo.CurrentCulture.DateTimeFormat;
 
@@ -30,7 +30,7 @@ namespace MarkSFrancis.Tests.Extensions.Time.DateTimeExtensionsTests
         }
 
         [Test]
-        public void AsDateString_WithFormatProviderUSAndShortFormat_FormatsAsLocal()
+        public void AsDateString_WithFormatProviderUSAndShortFormat_FormatsAsShortUSDate()
         {
             var formatProviderUS = CultureInfo.GetCultureInfo("en-US").DateTimeFormat;
 
@@ -41,7 +41,7 @@ namespace MarkSFrancis.Tests.Extensions.Time.DateTimeExtensionsTests
         }
 
         [Test]
-        public void AsDateString_WithFormatProviderGBAndShortFormat_FormatsAsLocal()
+        public void AsDateString_WithFormatProviderGBAndShortFormat_FormatsAsShortGBDate()
         {
             var formatProviderUK = CultureInfo.GetCultureInfo("en-GB").DateTimeFormat;
 
@@ -52,7 +52,7 @@ namespace MarkSFrancis.Tests.Extensions.Time.DateTimeExtensionsTests
         }
 
         [Test]
-        public void AsDateString_WithFormatProviderUSAndLongFormat_FormatsAsLocal()
+        public void AsDateString_WithFormatProviderUSAndLongFormat_FormatsAsLongUSDate()
         {
             var formatProviderUS = CultureInfo.GetCultureInfo("en-US").DateTimeFormat;
 
@@ -63,7 +63,7 @@ namespace MarkSFrancis.Tests.Extensions.Time.DateTimeExtensionsTests
         }
 
         [Test]
-        public void AsDateString_WithFormatProviderGBAndLongFormat_FormatsAsLocal()
+        public void AsDateString_WithFormatProviderGBAndLongFormat_FormatsAsLongUKDate()
         {
             var formatProviderUK = CultureInfo.GetCultureInfo("en-GB").DateTimeFormat;
 
@@ -74,14 +74,11 @@ namespace MarkSFrancis.Tests.Extensions.Time.DateTimeExtensionsTests
         }
 
         [Test]
-        public void AsDateString_WithFormatProviderAndLongFormat_FormatsAsLocal()
+        public void AsDateString_WithNullFormatProvider_ThrowsArgumentNullException()
         {
-            var formatProvider = CultureInfo.CurrentCulture.DateTimeFormat;
+            IFormatProvider formatProvider = null;
 
-            var shortDate = Sample.DateTime.AsDateString(false);
-            var shortDateShouldBe = Sample.DateTime.ToLongDateString();
-
-            Assert.AreEqual(shortDateShouldBe, shortDate);
+            Assert.Throws<ArgumentNullException>(() => Sample.DateTime.AsDateString(formatProvider));
         }
     }
 }
