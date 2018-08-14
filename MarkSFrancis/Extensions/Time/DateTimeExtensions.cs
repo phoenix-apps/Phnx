@@ -98,7 +98,7 @@ namespace MarkSFrancis.Extensions.Time
         /// <returns></returns>
         public static DateTime EndOfDay(this DateTime dt)
         {
-            return new DateTime(dt.Year, dt.Month, dt.Day + 1).AddTicks(-1);
+            return new DateTime(dt.Year, dt.Month, dt.Day).AddDays(1).AddTicks(-1);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace MarkSFrancis.Extensions.Time
         /// <returns></returns>
         public static DateTime EndOfMonth(this DateTime dt)
         {
-            return new DateTime(dt.Year, dt.Month + 1, 1).AddMonths(1).AddTicks(-1);
+            return new DateTime(dt.Year, dt.Month, 1).AddMonths(1).AddTicks(-1);
         }
 
         /// <summary>
