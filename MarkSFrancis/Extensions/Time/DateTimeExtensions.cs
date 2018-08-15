@@ -186,28 +186,6 @@ namespace MarkSFrancis.Extensions.Time
         }
 
         /// <summary>
-        /// Gets whether <paramref name="dt"/> (UTC) is in the future
-        /// </summary>
-        /// <param name="dt">The <see cref="DateTime"/> to check</param>
-        /// <param name="afterThis">The <see cref="DateTime"/> to check whether <paramref name="dt"/> is after</param>
-        /// <returns></returns>
-        public static bool IsAfter(this DateTime dt, DateTime afterThis)
-        {
-            return dt > afterThis;
-        }
-
-        /// <summary>
-        /// Gets whether <paramref name="dt"/> (UTC) is in the past
-        /// </summary>
-        /// <param name="dt">The <see cref="DateTime"/> to check</param>
-        /// <param name="beforeThis">The <see cref="DateTime"/> to check whether <paramref name="dt"/> is before</param>
-        /// <returns></returns>
-        public static bool IsBefore(this DateTime dt, DateTime beforeThis)
-        {
-            return dt < beforeThis;
-        }
-
-        /// <summary>
         /// Gets whether <paramref name="dt"/> (UTC) is within today
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to check</param>
