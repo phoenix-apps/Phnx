@@ -29,7 +29,7 @@ namespace MarkSFrancis.Extensions.Time
         /// </summary>
         /// <param name="span">The time difference between now an <see cref="DateTimeExtensions.Epoch"/></param>
         /// <returns></returns>
-        public static DateTime FromEpochTimeSpan(this TimeSpan span)
+        public static DateTime TimeSinceEpochToDateTime(this TimeSpan span)
         {
             return DateTimeExtensions.Epoch + span;
         }
