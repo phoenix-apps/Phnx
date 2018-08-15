@@ -216,10 +216,18 @@ namespace MarkSFrancis.Extensions.Time
         /// <param name="second">The second to assign</param>
         /// <param name="millisecond">The millisecond to assign</param>
         /// <returns></returns>
-        public static DateTime SetTime(this DateTime dt, int hour, int minute, int second = 0,
-            int millisecond = 0)
+        public static DateTime SetTime(this DateTime dt, int? hour = null, int? minute = null, int? second = null,
+            int? millisecond = null)
         {
-            return new DateTime(dt.Year, dt.Month, dt.Day, hour, minute, second, millisecond);
+            return new DateTime(
+                dt.Year,
+                dt.Month,
+                dt.Day,
+                hour ?? dt.Hour,
+                minute ?? dt.Minute,
+                second ?? dt.Second,
+                millisecond ?? dt.Millisecond
+            );
         }
 
         /// <summary>
