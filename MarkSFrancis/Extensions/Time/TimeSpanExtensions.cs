@@ -1,11 +1,11 @@
-﻿using System;
+﻿using MarkSFrancis.Extensions.Numeric;
+using System;
 using System.Collections.Generic;
-using MarkSFrancis.Extensions.Numeric;
 
 namespace MarkSFrancis.Extensions.Time
 {
     /// <summary>
-    /// A collection of <see cref="TimeSpan"/> components
+    /// A collection of <see cref="TimeSpan"/> components, used for formatting in <see cref="TimeSpanExtensions.ToString"/>
     /// </summary>
     [Flags]
     public enum TimeComponents
@@ -18,7 +18,7 @@ namespace MarkSFrancis.Extensions.Time
         Days = 1 << 4,   // 16
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     }
-    
+
     /// <summary>
     /// Extensions for <see cref="TimeSpan"/>
     /// </summary>
