@@ -235,7 +235,7 @@ namespace MarkSFrancis.Extensions.Time
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to convert</param>
         /// <returns></returns>
-        public static TimeSpan ToEpochTimeSpan(this DateTime dt)
+        public static TimeSpan GetTimeSinceEpoch(this DateTime dt)
         {
             return dt - Epoch;
         }
