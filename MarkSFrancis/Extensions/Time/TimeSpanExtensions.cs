@@ -1,6 +1,6 @@
 ﻿using MarkSFrancis.Extensions.Numeric;
 using System;
-using System.Collections.Generic;
+using System.Text;
 
 namespace MarkSFrancis.Extensions.Time
 {
@@ -55,37 +55,63 @@ namespace MarkSFrancis.Extensions.Time
                 secondsUnit = longFormat ? " seconds" : "",
                 millisecondsUnit = longFormat ? " milliseconds" : "";
 
-            List<string> timeSpanComponents = new List<string>();
-            string stringPrefix =
-                (tsComponents & TimeComponents.Days) != 0 ?
-                ts.Days + daysUnit + ", " : " ";
+            string days = string.Empty;
+            StringBuilder formattedText = new StringBuilder();
+
+            // Delimiters are placed preceding the element
+            void AppendItem(string appendMe, string longDelimiter = ", ", string shortDelimiter = "")
+            {
+                if (formattedText.Length > 0)
+                {
+                    formattedText.Append((longFormat ? longDelimiter : shortDelimiter) + appendMe);
+
+                }
+                else
+                {
+                    formattedText.Append(appendMe);
+                }
+            }
+
+            if ((tsComponents & TimeComponents.Days) != 0)
+            {
+                if (tsComponents != TimeComponents.Days)
+                {
+                    days = ts.Days + daysUnit + " ";
+                }
+                else
+                {
+                    return ts.Days + daysUnit;
+                }
+            }
 
             if ((tsComponents & TimeComponents.Hours) != 0)
             {
-                timeSpanComponents.Add(ts.Hours.ToString(2) + hoursUnit);
+                AppendItem(ts.Hours.ToString(2) + hoursUnit);
             }
 
             if ((tsComponents & TimeComponents.Minutes) != 0)
             {
-                timeSpanComponents.Add(ts.Minutes.ToString(2) + minutesUnit);
+                AppendItem(ts.Minutes.ToString(2) + minutesUnit);
             }
 
             if ((tsComponents & TimeComponents.Seconds) != 0)
             {
-                timeSpanComponents.Add(ts.Seconds.ToString(2) + secondsUnit);
+                AppendItem(ts.Seconds.ToString(2) + secondsUnit);
             }
 
-            string stringSuffix =
-                (tsComponents & TimeComponents.Milliseconds) != 0 ?
-                (longFormat ? ", " : ".") +
-                ts.Milliseconds.ToString(3) + millisecondsUnit : "";
+            if ((tsComponents & TimeComponents.Milliseconds) != 0)
+            {
+                if (tsComponents != TimeComponents.Milliseconds)
+                {
+                    AppendItem(ts.Milliseconds.ToString(3) + millisecondsUnit, shortDelimiter: ".");
+                }
+                else
+                {
+                    return ts.Milliseconds.ToString(3) + millisecondsUnit;
+                }
+            };
 
-            string formattedString =
-                stringPrefix +
-                string.Join(longFormat ? ", " : ":", timeSpanComponents) +
-                stringSuffix;
-
-            return formattedString;
+            return days + formattedText.ToString();
         }
     }
 }
