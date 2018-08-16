@@ -93,6 +93,25 @@ namespace MarkSFrancis
         }
 
         /// <summary>
+        /// Create an <see cref="ArgumentException(string)"/> with a specified error message
+        /// </summary>
+        /// <param name="message">A message that describes the error</param>
+        public ArgumentException ArgumentException(string message)
+        {
+            return new ArgumentException(message);
+        }
+
+        /// <summary>
+        /// Create an <see cref="ArgumentException(string)"/> with a specified error message and the name of the parameter that caused this exception
+        /// </summary>
+        /// <param name="message">A message that describes the error</param>
+        /// <param name="paramName">The name of the parameter that caused the exception</param>
+        public ArgumentException ArgumentException(string message, string paramName)
+        {
+            return new ArgumentException(message, paramName);
+        }
+
+        /// <summary>
         /// Create an <see cref="ArgumentOutOfRangeException" /> for an argument that cannot be less than zero, but was passed with a negative value
         /// </summary>
         /// <param name="paramName">The name of the parameter that caused the exception</param>
