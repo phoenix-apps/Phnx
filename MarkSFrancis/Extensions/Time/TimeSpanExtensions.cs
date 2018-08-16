@@ -38,28 +38,38 @@ namespace MarkSFrancis.Extensions.Time
         /// Represent a <see cref="TimeSpan"/> as a <see cref="string"/>, formatting it with only certain parts <see cref="TimeSpan"/>, such as "3 days 04:13:22"
         /// </summary>
         /// <param name="ts">The <see cref="TimeSpan"/> to represent</param>
-        /// <param name="tsComponents">The <see cref="TimeComponents"/> to include in the outputted string</param>
+        /// <param name="timeComponents">The <see cref="TimeComponents"/> to include in the outputted string</param>
         /// <param name="longFormat">Whether to display an extended format (such as "3 hours, 5 minutes" or "03:05" </param>
         /// <returns></returns>
         public static string ToString(this TimeSpan ts,
-            TimeComponents tsComponents =
+            TimeComponents timeComponents =
                 TimeComponents.Hours |
                 TimeComponents.Minutes |
                 TimeComponents.Seconds,
             bool longFormat = false)
         {
-            string
-                daysUnit = " days",
-                hoursUnit = longFormat ? " hours" : "",
-                minutesUnit = longFormat ? " minutes" : "",
-                secondsUnit = longFormat ? " seconds" : "",
-                millisecondsUnit = longFormat ? " milliseconds" : "";
+            if (!longFormat)
+            {
+                // Check for invalid component combinations
+                switch (timeComponents)
+                {
+                    case TimeComponents.Hours | TimeComponents.Seconds:
+                        goto err;
+                    case TimeComponents.Hours | TimeComponents.Milliseconds:
+                        goto err;
+                    case TimeComponents.Minutes | TimeComponents.Milliseconds:
+                        goto err;
+
+                        err:
+                        throw ErrorFactory.Default.ArgumentException("Time Components are invalid. They cannot be only " + timeComponents.ToString() + " and in a short format", nameof(timeComponents));
+                }
+            }
 
             string days = string.Empty;
             StringBuilder formattedText = new StringBuilder();
 
             // Delimiters are placed preceding the element
-            void AppendItem(string appendMe, string longDelimiter = ", ", string shortDelimiter = "")
+            void AppendItem(string appendMe, string longDelimiter = ", ", string shortDelimiter = ":")
             {
                 if (formattedText.Length > 0)
                 {
@@ -72,11 +82,13 @@ namespace MarkSFrancis.Extensions.Time
                 }
             }
 
-            if ((tsComponents & TimeComponents.Days) != 0)
+            if ((timeComponents & TimeComponents.Days) != 0)
             {
-                if (tsComponents != TimeComponents.Days)
+                string daysUnit = ts.Days == 1 ? " day" : " days";
+
+                if (timeComponents != TimeComponents.Days)
                 {
-                    days = ts.Days + daysUnit + " ";
+                    days = ts.Days + daysUnit + ", ";
                 }
                 else
                 {
@@ -84,30 +96,58 @@ namespace MarkSFrancis.Extensions.Time
                 }
             }
 
-            if ((tsComponents & TimeComponents.Hours) != 0)
+            if ((timeComponents & TimeComponents.Hours) != 0)
             {
-                AppendItem(ts.Hours.ToString(2) + hoursUnit);
-            }
+                string hours = longFormat ? ts.Hours.ToString() : ts.Hours.ToString(2);
 
-            if ((tsComponents & TimeComponents.Minutes) != 0)
-            {
-                AppendItem(ts.Minutes.ToString(2) + minutesUnit);
-            }
-
-            if ((tsComponents & TimeComponents.Seconds) != 0)
-            {
-                AppendItem(ts.Seconds.ToString(2) + secondsUnit);
-            }
-
-            if ((tsComponents & TimeComponents.Milliseconds) != 0)
-            {
-                if (tsComponents != TimeComponents.Milliseconds)
+                if (longFormat)
                 {
-                    AppendItem(ts.Milliseconds.ToString(3) + millisecondsUnit, shortDelimiter: ".");
+                    hours += ts.Hours == 1 ? " hour" : " hours";
+                }
+
+                AppendItem(hours);
+            }
+
+            if ((timeComponents & TimeComponents.Minutes) != 0)
+            {
+                string minutes = longFormat ? ts.Minutes.ToString() : ts.Minutes.ToString(2);
+
+                if (longFormat)
+                {
+                    minutes += ts.Minutes == 1 ? " minute" : " minutes";
+                }
+
+                AppendItem(minutes);
+            }
+
+            if ((timeComponents & TimeComponents.Seconds) != 0)
+            {
+                string seconds = longFormat ? ts.Seconds.ToString() : ts.Seconds.ToString(2);
+
+                if (longFormat)
+                {
+                    seconds += ts.Seconds == 1 ? " second" : " seconds";
+                }
+
+                AppendItem(seconds);
+            }
+
+            if ((timeComponents & TimeComponents.Milliseconds) != 0)
+            {
+                string milliseconds = longFormat ? ts.Milliseconds.ToString() : ts.Milliseconds.ToString(3);
+
+                if (longFormat)
+                {
+                    milliseconds += ts.Milliseconds == 1 ? " millisecond" : " milliseconds";
+                }
+
+                if (timeComponents != TimeComponents.Milliseconds)
+                {
+                    AppendItem(milliseconds, shortDelimiter: ".");
                 }
                 else
                 {
-                    return ts.Milliseconds.ToString(3) + millisecondsUnit;
+                    return milliseconds;
                 }
             };
 
