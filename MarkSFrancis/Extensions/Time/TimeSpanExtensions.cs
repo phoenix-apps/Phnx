@@ -40,6 +40,15 @@ namespace MarkSFrancis.Extensions.Time
         /// <param name="ts">The <see cref="TimeSpan"/> to represent</param>
         /// <param name="timeComponents">The <see cref="TimeComponents"/> to include in the outputted string</param>
         /// <param name="longFormat">Whether to display an extended format (such as "3 hours, 5 minutes" or "03:05" </param>
+        /// <exception cref="ArgumentException">Only applies when <paramref name="longFormat"/> is <see langword="false"/>. <paramref name="timeComponents"/> represents an unclear time.
+        /// These include the following:
+        /// Days, Hours, Seconds
+        /// Days, Hours, Milliseconds
+        /// Days, Minutes, Milliseconds
+        /// Hours, Seconds
+        /// Hours, Milliseconds
+        /// Minutes, Milliseconds
+        /// </exception>
         /// <returns></returns>
         public static string ToString(this TimeSpan ts,
             TimeComponents timeComponents =
@@ -53,9 +62,15 @@ namespace MarkSFrancis.Extensions.Time
                 // Check for invalid component combinations
                 switch (timeComponents)
                 {
+                    case TimeComponents.Days | TimeComponents.Hours | TimeComponents.Seconds:
+                        goto err;
                     case TimeComponents.Hours | TimeComponents.Seconds:
                         goto err;
+                    case TimeComponents.Days | TimeComponents.Hours | TimeComponents.Milliseconds:
+                        goto err;
                     case TimeComponents.Hours | TimeComponents.Milliseconds:
+                        goto err;
+                    case TimeComponents.Days | TimeComponents.Minutes | TimeComponents.Milliseconds:
                         goto err;
                     case TimeComponents.Minutes | TimeComponents.Milliseconds:
                         goto err;
