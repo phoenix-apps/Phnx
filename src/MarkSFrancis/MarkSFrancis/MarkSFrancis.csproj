@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.1.0-beta3</Version>
+    <PackageLicenseUrl>https://github.com/MarkSFrancis/MarkSFrancis/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/MarkSFrancis/MarkSFrancis</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/MarkSFrancis/MarkSFrancis</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <Copyright>Mark Francis</Copyright>
+    <Description>Core parts of the MarkSFrancis framework, shared across all components</Description>
+    <PackageIconUrl>https://raw.githubusercontent.com/MarkSFrancis/MarkSFrancis/master/qrcode-link-to-github.png</PackageIconUrl>
+    <Authors>MarkSFrancis</Authors>
+    <PackageId>MarkSFrancis</PackageId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\MarkSFrancis.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>

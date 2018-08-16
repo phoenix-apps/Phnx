@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Collections", "MarkSFrancis.Collections\MarkSFrancis.Collections.csproj", "{FA4BF49E-6077-4FE3-85EE-FD3CA4C1F245}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkSFrancis.Collections.Tests", "MarkSFrancis.Collections.Tests\MarkSFrancis.Collections.Tests.csproj", "{E8A9B394-AEDC-4890-92D2-78045E6BDA09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA4BF49E-6077-4FE3-85EE-FD3CA4C1F245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA4BF49E-6077-4FE3-85EE-FD3CA4C1F245}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA4BF49E-6077-4FE3-85EE-FD3CA4C1F245}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA4BF49E-6077-4FE3-85EE-FD3CA4C1F245}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8A9B394-AEDC-4890-92D2-78045E6BDA09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8A9B394-AEDC-4890-92D2-78045E6BDA09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8A9B394-AEDC-4890-92D2-78045E6BDA09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8A9B394-AEDC-4890-92D2-78045E6BDA09}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B2351D2-D611-4D2A-9030-D586240D5ED5}
+	EndGlobalSection
+EndGlobal
