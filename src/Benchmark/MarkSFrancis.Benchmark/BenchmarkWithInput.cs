@@ -47,7 +47,7 @@ namespace MarkSFrancis.Benchmark
         /// </summary>
         /// <param name="benchmarkWithValues">The values to pass to each of the <see cref="ComputeMethods"/> when benchmarking them</param>
         /// <returns>How long each of the <see cref="ComputeMethods"/> took to process all values</returns>
-        public TimeSpan[] Run(T[] benchmarkWithValues)
+        public TimeSpan[] Run(IEnumerable<T> benchmarkWithValues)
         {
             var timings = new TimeSpan[_computeMethods.Length];
 
