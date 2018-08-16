@@ -63,10 +63,10 @@ namespace MarkSFrancis.Extensions.Time
                 switch (timeComponents)
                 {
                     case TimeComponents.Days | TimeComponents.Hours | TimeComponents.Seconds:
-                    case TimeComponents.Hours | TimeComponents.Seconds:
                     case TimeComponents.Days | TimeComponents.Hours | TimeComponents.Milliseconds:
-                    case TimeComponents.Hours | TimeComponents.Milliseconds:
                     case TimeComponents.Days | TimeComponents.Minutes | TimeComponents.Milliseconds:
+                    case TimeComponents.Hours | TimeComponents.Seconds:
+                    case TimeComponents.Hours | TimeComponents.Milliseconds:
                     case TimeComponents.Minutes | TimeComponents.Milliseconds:
                         throw ErrorFactory.Default.ArgumentException("Time Components are invalid. They cannot be only " + timeComponents.ToString() + " and in a short format", nameof(timeComponents));
                 }
