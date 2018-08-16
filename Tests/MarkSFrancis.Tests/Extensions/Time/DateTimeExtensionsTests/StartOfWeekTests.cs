@@ -10,22 +10,22 @@ namespace MarkSFrancis.Tests.Extensions.Time.DateTimeExtensionsTests
         public void StartOfWeek_WhenFirstDayIsSundayAndDateIsSaturday_ReturnsPreviousSunday()
         {
             DateTime testDate = new DateTime(2000, 1, 1);
-            DateTime expectedResult = new DateTime(1999, 12, 26);
+            DateTime expected = new DateTime(1999, 12, 26);
 
             var result = testDate.StartOfWeek(false);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.AreEqual(expected, result);
         }
 
         [Test]
         public void StartOfWeek_WhenFirstDayIsSundayAndDateIsWednesday_ReturnsPreviousSunday()
         {
             DateTime testDate = new DateTime(2000, 1, 19);
-            DateTime expectedResult = new DateTime(2000, 1, 16);
+            DateTime expected = new DateTime(2000, 1, 16);
 
             var result = testDate.StartOfWeek(false);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.AreEqual(expected, result);
         }
 
         [Test]
@@ -42,22 +42,22 @@ namespace MarkSFrancis.Tests.Extensions.Time.DateTimeExtensionsTests
         public void StartOfWeek_WhenFirstDayIsMondayAndDateIsSunday_ReturnsPreviousMonday()
         {
             DateTime testDate = new DateTime(2000, 1, 2);
-            DateTime expectedResult = new DateTime(1999, 12, 27);
+            DateTime expected = new DateTime(1999, 12, 27);
 
             var result = testDate.StartOfWeek();
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.AreEqual(expected, result);
         }
 
         [Test]
         public void StartOfWeek_WhenFirstDayIsMondayAndDateIsThursday_ReturnsPreviousMonday()
         {
             DateTime testDate = new DateTime(2000, 1, 20);
-            DateTime expectedResult = new DateTime(2000, 1, 17);
+            DateTime expected = new DateTime(2000, 1, 17);
 
             var result = testDate.StartOfWeek(true);
 
-            Assert.AreEqual(expectedResult, result);
+            Assert.AreEqual(expected, result);
         }
 
         [Test]
