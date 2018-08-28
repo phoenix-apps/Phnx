@@ -13,6 +13,7 @@ namespace MarkSFrancis.Collections.Extensions
         /// </summary>
         /// <param name="bytes">The bytes to fill the <see cref="MemoryStream"/> with</param>
         /// <returns>A <see cref="MemoryStream"/> filled with specified bytes</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="bytes"/> is <see langword="null"/></exception>
         public static MemoryStream ToMemoryStream(this byte[] bytes)
         {
             return new MemoryStream(bytes);
