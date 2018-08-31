@@ -13,18 +13,18 @@ namespace MarkSFrancis.Collections.Extensions
         /// Copy a select range of values from the collection
         /// </summary>
         /// <typeparam name="T">The type of values in the collection</typeparam>
-        /// <param name="values">The collection to copy from</param>
+        /// <param name="source">The collection to copy from</param>
         /// <param name="startIndex">The index at which to start copying</param>
         /// <param name="count">The number of values to copy</param>
         /// <returns>The values from the collection within the range specified</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero or <paramref name="count"/> is less than zero</exception>
         /// <exception cref="IndexOutOfRangeException"><paramref name="startIndex"/> references an index greater than the number of items in the collection minus <paramref name="count"/></exception>
-        /// <exception cref="ArgumentNullException"><paramref name="values"/> is null</exception>
-        public static IEnumerable<T> CopyRange<T>(this IEnumerable<T> values, int startIndex, int count)
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
+        public static IEnumerable<T> CopyRange<T>(this IEnumerable<T> source, int startIndex, int count)
         {
-            if (values == null)
+            if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(values));
+                throw ErrorFactory.Default.ArgumentNull(nameof(source));
             }
 
             if (startIndex < 0)
@@ -37,25 +37,25 @@ namespace MarkSFrancis.Collections.Extensions
                 throw ErrorFactory.Default.ArgumentLessThanZero(nameof(count));
             }
 
-            IEnumerator<T> enumerator = values.GetEnumerator();
+            IEnumerator<T> enumerator = source.GetEnumerator();
 
-            for (int index = 0; index < startIndex; index++)
+            for (int index = 0; index < startIndex; ++index)
             {
                 // Skip value
                 if (!enumerator.MoveNext())
                 {
-                    throw ErrorFactory.Default.IndexOutOfRange(nameof(startIndex), index);
+                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(startIndex));
                 }
             }
 
-            for (int index = 0; index < count; index++)
+            for (int copiedCount = 0; copiedCount < count; ++copiedCount)
             {
-                yield return enumerator.Current;
-
                 if (!enumerator.MoveNext())
                 {
                     throw ErrorFactory.Default.ArgumentOutOfRange(nameof(count));
                 }
+
+                yield return enumerator.Current;
             }
 
             enumerator.Dispose();
@@ -65,17 +65,17 @@ namespace MarkSFrancis.Collections.Extensions
         /// Copy a select range of values from the collection
         /// </summary>
         /// <typeparam name="T">The type of values in the collection</typeparam>
-        /// <param name="values">The collection to copy from</param>
-        /// <param name="startIndex">The index at which to start copying</param>
-        /// <returns>The values from the collection within the range specified</returns>
+        /// <param name="source">The collection to copy from</param>
+        /// <param name="startIndex">The index at which to start copying. If this is the same as the number of items in the collection, no items are copied</param>
+        /// <returns>The values from the <paramref name="startIndex"/> to the end of the collection</returns>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero</exception>
-        /// <exception cref="IndexOutOfRangeException"><paramref name="startIndex"/> references an index greater than or equal to the number of items in the collection</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="values"/> is null</exception>
-        public static IEnumerable<T> CopyRange<T>(this IEnumerable<T> values, int startIndex)
+        /// <exception cref="IndexOutOfRangeException"><paramref name="startIndex"/> references an index greater than the number of items in the collection</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
+        public static IEnumerable<T> CopyRange<T>(this IEnumerable<T> source, int startIndex)
         {
-            if (values == null)
+            if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(values));
+                throw ErrorFactory.Default.ArgumentNull(nameof(source));
             }
 
             if (startIndex < 0)
@@ -83,18 +83,16 @@ namespace MarkSFrancis.Collections.Extensions
                 throw ErrorFactory.Default.ArgumentLessThanZero(nameof(startIndex));
             }
 
-            IEnumerator<T> enumerator = values.GetEnumerator();
+            IEnumerator<T> enumerator = source.GetEnumerator();
 
-            for (int index = 0; index < startIndex; index++)
+            for (int index = 0; index < startIndex; ++index)
             {
                 // Skip value
                 if (!enumerator.MoveNext())
                 {
-                    throw ErrorFactory.Default.IndexOutOfRange(nameof(startIndex), index);
+                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(startIndex));
                 }
             }
-
-            yield return enumerator.Current;
 
             while (enumerator.MoveNext())
             {
@@ -105,19 +103,19 @@ namespace MarkSFrancis.Collections.Extensions
         }
 
         /// <summary>
-        /// Fill this enumerable with a value
+        /// Creates a new <see cref="IEnumerable{T}"/> of the same size of <paramref name="source"/>, filling it with <paramref name="fillWith"/>
         /// </summary>
-        /// <param name="enumerable">The enumerable to fill</param>
+        /// <param name="source">The enumerable to fill</param>
         /// <param name="fillWith">The value to fill the enumerable with</param>
-        /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> is <see langword="null"/></exception>
-        public static IEnumerable<T> Fill<T>(this IEnumerable<T> enumerable, T fillWith)
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/></exception>
+        public static IEnumerable<T> Fill<T>(this IEnumerable<T> source, T fillWith)
         {
-            if (enumerable == null)
+            if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(enumerable));
+                throw ErrorFactory.Default.ArgumentNull(nameof(source));
             }
 
-            using (var enumerator = enumerable.GetEnumerator())
+            using (var enumerator = source.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -129,55 +127,26 @@ namespace MarkSFrancis.Collections.Extensions
         /// <summary>
         /// Concatenates a range of the members of a constructed <see cref="IEnumerable{T}"></see> collection, using <paramref name="toString"/> to convert each member to text, and then using the specified separator between each member
         /// </summary>
-        /// <param name="enumerable">A collection that contains the values to concatenate</param>
+        /// <param name="source">A collection that contains the values to concatenate</param>
         /// <param name="separator">The string to use as a separator. The separator is included in the returned string only if values has more than one element</param>
-        /// <param name="startIndex">The index at which the members to concatenate begin. If this is beyond the end of the <paramref name="enumerable"/>, <see cref="string.Empty"/> is returned</param>
-        /// <param name="toString">The method to use to convert each member to a <see cref="string"/>. If this is <see langword="null"/>, <see cref="object.ToString"/> is used</param>
-        /// <returns>A string that consists of the members of <paramref name="enumerable"/> delimited by the <paramref name="separator"/> string. If <paramref name="enumerable"/> has no members, or the <paramref name="startIndex"/> is beyond the end of the <paramref name="enumerable"/>, the method returns <see cref="String.Empty"></see></returns>
-        /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> is null</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero</exception>
-        public static string ToString<T>(this IEnumerable<T> enumerable, string separator, int startIndex = 0, Func<T, string> toString = null)
+        /// <param name="toString">The method to use to convert each member to a <see cref="string"/>. If this is <see langword="null"/>, <see cref="object.ToString"/> is used. If this returns <see langword="null"/>, <see cref="string.Empty"/> is used instead of <see langword="null"/></param>
+        /// <returns>A string that consists of the members of <paramref name="source"/> delimited by the <paramref name="separator"/> string. If <paramref name="source"/> has no members, the method returns <see cref="string.Empty"></see></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
+        public static string ToString<T>(this IEnumerable<T> source, string separator, Func<T, string> toString = null)
         {
-            if (toString == null)
+            if (separator == null)
             {
-                toString = t => t.ToString();
-            }
-
-            var newEnumerable = enumerable.Skip(startIndex).Select(toString);
-
-            return string.Join(separator, newEnumerable);
-        }
-
-        /// <summary>
-        /// Concatenates a range of the members of a constructed <see cref="IEnumerable{T}"></see> collection, using <paramref name="toString"/> to convert each member to text, and then using the specified separator between each member
-        /// </summary>
-        /// <param name="enumerable">A collection that contains the values to concatenate</param>
-        /// <param name="separator">The string to use as a separator. The separator is included in the returned string only if values has more than one element</param>
-        /// <param name="startIndex">The index at which the members to concatenate begin. If this is beyond the end of the <paramref name="enumerable"/>, <see cref="string.Empty"/> is returned</param>
-        /// <param name="count">The maximum number of values to concatenate. If this goes beyond the end of <paramref name="enumerable"/>, only the values up to the end will be concatenated</param>
-        /// <param name="toString">The method to use to convert each member to a <see cref="string"/>. If this is <see langword="null"/>, <see cref="object.ToString"/> is used</param>
-        /// <returns>A string that consists of the members of <paramref name="enumerable"/> delimited by the <paramref name="separator"/> string. If <paramref name="enumerable"/> has no members, or the <paramref name="startIndex"/> is beyond the end of the <paramref name="enumerable"/>, the method returns <see cref="String.Empty"></see></returns>
-        /// <exception cref="ArgumentNullException"><paramref name="enumerable"/> is null</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> or <paramref name="count"/> is less than zero</exception>
-        public static string ToString<T>(this IEnumerable<T> enumerable, string separator, int startIndex, int count, Func<T, string> toString = null)
-        {
-            if (startIndex < 0)
-            {
-                ErrorFactory.Default.ArgumentLessThanZero(nameof(startIndex));
-            }
-            if (count < 0)
-            {
-                ErrorFactory.Default.ArgumentLessThanZero(nameof(count));
+                throw ErrorFactory.Default.ArgumentNull(nameof(separator));
             }
 
             if (toString == null)
             {
-                toString = t => t.ToString();
+                return string.Join(separator, source);
             }
-
-            var newEnumerable = enumerable.Skip(startIndex).Take(count).Select(toString);
-
-            return string.Join(separator, newEnumerable);
+            else
+            {
+                return string.Join(separator, source.Select(toString));
+            }
         }
     }
 }

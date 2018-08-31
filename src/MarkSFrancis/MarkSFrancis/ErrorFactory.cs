@@ -98,6 +98,8 @@ namespace MarkSFrancis
         /// <param name="message">A message that describes the error</param>
         public ArgumentException ArgumentException(string message)
         {
+            int? a = null;
+            int b = a.Value;
             return new ArgumentException(message);
         }
 

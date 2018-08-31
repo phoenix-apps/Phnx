@@ -11,71 +11,85 @@ namespace MarkSFrancis.Collections.Extensions
         /// <summary>
         /// Gets the last value from an <see cref="IList{T}"/>
         /// </summary>
-        /// <typeparam name="T">The type of values in <paramref name="values"/></typeparam>
-        /// <param name="values">The values to get the last from</param>
+        /// <typeparam name="T">The type of values in <paramref name="source"/></typeparam>
+        /// <param name="source">The values to get the last from</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"><paramref name="values"/> is <see langword="null"/></exception>
-        /// <exception cref="IndexOutOfRangeException"><paramref name="values"/> is an empty collection</exception>
-        public static T Last<T>(this IList<T> values)
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/></exception>
+        /// <exception cref="IndexOutOfRangeException"><paramref name="source"/> is an empty collection</exception>
+        public static T Last<T>(this IList<T> source)
         {
-            if (values == null)
+            if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(values));
+                throw ErrorFactory.Default.ArgumentNull(nameof(source));
             }
 
-            if (values.Count == 0)
+            if (source.Count == 0)
             {
-                throw ErrorFactory.Default.CollectionEmpty(nameof(values));
+                throw ErrorFactory.Default.CollectionEmpty(nameof(source));
             }
 
-            return values[values.Count - 1];
+            return source[source.Count - 1];
         }
-        
+
+        /// <summary>
+        /// Converts this <see cref="IList{T}"/> to a <see cref="List{T}"/>, setting the default capacity to the size of <paramref name="source"/>
+        /// </summary>
+        /// <typeparam name="T">The type of items in the collection</typeparam>
+        /// <param name="source">The values to convert to a <see cref="List{T}"/></param>
+        /// <returns>A new <see cref="List{T}"/> which contains all the items that were in <paramref name="source"/>, with a capacity of the total number of values in <paramref name="source"/></returns>
+        public static List<T> ToList<T>(this IList<T> source)
+        {
+            var newList = new List<T>(source.Count);
+            newList.AddRange(source);
+
+            return newList;
+        }
+
         /// <summary>
         /// Fill this list with a value
         /// </summary>
-        /// <param name="values">The list to fill</param>
+        /// <param name="source">The list to fill</param>
         /// <param name="fillWith">The value to fill the list with</param>
-        /// <exception cref="ArgumentNullException"><paramref name="values"/> is <see langword="null"/></exception>
-        public static IList<T> Fill<T>(this IList<T> values, T fillWith)
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/></exception>
+        public static IList<T> Fill<T>(this IList<T> source, T fillWith)
         {
-            if (values == null)
+            if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(values));
+                throw ErrorFactory.Default.ArgumentNull(nameof(source));
             }
 
-            for (int index = 0; index < values.Count; index++)
+            for (int index = 0; index < source.Count; index++)
             {
-                values[index] = fillWith;
+                source[index] = fillWith;
             }
 
-            return values;
+            return source;
         }
 
         /// <summary>
         /// Gets whether two collections contain the same data using <see cref="EqualityComparer{T}.Default"/>
         /// </summary>
         /// <typeparam name="T">The type of values to compare</typeparam>
-        /// <param name="list">The first collection to compare</param>
+        /// <param name="source">The first collection to compare</param>
         /// <param name="rangeToCompare">The collection to compare with</param>
         /// <returns>Whether the two collections contain the same data. Returns <see langword="false"/> if either collection is <see langword="null"/></returns>
-        public static bool EqualsRange<T>(this IList<T> list, IList<T> rangeToCompare)
+        public static bool EqualsRange<T>(this IList<T> source, IList<T> rangeToCompare)
         {
-            if (list == null || rangeToCompare == null)
+            if (source == null || rangeToCompare == null)
             {
                 return false;
             }
 
             var comparer = EqualityComparer<T>.Default;
 
-            if (list.Count != rangeToCompare.Count)
+            if (source.Count != rangeToCompare.Count)
             {
                 return false;
             }
 
-            for (int index = 0; index < list.Count; index++)
+            for (int index = 0; index < source.Count; index++)
             {
-                if (!comparer.Equals(list[index], rangeToCompare[index]))
+                if (!comparer.Equals(source[index], rangeToCompare[index]))
                 {
                     return false;
                 }
@@ -83,29 +97,29 @@ namespace MarkSFrancis.Collections.Extensions
 
             return true;
         }
-        
+
         /// <summary>
         /// Performs a binary search using a given <see cref="Comparer{T}"/>. If the element is not found, it returns the flipped version of the index where the value should have been (for use in an insert). If the value is not found, the result will be negative. To restore the result to the index where it should have been found, use "~" to flip the resulting integer back
         /// </summary>
         /// <typeparam name="T">The type of values in the collection</typeparam>
-        /// <param name="values">The values to search</param>
+        /// <param name="source">The values to search</param>
         /// <param name="searchFor">The value to search for</param>
         /// <param name="comparer">The comparer to use when searching</param>
         /// <returns>The index of the found item. If the element is not found, it returns the flipped version of the index where the value should have been (for use in an insert). If the value is not found, the result will be negative. To restore the result to the index where it should have been found, use "~" to flip the resulting integer back</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="values"/> or <paramref name="comparer"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="comparer"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="comparer"/> returned an invalid result. <paramref name="comparer"/> results can only be -1, 0 or 1</exception>
-        public static int BinarySearchBy<T>(this IList<T> values, T searchFor, Comparer<T> comparer)
+        public static int BinarySearch<T>(this IList<T> source, T searchFor, IComparer<T> comparer)
         {
-            if (values == null)
+            if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(values));
+                throw ErrorFactory.Default.ArgumentNull(nameof(source));
             }
             if (comparer == null)
             {
                 throw ErrorFactory.Default.ArgumentNull(nameof(comparer));
             }
 
-            int left = 0, right = values.Count - 1;
+            int left = 0, right = source.Count - 1;
 
             BinarySearchRangeStart:
 
@@ -117,7 +131,7 @@ namespace MarkSFrancis.Collections.Extensions
 
             int mid = (left + right) / 2;
 
-            var orderResult = comparer.Compare(searchFor, values[mid]);
+            var orderResult = comparer.Compare(searchFor, source[mid]);
 
             switch (orderResult)
             {

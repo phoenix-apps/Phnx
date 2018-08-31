@@ -69,9 +69,8 @@ namespace MarkSFrancis.Collections.Tree
         /// <param name="removeAllOccurences">Whether to remove all occurences, or just the first occurence</param>
         public void RemoveChild(TreeNode<T> childToRemove, bool removeAllOccurences = true)
         {
-            Children = Children.RemoveBy(
-                    c => c == childToRemove,
-                    removeAllOccurences)
+            Children = Children.Where(
+                    c => c != childToRemove)
                 .ToList();
         }
 
@@ -82,9 +81,8 @@ namespace MarkSFrancis.Collections.Tree
         /// <param name="removeAllOccurences">Whether to remove all occurences, or just the first occurence</param>
         public void RemoveChild(T childToRemove, bool removeAllOccurences = true)
         {
-            Children = Children.RemoveBy(
-                    c => c.Value.Equals(childToRemove),
-                    removeAllOccurences)
+            Children = Children.Where(
+                    c => !c.Value.Equals(childToRemove))
                 .ToList();
         }
 

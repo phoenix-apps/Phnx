@@ -17,4 +17,10 @@
     <ProjectReference Include="..\MarkSFrancis.Collections\MarkSFrancis.Collections.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="MarkSFrancis">
+      <HintPath>..\..\MarkSFrancis\MarkSFrancis\bin\Debug\netstandard2.0\MarkSFrancis.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
