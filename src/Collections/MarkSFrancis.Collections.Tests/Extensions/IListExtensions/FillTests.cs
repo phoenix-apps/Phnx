@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MarkSFrancis.Collections.Tests.Extensions.IEnumerableExtensions
+namespace MarkSFrancis.Collections.Tests.Extensions.IListExtensions
 {
     public class FillTests
     {
         [Test]
         public void Fill_NullCollection_ThrowsArgumentNullException()
         {
-            IEnumerable<string> values = null;
+            IList<string> values = null;
 
             Assert.Throws<ArgumentNullException>(() => values.Fill(string.Empty).ToList());
         }
@@ -19,7 +19,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.IEnumerableExtensions
         [Test]
         public void Fill_WithNull_DoesNotThrow()
         {
-            IEnumerable<string> values = new List<string>
+            IList<string> values = new List<string>
             {
             };
 
@@ -31,7 +31,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.IEnumerableExtensions
         {
             var expected = new List<int> { 1, 1, 1, 1, 1 };
 
-            IEnumerable<int> items = new List<int>
+            IList<int> items = new List<int>
             {
                 1, 161, 3, 36, -13
             };

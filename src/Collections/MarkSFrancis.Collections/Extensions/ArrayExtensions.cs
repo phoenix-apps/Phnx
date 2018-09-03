@@ -166,7 +166,8 @@ namespace MarkSFrancis.Collections.Extensions
         }
 
         /// <summary>
-        /// Searches a range of elements in a sorted array for a value</summary>
+        /// Searches a range of elements in a sorted array for a value
+        /// </summary>
         /// <param name="source">The array to search.</param>
         /// <param name="value">The object to search for</param>
         /// <typeparam name="T">The type of the elements of the array.</typeparam>

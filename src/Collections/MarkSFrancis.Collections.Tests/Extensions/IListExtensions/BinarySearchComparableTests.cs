@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace MarkSFrancis.Collections.Tests.Extensions.ArrayExtensions
+namespace MarkSFrancis.Collections.Tests.Extensions.IListExtensions
 {
     public class BinarySearchComparableTests
     {
@@ -14,7 +14,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.ArrayExtensions
         [Test]
         public void BinarySearch_WhenArrayIsNull_ThrowsArgumentNullException()
         {
-            int[] array = null;
+            IList<int> array = null;
 
             Assert.Throws<ArgumentNullException>(() => array.BinarySearch(0));
         }
@@ -22,7 +22,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.ArrayExtensions
         [Test]
         public void BinarySearch_WhenArrayIsEmpty_ReturnsIndexMinus1()
         {
-            var array = new int[0];
+            IList<int> array = new List<int> { };
 
             var index = array.BinarySearch(0, IntComparer);
 
@@ -32,7 +32,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.ArrayExtensions
         [Test]
         public void BinarySearch_WhenArrayDoesNotContainIten_ReturnsIndexWhereItemShouldGo()
         {
-            var array = new int[] { 8, 6, 4, 2, 0 };
+            IList<int> array = new List<int> { 8, 6, 4, 2, 0 };
 
             var index = array.BinarySearch(-2, IntComparer);
             Assert.AreEqual(~5, index);
@@ -59,7 +59,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.ArrayExtensions
         [Test]
         public void BinarySearch_WhenArrayDoesContainIten_ReturnsIndexWhereItemIs()
         {
-            var array = new int[] { 8, 6, 4, 2, 0 };
+            IList<int> array = new List<int> { 8, 6, 4, 2, 0 };
 
             var index = array.BinarySearch(0, IntComparer);
             Assert.AreEqual(4, index);
@@ -80,7 +80,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.ArrayExtensions
         [Test]
         public void BinarySearch_WhenIComparableNullAndImplemented_UsesDefaultIComparable()
         {
-            var array = new int[] { 0, 2, 4, 6, 8 };
+            IList<int> array = new List<int> { 0, 2, 4, 6, 8 };
 
             var index = array.BinarySearch(-2, null);
             Assert.AreEqual(~0, index);
@@ -95,7 +95,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.ArrayExtensions
         [Test]
         public void BinarySearch_WhenIComparableNullAndNotImplemented_ThrowsInvalidOperationException()
         {
-            var array = new Point[] { new Point(5, 5) };
+            IList<Point> array = new List<Point> { new Point(5, 5) };
 
             Assert.Throws<InvalidOperationException>(() => array.BinarySearch(new Point(5, 5), null));
         }
@@ -103,7 +103,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.ArrayExtensions
         [Test]
         public void BinarySearch_CustomIComparable_WhenThereIsNoDefault_UsesCustomIComparable()
         {
-            var array = new Point[] { new Point(5, 5) };
+            IList<Point> array = new List<Point> { new Point(5, 5) };
             var comparer = new AreaComparer();
 
             var index = array.BinarySearch(new Point(5, 5), comparer);

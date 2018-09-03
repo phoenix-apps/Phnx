@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace MarkSFrancis.Collections.Tests.Fakes
+namespace MarkSFrancis.Collections.Tests.TestHelpers
 {
     public class UnlimitedEnumerable<T> : IEnumerable<T>
     {

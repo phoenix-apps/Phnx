@@ -13,9 +13,10 @@ namespace MarkSFrancis.Collections
         /// Create a new <see cref="EnumerableEnumerator{T}"/> from an <see cref="IEnumerator{T}"/>
         /// </summary>
         /// <param name="enumerator">The enumerator to enumerate over</param>
+        /// <exception cref="System.ArgumentNullException"><paramref name="enumerator"/> is <see langword="null"/></exception>
         public EnumerableEnumerator(IEnumerator<T> enumerator)
         {
-            Enumerator = enumerator;
+            Enumerator = enumerator ?? throw ErrorFactory.Default.ArgumentNull(nameof(enumerator));
         }
 
         /// <summary>
@@ -31,7 +32,7 @@ namespace MarkSFrancis.Collections
         {
             return Enumerator;
         }
-        
+
         /// <summary>
         /// Gets <see cref="Enumerator"/>
         /// </summary>
@@ -41,7 +42,7 @@ namespace MarkSFrancis.Collections
             return GetEnumerator();
         }
     }
-    
+
     /// <summary>
     /// Provides a way to enumerator over an <see cref="IEnumerator"/>
     /// </summary>
@@ -51,16 +52,17 @@ namespace MarkSFrancis.Collections
         /// Create a new <see cref="EnumerableEnumerator"/> from an <see cref="IEnumerator"/>
         /// </summary>
         /// <param name="enumerator">The enumerator to enumerate over</param>
+        /// <exception cref="System.ArgumentNullException"><paramref name="enumerator"/> is <see langword="null"/></exception>
         public EnumerableEnumerator(IEnumerator enumerator)
         {
-            Enumerator = enumerator;
+            Enumerator = enumerator ?? throw ErrorFactory.Default.ArgumentNull(nameof(enumerator));
         }
 
         /// <summary>
         /// Gets the <see cref="IEnumerator{T}"/>
         /// </summary>
         public IEnumerator Enumerator { get; }
-        
+
         /// <summary>
         /// Gets <see cref="Enumerator"/>
         /// </summary>

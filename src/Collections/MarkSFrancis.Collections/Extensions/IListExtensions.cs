@@ -15,7 +15,7 @@ namespace MarkSFrancis.Collections.Extensions
         /// <param name="source">The values to get the last from</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/></exception>
-        /// <exception cref="IndexOutOfRangeException"><paramref name="source"/> is an empty collection</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="source"/> is an empty collection</exception>
         public static T Last<T>(this IList<T> source)
         {
             if (source == null)
@@ -25,7 +25,7 @@ namespace MarkSFrancis.Collections.Extensions
 
             if (source.Count == 0)
             {
-                throw ErrorFactory.Default.CollectionEmpty(nameof(source));
+                throw ErrorFactory.Default.ArgumentEmpty(nameof(source));
             }
 
             return source[source.Count - 1];
@@ -37,8 +37,14 @@ namespace MarkSFrancis.Collections.Extensions
         /// <typeparam name="T">The type of items in the collection</typeparam>
         /// <param name="source">The values to convert to a <see cref="List{T}"/></param>
         /// <returns>A new <see cref="List{T}"/> which contains all the items that were in <paramref name="source"/>, with a capacity of the total number of values in <paramref name="source"/></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/></exception>
         public static List<T> ToList<T>(this IList<T> source)
         {
+            if (source == null)
+            {
+                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+            }
+
             var newList = new List<T>(source.Count);
             newList.AddRange(source);
 
@@ -99,24 +105,45 @@ namespace MarkSFrancis.Collections.Extensions
         }
 
         /// <summary>
-        /// Performs a binary search using a given <see cref="Comparer{T}"/>. If the element is not found, it returns the flipped version of the index where the value should have been (for use in an insert). If the value is not found, the result will be negative. To restore the result to the index where it should have been found, use "~" to flip the resulting integer back
+        /// Searches a range of elements in a sorted <see cref="IList{T}"/> for a value
         /// </summary>
         /// <typeparam name="T">The type of values in the collection</typeparam>
         /// <param name="source">The values to search</param>
-        /// <param name="searchFor">The value to search for</param>
-        /// <param name="comparer">The comparer to use when searching</param>
-        /// <returns>The index of the found item. If the element is not found, it returns the flipped version of the index where the value should have been (for use in an insert). If the value is not found, the result will be negative. To restore the result to the index where it should have been found, use "~" to flip the resulting integer back</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="comparer"/> is <see langword="null"/></exception>
+        /// <param name="value">The value to search for</param>
+        /// <returns>The index of the specified <paramref name="value"/> in the specified <paramref name="source"/>, if <paramref name="value"/> is found; otherwise, a negative number. If <paramref name="value"/> is not found and <paramref name="value"/> is less than one or more elements in <paramref name="source"/>, the negative number returned is the bitwise complement of the index of the first element that is larger than <paramref name="value"/>. If <paramref name="value"/> is not found and <paramref name="value"/> is greater than all elements in <paramref name="source"/>, the negative number returned is the bitwise complement of the index of the last element plus 1. If this method is called with a non-sorted <paramref name="source"/>, the return value can be incorrect and a negative number could be returned, even if <paramref name="value"/> is present in <paramref name="source"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The default comparer for <typeparamref name="T"/> returned an invalid result. The comparer's results can only be -1, 0 or 1</exception>
+        public static int BinarySearch<T>(this IList<T> source, T value)
+        {
+            return BinarySearch(source, value, null);
+        }
+
+        /// <summary>
+        /// Searches a range of elements in a sorted <see cref="IList{T}"/> for a value
+        /// </summary>
+        /// <typeparam name="T">The type of values in the collection</typeparam>
+        /// <param name="source">The values to search</param>
+        /// <param name="value">The value to search for</param>
+        /// <param name="comparer">The comparer to use when searching. If this is <see langword="null"/>, the default <see cref="IComparer{T}"/> is used</param>
+        /// <returns>The index of the specified <paramref name="value"/> in the specified <paramref name="source"/>, if <paramref name="value"/> is found; otherwise, a negative number. If <paramref name="value"/> is not found and <paramref name="value"/> is less than one or more elements in <paramref name="source"/>, the negative number returned is the bitwise complement of the index of the first element that is larger than <paramref name="value"/>. If <paramref name="value"/> is not found and <paramref name="value"/> is greater than all elements in <paramref name="source"/>, the negative number returned is the bitwise complement of the index of the last element plus 1. If this method is called with a non-sorted <paramref name="source"/>, the return value can be incorrect and a negative number could be returned, even if <paramref name="value"/> is present in <paramref name="source"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="comparer"/> returned an invalid result. <paramref name="comparer"/> results can only be -1, 0 or 1</exception>
-        public static int BinarySearch<T>(this IList<T> source, T searchFor, IComparer<T> comparer)
+        public static int BinarySearch<T>(this IList<T> source, T value, IComparer<T> comparer)
         {
             if (source == null)
             {
                 throw ErrorFactory.Default.ArgumentNull(nameof(source));
             }
-            if (comparer == null)
+
+            bool comparerIsValidated = comparer != null;
+            if (!comparerIsValidated)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(comparer));
+                comparer = ComparerHelpers.DefaultComparer<T>();
+
+                if (comparer == null)
+                {
+                    throw new InvalidOperationException(typeof(T).FullName + " does not have a default comparer");
+                }
             }
 
             int left = 0, right = source.Count - 1;
@@ -131,7 +158,24 @@ namespace MarkSFrancis.Collections.Extensions
 
             int mid = (left + right) / 2;
 
-            var orderResult = comparer.Compare(searchFor, source[mid]);
+            int orderResult;
+
+            if (comparerIsValidated)
+            {
+                orderResult = comparer.Compare(value, source[mid]);
+            }
+            else
+            {
+                try
+                {
+                    orderResult = comparer.Compare(value, source[mid]);
+                    comparerIsValidated = true;
+                }
+                catch (ArgumentException)
+                {
+                    throw new InvalidOperationException(typeof(T).FullName + " does not have a default comparer");
+                }
+            }
 
             switch (orderResult)
             {
@@ -149,7 +193,7 @@ namespace MarkSFrancis.Collections.Extensions
                     goto BinarySearchRangeStart;
 
                 default:
-                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(orderResult),
+                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(comparer),
                         "Comparer result was invalid. Value of result was " + orderResult);
             }
         }

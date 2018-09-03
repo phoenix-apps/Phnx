@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -6,6 +7,18 @@ namespace MarkSFrancis.Collections.Tests
 {
     public class EnumerableEnumeratorTests
     {
+        [Test]
+        public void GetEnumerableT_WhenIEnumeratorIsNull_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new EnumerableEnumerator<string>(null));
+        }
+
+        [Test]
+        public void GetEnumerable_WhenIEnumeratorIsNull_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new EnumerableEnumerator(null));
+        }
+
         [Test]
         public void GetEnumerableT_WithType_ReturnsOriginalEnumerator()
         {
