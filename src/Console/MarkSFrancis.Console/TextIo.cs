@@ -338,7 +338,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="converter">The method to use when converting from the text to the desired type</param>
         /// <param name="question">The question to write</param>
-        /// <returns>The <typeparamref name="T"/> entered by the user</returns>
+        /// <returns>The <typeparamref name="T"/> converted from the line from <see cref="Input"/></returns>
         /// <exception cref="ArgumentNullException"><paramref name="converter"/> is <see langword="null"/></exception>
         /// <exception cref="IOException">An I/O error occurs</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
@@ -371,7 +371,7 @@ namespace MarkSFrancis.Console
             }
             catch (Exception ex)
             {
-                throw new InvalidCastException($"An error occurred converting from {typeof(string)} to {typeof(T)}: {ex.Message}", ex);
+                throw new InvalidCastException($"An error occurred converting from {typeof(string).FullName} to {typeof(T).FullName}: {ex.Message}", ex);
             }
         }
     }
