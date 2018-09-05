@@ -16,4 +16,8 @@
     <ProjectReference Include="..\MarkSFrancis.Console\MarkSFrancis.Console.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ConsoleIoTests\" />
+  </ItemGroup>
+
 </Project>
