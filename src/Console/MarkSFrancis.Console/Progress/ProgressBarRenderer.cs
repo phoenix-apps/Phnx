@@ -5,7 +5,7 @@ namespace MarkSFrancis.Console.Progress
     /// <summary>
     /// Provides a way of writing the progress of an operation to the console
     /// </summary>
-    internal class ProgressBarRenderer
+    public class ProgressBarRenderer
     {
         /// <summary>
         /// The maximum value of progress possible
@@ -28,6 +28,11 @@ namespace MarkSFrancis.Console.Progress
         /// <param name="maxValue">The maximum value, representing the progress bar at its completed state</param>
         public ProgressBarRenderer(decimal maxValue)
         {
+            if (maxValue < 0)
+            {
+                throw ErrorFactory.Default.ArgumentLessThanZero(nameof(maxValue));
+            }
+
             MaxValue = maxValue;
             _currentAnimationFrame = 0;
         }
@@ -80,7 +85,7 @@ namespace MarkSFrancis.Console.Progress
         /// </summary>
         /// <param name="renderSpinner">Whether to render the spinner</param>
         /// <returns>This <see cref="ProgressBarRenderer"/> formatted as a progress bar</returns>
-        public string ToString(bool renderSpinner)
+        public string ToString(bool renderSpinner = true)
         {
             if (renderSpinner)
             {
@@ -93,7 +98,7 @@ namespace MarkSFrancis.Console.Progress
             var progressDoneIndicator = new string('#', blocksToPrint);
             var progressToGoIndicator = new string('-', BlockCount - blocksToPrint);
 
-            string renderedBar = $"[{progressDoneIndicator}{progressToGoIndicator}] {percProgress,3}%";
+            string renderedBar = $"[{progressDoneIndicator}{progressToGoIndicator}] {percProgress.ToString("0.##")}%";
 
             if (renderSpinner)
             {
