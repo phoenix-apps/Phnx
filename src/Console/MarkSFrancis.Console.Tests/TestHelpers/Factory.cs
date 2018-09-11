@@ -4,7 +4,7 @@ namespace MarkSFrancis.Console.Tests.TestHelpers
 {
     public static class Factory
     {
-        public static TextIo TextIo(out StreamReader fromTextIo, out StreamWriter toTextIo)
+        public static TextIoHelper TextIo(out StreamReader fromTextIo, out StreamWriter toTextIo)
         {
             var textIoInput = new TailedStream(false);
             var textIoOutput = new TailedStream();
@@ -12,7 +12,7 @@ namespace MarkSFrancis.Console.Tests.TestHelpers
             fromTextIo = textIoOutput.Tail;
             toTextIo = textIoInput.Head;
 
-            return new TextIo(textIoInput.Tail, textIoOutput.Head, true);
+            return new TextIoHelper(textIoInput.Tail, textIoOutput.Head, true);
         }
     }
 }

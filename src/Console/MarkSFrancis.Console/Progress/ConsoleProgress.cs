@@ -9,7 +9,7 @@ namespace MarkSFrancis.Console.Progress
     /// </summary>
     public class ConsoleProgress : IDisposable
     {
-        private readonly ConsoleIo _console;
+        private readonly ConsoleHelper _console;
         private readonly ProgressBarRenderer _bar;
         private readonly Func<decimal, string> _writeProgressMessage;
         private readonly bool _writeMessageToLeftOfBar;
@@ -23,7 +23,7 @@ namespace MarkSFrancis.Console.Progress
         /// <param name="bar"></param>
         /// <param name="writeProgressMessage"></param>
         /// <param name="writeMessageToLeftOfBar"></param>
-        internal ConsoleProgress(ConsoleIo console, ProgressBarRenderer bar, Func<decimal, string> writeProgressMessage, bool writeMessageToLeftOfBar)
+        internal ConsoleProgress(ConsoleHelper console, ProgressBarRenderer bar, Func<decimal, string> writeProgressMessage, bool writeMessageToLeftOfBar)
         {
             _console = console;
             _bar = bar;

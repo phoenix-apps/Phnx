@@ -9,13 +9,13 @@ namespace MarkSFrancis.Console.Tests.TextIoTests
         [Test]
         public void CreatingTextIo_WhenInputIsNull_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new TextIo(null, new TailedStream().Head));
+            Assert.Throws<ArgumentNullException>(() => new TextIoHelper(null, new TailedStream().Head));
         }
 
         [Test]
         public void CreatingTextIo_WhenOutputIsNull_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new TextIo(new TailedStream().Tail, null));
+            Assert.Throws<ArgumentNullException>(() => new TextIoHelper(new TailedStream().Tail, null));
         }
     }
 }

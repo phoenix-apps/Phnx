@@ -2,18 +2,19 @@
 using System;
 using System.IO;
 using System.Security;
+using _Console = System.Console;
 
 namespace MarkSFrancis.Console
 {
     /// <summary>
     /// Creates a wrapper around <see cref="System.Console"/> to make reading and writing easier to use, such as getting numbers, printing collections and more
     /// </summary>
-    public class ConsoleIo : TextIo
+    public class ConsoleHelper : TextIoHelper
     {
         /// <summary>
         /// Create a new instance of ConsoleIo
         /// </summary>
-        public ConsoleIo() : base(System.Console.In, System.Console.Out)
+        public ConsoleHelper() : base(_Console.In, _Console.Out)
         {
         }
 
@@ -25,8 +26,8 @@ namespace MarkSFrancis.Console
         /// <exception cref="IOException">An I/O error occurred</exception>
         public ConsoleColor FontColor
         {
-            get => System.Console.ForegroundColor;
-            set => System.Console.ForegroundColor = value;
+            get => _Console.ForegroundColor;
+            set => _Console.ForegroundColor = value;
         }
 
         /// <summary>
@@ -37,8 +38,8 @@ namespace MarkSFrancis.Console
         /// <exception cref="IOException">An I/O error occurred</exception>
         public ConsoleColor BackgroundColor
         {
-            get => System.Console.BackgroundColor;
-            set => System.Console.BackgroundColor = value;
+            get => _Console.BackgroundColor;
+            set => _Console.BackgroundColor = value;
         }
 
         /// <summary>
@@ -50,8 +51,8 @@ namespace MarkSFrancis.Console
         /// <exception cref="IOException">An I/O error occurred</exception>
         public string WindowTitle
         {
-            get => System.Console.Title;
-            set => System.Console.Title = value;
+            get => _Console.Title;
+            set => _Console.Title = value;
         }
 
         /// <summary>
@@ -61,14 +62,14 @@ namespace MarkSFrancis.Console
         /// <exception cref="IOException">An I/O error occurred</exception>
         public void ResetColor()
         {
-            System.Console.ResetColor();
+            _Console.ResetColor();
         }
 
         /// <summary>
         /// Clear the console
         /// </summary>
         /// <exception cref="IOException">An I/O error occurred</exception>
-        public void Clear() => System.Console.Clear();
+        public void Clear() => _Console.Clear();
 
         /// <summary>
         /// Create and use a new progress bar
@@ -100,15 +101,11 @@ namespace MarkSFrancis.Console
 
             if (question != null)
             {
-                if (!question.EndsWith(" "))
-                {
-                    question += " ";
-                }
-
-                Clear();
+                question = question.Trim() + " ";
                 Write(question);
             }
 
+            int? errorLength = null;
             do
             {
                 var valueEntered = GetString();
@@ -119,19 +116,35 @@ namespace MarkSFrancis.Console
                 }
                 catch (Exception ex)
                 {
-                    Clear();
+                    if (errorLength.HasValue)
+                    {
+                        // Clear error and input
+                        _Console.SetCursorPosition(0, _Console.CursorTop - 2);
+                        _Console.WriteLine(new string(' ', errorLength.Value));
+                        _Console.WriteLine(new string(' ', question.Length + valueEntered.Length));
+                        _Console.SetCursorPosition(0, _Console.CursorTop - 2);
+                    }
+                    else
+                    {
+                        // Clear input
+                        _Console.SetCursorPosition(0, _Console.CursorTop - 1);
+                        _Console.WriteLine(new string(' ', question.Length + valueEntered.Length));
+                        _Console.SetCursorPosition(0, _Console.CursorTop - 1);
+                    }
 
-                    WriteLine(valueEntered);
+                    var color = FontColor;
+                    FontColor = ConsoleColor.Red;
+
+                    // TODO bug where error message is really long causes line not to be erased properly
+                    string err = "Error converting tghwiekls; jgaesdl;i gjhadsfil;gh jadsfo;ilj gasdfl;ij gadsl;ij go;asfdj gasdkl;j fisal;dfj gial;sfdj gasiod;jhe entered value: " + ex.Message;
+                    WriteLine(err);
+                    FontColor = color;
+                    errorLength = err.Length;
 
                     if (question != null)
                     {
                         Write(question);
                     }
-
-                    var color = FontColor;
-                    FontColor = ConsoleColor.Red;
-                    WriteLine("Error converting the entered value: " + ex.Message);
-                    FontColor = color;
                 }
             } while (true);
         }
@@ -199,7 +212,7 @@ namespace MarkSFrancis.Console
         /// <exception cref="InvalidOperationException">The <see cref="System.Console.In"/> property is redirected from some stream other than the console</exception>
         public ConsoleKeyInfo ReadKey(bool showPressedKeyInConsole = true)
         {
-            return System.Console.ReadKey(!showPressedKeyInConsole);
+            return _Console.ReadKey(!showPressedKeyInConsole);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace MarkSFrancis.Console
     /// <summary>
     /// Stream data input and output between a <see cref="TextReader"/> and <see cref="TextWriter"/> such as <see cref="System.Console.In"/>, a file, or a web stream
     /// </summary>
-    public class TextIo
+    public class TextIoHelper
     {
         /// <summary>
         /// The text reader to get input from
@@ -29,13 +29,13 @@ namespace MarkSFrancis.Console
         public bool AutoFlush { get; set; }
 
         /// <summary>
-        /// Creates a new instance of <see cref="TextIo"/>
+        /// Creates a new instance of <see cref="TextIoHelper"/>
         /// </summary>
         /// <param name="input">Where to get input from</param>
         /// <param name="output">Where to send output to</param>
         /// <param name="autoFlush">Whether to automatically flush the output stream when writing to it</param>
         /// <exception cref="ArgumentNullException"><paramref name="input"/> or <paramref name="output"/> is <see langword="null"/></exception>
-        public TextIo(TextReader input, TextWriter output, bool autoFlush = false)
+        public TextIoHelper(TextReader input, TextWriter output, bool autoFlush = false)
         {
             Input = input ?? throw ErrorFactory.Default.ArgumentNull(nameof(input));
             Output = output ?? throw ErrorFactory.Default.ArgumentNull(nameof(output));
