@@ -1,6 +1,5 @@
 ﻿using MarkSFrancis.Console.Progress;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Security;
 
@@ -49,7 +48,7 @@ namespace MarkSFrancis.Console
         /// <exception cref="ArgumentOutOfRangeException">In a set operation, the specified title is longer than 24500 characters</exception>
         /// <exception cref="ArgumentNullException">In a set operation, the specified title is <see langword="null" /></exception>
         /// <exception cref="IOException">An I/O error occurred</exception>
-        public string Title
+        public string WindowTitle
         {
             get => System.Console.Title;
             set => System.Console.Title = value;
@@ -91,6 +90,7 @@ namespace MarkSFrancis.Console
         /// <param name="converter">The method to use when converting from the text to the desired type</param>
         /// <param name="question">The question to write. If this is <see langword="null"/>, the console is not cleared</param>
         /// <returns>The <typeparamref name="T"/> entered by the user</returns>
+        /// <exception cref="IOException">An I/O exception occurs</exception>
         public override T Get<T>(Func<string, T> converter, string question = null)
         {
             if (converter == null)
@@ -98,37 +98,42 @@ namespace MarkSFrancis.Console
                 throw ErrorFactory.Default.ArgumentNull(nameof(converter));
             }
 
-            T returnValue = default(T);
-
+            if (question != null)
             {
-                bool conversionWorked;
-                do
+                if (!question.EndsWith(" "))
                 {
+                    question += " ";
+                }
+
+                Clear();
+                Write(question);
+            }
+
+            do
+            {
+                var valueEntered = GetString();
+
+                try
+                {
+                    return converter(valueEntered);
+                }
+                catch (Exception ex)
+                {
+                    Clear();
+
+                    WriteLine(valueEntered);
+
                     if (question != null)
                     {
-                        Clear();
-
                         Write(question);
                     }
 
-                    var valueEntered = GetString();
-
-                    try
-                    {
-                        returnValue = converter(valueEntered);
-
-                        conversionWorked = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex);
-
-                        conversionWorked = false;
-                    }
-                } while (!conversionWorked);
-            }
-
-            return returnValue;
+                    var color = FontColor;
+                    FontColor = ConsoleColor.Red;
+                    WriteLine("Error converting the entered value: " + ex.Message);
+                    FontColor = color;
+                }
+            } while (true);
         }
 
         /// <summary>
