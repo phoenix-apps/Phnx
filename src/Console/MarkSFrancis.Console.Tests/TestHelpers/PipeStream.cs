@@ -4,12 +4,12 @@ using System.IO;
 
 namespace MarkSFrancis.Console.Tests.TestHelpers
 {
-    public class TailedStream : Stream
+    public class PipeStream : Stream
     {
         private Queue<byte> data;
         private Queue<byte> flushBuffer;
         private readonly bool requireFlush;
-
+        
         public override bool CanRead => true;
 
         public override bool CanSeek => false;
@@ -30,7 +30,7 @@ namespace MarkSFrancis.Console.Tests.TestHelpers
         public override long Position
         {
             get => Length;
-            set => throw new NotSupportedException($"Cannot seek in a {nameof(TailedStream)}");
+            set => throw new NotSupportedException($"Cannot seek in a {nameof(PipeStream)}");
         }
 
         public StreamWriter Head { get; }
@@ -38,7 +38,7 @@ namespace MarkSFrancis.Console.Tests.TestHelpers
         public StreamReader Tail { get; }
 
         /// <param name="requireFlush">Set to <see langword="true"/> when you want to use a buffer. This helps for testing <see cref="Stream.Flush"/> being called after write operations</param>
-        public TailedStream(bool requireFlush = true)
+        public PipeStream(bool requireFlush = true)
         {
             data = new Queue<byte>();
             flushBuffer = new Queue<byte>();
@@ -82,7 +82,7 @@ namespace MarkSFrancis.Console.Tests.TestHelpers
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new NotSupportedException($"Cannot seek in a {nameof(TailedStream)}");
+            throw new NotSupportedException($"Cannot seek in a {nameof(PipeStream)}");
         }
 
         public override void SetLength(long value)

@@ -6,8 +6,8 @@ namespace MarkSFrancis.Console.Tests.TestHelpers
     {
         public static TextIoHelper TextIo(out StreamReader fromTextIo, out StreamWriter toTextIo)
         {
-            var textIoInput = new TailedStream(false);
-            var textIoOutput = new TailedStream();
+            var textIoInput = new PipeStream(false);
+            var textIoOutput = new PipeStream();
 
             fromTextIo = textIoOutput.Tail;
             toTextIo = textIoInput.Head;
