@@ -6,9 +6,9 @@
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Test...");
+            Console.WriteInfo($"Welcome to the playground application for the MarkSFrancis.Console library");
 
-            var result = Console.GetInt("Why are you like this?");
+            var result = Console.GetInt("Please enter an integer:");
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey(false);

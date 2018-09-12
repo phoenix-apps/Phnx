@@ -7,7 +7,7 @@ using _Console = System.Console;
 namespace MarkSFrancis.Console
 {
     /// <summary>
-    /// Creates a wrapper around <see cref="System.Console"/> to make reading and writing easier to use, such as getting numbers, printing collections and more
+    /// Provides helper methods for <see cref="System.Console"/> to make reading and writing easier to use, such as getting numbers, printing collections and more
     /// </summary>
     public class ConsoleHelper : TextIoHelper
     {
@@ -86,12 +86,83 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
+        /// Writes an informational message in cyan
+        /// </summary>
+        /// <param name="info">The information to write</param>
+        public void WriteInfo(string info)
+        {
+            WriteLineInColor(info, ConsoleColor.Cyan);
+        }
+
+        /// <summary>
+        /// Writes a warning message in yellow
+        /// </summary>
+        /// <param name="warning">The warning to write</param>
+        public void WriteWarning(string warning)
+        {
+            WriteLineInColor(warning, ConsoleColor.Yellow);
+        }
+
+        /// <summary>
+        /// Writes an error in red
+        /// </summary>
+        /// <param name="error">The error to write</param>
+        public void WriteError(string error)
+        {
+            WriteLineInColor(error, ConsoleColor.Red);
+        }
+
+        /// <summary>
+        /// Writes an error in red
+        /// </summary>
+        /// <param name="error">The error to write</param>
+        public void WriteError(Exception error)
+        {
+            WriteError(error.ToString());
+        }
+
+        /// <summary>
+        /// Writes a line of text in a specified font and/or background color
+        /// </summary>
+        /// <param name="text">The text to write</param>
+        /// <param name="fontColor">The font color to use</param>
+        /// <param name="backgroundColor">The background color to use</param>
+        public void WriteLineInColor(string text, ConsoleColor? fontColor = null, ConsoleColor? backgroundColor = null)
+        {
+            ConsoleColor? startFontColor = null, startBackgroundColor = null;
+
+            if (fontColor != null)
+            {
+                startFontColor = FontColor;
+                FontColor = fontColor.Value;
+            }
+
+            if (backgroundColor != null)
+            {
+                startBackgroundColor = BackgroundColor;
+                BackgroundColor = backgroundColor.Value;
+            }
+
+            WriteLine(text);
+
+            if (fontColor != null)
+            {
+                FontColor = startFontColor.Value;
+            }
+
+            if (backgroundColor != null)
+            {
+                BackgroundColor = startBackgroundColor.Value;
+            }
+        }
+
+        /// <summary>
         /// Writes the <paramref name="question"/> to the console, and then read a line from the console, and convert it using the <paramref name="converter"/>. If the received input is invalid, <see cref="Clear"/> is called, and the process repeats
         /// </summary>
         /// <param name="converter">The method to use when converting from the text to the desired type</param>
         /// <param name="question">The question to write. If this is <see langword="null"/>, the console is not cleared</param>
         /// <returns>The <typeparamref name="T"/> entered by the user</returns>
-        /// <exception cref="IOException">An I/O exception occurs</exception>
+        /// <exception cref="IOException">An I/O exception occured</exception>
         public override T Get<T>(Func<string, T> converter, string question = null)
         {
             if (converter == null)
@@ -105,7 +176,8 @@ namespace MarkSFrancis.Console
                 Write(question);
             }
 
-            int? errorLength = null;
+            string errorWritten = null;
+
             do
             {
                 var valueEntered = GetString();
@@ -116,30 +188,14 @@ namespace MarkSFrancis.Console
                 }
                 catch (Exception ex)
                 {
-                    if (errorLength.HasValue)
+                    UndoWriteLine(question + valueEntered);
+                    if (errorWritten != null)
                     {
-                        // Clear error and input
-                        _Console.SetCursorPosition(0, _Console.CursorTop - 2);
-                        _Console.WriteLine(new string(' ', errorLength.Value));
-                        _Console.WriteLine(new string(' ', question.Length + valueEntered.Length));
-                        _Console.SetCursorPosition(0, _Console.CursorTop - 2);
-                    }
-                    else
-                    {
-                        // Clear input
-                        _Console.SetCursorPosition(0, _Console.CursorTop - 1);
-                        _Console.WriteLine(new string(' ', question.Length + valueEntered.Length));
-                        _Console.SetCursorPosition(0, _Console.CursorTop - 1);
+                        UndoWriteLine(errorWritten);
                     }
 
-                    var color = FontColor;
-                    FontColor = ConsoleColor.Red;
-
-                    // TODO bug where error message is really long causes line not to be erased properly
-                    string err = "Error converting tghwiekls; jgaesdl;i gjhadsfil;gh jadsfo;ilj gasdfl;ij gadsl;ij go;asfdj gasdkl;j fisal;dfj gial;sfdj gasiod;jhe entered value: " + ex.Message;
-                    WriteLine(err);
-                    FontColor = color;
-                    errorLength = err.Length;
+                    WriteError(ex.Message);
+                    errorWritten = ex.Message;
 
                     if (question != null)
                     {
@@ -155,7 +211,7 @@ namespace MarkSFrancis.Console
         /// <param name="question">The yes or no question to ask the user. " (y/n): " is appended to the question automatically</param>
         /// <returns><see langword="true"/> if the user pressed <see cref="ConsoleKey.Y"/> or <see langword="false"/> if the user pressed <see cref="ConsoleKey.N"/></returns>
         /// <exception cref="InvalidOperationException">The <see cref="System.Console.In"/> property is redirected from some stream other than the console</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public bool YesNo(string question)
         {
             Write(question.Trim() + " (y/n): ");
@@ -179,7 +235,7 @@ namespace MarkSFrancis.Console
         /// <param name="question">The yes or no question to ask the user. " (y/n/escape): " is appended to the question automatically</param>
         /// <returns><see langword="true"/> if the user pressed <see cref="ConsoleKey.Y"/>, <see langword="false"/> if the user pressed <see cref="ConsoleKey.N"/>, and <see langword="null"/> if the user pressed <see cref="ConsoleKey.Escape"/></returns>
         /// <exception cref="InvalidOperationException">The <see cref="System.Console.In"/> property is redirected from some stream other than the console</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public bool? YesNoCancel(string question)
         {
             Write(question.Trim() + " (y/n/escape): ");
@@ -213,6 +269,84 @@ namespace MarkSFrancis.Console
         public ConsoleKeyInfo ReadKey(bool showPressedKeyInConsole = true)
         {
             return _Console.ReadKey(!showPressedKeyInConsole);
+        }
+
+        /// <summary>
+        /// Clears previous lines from the console. This is faster than <see cref="UndoWriteLine(int)"/>, but requires you to know what text was written
+        /// </summary>
+        /// <param name="linesWritten">The lines that were written to the console to be cleared</param>
+        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
+        /// <exception cref="IOException">An I/O error occurred</exception>
+        public void UndoWriteLine(params string[] linesWritten)
+        {
+            for (int lineIndex = linesWritten.Length - 1; lineIndex >= 0; --lineIndex)
+            {
+                _Console.SetCursorPosition(0, _Console.CursorTop - 1);
+                ClearCurrentLine(linesWritten[lineIndex]);
+            }
+        }
+
+        /// <summary>
+        /// Clears previous lines from the console
+        /// </summary>
+        /// <param name="linesToClear">The number of lines to clear</param>
+        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
+        /// <exception cref="IOException">An I/O error occurred</exception>
+        public void UndoWriteLine(int linesToClear)
+        {
+            for (int linesCleared = 0; linesCleared < linesToClear; ++linesCleared)
+            {
+                _Console.SetCursorPosition(0, _Console.CursorTop - 1);
+                ClearCurrentLine();
+            }
+        }
+
+        /// <summary>
+        /// Clears the current line from the console. This is faster than <see cref="ClearCurrentLine()"/>, but requires you to know what text was written
+        /// </summary>
+        /// <param name="textWritten">The text that was written to the console</param>
+        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
+        /// <exception cref="IOException">An I/O error occurred</exception>
+        public void ClearCurrentLine(string textWritten)
+        {
+            var width = _Console.BufferWidth;
+
+            int charactersToErase = textWritten.Length;
+
+            int numberOfLinesToErase = (int)Math.Truncate((decimal)charactersToErase / width) + 1;
+
+            _Console.SetCursorPosition(0, _Console.CursorTop - (numberOfLinesToErase - 1));
+            for (int linesErased = 0; linesErased < numberOfLinesToErase - 1; ++linesErased)
+            {
+                Write(new string(' ', width));
+            }
+
+            if (charactersToErase % width == 0)
+            {
+                Write(new string(' ', width));
+                _Console.SetCursorPosition(0, _Console.CursorTop - numberOfLinesToErase);
+            }
+            else
+            {
+                Write(new string(' ', charactersToErase % width));
+                _Console.SetCursorPosition(0, _Console.CursorTop - (numberOfLinesToErase - 1));
+            }
+        }
+
+        /// <summary>
+        /// Clears the current line from the console
+        /// </summary>
+        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
+        /// <exception cref="IOException">An I/O error occurred</exception>
+        public void ClearCurrentLine()
+        {
+            var width = _Console.BufferWidth;
+
+            _Console.SetCursorPosition(0, _Console.CursorTop);
+
+            _Console.Write(new string(' ', width));
+
+            _Console.SetCursorPosition(0, _Console.CursorTop - 1);
         }
     }
 }
