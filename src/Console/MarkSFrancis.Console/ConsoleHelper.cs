@@ -89,6 +89,8 @@ namespace MarkSFrancis.Console
         /// Writes an informational message in cyan
         /// </summary>
         /// <param name="info">The information to write</param>
+        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
+        /// <exception cref="IOException">An I/O error occurred</exception>
         public void WriteInfo(string info)
         {
             WriteLineInColor(info, ConsoleColor.Cyan);
@@ -98,6 +100,8 @@ namespace MarkSFrancis.Console
         /// Writes a warning message in yellow
         /// </summary>
         /// <param name="warning">The warning to write</param>
+        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
+        /// <exception cref="IOException">An I/O error occurred</exception>
         public void WriteWarning(string warning)
         {
             WriteLineInColor(warning, ConsoleColor.Yellow);
@@ -107,6 +111,8 @@ namespace MarkSFrancis.Console
         /// Writes an error in red
         /// </summary>
         /// <param name="error">The error to write</param>
+        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
+        /// <exception cref="IOException">An I/O error occurred</exception>
         public void WriteError(string error)
         {
             WriteLineInColor(error, ConsoleColor.Red);
@@ -116,6 +122,8 @@ namespace MarkSFrancis.Console
         /// Writes an error in red
         /// </summary>
         /// <param name="error">The error to write</param>
+        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
+        /// <exception cref="IOException">An I/O error occurred</exception>
         public void WriteError(Exception error)
         {
             WriteError(error.ToString());
@@ -127,6 +135,8 @@ namespace MarkSFrancis.Console
         /// <param name="text">The text to write</param>
         /// <param name="fontColor">The font color to use</param>
         /// <param name="backgroundColor">The background color to use</param>
+        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
+        /// <exception cref="IOException">An I/O error occurred</exception>
         public void WriteLineInColor(string text, ConsoleColor? fontColor = null, ConsoleColor? backgroundColor = null)
         {
             ConsoleColor? startFontColor = null, startBackgroundColor = null;
@@ -163,6 +173,8 @@ namespace MarkSFrancis.Console
         /// <param name="question">The question to write. If this is <see langword="null"/>, the console is not cleared</param>
         /// <returns>The <typeparamref name="T"/> entered by the user</returns>
         /// <exception cref="IOException">An I/O exception occured</exception>
+        /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="TextIoHelper.Input"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
         public override T Get<T>(Func<string, T> converter, string question = null)
         {
             if (converter == null)

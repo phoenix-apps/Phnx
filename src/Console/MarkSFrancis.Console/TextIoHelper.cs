@@ -58,7 +58,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="s">The text to write</param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public void WriteLine(string s = "")
         {
             Output.WriteLine(s);
@@ -70,7 +70,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="o">The object to write</param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public void WriteLine(object o)
         {
             Output.WriteLine(o);
@@ -82,7 +82,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="s">The text to write</param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public void Write(string s)
         {
             Output.Write(s);
@@ -94,7 +94,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="o">The object to write</param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public void Write(object o)
         {
             Output.Write(o);
@@ -106,7 +106,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="collection">The collection of text to write</param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public void WriteCollection(params string[] collection)
         {
             WriteCollection((IEnumerable<string>)collection);
@@ -117,7 +117,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="collection">The collection of objects to write</param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public void WriteCollection(params object[] collection)
         {
             WriteCollection((IEnumerable<object>)collection);
@@ -128,7 +128,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="collection">The collection of text to write</param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public void WriteCollection(IEnumerable<string> collection)
         {
             WriteCollection(collection, Environment.NewLine);
@@ -140,7 +140,7 @@ namespace MarkSFrancis.Console
         /// <param name="collection">The collection of text to write</param>
         /// <param name="delimiter">The delimiter to write between each value in the collection</param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public void WriteCollection(IEnumerable<string> collection, string delimiter)
         {
             Output.Write(string.Join(delimiter, collection));
@@ -152,7 +152,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="collection">The collection of objects to write</param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public void WriteCollection<T>(IEnumerable<T> collection)
         {
             WriteCollection(collection.Select(o => o.ToString()));
@@ -164,7 +164,7 @@ namespace MarkSFrancis.Console
         /// <param name="collection">The collection of objects to write</param>
         /// <param name="delimiter">The delimiter to write between each value in the collection</param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public void WriteCollection<T>(IEnumerable<T> collection, string delimiter)
         {
             Output.Write(string.Join(delimiter, collection));
@@ -178,7 +178,7 @@ namespace MarkSFrancis.Console
         /// <param name="delimiter">The delimiter to write between each value in the collection</param>
         /// <param name="toString">The function to use when converting each <typeparamref name="T"/> to a <see cref="string"/></param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         public void WriteCollection<T>(IEnumerable<T> collection, string delimiter, Func<T, string> toString)
         {
             WriteCollection(collection.Select(toString), delimiter);
@@ -188,7 +188,7 @@ namespace MarkSFrancis.Console
         /// Get a line of text from the <see cref="Input"/>
         /// </summary>
         /// <returns>The next line from the input stream, or <see langword="null"/> if the end of the input stream is reached</returns>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
         /// <exception cref="ObjectDisposedException"><see cref="Input"/> is closed</exception>
         /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
@@ -202,7 +202,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="question">The question to write</param>
         /// <returns>The next line from the input stream, or <see langword="null"/> if the end of the input stream is reached</returns>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
@@ -217,7 +217,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="question">The question to write</param>
         /// <returns>The <see cref="int"/> entered by the user</returns>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
@@ -235,7 +235,7 @@ namespace MarkSFrancis.Console
         /// <param name="question">The question to write</param>
         /// <returns>The index of the selected option</returns>
         /// <exception cref="ArgumentNullException"><paramref name="options"/> is <see langword="null"/></exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
@@ -290,7 +290,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="question">The question to write</param>
         /// <returns>The <see cref="long"/> entered by the user</returns>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
@@ -306,7 +306,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="question">The question to write</param>
         /// <returns>The <see cref="decimal"/> entered by the user</returns>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
@@ -322,7 +322,7 @@ namespace MarkSFrancis.Console
         /// </summary>
         /// <param name="question">The question to write</param>
         /// <returns>The <see cref="DateTime"/> entered by the user</returns>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
@@ -340,7 +340,7 @@ namespace MarkSFrancis.Console
         /// <param name="question">The question to write</param>
         /// <returns>The <typeparamref name="T"/> converted from the line from <see cref="Input"/></returns>
         /// <exception cref="ArgumentNullException"><paramref name="converter"/> is <see langword="null"/></exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
         /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
