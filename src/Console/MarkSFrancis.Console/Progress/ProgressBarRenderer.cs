@@ -26,6 +26,7 @@ namespace MarkSFrancis.Console.Progress
         /// Create a new <see cref="ProgressBarRenderer"/>
         /// </summary>
         /// <param name="maxValue">The maximum value, representing the progress bar at its completed state</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="maxValue"/> is less than zero</exception>
         public ProgressBarRenderer(decimal maxValue)
         {
             if (maxValue < 0)
@@ -44,11 +45,18 @@ namespace MarkSFrancis.Console.Progress
         /// <summary>
         /// Get or set the current progress
         /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">The value was set to a value less than zero</exception>
+        /// <exception cref="IndexOutOfRangeException">The value was set to a value greater than <see cref="MaxValue"/></exception>
         public decimal Progress
         {
             get => _progress;
             set
             {
+                if (value < 0)
+                {
+                    throw ErrorFactory.Default.ArgumentLessThanZero(nameof(value));
+                }
+
                 if (value > MaxValue)
                 {
                     throw ErrorFactory.Default.IndexOutOfRange(nameof(value));
