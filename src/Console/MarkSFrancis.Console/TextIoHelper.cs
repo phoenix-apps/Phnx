@@ -54,12 +54,12 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
-        /// Write a number of blank lines to the <see cref="Output"/>
+        /// Write a number of new lines to the <see cref="Output"/>
         /// </summary>
-        /// <param name="lines">The number of blank lines to write</param>
+        /// <param name="lines">The number of new lines to write</param>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
         /// <exception cref="IOException">An I/O error occured</exception>
-        public void BlankLine(int lines = 1)
+        public void NewLine(int lines = 1)
         {
             for (int index = 0; index < lines; ++index)
             {

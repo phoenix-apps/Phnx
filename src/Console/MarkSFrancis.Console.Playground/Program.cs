@@ -32,7 +32,7 @@ namespace MarkSFrancis.Console.Playground
             }
 
             Console.WriteLine($"{result}² = {Math.Pow(result, 2)}");
-            Console.BlankLine();
+            Console.NewLine();
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey(false);
