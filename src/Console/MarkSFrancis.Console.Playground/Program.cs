@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace MarkSFrancis.Console.Playground
 {
@@ -20,6 +21,16 @@ namespace MarkSFrancis.Console.Playground
             }
 
             var result = Console.GetInt("Please enter an integer to square:");
+
+            using (var progress = Console.ProgressBar(100, d => "Powering up math cells...", true))
+            {
+                for (int timer = 1; timer < 100; ++timer)
+                {
+                    progress.Progress = timer;
+                    Thread.Sleep(25);
+                }
+            }
+
             Console.WriteLine($"{result}² = {Math.Pow(result, 2)}");
             Console.BlankLine();
 

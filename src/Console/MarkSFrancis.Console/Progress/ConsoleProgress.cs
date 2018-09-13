@@ -77,17 +77,19 @@ namespace MarkSFrancis.Console.Progress
             string newWrite;
 
             _console.FontColor = ConsoleColor.Yellow;
+            int rendersSinceLastUpdate = 0;
 
             while (!_safeExit && !IsComplete)
             {
                 lock (_bar)
                 {
-                    newWrite = _bar.ToString();
+                    newWrite = _bar.ToStringWithSpinner(rendersSinceLastUpdate % 20 == 0);
                 }
 
                 lastWrite = OverwriteLastWrite(lastWrite, newWrite);
 
-                Thread.Sleep(250);
+                Thread.Sleep(25);
+                ++rendersSinceLastUpdate;
             }
 
             if (_safeExit)
@@ -98,7 +100,7 @@ namespace MarkSFrancis.Console.Progress
             // Write finished line
             lock (_bar)
             {
-                newWrite = _bar.ToString(false);
+                newWrite = _bar.ToString();
             }
 
             _console.FontColor = ConsoleColor.Green;
@@ -123,12 +125,14 @@ namespace MarkSFrancis.Console.Progress
             if (_writeProgressMessage != null && _writeMessageToLeftOfBar)
             {
                 outputBuilder.Append(_writeProgressMessage(Progress));
+                outputBuilder.Append(' ');
             }
 
             outputBuilder.Append(newWrite);
 
             if (_writeProgressMessage != null && !_writeMessageToLeftOfBar)
             {
+                outputBuilder.Append(' ');
                 outputBuilder.Append(_writeProgressMessage(Progress));
             }
 
@@ -179,6 +183,8 @@ namespace MarkSFrancis.Console.Progress
         /// </summary>
         public void Dispose()
         {
+            WriteCompleted();
+
             lock (_bar)
             {
                 _safeExit = true;

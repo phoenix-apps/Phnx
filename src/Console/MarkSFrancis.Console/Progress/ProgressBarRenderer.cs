@@ -85,17 +85,22 @@ namespace MarkSFrancis.Console.Progress
         /// <returns>This <see cref="ProgressBarRenderer"/> formatted as a progress bar</returns>
         public override string ToString()
         {
-            return ToString(true);
+            return ToString(false, false);
         }
 
         /// <summary>
         /// Return this <see cref="ProgressBarRenderer"/> formatted as a progress bar
         /// </summary>
-        /// <param name="renderSpinner">Whether to render the spinner</param>
+        /// <param name="moveSpinnerToNextPosition">Whether to rotate the spinner by 1 position</param>
         /// <returns>This <see cref="ProgressBarRenderer"/> formatted as a progress bar</returns>
-        public string ToString(bool renderSpinner = true)
+        public string ToStringWithSpinner(bool moveSpinnerToNextPosition)
         {
-            if (renderSpinner)
+            return ToString(true, moveSpinnerToNextPosition);
+        }
+
+        private string ToString(bool showSpinner, bool moveSpinnerToNextPosition)
+        {
+            if (moveSpinnerToNextPosition)
             {
                 UpdateAnimationChar();
             }
@@ -108,7 +113,7 @@ namespace MarkSFrancis.Console.Progress
 
             string renderedBar = $"[{progressDoneIndicator}{progressToGoIndicator}] {percProgress.ToString("0.##")}%";
 
-            if (renderSpinner)
+            if (showSpinner)
             {
                 var frame = Frames[_currentAnimationFrame];
                 renderedBar += $" {frame}";
