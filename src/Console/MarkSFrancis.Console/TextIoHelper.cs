@@ -54,6 +54,22 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
+        /// Write a number of blank lines to the <see cref="Output"/>
+        /// </summary>
+        /// <param name="lines">The number of blank lines to write</param>
+        /// <exception cref="ObjectDisposedException"><see cref="Output"/> is closed</exception>
+        /// <exception cref="IOException">An I/O error occured</exception>
+        public void BlankLine(int lines = 1)
+        {
+            for (int index = 0; index < lines; ++index)
+            {
+                Output.WriteLine();
+            }
+
+            DoAutoFlush();
+        }
+
+        /// <summary>
         /// Write a line of text to the <see cref="Output"/>, followed by a newline
         /// </summary>
         /// <param name="s">The text to write</param>

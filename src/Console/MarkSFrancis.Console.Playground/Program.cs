@@ -21,7 +21,7 @@ namespace MarkSFrancis.Console.Playground
 
             var result = Console.GetInt("Please enter an integer to square:");
             Console.WriteLine($"{result}² = {Math.Pow(result, 2)}");
-            Console.WriteLine();
+            Console.BlankLine();
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey(false);
