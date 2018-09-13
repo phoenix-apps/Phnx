@@ -192,18 +192,36 @@ namespace MarkSFrancis.Console
 
             do
             {
+                var startColor = FontColor;
+                FontColor = ConsoleColor.Cyan;
                 var valueEntered = GetString();
+                FontColor = startColor;
 
                 try
                 {
-                    return converter(valueEntered);
+                    var converted = converter(valueEntered);
+
+                    if (errorWritten != null)
+                    {
+                        UndoWriteLine(errorWritten, question + valueEntered);
+                        Write(question);
+
+                        FontColor = ConsoleColor.Cyan;
+                        WriteLine(valueEntered);
+                        FontColor = startColor;
+                    }
+
+                    return converted;
                 }
                 catch (Exception ex)
                 {
-                    UndoWriteLine(question + valueEntered);
                     if (errorWritten != null)
                     {
-                        UndoWriteLine(errorWritten);
+                        UndoWriteLine(errorWritten, question + valueEntered);
+                    }
+                    else
+                    {
+                        UndoWriteLine(question + valueEntered);
                     }
 
                     WriteError(ex.Message);
@@ -284,6 +302,13 @@ namespace MarkSFrancis.Console
         }
 
         /// <summary>
+        /// Clears the previous line from the console
+        /// </summary>
+        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
+        /// <exception cref="IOException">An I/O error occurred</exception>
+        public void UndoWriteLine() => UndoWriteLine(1);
+
+        /// <summary>
         /// Clears previous lines from the console. This is faster than <see cref="UndoWriteLine(int)"/>, but requires you to know what text was written
         /// </summary>
         /// <param name="linesWritten">The lines that were written to the console to be cleared</param>
@@ -291,11 +316,29 @@ namespace MarkSFrancis.Console
         /// <exception cref="IOException">An I/O error occurred</exception>
         public void UndoWriteLine(params string[] linesWritten)
         {
-            for (int lineIndex = linesWritten.Length - 1; lineIndex >= 0; --lineIndex)
+            var width = _Console.BufferWidth;
+
+            int totalLinesToErase = 0;
+            int totalLinesInLastLineWritten = 0;
+
+            for (int index = 0; index < linesWritten.Length; ++index)
             {
-                _Console.SetCursorPosition(0, _Console.CursorTop - 1);
-                ClearCurrentLine(linesWritten[lineIndex]);
+                var charactersToErase = linesWritten[index].Length;
+
+                int linesWrittenByThisWriteLine = (int)Math.Truncate((decimal)charactersToErase / width) + 1;
+
+                totalLinesToErase += linesWrittenByThisWriteLine;
+                totalLinesInLastLineWritten = linesWrittenByThisWriteLine;
             }
+
+            _Console.SetCursorPosition(0, _Console.CursorTop - totalLinesToErase);
+
+            for (int index = 0; index < linesWritten.Length; ++index)
+            {
+                _Console.WriteLine(new string(' ', linesWritten[index].Length));
+            }
+
+            _Console.SetCursorPosition(0, _Console.CursorTop - totalLinesToErase);
         }
 
         /// <summary>
@@ -306,11 +349,16 @@ namespace MarkSFrancis.Console
         /// <exception cref="IOException">An I/O error occurred</exception>
         public void UndoWriteLine(int linesToClear)
         {
+            int width = _Console.BufferWidth;
+
+            _Console.SetCursorPosition(0, _Console.CursorTop - linesToClear);
+
             for (int linesCleared = 0; linesCleared < linesToClear; ++linesCleared)
             {
-                _Console.SetCursorPosition(0, _Console.CursorTop - 1);
-                ClearCurrentLine();
+                _Console.Write(new string(' ', width));
             }
+
+            _Console.SetCursorPosition(0, _Console.CursorTop - linesToClear);
         }
 
         /// <summary>
@@ -333,16 +381,8 @@ namespace MarkSFrancis.Console
                 Write(new string(' ', width));
             }
 
-            if (charactersToErase % width == 0)
-            {
-                Write(new string(' ', width));
-                _Console.SetCursorPosition(0, _Console.CursorTop - numberOfLinesToErase);
-            }
-            else
-            {
-                Write(new string(' ', charactersToErase % width));
-                _Console.SetCursorPosition(0, _Console.CursorTop - (numberOfLinesToErase - 1));
-            }
+            Write(new string(' ', charactersToErase % width));
+            _Console.SetCursorPosition(0, _Console.CursorTop - (numberOfLinesToErase - 1));
         }
 
         /// <summary>

@@ -6,7 +6,16 @@
 
         static void Main(string[] args)
         {
-            Console.WriteInfo($"Welcome to the playground application for the MarkSFrancis.Console library");
+            Console.WriteInfo("Welcome to the playground application for the MarkSFrancis.Console library");
+
+            if (Console.YesNo("Clear the intro message?"))
+            {
+                Console.UndoWriteLine(2);
+            }
+            else
+            {
+                Console.UndoWriteLine();
+            }
 
             var result = Console.GetInt("Please enter an integer:");
 
