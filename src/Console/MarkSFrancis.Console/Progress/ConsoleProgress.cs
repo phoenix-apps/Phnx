@@ -20,9 +20,9 @@ namespace MarkSFrancis.Console.Progress
         /// Create a new <see cref="ConsoleProgress"/>
         /// </summary>
         /// <param name="console">The console to output to</param>
-        /// <param name="bar"></param>
-        /// <param name="writeProgressMessage"></param>
-        /// <param name="writeMessageToLeftOfBar"></param>
+        /// <param name="bar">The bar to use when rendering information</param>
+        /// <param name="writeProgressMessage">The message to write with the progress indications</param>
+        /// <param name="writeMessageToLeftOfBar">Whether to write that message to the left or the right of the progress bar</param>
         internal ConsoleProgress(ConsoleHelper console, ProgressBarRenderer bar, Func<decimal, string> writeProgressMessage, bool writeMessageToLeftOfBar)
         {
             _console = console;
@@ -32,6 +32,21 @@ namespace MarkSFrancis.Console.Progress
             _safeExit = false;
             _thread = new Thread(WriterThread);
             _thread.Start();
+        }
+
+        /// <summary>
+        /// Create and use a new progress bar
+        /// </summary>
+        /// <param name="maxValue">The highest value that the progress bar can represent</param>
+        /// <param name="writeProgressMessage">The text to write with the progress bar. This method must be thread-safe</param>
+        /// <param name="writeMessageToLeftOfBar">Whether to write the extra text to the left or right of the progress bar</param>
+        /// <returns>A console progress bar which can have its value changed as progress continues</returns>
+        public ConsoleProgress(int maxValue, Func<decimal, string> writeProgressMessage, bool writeMessageToLeftOfBar) : this(
+            new ConsoleHelper(),
+            new ProgressBarRenderer(maxValue),
+            writeProgressMessage,
+            writeMessageToLeftOfBar)
+        {
         }
 
         /// <summary>
@@ -66,6 +81,27 @@ namespace MarkSFrancis.Console.Progress
             }
         }
 
+        /// <summary>
+        /// Whether an error has occured
+        /// </summary>
+        public bool IsFaulted
+        {
+            get
+            {
+                lock (_bar)
+                {
+                    return _bar.IsFaulted;
+                }
+            }
+            set
+            {
+                lock (_bar)
+                {
+                    _bar.IsFaulted = value;
+                }
+            }
+        }
+
         private void WriterThread()
         {
             if (System.Console.IsOutputRedirected)
@@ -79,7 +115,7 @@ namespace MarkSFrancis.Console.Progress
             _console.FontColor = ConsoleColor.Yellow;
             int rendersSinceLastUpdate = 0;
 
-            while (!_safeExit && !IsComplete)
+            while (!_safeExit && !IsComplete && !IsFaulted)
             {
                 lock (_bar)
                 {
@@ -92,18 +128,20 @@ namespace MarkSFrancis.Console.Progress
                 ++rendersSinceLastUpdate;
             }
 
-            if (_safeExit)
-            {
-                return;
-            }
-
             // Write finished line
             lock (_bar)
             {
                 newWrite = _bar.ToString();
             }
 
-            _console.FontColor = ConsoleColor.Green;
+            if (IsComplete)
+            {
+                _console.FontColor = ConsoleColor.Green;
+            }
+            else if (IsFaulted)
+            {
+                _console.FontColor = ConsoleColor.Red;
+            }
 
             StringBuilder output = new StringBuilder();
             output.Append('\b', lastWrite.Length);
@@ -179,11 +217,30 @@ namespace MarkSFrancis.Console.Progress
         }
 
         /// <summary>
+        /// Sets the progress to faulted, and ensures that the error state is written to the console
+        /// </summary>
+        public void WriteError()
+        {
+            lock (_bar)
+            {
+                _bar.IsFaulted = true;
+            }
+
+            while (_thread.IsAlive)
+            {
+                Thread.Sleep(50);
+            }
+        }
+
+        /// <summary>
         /// Exits the progress bar writer, without ensuring that the "complete" progress bar is written
         /// </summary>
         public void Dispose()
         {
-            WriteCompleted();
+            if (!IsComplete)
+            {
+                WriteError();
+            }
 
             lock (_bar)
             {

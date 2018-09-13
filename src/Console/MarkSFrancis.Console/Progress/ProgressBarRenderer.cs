@@ -71,6 +71,11 @@ namespace MarkSFrancis.Console.Progress
         /// </summary>
         public bool IsComplete => Progress == MaxValue;
 
+        /// <summary>
+        /// Get whether the progress is faulted
+        /// </summary>
+        public bool IsFaulted { get; set; }
+
         private void UpdateAnimationChar()
         {
             if (++_currentAnimationFrame >= Frames.Length)
