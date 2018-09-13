@@ -1,4 +1,6 @@
-﻿namespace MarkSFrancis.Console.Playground
+﻿using System;
+
+namespace MarkSFrancis.Console.Playground
 {
     class Program
     {
@@ -17,7 +19,9 @@
                 Console.UndoWriteLine();
             }
 
-            var result = Console.GetInt("Please enter an integer:");
+            var result = Console.GetInt("Please enter an integer to square:");
+            Console.WriteLine($"{result}² = {Math.Pow(result, 2)}");
+            Console.WriteLine();
 
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey(false);

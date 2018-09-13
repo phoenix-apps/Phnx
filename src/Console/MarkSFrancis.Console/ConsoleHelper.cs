@@ -250,7 +250,7 @@ namespace MarkSFrancis.Console
 
             do
             {
-                keyInfo = ReadKey(true);
+                keyInfo = ReadKey(false);
 
             } while (keyInfo.Key != ConsoleKey.Y && keyInfo.Key != ConsoleKey.N);
 
