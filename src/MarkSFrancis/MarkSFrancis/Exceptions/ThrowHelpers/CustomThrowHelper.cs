@@ -3,10 +3,10 @@
 namespace MarkSFrancis.ThrowHelpers
 {
     /// <summary>
-    /// An implementation of <see cref="IThrowHelper"/> for function driven factories for handling each throw scenario
+    /// An implementation of <see cref="ThrowHelper"/> for function driven factories for handling each throw scenario
     /// </summary>
     /// <typeparam name="T">The type of exception this factory produces</typeparam>
-    public class CustomThrowHelper<T> : IThrowHelper where T : Exception
+    public class CustomThrowHelper<T> : ThrowHelper where T : Exception
     {
         private readonly Func<T> defaultFactory;
         private readonly Func<Exception, T> innerExceptionFactory;
@@ -26,7 +26,7 @@ namespace MarkSFrancis.ThrowHelpers
         /// Throw the exception
         /// </summary>
         /// <returns>An instance of <typeparamref name="T"/></returns>
-        public Exception Create()
+        public override Exception Create()
         {
             return defaultFactory();
         }
@@ -35,7 +35,7 @@ namespace MarkSFrancis.ThrowHelpers
         /// Throw the exception with an inner exception
         /// </summary>
         /// <returns>An instance of <typeparamref name="T"/> with the given inner exception</returns>
-        public Exception Create(Exception innerException)
+        public override Exception Create(Exception innerException)
         {
             return innerExceptionFactory(innerException);
         }

@@ -8,7 +8,7 @@ namespace MarkSFrancis.Tests
         [Test]
         public void GetErrorInvalidCast_CreatesError()
         {
-            var error = ErrorFactory.Default.InvalidCast("asdf", "string", "string").Create();
+            var error = Errors.Factory.InvalidCast("asdf", "string", "string").Create();
 
             Assert.IsInstanceOf<InvalidCastException>(error);
         }
@@ -16,7 +16,7 @@ namespace MarkSFrancis.Tests
         [Test]
         public void GetErrorInvalidCast_WithTypes_CreatesError()
         {
-            var error = ErrorFactory.Default.InvalidCast("asdf", typeof(string), typeof(string)).Create();
+            var error = Errors.Factory.InvalidCast("asdf", typeof(string), typeof(string)).Create();
 
             Assert.IsInstanceOf<InvalidCastException>(error);
         }
@@ -24,7 +24,7 @@ namespace MarkSFrancis.Tests
         [Test]
         public void GetErrorArgumentNull_CreatesError()
         {
-            var error = ErrorFactory.Default.ArgumentNull("asdf").Create();
+            var error = Errors.Factory.ArgumentNull("asdf").Create();
 
             Assert.IsInstanceOf<ArgumentNullException>(error);
         }
@@ -33,7 +33,7 @@ namespace MarkSFrancis.Tests
         public void GetErrorArgumentNull_WithMessage_CreatesError()
         {
             string message = "test message";
-            var error = ErrorFactory.Default.ArgumentNull("asdf", message).Create();
+            var error = Errors.Factory.ArgumentNull("asdf", message).Create();
 
             Assert.IsInstanceOf<ArgumentNullException>(error);
             Assert.IsTrue(error.Message.Contains(message));
@@ -42,7 +42,7 @@ namespace MarkSFrancis.Tests
         [Test]
         public void GetErrorArgumentOutOfRange_CreatesError()
         {
-            var error = ErrorFactory.Default.ArgumentOutOfRange("asdf").Create();
+            var error = Errors.Factory.ArgumentOutOfRange("asdf").Create();
 
             Assert.IsInstanceOf<ArgumentOutOfRangeException>(error);
         }
@@ -51,7 +51,7 @@ namespace MarkSFrancis.Tests
         public void GetErrorArgumentOutOfRange_WithMessage_CreatesError()
         {
             string message = "test message";
-            var error = ErrorFactory.Default.ArgumentOutOfRange("asdf", message).Create();
+            var error = Errors.Factory.ArgumentOutOfRange("asdf", message).Create();
 
             Assert.IsInstanceOf<ArgumentOutOfRangeException>(error);
             Assert.IsTrue(error.Message.Contains(message));
@@ -60,7 +60,7 @@ namespace MarkSFrancis.Tests
         [Test]
         public void GetErrorArgumentLessThanZero_CreatesError()
         {
-            var error = ErrorFactory.Default.ArgumentOutOfRange("asdf").Create();
+            var error = Errors.Factory.ArgumentOutOfRange("asdf").Create();
 
             Assert.IsInstanceOf<ArgumentOutOfRangeException>(error);
         }
@@ -68,7 +68,7 @@ namespace MarkSFrancis.Tests
         [Test]
         public void GetErrorIndexOutOfRange_CreatesError()
         {
-            var error = ErrorFactory.Default.IndexOutOfRange("asdf").Create();
+            var error = Errors.Factory.IndexOutOfRange("asdf").Create();
 
             Assert.IsInstanceOf<IndexOutOfRangeException>(error);
         }
@@ -76,7 +76,7 @@ namespace MarkSFrancis.Tests
         [Test]
         public void GetErrorIndexOutOfRange_WithValue_CreatesError()
         {
-            var error = ErrorFactory.Default.IndexOutOfRange("asdf", 0).Create();
+            var error = Errors.Factory.IndexOutOfRange("asdf", 0).Create();
 
             Assert.IsInstanceOf<IndexOutOfRangeException>(error);
         }
@@ -84,7 +84,7 @@ namespace MarkSFrancis.Tests
         [Test]
         public void GetErrorIndexOutOfRange_WithValueAndCollectionSize_CreatesError()
         {
-            var error = ErrorFactory.Default.IndexOutOfRange("asdf", 0, 0).Create();
+            var error = Errors.Factory.IndexOutOfRange("asdf", 0, 0).Create();
 
             Assert.IsInstanceOf<IndexOutOfRangeException>(error);
         }
@@ -92,7 +92,7 @@ namespace MarkSFrancis.Tests
         [Test]
         public void GetErrorIndexOutOfRange_WithValueAndCollectionName_CreatesError()
         {
-            var error = ErrorFactory.Default.IndexOutOfRange("asdf", 0, "test").Create();
+            var error = Errors.Factory.IndexOutOfRange("asdf", 0, "test").Create();
 
             Assert.IsInstanceOf<IndexOutOfRangeException>(error);
         }
@@ -100,7 +100,7 @@ namespace MarkSFrancis.Tests
         [Test]
         public void GetErrorIndexOutOfRange_WithValueAndCollectionNameAndCollectionSize_CreatesError()
         {
-            var error = ErrorFactory.Default.IndexOutOfRange("asdf", 0, "test", 0).Create();
+            var error = Errors.Factory.IndexOutOfRange("asdf", 0, "test", 0).Create();
 
             Assert.IsInstanceOf<IndexOutOfRangeException>(error);
         }
@@ -108,7 +108,7 @@ namespace MarkSFrancis.Tests
         [Test]
         public void GetErrorNotImplemented_CreatesError()
         {
-            var error = ErrorFactory.Default.NotImplemented().Create();
+            var error = Errors.Factory.NotImplemented().Create();
 
             Assert.IsInstanceOf<NotImplementedException>(error);
         }
@@ -117,7 +117,7 @@ namespace MarkSFrancis.Tests
         public void GetErrorNotImplemented_WithTodo_CreatesError()
         {
             string todoNote = "Note";
-            var error = ErrorFactory.Default.NotImplemented(todoNote).Create();
+            var error = Errors.Factory.NotImplemented(todoNote).Create();
 
             Assert.IsInstanceOf<NotImplementedException>(error);
             Assert.IsTrue(error.Message.Contains(todoNote));

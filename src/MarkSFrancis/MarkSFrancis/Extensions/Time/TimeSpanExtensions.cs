@@ -68,7 +68,7 @@ namespace MarkSFrancis.Extensions.Time
                     case TimeComponents.Hours | TimeComponents.Seconds:
                     case TimeComponents.Hours | TimeComponents.Milliseconds:
                     case TimeComponents.Minutes | TimeComponents.Milliseconds:
-                        throw ErrorFactory.Default.ArgumentException("Time Components are invalid. They cannot be only " + timeComponents.ToString() + " and in a short format", nameof(timeComponents)).Create();
+                        throw Errors.Factory.ArgumentException("Time Components are invalid. They cannot be only " + timeComponents.ToString() + " and in a short format", nameof(timeComponents)).Create();
                 }
             }
 

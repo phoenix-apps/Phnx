@@ -18,7 +18,7 @@ namespace MarkSFrancis.Extensions.Numeric
         {
             if (currencySymbol == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(currencySymbol)).Create();
+                throw Errors.Factory.ArgumentNull(nameof(currencySymbol)).Create();
             }
 
             var roundedValue = Math.Round(value, 2).ToString();
