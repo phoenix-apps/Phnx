@@ -41,7 +41,7 @@ namespace MarkSFrancis
         /// <summary>
         /// The default singleton instance of <see cref="Errors"/>
         /// </summary>
-        public static readonly Errors Factory = new Errors();
+        public static Errors Factory { get; } = new Errors();
 
         /// <summary>
         /// Create an <see cref="InvalidCastException"/> for a failed cast
