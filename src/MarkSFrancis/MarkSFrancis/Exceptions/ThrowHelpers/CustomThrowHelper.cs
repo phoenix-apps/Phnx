@@ -25,7 +25,7 @@ namespace MarkSFrancis.ThrowHelpers
         /// <summary>
         /// Throw the exception
         /// </summary>
-        /// <exception cref="T"></exception>
+        /// <returns>An instance of <typeparamref name="T"/></returns>
         public Exception Create()
         {
             return defaultFactory();
@@ -34,7 +34,7 @@ namespace MarkSFrancis.ThrowHelpers
         /// <summary>
         /// Throw the exception with an inner exception
         /// </summary>
-        /// <exception cref="T"></exception>
+        /// <returns>An instance of <typeparamref name="T"/> with the given inner exception</returns>
         public Exception Create(Exception innerException)
         {
             return innerExceptionFactory(innerException);
