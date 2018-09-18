@@ -57,7 +57,7 @@ namespace MarkSFrancis.Extensions.Time
         {
             if (formatProvider == null)
             {
-                throw ErrorFactory.ArgumentNull(nameof(formatProvider)).Create();
+                throw ErrorFactory.Default.ArgumentNull(nameof(formatProvider)).Create();
             }
 
             return shortFormat ? dt.ToString("d", formatProvider) : dt.ToString("D", formatProvider);
@@ -85,7 +85,7 @@ namespace MarkSFrancis.Extensions.Time
         {
             if (formatProvider == null)
             {
-                throw ErrorFactory.ArgumentNull(nameof(formatProvider)).Create();
+                throw ErrorFactory.Default.ArgumentNull(nameof(formatProvider)).Create();
             }
 
             return shortFormat ? dt.ToString("t", formatProvider) : dt.ToString("T", formatProvider);

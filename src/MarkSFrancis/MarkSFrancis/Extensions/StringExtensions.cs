@@ -62,12 +62,12 @@ namespace MarkSFrancis.Extensions
         {
             if (stringToRemoveFrom == null)
             {
-                throw ErrorFactory.ArgumentNull(nameof(stringToRemoveFrom)).Create();
+                throw ErrorFactory.Default.ArgumentNull(nameof(stringToRemoveFrom)).Create();
             }
 
             if (charsToRemove == null)
             {
-                throw ErrorFactory.ArgumentNull(nameof(charsToRemove)).Create();
+                throw ErrorFactory.Default.ArgumentNull(nameof(charsToRemove)).Create();
             }
 
             StringBuilder sb = new StringBuilder();
@@ -95,7 +95,7 @@ namespace MarkSFrancis.Extensions
         {
             if (stringToRemoveFrom == null)
             {
-                throw ErrorFactory.ArgumentNull(nameof(stringToRemoveFrom)).Create();
+                throw ErrorFactory.Default.ArgumentNull(nameof(stringToRemoveFrom)).Create();
             }
 
             return stringToRemoveFrom.Replace(textToRemove, string.Empty);
@@ -122,12 +122,12 @@ namespace MarkSFrancis.Extensions
         {
             if (stringToRemoveFrom == null)
             {
-                throw ErrorFactory.ArgumentNull(nameof(stringToRemoveFrom)).Create();
+                throw ErrorFactory.Default.ArgumentNull(nameof(stringToRemoveFrom)).Create();
             }
 
             if (textToRemove == null)
             {
-                throw ErrorFactory.ArgumentNull(nameof(textToRemove)).Create();
+                throw ErrorFactory.Default.ArgumentNull(nameof(textToRemove)).Create();
             }
 
             string retString = stringToRemoveFrom;
@@ -151,7 +151,7 @@ namespace MarkSFrancis.Extensions
         {
             if (stringToConvert == null)
             {
-                throw ErrorFactory.ArgumentNull(nameof(stringToConvert)).Create();
+                throw ErrorFactory.Default.ArgumentNull(nameof(stringToConvert)).Create();
             }
 
             var wordDelimiters = new[] { ' ', '-', '_' };
@@ -205,7 +205,7 @@ namespace MarkSFrancis.Extensions
         {
             if (stringToConvert == null)
             {
-                throw ErrorFactory.ArgumentNull(nameof(stringToConvert)).Create();
+                throw ErrorFactory.Default.ArgumentNull(nameof(stringToConvert)).Create();
             }
 
             if (stringToConvert.Length == 0)

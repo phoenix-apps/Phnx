@@ -35,7 +35,7 @@ namespace MarkSFrancis.Benchmark.Section
             {
                 if (!_isFinished)
                 {
-                    throw ErrorFactory.Default.BenchmarkNotFinished();
+                    throw ErrorFactory.Default.BenchmarkNotFinished().Create();
                 }
 
                 return _timeTaken;

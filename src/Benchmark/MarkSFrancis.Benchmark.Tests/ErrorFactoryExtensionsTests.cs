@@ -8,7 +8,7 @@ namespace MarkSFrancis.Benchmark.Tests
         [Test]
         public void ErrorFactory_GetBenchmarkNotFinished_ReturnsInvalidOperationException()
         {
-            Assert.IsInstanceOf<InvalidOperationException>(ErrorFactory.Default.BenchmarkNotFinished());
+            Assert.IsInstanceOf<InvalidOperationException>(ErrorFactory.Default.BenchmarkNotFinished().Create());
         }
     }
 }
