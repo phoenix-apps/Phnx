@@ -1,9 +1,22 @@
 ﻿using NUnit.Framework;
+using System;
 
 namespace MarkSFrancis.Data.Tests
 {
     public class EscapedTests
     {
+        [Test]
+        public void EscapingText_WhenTextIsNull_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => Escaped.Escape(null, ' '));
+        }
+
+        [Test]
+        public void EscapingText_WhenEscapeTheseCharsIsNull_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => Escaped.Escape(string.Empty, ' ', null));
+        }
+
         [Test]
         public void EscapingText_WithNoContent_ReturnsEmptyString()
         {

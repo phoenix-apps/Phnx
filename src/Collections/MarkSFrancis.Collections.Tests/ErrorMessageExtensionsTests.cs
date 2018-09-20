@@ -2,7 +2,7 @@
 
 namespace MarkSFrancis.Collections.Tests.Exceptions
 {
-    public class EmptyCollectionTests
+    public class ErrorMessageExtensionsTests
     {
         [Test]
         public void SequenceEmpty_WithoutCollectionName_MakesMessage()

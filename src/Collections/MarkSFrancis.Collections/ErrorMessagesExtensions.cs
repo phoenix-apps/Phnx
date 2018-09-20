@@ -1,7 +1,7 @@
 ﻿namespace MarkSFrancis.Collections
 {
     /// <summary>
-    /// Extends <see cref="ErrorMessage"/> with new messages related to collections
+    /// Extends <see cref="ErrorMessage"/> with new messages related to <see cref="Collections"/>
     /// </summary>
     public static class ErrorMessageExtensions
     {

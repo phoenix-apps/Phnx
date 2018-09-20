@@ -18,7 +18,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MarkSFrancis" Version="1.1.0-beta2" />
+    <Reference Include="MarkSFrancis">
+      <HintPath>..\..\..\MarkSFrancis\MarkSFrancis\bin\Debug\netstandard2.0\MarkSFrancis.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

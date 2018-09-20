@@ -1,50 +1,49 @@
 ﻿using System;
-using MarkSFrancis.Data.Extensions;
 
 namespace MarkSFrancis.Data.LazyLoad
 {
     /// <summary>
     /// Lazy loading for a property, with the option to set and get its value
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class Lazy<T>
+    /// <typeparam name="T">The type of value cached</typeparam>
+    public class LazyGetSet<T>
     {
-        private readonly Func<T> _getFunc;
-        private readonly Action<T> _setFunc;
+        private readonly Func<T> _getFromExternal;
+        private readonly Action<T> _setToExternal;
 
         /// <summary>
-        /// Occurs when the value for a <see cref="Lazy{T}"/> is set
+        /// Occurs when the value for a <see cref="LazyGetSet{T}"/> is set
         /// </summary>
-        /// <param name="sender">The <see cref="Lazy{T}"/> that triggered the event</param>
+        /// <param name="sender">The <see cref="LazyGetSet{T}"/> that triggered the event</param>
         /// <param name="newValue">The new value that has been assigned to the sender</param>
-        public delegate void ValueSetEvent(Lazy<T> sender, T newValue);
+        public delegate void ValueSetEvent(LazyGetSet<T> sender, T newValue);
 
         /// <summary>
-        /// Occurs when the value for a <see cref="Lazy{T}"/> is loaded from an external source into its cache
+        /// Occurs when the value for a <see cref="LazyGetSet{T}"/> is loaded from an external source into its cache
         /// </summary>
-        /// <param name="sender">The <see cref="Lazy{T}"/> that triggered the event</param>
+        /// <param name="sender">The <see cref="LazyGetSet{T}"/> that triggered the event</param>
         /// <param name="cachedValue">The value that has been loaded into the cache</param>
-        public delegate void ValueCachedEvent(Lazy<T> sender, T cachedValue);
-        
-        /// <summary>
-        /// Occurs when the value for a <see cref="Lazy{T}"/> is requested
-        /// </summary>
-        /// <param name="sender">The <see cref="Lazy{T}"/> that triggered the event</param>
-        /// <param name="value">The value of the sender that has retrieved</param>
-        public delegate void ValueGetEvent(Lazy<T> sender, T value);
+        public delegate void ValueCachedEvent(LazyGetSet<T> sender, T cachedValue);
 
         /// <summary>
-        /// Occurs when the value for this <see cref="Lazy{T}"/> is set
+        /// Occurs when the value for a <see cref="LazyGetSet{T}"/> is requested
+        /// </summary>
+        /// <param name="sender">The <see cref="LazyGetSet{T}"/> that triggered the event</param>
+        /// <param name="value">The value of the sender that has retrieved</param>
+        public delegate void ValueGetEvent(LazyGetSet<T> sender, T value);
+
+        /// <summary>
+        /// Occurs when the value for this <see cref="LazyGetSet{T}"/> is set
         /// </summary>
         public event ValueSetEvent ValueSet;
 
         /// <summary>
-        /// Occurs when the value for this <see cref="Lazy{T}"/> is loaded from an external source into the cache
+        /// Occurs when the value for this <see cref="LazyGetSet{T}"/> is loaded from an external source into the cache
         /// </summary>
         public event ValueCachedEvent ValueCached;
 
         /// <summary>
-        /// Occurs when the value for this <see cref="Lazy{T}"/> is loaded from an external source, or from the cache
+        /// Occurs when the value for this <see cref="LazyGetSet{T}"/> is loaded from an external source, or from the cache
         /// </summary>
         public event ValueGetEvent ValueGet;
 
@@ -52,48 +51,48 @@ namespace MarkSFrancis.Data.LazyLoad
         private bool _valueIsCached;
 
         /// <summary>
-        /// Whether the value for this <see cref="Lazy{T}"/> can be set
+        /// Whether the value for this <see cref="LazyGetSet{T}"/> can be set
         /// </summary>
-        public bool CanSet => _setFunc != null;
-
-        private bool _valueChangedInLife;
+        public bool CanSet => _setToExternal != null;
 
         /// <summary>
         /// Whether the value of this has ever been set
         /// </summary>
-        public bool ValueChangedInLife => _valueChangedInLife;
+        public bool ValueChangedInLife { get; private set; }
 
         /// <summary>
-        /// Create a new read-only <see cref="Lazy{T}"/> using a function to load the data from an external source when requested
+        /// Create a new read-only <see cref="LazyGetSet{T}"/> using a function to load the data from an external source when requested
         /// </summary>
-        /// <param name="getFunction">The function to load the data from an external source</param>
-        public Lazy(Func<T> getFunction)
+        /// <param name="get">The function to load the data from an external source</param>
+        public LazyGetSet(Func<T> get)
         {
-            _getFunc = getFunction;
+            _getFromExternal = get ?? throw new ArgumentNullException(nameof(get));
         }
 
         /// <summary>
-        /// Create a new <see cref="Lazy{T}"/> using a function to load the data from an external source when requested, and a function to update the external source. The external source is updated immediately when the <see cref="Value"/> is set
+        /// Create a new <see cref="LazyGetSet{T}"/> using a function to load the data from an external source when requested, and a function to update the external source. The external source is updated immediately when the <see cref="Value"/> is set
         /// </summary>
-        /// <param name="getFunction">The function to load the data from an external source</param>
-        /// <param name="setFunction">The function to send the data to an external source</param>
-        public Lazy(Func<T> getFunction, Action<T> setFunction)
+        /// <param name="get">The function to load the data from an external source</param>
+        /// <param name="set">The function to send the data to an external source</param>
+        public LazyGetSet(Func<T> get, Action<T> set)
         {
-            _getFunc = getFunction;
-            _setFunc = setFunction;
+            _getFromExternal = get ?? throw new ArgumentNullException(nameof(get));
+            _setToExternal = set ?? throw new ArgumentNullException(nameof(set));
         }
 
         /// <summary>
         /// The lazy-loaded value
         /// </summary>
+        /// <exception cref="NotSupportedException">Could not set the value, as <see cref="CanSet"/> was <see langword="false"/></exception>
         public T Value
         {
             get
             {
                 if (!_valueIsCached)
                 {
-                    _cachedValue = _getFunc();
+                    _cachedValue = _getFromExternal();
                     _valueIsCached = true;
+                    ValueChangedInLife = false;
 
                     ValueCached?.Invoke(this, _cachedValue);
                 }
@@ -105,13 +104,13 @@ namespace MarkSFrancis.Data.LazyLoad
             {
                 if (!CanSet)
                 {
-                    throw ErrorFactory.Default.CannotSetValue();
+                    throw new NotSupportedException(ErrorMessage.Factory.CannotSetValue());
                 }
 
-                _setFunc.Invoke(value);
+                _setToExternal(value);
                 _cachedValue = value;
                 _valueIsCached = true;
-                _valueChangedInLife = true;
+                ValueChangedInLife = true;
 
                 ValueSet?.Invoke(this, _cachedValue);
                 ValueCached?.Invoke(this, _cachedValue);

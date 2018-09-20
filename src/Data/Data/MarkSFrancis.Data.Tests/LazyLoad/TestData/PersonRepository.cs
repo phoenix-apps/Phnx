@@ -1,9 +1,13 @@
 ﻿namespace MarkSFrancis.Data.Tests.LazyLoad.TestData
 {
-    static class PersonRepository
+    internal class PersonRepository
     {
-        public static Person GetSingle(int id)
+        public int TimesLoaded { get; private set; }
+
+        public Person GetSingle(int id)
         {
+            TimesLoaded++;
+
             return new Person
             {
                 FirstName = "John",
