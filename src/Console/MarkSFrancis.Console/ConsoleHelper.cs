@@ -179,7 +179,7 @@ namespace MarkSFrancis.Console
         {
             if (converter == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(converter));
+                throw new ArgumentNullException(nameof(converter));
             }
 
             if (question != null)

@@ -1,6 +1,6 @@
 ﻿namespace MarkSFrancis.Data.Tests.LazyLoad.TestData
 {
-    class Role : IPrimaryKeyDataModel<int>
+    internal class Role : IIdDataModel<int>
     {
         public int Id { get; set; }
 

@@ -33,22 +33,22 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (startIndex < 0)
             {
-                throw ErrorFactory.Default.ArgumentLessThanZero(nameof(startIndex));
+                throw new ArgumentLessThanZeroException(nameof(startIndex));
             }
 
             if (source.Length < 8)
             {
-                throw ErrorFactory.Default.ArgumentException("Array is too short to convert to int64", nameof(source));
+                throw new ArgumentException("Array is too short to convert to int64", nameof(source));
             }
 
             if (startIndex > source.Length - 8)
             {
-                throw ErrorFactory.Default.ArgumentOutOfRange(nameof(startIndex));
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
             return BitConverter.ToInt64(source, startIndex);
@@ -68,22 +68,22 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (startIndex < 0)
             {
-                throw ErrorFactory.Default.ArgumentLessThanZero(nameof(startIndex));
+                throw new ArgumentLessThanZeroException(nameof(startIndex));
             }
 
             if (source.Length < 4)
             {
-                throw ErrorFactory.Default.ArgumentException("Array is too short to convert to int32", nameof(source));
+                throw new ArgumentException("Array is too short to convert to int32", nameof(source));
             }
 
             if (startIndex > source.Length - 4)
             {
-                throw ErrorFactory.Default.ArgumentOutOfRange(nameof(startIndex));
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
             return BitConverter.ToInt32(source, startIndex);
@@ -98,27 +98,28 @@ namespace MarkSFrancis.Collections.Extensions
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="startIndex"/> is greater than or equal to the length of <paramref name="source"/> minus 1</exception>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero or greater than the length of <paramref name="source"/> minus 1</exception>
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="startIndex"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is greater than the length of <paramref name="source"/> minus 1</exception>
         public static short ToShort(this byte[] source, int startIndex = 0)
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (startIndex < 0)
             {
-                throw ErrorFactory.Default.ArgumentLessThanZero(nameof(startIndex));
+                throw new ArgumentLessThanZeroException(nameof(startIndex));
             }
 
             if (source.Length < 2)
             {
-                throw ErrorFactory.Default.ArgumentException("Array is too short to convert to int16", nameof(source));
+                throw new ArgumentException("Array is too short to convert to int16", nameof(source));
             }
 
             if (startIndex > source.Length - 2)
             {
-                throw ErrorFactory.Default.ArgumentOutOfRange(nameof(startIndex));
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
             return BitConverter.ToInt16(source, startIndex);

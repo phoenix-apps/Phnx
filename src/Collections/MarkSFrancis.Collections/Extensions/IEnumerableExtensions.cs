@@ -17,24 +17,24 @@ namespace MarkSFrancis.Collections.Extensions
         /// <param name="startIndex">The index at which to start copying</param>
         /// <param name="count">The number of values to copy</param>
         /// <returns>The values from the collection within the range specified</returns>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero or <paramref name="count"/> is less than zero</exception>
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="startIndex"/> is less than zero or <paramref name="count"/> is less than zero</exception>
         /// <exception cref="IndexOutOfRangeException"><paramref name="startIndex"/> references an index greater than the number of items in the collection minus <paramref name="count"/></exception>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
         public static IEnumerable<T> CopyRange<T>(this IEnumerable<T> source, int startIndex, int count)
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (startIndex < 0)
             {
-                throw ErrorFactory.Default.ArgumentLessThanZero(nameof(startIndex));
+                throw new ArgumentLessThanZeroException(nameof(startIndex));
             }
 
             if (count < 0)
             {
-                throw ErrorFactory.Default.ArgumentLessThanZero(nameof(count));
+                throw new ArgumentLessThanZeroException(nameof(count));
             }
 
             IEnumerator<T> enumerator = source.GetEnumerator();
@@ -44,7 +44,7 @@ namespace MarkSFrancis.Collections.Extensions
                 // Skip value
                 if (!enumerator.MoveNext())
                 {
-                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(startIndex));
+                    throw new ArgumentOutOfRangeException(nameof(startIndex));
                 }
             }
 
@@ -52,7 +52,7 @@ namespace MarkSFrancis.Collections.Extensions
             {
                 if (!enumerator.MoveNext())
                 {
-                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(count));
+                    throw new ArgumentOutOfRangeException(nameof(count));
                 }
 
                 yield return enumerator.Current;
@@ -75,12 +75,12 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (startIndex < 0)
             {
-                throw ErrorFactory.Default.ArgumentLessThanZero(nameof(startIndex));
+                throw new ArgumentLessThanZeroException(nameof(startIndex));
             }
 
             IEnumerator<T> enumerator = source.GetEnumerator();
@@ -90,7 +90,7 @@ namespace MarkSFrancis.Collections.Extensions
                 // Skip value
                 if (!enumerator.MoveNext())
                 {
-                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(startIndex));
+                    throw new ArgumentOutOfRangeException(nameof(startIndex));
                 }
             }
 
@@ -112,7 +112,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             using (var enumerator = source.GetEnumerator())
@@ -136,7 +136,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (separator == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(separator));
+                throw new ArgumentNullException(nameof(separator));
             }
 
             if (toString == null)

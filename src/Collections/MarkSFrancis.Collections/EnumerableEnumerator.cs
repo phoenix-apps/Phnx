@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace MarkSFrancis.Collections
@@ -16,7 +17,7 @@ namespace MarkSFrancis.Collections
         /// <exception cref="System.ArgumentNullException"><paramref name="enumerator"/> is <see langword="null"/></exception>
         public EnumerableEnumerator(IEnumerator<T> enumerator)
         {
-            Enumerator = enumerator ?? throw ErrorFactory.Default.ArgumentNull(nameof(enumerator));
+            Enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
         }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace MarkSFrancis.Collections
         /// <exception cref="System.ArgumentNullException"><paramref name="enumerator"/> is <see langword="null"/></exception>
         public EnumerableEnumerator(IEnumerator enumerator)
         {
-            Enumerator = enumerator ?? throw ErrorFactory.Default.ArgumentNull(nameof(enumerator));
+            Enumerator = enumerator ?? throw new ArgumentNullException(nameof(enumerator));
         }
 
         /// <summary>

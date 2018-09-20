@@ -31,11 +31,11 @@ namespace MarkSFrancis.Collections.Tests.Extensions.ByteArrayExtensions
         }
 
         [Test]
-        public void ToShort_WithStartIndexLessThanZero_ThrowsArgumentOutOfRangeException()
+        public void ToShort_WithStartIndexLessThanZero_ThrowsArgumentLessThanZeroException()
         {
             var bytes = new byte[] { 1, 62 };
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => bytes.ToShort(-1));
+            Assert.Throws<ArgumentLessThanZeroException>(() => bytes.ToShort(-1));
         }
 
         [Test]

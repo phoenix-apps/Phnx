@@ -110,7 +110,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.IEnumerableExtensions
         }
 
         [Test]
-        public void CopyRange_StartingLessThanZero_ThrowsArgumentOutOfRangeException()
+        public void CopyRange_StartingLessThanZero_ThrowsArgumentLessThanZeroException()
         {
             var items = new List<string>
             {
@@ -119,7 +119,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.IEnumerableExtensions
                 "item3"
             };
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => items.CopyRange(-1, 0).ToList());
+            Assert.Throws<ArgumentLessThanZeroException>(() => items.CopyRange(-1, 0).ToList());
         }
 
         [Test]
@@ -149,7 +149,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.IEnumerableExtensions
         }
 
         [Test]
-        public void CopyRange_WithCountLessThanZero_ThrowsArgumentOutOfRangeException()
+        public void CopyRange_WithCountLessThanZero_ThrowsArgumentLessThanZeroException()
         {
             var items = new List<string>
             {
@@ -158,7 +158,7 @@ namespace MarkSFrancis.Collections.Tests.Extensions.IEnumerableExtensions
                 "item3"
             };
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => items.CopyRange(2, -1).ToList());
+            Assert.Throws<ArgumentLessThanZeroException>(() => items.CopyRange(2, -1).ToList());
         }
     }
 }

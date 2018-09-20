@@ -26,12 +26,12 @@ namespace MarkSFrancis.Collections.Tests.Extensions
         }
 
         [Test]
-        public void InsertList_WhenStartIndexLessThan0_ThrowsArgumentOutOfRangeException()
+        public void InsertList_WhenStartIndexLessThan0_ThrowsArgumentLessThanZeroException()
         {
             var items = new List<int> { 1, 2, 3 };
             var itemsToAdd = new List<int> { 4, 5, 6 };
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => items.InsertList(-1, itemsToAdd));
+            Assert.Throws<ArgumentLessThanZeroException>(() => items.InsertList(-1, itemsToAdd));
         }
 
         [Test]

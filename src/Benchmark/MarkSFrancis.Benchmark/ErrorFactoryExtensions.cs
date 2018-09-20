@@ -3,18 +3,18 @@
 namespace MarkSFrancis.Benchmark
 {
     /// <summary>
-    /// Extensions for <see cref="ErrorFactory"/>
+    /// Extensions for <see cref="ErrorMessage"/>
     /// </summary>
-    public static class ErrorFactoryExtensions
+    public static class ErrorMessageExtensions
     {
         /// <summary>
         /// An error that explains that the benchmark's time cannot be retrieved until the section finishes executing
         /// </summary>
-        /// <param name="factory">The factory to extend</param>
-        /// <returns></returns>
-        public static InvalidOperationException BenchmarkNotFinished(this ErrorFactory factory)
+        /// <param name="errors">The <see cref="ErrorMessage"/> to extend</param>
+        /// <returns>An <see cref="InvalidOperationException"/>, describing that the benchmark time cannot be retrieved until the benchmark is finished</returns>
+        public static string BenchmarkNotFinished(this ErrorMessage errors)
         {
-            return new InvalidOperationException("The time of the benchmark cannot be retrieved until the benchmark is completed");
+            return "The time of the benchmark cannot be retrieved until the benchmark is completed";
         }
     }
 }

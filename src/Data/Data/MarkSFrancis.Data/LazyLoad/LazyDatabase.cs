@@ -9,29 +9,29 @@ namespace MarkSFrancis.Data.LazyLoad
     /// </summary>
     public static class LazyDatabase
     {
-        private static readonly ConcurrentDictionary<Type, ConcurrentDictionary<object, object>> Cache =
+        private static readonly ConcurrentDictionary<Type, ConcurrentDictionary<object, object>> _cache =
             new ConcurrentDictionary<Type, ConcurrentDictionary<object, object>>();
 
-        private static readonly object SyncContext = new object();
+        private static readonly object _syncContext = new object();
 
-        private static ConcurrentDictionary<object, object> GetTable(Type type)
+        private static ConcurrentDictionary<object, object> GetTable<T>()
         {
-            return Cache.GetOrAdd(type, new ConcurrentDictionary<object, object>());
+            return _cache.GetOrAdd(typeof(T), new ConcurrentDictionary<object, object>());
         }
 
         /// <summary>
         /// Lazy load an entry from the cache
         /// </summary>
-        /// <typeparam name="TId">The type of id for the object to load</typeparam>
+        /// <typeparam name="TKey">The type of id for the object to load</typeparam>
         /// <typeparam name="TEntry">The type of entry to load</typeparam>
         /// <param name="id">The id of the entry to load</param>
         /// <param name="load">The method to call if the value is not already in the cache</param>
         /// <returns>The lazy loaded value with the primary key of <paramref name="id"/></returns>
-        public static TEntry Get<TId, TEntry>(TId id, Func<TId, TEntry> load)
+        public static TEntry Get<TKey, TEntry>(TKey id, Func<TKey, TEntry> load)
         {
-            lock (SyncContext)
+            lock (_syncContext)
             {
-                var table = GetTable(typeof(TEntry));
+                var table = GetTable<TEntry>();
 
                 return (TEntry)table.GetOrAdd(id, load);
             }
@@ -40,15 +40,15 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <summary>
         /// Add or update an entry in the cache
         /// </summary>
-        /// <typeparam name="TId">The type of id for the object to add or update</typeparam>
+        /// <typeparam name="TKey">The type of id for the object to add or update</typeparam>
         /// <typeparam name="TEntry">The type of entry to add or update</typeparam>
         /// <param name="id">The id of the entry to add or update</param>
         /// <param name="value">The value to add or update</param>
-        public static void AddOrUpdate<TId, TEntry>(TId id, TEntry value)
+        public static void AddOrUpdate<TKey, TEntry>(TKey id, TEntry value)
         {
-            lock (SyncContext)
+            lock (_syncContext)
             {
-                var table = GetTable(typeof(TEntry));
+                var table = GetTable<TEntry>();
 
                 table.AddOrUpdate(id, value, (a, b) => value);
             }
@@ -57,14 +57,14 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <summary>
         /// Remove an entry from the cache
         /// </summary>
-        /// <typeparam name="TId">The type of id for the object to remove</typeparam>
+        /// <typeparam name="TKey">The type of id for the object to remove</typeparam>
         /// <typeparam name="TEntry">The type of entry to remove</typeparam>
         /// <param name="id">The id of the entry to remove</param>
-        public static void Remove<TId, TEntry>(TId id)
+        public static void Remove<TKey, TEntry>(TKey id)
         {
-            lock (SyncContext)
+            lock (_syncContext)
             {
-                var table = GetTable(typeof(TEntry));
+                var table = GetTable<TEntry>();
 
                 table.TryRemove(id, out _);
             }
@@ -73,12 +73,12 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <summary>
         /// Clear a table from the cache
         /// </summary>
-        /// <param name="tableType">The type of the table to clear</param>
-        public static void Clear(Type tableType)
+        /// <typeparam name="T">The type of the table to clear</typeparam>
+        public static void Clear<T>()
         {
-            lock (SyncContext)
+            lock (_syncContext)
             {
-                Cache.TryRemove(tableType, out _);
+                _cache.TryRemove(typeof(T), out _);
             }
         }
 
@@ -87,9 +87,9 @@ namespace MarkSFrancis.Data.LazyLoad
         /// </summary>
         public static void Clear()
         {
-            lock (SyncContext)
+            lock (_syncContext)
             {
-                Cache.Clear();
+                _cache.Clear();
             }
         }
 
@@ -100,9 +100,9 @@ namespace MarkSFrancis.Data.LazyLoad
         {
             get
             {
-                lock (SyncContext)
+                lock (_syncContext)
                 {
-                    return Cache.Sum(c => (long)c.Value.Count);
+                    return _cache.Sum(c => (long)c.Value.Count);
                 }
             }
         }
@@ -110,13 +110,13 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <summary>
         /// Get the number of items cached in a specific table
         /// </summary>
-        /// <param name="tableType"></param>
+        /// <typeparam name="T">The type of the table to get the total items cached in</typeparam>
         /// <returns></returns>
-        public static int TableItemsCachedCount(Type tableType)
+        public static int TableItemsCachedCount<T>()
         {
-            lock (SyncContext)
+            lock (_syncContext)
             {
-                var table = GetTable(tableType);
+                var table = GetTable(typeof(T));
 
                 return table.Count;
             }

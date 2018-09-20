@@ -3,124 +3,102 @@ using System;
 
 namespace MarkSFrancis.Tests
 {
-    public class ErrorFactoryTests
+    public class ErrorMessageTests
     {
         [Test]
-        public void GetErrorInvalidCast_CreatesError()
+        public void GetErrorInvalidCast_GetsMessage()
         {
-            var error = ErrorFactory.Default.InvalidCast("asdf", "string", "string");
+            string paramName = "asdf", type1 = "string1", type2 = "string2";
 
-            Assert.IsInstanceOf<InvalidCastException>(error);
+            var error = ErrorMessage.Factory.InvalidCast(paramName, type1, type2);
+
+            Assert.IsTrue(error.Contains(paramName));
+            Assert.IsTrue(error.Contains(type1));
+            Assert.IsTrue(error.Contains(type2));
         }
 
         [Test]
-        public void GetErrorInvalidCast_WithTypes_CreatesError()
+        public void GetErrorInvalidCast_WithTypes_GetsMessage()
         {
-            var error = ErrorFactory.Default.InvalidCast("asdf", typeof(string), typeof(string));
+            string paramName = "asdf";
+            Type type1 = typeof(string), type2 = typeof(Guid);
 
-            Assert.IsInstanceOf<InvalidCastException>(error);
+            var error = ErrorMessage.Factory.InvalidCast(paramName, type1, type2);
+
+            Assert.IsTrue(error.Contains(paramName));
+            Assert.IsTrue(error.Contains(type1.FullName));
+            Assert.IsTrue(error.Contains(type2.FullName));
         }
 
         [Test]
-        public void GetErrorArgumentNull_CreatesError()
+        public void GetErrorIndexOutOfRange_GetsMessage()
         {
-            var error = ErrorFactory.Default.ArgumentNull("asdf");
+            string paramName = "asdf";
 
-            Assert.IsInstanceOf<ArgumentNullException>(error);
+            var error = ErrorMessage.Factory.IndexOutOfRange(paramName);
+
+            Assert.IsTrue(error.Contains(paramName));
         }
 
         [Test]
-        public void GetErrorArgumentNull_WithMessage_CreatesError()
+        public void GetErrorIndexOutOfRange_WithValue_GetsMessage()
         {
-            string message = "test message";
-            var error = ErrorFactory.Default.ArgumentNull("asdf", message);
+            string paramName = "asdf";
+            int index = 42;
 
-            Assert.IsInstanceOf<ArgumentNullException>(error);
-            Assert.IsTrue(error.Message.Contains(message));
+            var error = ErrorMessage.Factory.IndexOutOfRange(paramName, index);
+
+            Assert.IsTrue(error.Contains(paramName));
+            Assert.IsTrue(error.Contains(index.ToString()));
         }
 
         [Test]
-        public void GetErrorArgumentOutOfRange_CreatesError()
+        public void GetErrorIndexOutOfRange_WithValueAndCollectionSize_GetsMessage()
         {
-            var error = ErrorFactory.Default.ArgumentOutOfRange("asdf");
+            string paramName = "asdf";
+            int index = 42, size = 13;
 
-            Assert.IsInstanceOf<ArgumentOutOfRangeException>(error);
+            var error = ErrorMessage.Factory.IndexOutOfRange(paramName, index, size);
+
+            Assert.IsTrue(error.Contains(paramName));
+            Assert.IsTrue(error.Contains(index.ToString()));
+            Assert.IsTrue(error.Contains(size.ToString()));
         }
 
         [Test]
-        public void GetErrorArgumentOutOfRange_WithMessage_CreatesError()
+        public void GetErrorIndexOutOfRange_WithValueAndCollectionName_GetsMessage()
         {
-            string message = "test message";
-            var error = ErrorFactory.Default.ArgumentOutOfRange("asdf", message);
+            string paramName = "asdf", collectionName = "myCol";
+            int index = 42;
 
-            Assert.IsInstanceOf<ArgumentOutOfRangeException>(error);
-            Assert.IsTrue(error.Message.Contains(message));
+            var error = ErrorMessage.Factory.IndexOutOfRange(paramName, index, collectionName);
+
+            Assert.IsTrue(error.Contains(paramName));
+            Assert.IsTrue(error.Contains(index.ToString()));
+            Assert.IsTrue(error.Contains(collectionName));
         }
 
         [Test]
-        public void GetErrorArgumentLessThanZero_CreatesError()
+        public void GetErrorIndexOutOfRange_WithValueAndCollectionNameAndCollectionSize_GetsMessage()
         {
-            var error = ErrorFactory.Default.ArgumentOutOfRange("asdf");
+            string paramName = "asdf", collectionName = "myCol";
+            int index = 42, size = 13;
 
-            Assert.IsInstanceOf<ArgumentOutOfRangeException>(error);
+            var error = ErrorMessage.Factory.IndexOutOfRange(paramName, index, collectionName, size);
+
+            Assert.IsTrue(error.Contains(paramName));
+            Assert.IsTrue(error.Contains(index.ToString()));
+            Assert.IsTrue(error.Contains(collectionName));
+            Assert.IsTrue(error.Contains(size.ToString()));
         }
 
         [Test]
-        public void GetErrorIndexOutOfRange_CreatesError()
-        {
-            var error = ErrorFactory.Default.IndexOutOfRange("asdf");
-
-            Assert.IsInstanceOf<IndexOutOfRangeException>(error);
-        }
-
-        [Test]
-        public void GetErrorIndexOutOfRange_WithValue_CreatesError()
-        {
-            var error = ErrorFactory.Default.IndexOutOfRange("asdf", 0);
-
-            Assert.IsInstanceOf<IndexOutOfRangeException>(error);
-        }
-
-        [Test]
-        public void GetErrorIndexOutOfRange_WithValueAndCollectionSize_CreatesError()
-        {
-            var error = ErrorFactory.Default.IndexOutOfRange("asdf", 0, 0);
-
-            Assert.IsInstanceOf<IndexOutOfRangeException>(error);
-        }
-
-        [Test]
-        public void GetErrorIndexOutOfRange_WithValueAndCollectionName_CreatesError()
-        {
-            var error = ErrorFactory.Default.IndexOutOfRange("asdf", 0, "test");
-
-            Assert.IsInstanceOf<IndexOutOfRangeException>(error);
-        }
-
-        [Test]
-        public void GetErrorIndexOutOfRange_WithValueAndCollectionNameAndCollectionSize_CreatesError()
-        {
-            var error = ErrorFactory.Default.IndexOutOfRange("asdf", 0, "test", 0);
-
-            Assert.IsInstanceOf<IndexOutOfRangeException>(error);
-        }
-
-        [Test]
-        public void GetErrorNotImplemented_CreatesError()
-        {
-            var error = ErrorFactory.Default.NotImplemented();
-
-            Assert.IsInstanceOf<NotImplementedException>(error);
-        }
-
-        [Test]
-        public void GetErrorNotImplemented_WithTodo_CreatesError()
+        public void GetErrorNotImplemented_WithTodo_GetsMessage()
         {
             string todoNote = "Note";
-            var error = ErrorFactory.Default.NotImplemented(todoNote);
+            var error = ErrorMessage.Factory.NotImplemented(todoNote);
 
-            Assert.IsInstanceOf<NotImplementedException>(error);
-            Assert.IsTrue(error.Message.Contains(todoNote));
+            Assert.IsTrue(error.Contains(todoNote));
         }
     }
 }

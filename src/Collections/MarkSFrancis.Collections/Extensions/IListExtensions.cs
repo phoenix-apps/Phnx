@@ -20,12 +20,12 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (source.Count == 0)
             {
-                throw ErrorFactory.Default.ArgumentEmpty(nameof(source));
+                throw new InvalidOperationException(nameof(source));
             }
 
             return source[source.Count - 1];
@@ -42,7 +42,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             var newList = new List<T>(source.Count);
@@ -61,7 +61,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             for (int index = 0; index < source.Count; index++)
@@ -132,7 +132,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             bool comparerIsValidated = comparer != null;
@@ -193,7 +193,7 @@ namespace MarkSFrancis.Collections.Extensions
                     goto BinarySearchRangeStart;
 
                 default:
-                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(comparer),
+                    throw new ArgumentOutOfRangeException(nameof(comparer),
                         "Comparer result was invalid. Value of result was " + orderResult);
             }
         }

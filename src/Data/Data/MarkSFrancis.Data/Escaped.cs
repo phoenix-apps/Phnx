@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace MarkSFrancis.Data
@@ -15,11 +16,21 @@ namespace MarkSFrancis.Data
         /// <param name="escapeChar">The character to use when escaping</param>
         /// <param name="escapeTheseChars">The characters that will be escaped</param>
         /// <returns>The escaped string</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="textToEscape"/> or <paramref name="escapeTheseChars"/> is <see langword="null"/></exception>
         public static string Escape(string textToEscape, char escapeChar, params char[] escapeTheseChars)
         {
+            if (textToEscape == null)
+            {
+                throw new ArgumentNullException(nameof(textToEscape));
+            }
+            if (escapeTheseChars == null)
+            {
+                throw new ArgumentNullException(nameof(escapeTheseChars));
+            }
+
             StringBuilder escaped = new StringBuilder();
 
-            foreach(var @char in textToEscape)
+            foreach (var @char in textToEscape)
             {
                 if (@char == escapeChar || escapeTheseChars.Contains(@char))
                 {
@@ -39,8 +50,18 @@ namespace MarkSFrancis.Data
         /// <param name="escapeChar">The character that's been used when escaping</param>
         /// <param name="escapedTheseChars">The characters that have be escaped</param>
         /// <returns>The restored (unescaped) string</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="escapedText"/> or <paramref name="escapedTheseChars"/> is <see langword="null"/></exception>
         public static string Unescape(string escapedText, char escapeChar, params char[] escapedTheseChars)
         {
+            if (escapedText == null)
+            {
+                throw new ArgumentNullException(nameof(escapedText));
+            }
+            if (escapedTheseChars == null)
+            {
+                throw new ArgumentNullException(nameof(escapedTheseChars));
+            }
+
             StringBuilder unescaped = new StringBuilder();
 
             bool lastCharWasEscapeChar = false;

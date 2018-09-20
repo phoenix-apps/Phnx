@@ -62,12 +62,12 @@ namespace MarkSFrancis.Extensions
         {
             if (stringToRemoveFrom == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(stringToRemoveFrom));
+                throw new ArgumentNullException(nameof(stringToRemoveFrom));
             }
 
             if (charsToRemove == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(charsToRemove));
+                throw new ArgumentNullException(nameof(charsToRemove));
             }
 
             StringBuilder sb = new StringBuilder();
@@ -95,7 +95,7 @@ namespace MarkSFrancis.Extensions
         {
             if (stringToRemoveFrom == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(stringToRemoveFrom));
+                throw new ArgumentNullException(nameof(stringToRemoveFrom));
             }
 
             return stringToRemoveFrom.Replace(textToRemove, string.Empty);
@@ -122,12 +122,12 @@ namespace MarkSFrancis.Extensions
         {
             if (stringToRemoveFrom == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(stringToRemoveFrom));
+                throw new ArgumentNullException(nameof(stringToRemoveFrom));
             }
 
             if (textToRemove == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(textToRemove));
+                throw new ArgumentNullException(nameof(textToRemove));
             }
 
             string retString = stringToRemoveFrom;
@@ -151,7 +151,7 @@ namespace MarkSFrancis.Extensions
         {
             if (stringToConvert == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(stringToConvert));
+                throw new ArgumentNullException(nameof(stringToConvert));
             }
 
             var wordDelimiters = new[] { ' ', '-', '_' };
@@ -205,7 +205,7 @@ namespace MarkSFrancis.Extensions
         {
             if (stringToConvert == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(stringToConvert));
+                throw new ArgumentNullException(nameof(stringToConvert));
             }
 
             if (stringToConvert.Length == 0)

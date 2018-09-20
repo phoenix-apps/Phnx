@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using System;
 
 namespace MarkSFrancis.Configuration
 {
@@ -16,9 +17,10 @@ namespace MarkSFrancis.Configuration
         /// Create a new <see cref="Config"/> using <paramref name="configuration"/> as a configuration source
         /// </summary>
         /// <param name="configuration">The configuration source</param>
+        /// <exception cref="ArgumentNullException"><paramref name="configuration"/> is <see langword="null"/></exception>
         public Config(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = configuration ?? throw ErrorFactory.Default.ArgumentNull(nameof(configuration));
         }
 
         /// <summary>
@@ -34,10 +36,18 @@ namespace MarkSFrancis.Configuration
         /// <typeparam name="T">The type of the value for the key to load</typeparam>
         /// <param name="key">The key to the configuration to load</param>
         /// <returns>The value associated with the given configuration key, converted to <typeparamref name="T"/></returns>
+        /// <exception cref="InvalidCastException">An error occured either getting the converter from <see cref="string"/> to <typeparamref name="T"/>, or an error occured running the converter. Check the inner exception for details on what went wrong in the converter</exception>
         public T Get<T>(string key)
         {
-            var defaultConverter = ConverterHelpers.GetDefaultConverter<string, T>();
-            return defaultConverter(this[key]);
+            try
+            {
+                var defaultConverter = ConverterHelpers.GetDefaultConverter<string, T>();
+                return defaultConverter(this[key]);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidCastException($"Error casting from {typeof(string)} to {typeof(T)}", ex);
+            }
         }
 
         /// <summary>
@@ -49,7 +59,7 @@ namespace MarkSFrancis.Configuration
         /// <returns>The value associated with the given configuration key, converted to <typeparamref name="T"/></returns>
         public T Get<T>(string key, T defaultValue)
         {
-            if (TryGet<T>(key, out T value))
+            if (TryGet(key, out T value))
             {
                 return value;
             }
@@ -76,7 +86,7 @@ namespace MarkSFrancis.Configuration
             try
             {
                 var defaultConverter = ConverterHelpers.GetDefaultConverter<string, T>();
-                value = defaultConverter(this[key]);
+                value = defaultConverter(keyValue);
                 return true;
             }
             catch
@@ -87,7 +97,7 @@ namespace MarkSFrancis.Configuration
         }
 
         /// <summary>
-        /// Get a connection string from the configuration
+        /// Get a connection string from the configuration, using the "ConnectionStrings" section of the configuration
         /// </summary>
         /// <param name="key">The key to the connection string to load</param>
         /// <returns>The connection string associated with the given key</returns>

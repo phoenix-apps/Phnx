@@ -16,24 +16,25 @@ namespace MarkSFrancis.Collections.Extensions
         /// <param name="startIndex">The index at which inserting into <paramref name="source"/> begins</param>
         /// <param name="valuesToInsert">The values to insert into the collection</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="valuesToInsert"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero, or is greater than or equal to the size of <paramref name="source"/></exception>
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="startIndex"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is greater than or equal to the size of <paramref name="source"/></exception>
         public static void InsertList<T>(this List<T> source, int startIndex, IList<T> valuesToInsert)
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
             if (valuesToInsert == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(valuesToInsert));
+                throw new ArgumentNullException(nameof(valuesToInsert));
             }
             if (startIndex < 0)
             {
-                throw ErrorFactory.Default.ArgumentLessThanZero(nameof(startIndex));
+                throw new ArgumentLessThanZeroException(nameof(startIndex));
             }
             if (startIndex > source.Count)
             {
-                throw ErrorFactory.Default.ArgumentOutOfRange(nameof(startIndex), $"{nameof(startIndex)} cannot be greater than or equal to the size of {nameof(source)}. {nameof(source)} has a size of {source.Count}");
+                throw new ArgumentOutOfRangeException(nameof(startIndex), $"{nameof(startIndex)} cannot be greater than or equal to the size of {nameof(source)}. {nameof(source)} has a size of {source.Count}");
             }
 
             if (source.Capacity < valuesToInsert.Count + source.Count)

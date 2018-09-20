@@ -1,15 +1,34 @@
-﻿using System;
+﻿using MarkSFrancis.Data.LazyLoad;
 using NUnit.Framework;
+using System;
 
 namespace MarkSFrancis.Data.Tests.LazyLoad
 {
     public class LazyTests
     {
-        public Data.LazyLoad.Lazy<object> GetOnlyLazy =>
-            new Data.LazyLoad.Lazy<object>(() => null);
+        public LazyGetSet<object> GetOnlyLazy =>
+            new LazyGetSet<object>(() => null);
 
-        public Data.LazyLoad.Lazy<object> GetSetLazy =>
-            new Data.LazyLoad.Lazy<object>(() => null, o => { });
+        public LazyGetSet<object> GetSetLazy =>
+            new LazyGetSet<object>(() => null, o => { });
+
+        [Test]
+        public void CreateLazyLoad_WithNullGetFunc_InGetOnly_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new LazyGetSet<object>(null));
+        }
+
+        [Test]
+        public void CreateLazyLoad_WithNullGetFunc_InGetSet_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new LazyGetSet<object>(null, o => { }));
+        }
+
+        [Test]
+        public void CreateLazyLoad_WithNullSetFunc_InGetSet_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new LazyGetSet<object>(() => null, null));
+        }
 
         [Test]
         public void LazyLoad_FirstLoad_CallsLoadEventsInOrder()
@@ -53,7 +72,7 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         {
             bool wasCalled = false;
 
-            var lazy = new Data.LazyLoad.Lazy<object>(() => null, o => wasCalled = true)
+            var lazy = new LazyGetSet<object>(() => null, o => wasCalled = true)
             {
                 Value = null
             };
@@ -67,7 +86,7 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         {
             bool wasCalled = false;
 
-            var lazy = new Data.LazyLoad.Lazy<object>(() =>
+            var lazy = new LazyGetSet<object>(() =>
             {
                 wasCalled = true;
                 return null;
@@ -81,7 +100,7 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         [Test]
         public void GetLazyValue_WithNull_LoadsValue()
         {
-            var lazy = new Data.LazyLoad.Lazy<object>(() => null);
+            var lazy = new LazyGetSet<object>(() => null);
 
             var val = lazy.Value;
 
@@ -92,7 +111,7 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         public void SetLazyValue_WithNull_SetsCachedValue()
         {
             var lazy =
-                new Data.LazyLoad.Lazy<object>(() => null, o =>
+                new LazyGetSet<object>(() => null, o =>
                     { })
                 {
                     Value = 17
@@ -110,11 +129,11 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
             int timesGetCalled = 0;
 
             var lazy =
-                new Data.LazyLoad.Lazy<object>(() =>
+                new LazyGetSet<object>(() =>
                     {
                         ++timesGetCalled;
                         return firstVal;
-                    }, 
+                    },
                     o => { });
 
             Assert.AreEqual(firstVal, lazy.Value);

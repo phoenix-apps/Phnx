@@ -25,11 +25,11 @@ namespace MarkSFrancis.Collections.Tests.Extensions.IEnumerableLinqExtensions
         }
 
         [Test]
-        public void MaxBy_WhenCollectionIsEmpty_ThrowsArgumentException()
+        public void MaxBy_WhenCollectionIsEmpty_ThrowsInvalidOperationException()
         {
             IEnumerable<int> values = new List<int>();
 
-            Assert.Throws<ArgumentException>(() => values.MaxBy(v => v));
+            Assert.Throws<InvalidOperationException>(() => values.MaxBy(v => v));
         }
 
         [Test]

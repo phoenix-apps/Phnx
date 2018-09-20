@@ -6,14 +6,18 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
 {
     public class LazyDatabaseTests
     {
-        // NOTE: The LazyDatabase must be cleared before each test, and tests cannot be ran in parallel
+        [SetUp]
+        public void Setup()
+        {
+            // NOTE: The LazyDatabase must be cleared before each test, and tests cannot be ran in parallel
+            LazyDatabase.Clear();
+        }
 
         [Test]
         public void SubmittingEntry_ToTheCache_IncreasesCacheCountByOne()
         {
-            LazyDatabase.Clear();
-
-            var person = PersonRepository.GetSingle(1);
+            var people = new PersonRepository();
+            var person = people.GetSingle(1);
 
             LazyDatabase.AddOrUpdate(1, person);
 
@@ -25,15 +29,15 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         [Test]
         public void SubmittingCrossTypeEntries_ToTheCache_IncreasesCacheCountByTwo()
         {
-            LazyDatabase.Clear();
-
-            var person = PersonRepository.GetSingle(1);
-            var role = RoleRepository.GetSingle(1);
+            var people = new PersonRepository();
+            var person = people.GetSingle(1);
+            var roles = new RoleRepository();
+            var role = roles.GetSingle(1);
 
             LazyDatabase.AddOrUpdate(1, person);
             LazyDatabase.AddOrUpdate(1, role);
 
-            LazyDatabase.Get(1, PersonRepository.GetSingle);
+            LazyDatabase.Get(1, people.GetSingle);
 
             Assert.AreEqual(2, LazyDatabase.TotalItemsCachedCount);
 

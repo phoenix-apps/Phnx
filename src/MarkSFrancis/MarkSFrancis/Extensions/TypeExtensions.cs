@@ -29,7 +29,7 @@ namespace MarkSFrancis.Extensions
         {
             if (type == null)
             {
-                ErrorFactory.Default.ArgumentNull(nameof(type));
+                throw new ArgumentNullException(nameof(type));
             }
 
             return Activator.CreateInstance(type, args);

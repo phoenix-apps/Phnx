@@ -19,11 +19,11 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
             else if (keySelector == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(keySelector));
+                throw new ArgumentNullException(nameof(keySelector));
             }
 
             HashSet<TKey> knownDistincts = new HashSet<TKey>();
@@ -50,16 +50,16 @@ namespace MarkSFrancis.Collections.Extensions
         /// <param name="keySelector">The selector to get the key to use for comparing values</param>
         /// <returns>The value from the collection with the maximum key value</returns>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null or <paramref name="keySelector"/> is null</exception>
-        /// <exception cref="ArgumentException"><paramref name="source"/> was empty</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="source"/> was empty</exception>
         public static T MaxBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> keySelector) where TKey : IComparable<TKey>
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
             else if (keySelector == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(keySelector));
+                throw new ArgumentNullException(nameof(keySelector));
             }
 
             T curMax = default(T);
@@ -87,7 +87,7 @@ namespace MarkSFrancis.Collections.Extensions
 
             if (firstRun)
             {
-                throw ErrorFactory.Default.ArgumentException("Collection was empty", nameof(source));
+                throw new InvalidOperationException(ErrorMessage.Factory.SequenceEmpty(nameof(source)));
             }
 
             return curMax;
@@ -102,16 +102,16 @@ namespace MarkSFrancis.Collections.Extensions
         /// <param name="keySelector">The selector to get the key to use for comparing values</param>
         /// <returns>The value from the collection with the minimum key value</returns>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null or <paramref name="keySelector"/> is null</exception>
-        /// <exception cref="ArgumentException"><paramref name="source"/> was empty</exception>
+        /// <exception cref="InvalidOperationException"><paramref name="source"/> was empty</exception>
         public static T MinBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> keySelector) where TKey : IComparable<TKey>
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
             else if (keySelector == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(keySelector));
+                throw new ArgumentNullException(nameof(keySelector));
             }
 
             T curMin = default(T);
@@ -139,7 +139,7 @@ namespace MarkSFrancis.Collections.Extensions
 
             if (firstRun)
             {
-                throw ErrorFactory.Default.ArgumentException("Collection was empty", nameof(source));
+                throw new InvalidOperationException(nameof(source));
             }
 
             return curMin;
@@ -226,11 +226,11 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
             if (collections == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(collections));
+                throw new ArgumentNullException(nameof(collections));
             }
 
             foreach (var value in source)
@@ -285,11 +285,11 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
             if (isMatch == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(isMatch));
+                throw new ArgumentNullException(nameof(isMatch));
             }
 
             int index = 0;
@@ -320,11 +320,11 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
             if (isMatch == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(isMatch));
+                throw new ArgumentNullException(nameof(isMatch));
             }
 
             long index = 0;

@@ -37,7 +37,7 @@ namespace MarkSFrancis.Extensions.Numeric
         {
             if (b == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(b));
+                throw new ArgumentNullException(nameof(b));
             }
 
             return BitConverter.ToString(b).Replace("-", string.Empty);
