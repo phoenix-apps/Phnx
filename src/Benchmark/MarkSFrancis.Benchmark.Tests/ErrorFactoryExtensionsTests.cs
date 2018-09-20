@@ -1,14 +1,14 @@
 ﻿using NUnit.Framework;
-using System;
 
 namespace MarkSFrancis.Benchmark.Tests
 {
-    public class ErrorFactoryExtensionsTests
+    public class ErrorMessageExtensionsTests
     {
         [Test]
-        public void ErrorFactory_GetBenchmarkNotFinished_ReturnsInvalidOperationException()
+        public void ErrorMessages_GetBenchmarkNotFinished_GetsMessage()
         {
-            Assert.IsInstanceOf<InvalidOperationException>(ErrorFactory.Default.BenchmarkNotFinished().Create());
+            string error = ErrorMessage.Factory.BenchmarkNotFinished();
+            Assert.IsFalse(string.IsNullOrEmpty(error));
         }
     }
 }

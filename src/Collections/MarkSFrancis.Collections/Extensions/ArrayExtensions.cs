@@ -17,7 +17,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             Array.Clear(source, 0, source.Length);
@@ -95,7 +95,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             T[] copy = new T[source.Length];
@@ -117,7 +117,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             Array.Resize(ref source, newSize);
@@ -137,7 +137,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             for (long index = 0; index < source.Length; ++index)
@@ -156,7 +156,7 @@ namespace MarkSFrancis.Collections.Extensions
         {
             if (source == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(source));
+                throw new ArgumentNullException(nameof(source));
             }
 
             for (long index = 0; index < source.Length; ++index)

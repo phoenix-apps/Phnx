@@ -9,7 +9,7 @@ namespace MarkSFrancis.Console.Tests.Progress
         [Test]
         public void CreateNew_WithNegativeMaxValue_ThrowsArgumentOutOfRangeException()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ProgressBarRenderer(-1));
+            Assert.Throws<ArgumentLessThanZeroException>(() => new ProgressBarRenderer(-1));
         }
 
         [Test]
@@ -28,7 +28,7 @@ namespace MarkSFrancis.Console.Tests.Progress
             var expected = "[----------] 0%";
 
             var prog = new ProgressBarRenderer(10);
-            var result = prog.ToString(false);
+            var result = prog.ToString();
 
             Assert.AreEqual(expected, result);
         }

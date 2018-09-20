@@ -1,5 +1,4 @@
-﻿using MarkSFrancis.Collections.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -37,8 +36,8 @@ namespace MarkSFrancis.Console
         /// <exception cref="ArgumentNullException"><paramref name="input"/> or <paramref name="output"/> is <see langword="null"/></exception>
         public TextIoHelper(TextReader input, TextWriter output, bool autoFlush = false)
         {
-            Input = input ?? throw ErrorFactory.Default.ArgumentNull(nameof(input));
-            Output = output ?? throw ErrorFactory.Default.ArgumentNull(nameof(output));
+            Input = input ?? throw new ArgumentNullException(nameof(input));
+            Output = output ?? throw new ArgumentNullException(nameof(output));
             AutoFlush = autoFlush;
         }
 
@@ -251,6 +250,7 @@ namespace MarkSFrancis.Console
         /// <param name="question">The question to write</param>
         /// <returns>The index of the selected option</returns>
         /// <exception cref="ArgumentNullException"><paramref name="options"/> is <see langword="null"/></exception>
+        /// <exception cref="InvalidOperationException"><paramref name="options"/> is empty</exception>
         /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
@@ -261,7 +261,7 @@ namespace MarkSFrancis.Console
         {
             if (options == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(options));
+                throw new ArgumentNullException(nameof(options));
             }
 
             // Format question
@@ -281,7 +281,7 @@ namespace MarkSFrancis.Console
 
             if (optionCount == 0)
             {
-                throw ErrorFactory.Default.ArgumentEmpty(nameof(options));
+                throw new InvalidOperationException(nameof(options));
             }
 
             var questionWithRangeAsString = questionWithRange.ToString();
@@ -292,7 +292,7 @@ namespace MarkSFrancis.Console
 
                 if (valueInt < 0 || valueInt >= optionCount)
                 {
-                    throw ErrorFactory.Default.ArgumentOutOfRange(nameof(enteredValue));
+                    throw new ArgumentOutOfRangeException(nameof(enteredValue));
                 }
 
                 return valueInt;
@@ -366,7 +366,7 @@ namespace MarkSFrancis.Console
         {
             if (converter == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(converter));
+                throw new ArgumentNullException(nameof(converter));
             }
 
             if (question != null)

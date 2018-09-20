@@ -86,7 +86,7 @@ namespace MarkSFrancis.Benchmark
         {
             if (generateValue == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(generateValue)).Create();
+                throw new ArgumentNullException(nameof(generateValue));
             }
 
             var values = new T[numberOfValuesToGenerate];

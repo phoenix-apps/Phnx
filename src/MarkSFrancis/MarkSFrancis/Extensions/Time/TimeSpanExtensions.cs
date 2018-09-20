@@ -68,7 +68,7 @@ namespace MarkSFrancis.Extensions.Time
                     case TimeComponents.Hours | TimeComponents.Seconds:
                     case TimeComponents.Hours | TimeComponents.Milliseconds:
                     case TimeComponents.Minutes | TimeComponents.Milliseconds:
-                        throw Errors.Factory.ArgumentException("Time Components are invalid. They cannot be only " + timeComponents.ToString() + " and in a short format", nameof(timeComponents)).Create();
+                        throw new ArgumentException("Time Components are invalid. They cannot be only " + timeComponents.ToString() + " and in a short format", nameof(timeComponents));
                 }
             }
 
@@ -81,7 +81,6 @@ namespace MarkSFrancis.Extensions.Time
                 if (formattedText.Length > 0)
                 {
                     formattedText.Append((longFormat ? longDelimiter : shortDelimiter) + appendMe);
-
                 }
                 else
                 {

@@ -1,21 +1,20 @@
-﻿using MarkSFrancis.ThrowHelpers;
-using System;
+﻿using System;
 
 namespace MarkSFrancis.Benchmark
 {
     /// <summary>
-    /// Extensions for <see cref="ErrorFactory"/>
+    /// Extensions for <see cref="ErrorMessage"/>
     /// </summary>
-    public static partial class ErrorFactoryExtensions
+    public static class ErrorMessageExtensions
     {
         /// <summary>
         /// An error that explains that the benchmark's time cannot be retrieved until the section finishes executing
         /// </summary>
-        /// <param name="factory">The <see cref="ErrorFactory"/> to extend</param>
+        /// <param name="errors">The <see cref="ErrorMessage"/> to extend</param>
         /// <returns>An <see cref="InvalidOperationException"/>, describing that the benchmark time cannot be retrieved until the benchmark is finished</returns>
-        public static IThrowHelper BenchmarkNotFinished(this ErrorFactory factory)
+        public static string BenchmarkNotFinished(this ErrorMessage errors)
         {
-            return new ThrowHelper<InvalidOperationException>("The time of the benchmark cannot be retrieved until the benchmark is completed");
+            return "The time of the benchmark cannot be retrieved until the benchmark is completed";
         }
     }
 }

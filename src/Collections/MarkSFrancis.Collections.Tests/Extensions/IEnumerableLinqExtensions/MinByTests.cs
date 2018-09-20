@@ -25,11 +25,11 @@ namespace MarkSFrancis.Collections.Tests.Extensions.IEnumerableLinqExtensions
         }
 
         [Test]
-        public void MinBy_WhenCollectionIsEmpty_ThrowsArgumentException()
+        public void MinBy_WhenCollectionIsEmpty_ThrowsInvalidOperationException()
         {
             IEnumerable<int> values = new List<int>();
 
-            Assert.Throws<ArgumentException>(() => values.MinBy(v => v));
+            Assert.Throws<InvalidOperationException>(() => values.MinBy(v => v));
         }
 
         [Test]
