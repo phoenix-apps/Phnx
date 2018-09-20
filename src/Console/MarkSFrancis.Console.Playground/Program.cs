@@ -9,6 +9,16 @@ namespace MarkSFrancis.Console.Playground
 
         static void Main(string[] args)
         {
+            Intro();
+            TestUndoAndClear();
+            if (!DoMath()) return;
+
+            Console.WriteLine("Press any key to exit...");
+            Console.ReadKey(false);
+        }
+
+        private static void Intro()
+        {
             Console.WriteInfo("Welcome to the playground application for the MarkSFrancis.Console library");
 
             if (Console.YesNo("Clear the intro message?"))
@@ -19,24 +29,30 @@ namespace MarkSFrancis.Console.Playground
             {
                 Console.UndoWriteLine();
             }
+        }
 
+        private static void TestUndoAndClear()
+        {
             var infoMessage = "Testing undo writeline, please wait...";
             Console.WriteLine(infoMessage);
 
             var fullLine = new string('_', System.Console.BufferWidth);
             Console.WriteLine(fullLine);
 
-            Thread.Sleep(500);
+            Wait(500);
             Console.UndoWriteLine(infoMessage, fullLine);
 
             infoMessage = "Testing clear current line, please wait...";
             Console.WriteLine(infoMessage);
 
             Console.Write(fullLine);
-            Thread.Sleep(500);
+            Wait(500);
             Console.ClearCurrentLine(fullLine);
             Console.UndoWriteLine();
+        }
 
+        private static bool DoMath()
+        {
             var result = Console.GetInt("Please enter an integer to square:");
 
             using (var progress = Console.ProgressBar(100, d => "Powering up math cells...", true))
@@ -51,22 +67,31 @@ namespace MarkSFrancis.Console.Playground
 
             Console.WriteError("Critical failure with math cells: Temperature above safe levels, emergency abort");
 
-            if (!Console.YesNo("Continue?")) return;
+            if (!Console.YesNo("Continue?")) return false;
 
             Console.WriteWarning("Falling back to legacy algorithmic modelling");
-            for (int index = 0; index < 10; ++index)
-            {
-                Console.Write('.');
-                Thread.Sleep(250);
-            }
+            SlowlyWriteText("..........");
 
             Console.NewLine(2);
 
             Console.WriteLine($"{result}² = {Math.Pow(result, 2)}");
             Console.NewLine();
 
-            Console.WriteLine("Press any key to exit...");
-            Console.ReadKey(false);
+            return true;
+        }
+
+        private static void SlowlyWriteText(string text)
+        {
+            foreach (var letter in text)
+            {
+                Console.Write(letter);
+                Wait(250);
+            }
+        }
+
+        private static void Wait(int milliseconds)
+        {
+            Thread.Sleep(milliseconds);
         }
     }
 }
