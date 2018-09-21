@@ -110,7 +110,7 @@ namespace MarkSFrancis.Data.LazyLoad
         {
             if (!TryGetTable<TEntry>(out var table))
             {
-                if (!TryAddTable(getFromExternalSource))
+                if (!TryAddTable(getFromExternalSource) || !TryGetTable<TEntry>(out table))
                 {
                     // Threading fuckery, fuck it. Don't cache the value, just load it directly from the external source
                     return getFromExternalSource(id);

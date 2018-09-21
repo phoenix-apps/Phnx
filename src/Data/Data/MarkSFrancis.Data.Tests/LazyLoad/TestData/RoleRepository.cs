@@ -2,11 +2,11 @@
 {
     internal class RoleRepository
     {
-        public int TimesCalled { get; set; }
+        public int TimesLoaded { get; set; }
 
         public Role GetSingle(int id)
         {
-            ++TimesCalled;
+            ++TimesLoaded;
 
             return new Role
             {
