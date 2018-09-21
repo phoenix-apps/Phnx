@@ -99,7 +99,7 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Lazy load an entry from the cache
+        /// Lazy load an entry from the cache, configuring the cache table if it's not already configured
         /// </summary>
         /// <typeparam name="TKey">The type of id for the object to load</typeparam>
         /// <typeparam name="TEntry">The type of entry to load</typeparam>
@@ -139,7 +139,7 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Add or update an entry in the cache
+        /// Add or update an entry in the cache, configuring the cache table if it's not already configured
         /// </summary>
         /// <typeparam name="TKey">The type of id for the object to add or update</typeparam>
         /// <typeparam name="TEntry">The type of entry to add or update</typeparam>
@@ -169,10 +169,10 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Remove a table from the cache
+        /// Try to remove a table from the cache
         /// </summary>
         /// <typeparam name="TEntry">The type of entries in the table to remove</typeparam>
-        /// <returns></returns>
+        /// <returns>Whether the table was removed from the cache</returns>
         public bool TryRemoveTable<TEntry>()
         {
             return _cache.TryRemove(typeof(TEntry), out _);
@@ -184,6 +184,7 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <typeparam name="TKey">The type of id for the object to remove</typeparam>
         /// <typeparam name="TEntry">The type of entry to remove</typeparam>
         /// <param name="id">The id of the entry to remove</param>
+        /// <returns>Whether the record was removed from the cache</returns>
         public bool TryRemove<TKey, TEntry>(TKey id)
         {
             if (!TryGetTable<TEntry>(out var table))
@@ -206,7 +207,7 @@ namespace MarkSFrancis.Data.LazyLoad
         /// Get the number of items cached in a specific table
         /// </summary>
         /// <typeparam name="T">The type of the table to get the total items cached in</typeparam>
-        /// <returns></returns>
+        /// <returns>The number of items cached in a specific table. Returns 0 if the cache is not configured</returns>
         public int TableItemsCachedCount<T>()
         {
             if (!TryGetTable<T>(out var table))
