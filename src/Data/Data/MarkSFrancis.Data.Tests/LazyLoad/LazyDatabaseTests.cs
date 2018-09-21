@@ -8,6 +8,14 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
     public class LazyDatabaseTests
     {
         [Test]
+        public void AddingTable_WithNullLoader_ThrowsArgumentNullException()
+        {
+            var database = new LazyDatabase();
+
+            Assert.Throws<ArgumentNullException>(() => database.TryAddTable<int, Person>(null));
+        }
+
+        [Test]
         public void SubmittingEntry_ToTheCache_IncreasesCacheCountByOne()
         {
             var database = new LazyDatabase();
@@ -59,19 +67,20 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
             database.TryAddTable<int, Person>(people.GetSingle);
             database.TryAddTable<int, Role>(roles.GetSingle);
 
-            database.TryGet<int, Person>(1, out _);
-            database.TryGet<int, Person>(1, out _);
-            database.TryGet<int, Person>(2, out _);
-            database.TryGet<int, Person>(2, out _);
-            database.TryGet<int, Role>(1, out _);
-            database.TryGet<int, Role>(2, out _);
-            database.TryGet<int, Role>(7, out _);
-            database.TryGet<int, Role>(7, out _);
-            database.TryGet<int, Role>(7, out _);
-            database.TryGet<int, Role>(7, out _);
-            database.TryGet<int, Role>(7, out _);
-            database.TryGet<int, Role>(7, out _);
-            database.TryGet<int, Role>(7, out _);
+            database.TryGet(1, out Person p);
+            database.TryGet(1, out p);
+            database.TryGet(2, out p);
+            database.TryGet(2, out p);
+
+            database.TryGet(1, out Role r);
+            database.TryGet(2, out r);
+            database.TryGet(7, out r);
+            database.TryGet(7, out r);
+            database.TryGet(7, out r);
+            database.TryGet(7, out r);
+            database.TryGet(7, out r);
+            database.TryGet(7, out r);
+            database.TryGet(7, out r);
 
             Assert.AreEqual(2, people.TimesLoaded);
             Assert.AreEqual(3, roles.TimesLoaded);
@@ -85,8 +94,8 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
 
             database.TryAddTable<int, Person>(people.GetSingle);
 
-            database.TryGet<int, Person>(1, out _);
-            database.TryGet<int, Person>(1, out _);
+            database.TryGet(1, out Person p);
+            database.TryGet(1, out p);
             database.Get(1, people.GetSingle);
 
             Assert.AreEqual(3, people.TimesLoaded);
@@ -99,8 +108,8 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
             var people = new PersonRepository();
 
             database.Get(1, people.GetSingle);
-            database.TryGet<int, Person>(1, out _);
-            database.TryGet<int, Person>(1, out _);
+            database.TryGet(1, out Person p);
+            database.TryGet(1, out p);
 
             Assert.AreEqual(1, people.TimesLoaded);
         }

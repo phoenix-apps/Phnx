@@ -23,10 +23,10 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
             return new LazyDictionary<int, Person>(people.GetSingle);
         }
 
-        private LazyDictionary<int, Person> CreateLifetimeDictionary(int lifetimeMilliseconds, out PersonRepository people)
+        private LazyDictionary<int, Person> CreateLifetimeDictionary(out PersonRepository people)
         {
             people = new PersonRepository();
-            return new LazyDictionary<int, Person>(people.GetSingle, TimeSpan.FromMilliseconds(lifetimeMilliseconds));
+            return new LazyDictionary<int, Person>(people.GetSingle, TimeSpan.Zero);
         }
 
         [Test]
@@ -99,6 +99,17 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
 
             Assert.AreEqual(person, person2);
             Assert.AreEqual(1, people.TimesLoaded);
+        }
+
+        [Test]
+        public void GettingEntry_ThatIsExpired_Reloads()
+        {
+            var cache = CreateLifetimeDictionary(out var people);
+
+            cache.Get(1);
+            cache.Get(1);
+
+            Assert.AreEqual(2, people.TimesLoaded);
         }
 
         [Test]

@@ -4,7 +4,7 @@ using System;
 
 namespace MarkSFrancis.Data.Tests.LazyLoad
 {
-    public class LazyTests
+    public class LazyGetSetTests
     {
         public LazyGetSet<object> GetOnlyLazy =>
             new LazyGetSet<object>(() => null);
@@ -31,12 +31,12 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         }
 
         [Test]
-        public void LazyLoad_FirstLoad_CallsLoadEventsInOrder()
+        public void FirstLoad_CallsLoadEventsInOrder()
         {
             var lazy = GetSetLazy;
 
-            int eventsCalledCount = 0;
-            int valueCachedCallOrder = 0,
+            int eventsCalledCount = 0,
+                valueCachedCallOrder = 0,
                 valueGetCallOrder = 0,
                 valueSetCallOrder = 0;
 
@@ -77,7 +77,6 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
                 Value = null
             };
 
-
             Assert.IsTrue(wasCalled);
         }
 
@@ -110,19 +109,16 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         [Test]
         public void SetLazyValue_WithNull_SetsCachedValue()
         {
-            var lazy =
-                new LazyGetSet<object>(() => null, o =>
-                    { })
-                {
-                    Value = 17
-                };
+            var lazy = new LazyGetSet<object>(() => null, o => { })
+            {
+                Value = null
+            };
 
-
-            Assert.AreEqual(17, lazy.Value);
+            Assert.AreEqual(null, lazy.Value);
         }
 
         [Test]
-        public void GetSetGetGetLazyValue_WithDifferentValues_UpdatesAndUsesCache()
+        public void GetSetLazy_WithDifferentValues_UpdatesAndUsesCache()
         {
             var firstVal = 167;
             var secondVal = "asdf";
