@@ -5,7 +5,7 @@ using System;
 
 namespace MarkSFrancis.Data.Tests.LazyLoad
 {
-    public class LazyDataTests
+    public class LazyDictionaryTests
     {
         private static Person SamplePerson(int id = 1)
         {
@@ -48,7 +48,7 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
 
             Person sample = SamplePerson();
 
-            cache.AddOrUpdate(sample);
+            cache.AddOrUpdate(sample.Id, sample);
 
             Assert.AreEqual(1, cache.CachedCount);
         }
@@ -64,10 +64,10 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
 
             var person = cache.Get(1);
 
-            cache.AddOrUpdate(sample);
+            cache.AddOrUpdate(sample.Id, sample);
 
             sample.LastName = replacementName;
-            cache.AddOrUpdate(sample);
+            cache.AddOrUpdate(sample.Id, sample);
 
             Assert.AreEqual(1, cache.CachedCount);
             Assert.AreEqual(replacementName, sample.LastName);
@@ -80,11 +80,11 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
 
             Person sample = SamplePerson();
 
-            cache.AddOrUpdate(sample);
+            cache.AddOrUpdate(sample.Id, sample);
 
             sample = SamplePerson(2);
 
-            cache.AddOrUpdate(sample);
+            cache.AddOrUpdate(sample.Id, sample);
 
             Assert.AreEqual(2, cache.CachedCount);
         }
@@ -108,7 +108,7 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
 
             Person sample = SamplePerson();
 
-            cache.AddOrUpdate(sample);
+            cache.AddOrUpdate(sample.Id, sample);
 
             cache.Remove(sample.Id);
 
