@@ -98,11 +98,9 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
             var database = new LazyDatabase(TimeSpan.FromHours(100));
             var people = new PersonRepository();
 
-            database.TryAddTable<int, Person>(people.GetSingle);
-
-            database.TryGet<int, Person>(1, out _);
-            database.TryGet<int, Person>(1, out _);
             database.Get(1, people.GetSingle);
+            database.TryGet<int, Person>(1, out _);
+            database.TryGet<int, Person>(1, out _);
 
             Assert.AreEqual(1, people.TimesLoaded);
         }
