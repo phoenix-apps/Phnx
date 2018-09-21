@@ -7,16 +7,53 @@ namespace MarkSFrancis.Data.LazyLoad
     /// <summary>
     /// A thread-safe lazy loaded database, with tables seperated by model types
     /// </summary>
-    public static class LazyDatabase
+    public class LazyDatabase
     {
-        private static readonly ConcurrentDictionary<Type, ConcurrentDictionary<object, object>> _cache =
-            new ConcurrentDictionary<Type, ConcurrentDictionary<object, object>>();
+        private readonly ConcurrentDictionary<Type, LazyDictionary<object, object>> _cache;
 
-        private static readonly object _syncContext = new object();
-
-        private static ConcurrentDictionary<object, object> GetTable<T>()
+        public LazyDatabase()
         {
-            return _cache.GetOrAdd(typeof(T), new ConcurrentDictionary<object, object>());
+            EntriesDefaultMaximumLifetime = null;
+            _cache = new ConcurrentDictionary<Type, LazyDictionary<object, object>>();
+        }
+
+        public LazyDatabase(TimeSpan globalLifetime)
+        {
+            EntriesDefaultMaximumLifetime = globalLifetime;
+            _cache = new ConcurrentDictionary<Type, LazyDictionary<object, object>>();
+        }
+
+        /// <summary>
+        /// Get the total number of tables that have been cached
+        /// </summary>
+        public int TotalTablesCount => _cache.Count;
+
+        /// <summary>
+        /// The default maximum lifetime for entries in the cache. This is <see langword="null"/> if there is no default maximum lifetime
+        /// </summary>
+        public TimeSpan? EntriesDefaultMaximumLifetime { get; }
+
+        /// <summary>
+        /// Whether this <see cref="LazyDictionary{TKey, TEntry}"/> has been set up with an auto-expiration by default for entries
+        /// </summary>
+        public bool EntriesHaveDefaultMaximumLifetime => EntriesDefaultMaximumLifetime.HasValue;
+
+        /// <summary>
+        /// Add a lazy loading table to the dictionary if it is not already loaded
+        /// </summary>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="getFromExternalSource"></param>
+        /// <returns>Whether the table was added to the cache database</returns>
+        public bool TryAddTable<TKey, TValue>(Func<TKey, TValue> getFromExternalSource, TimeSpan overrideLifetime)
+        {
+            var newTable = new LazyDictionary<object, object>(key => getFromExternalSource((TKey)key));
+            return _cache.TryAdd(typeof(TValue), newTable);
+        }
+
+        private bool TryGetTable<T>(out LazyDictionary<object, object> table)
+        {
+            return _cache.TryGetValue(typeof(T), out table);
         }
 
         /// <summary>
@@ -27,7 +64,7 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <param name="id">The id of the entry to load</param>
         /// <param name="load">The method to call if the value is not already in the cache</param>
         /// <returns>The lazy loaded value with the primary key of <paramref name="id"/></returns>
-        public static TEntry Get<TKey, TEntry>(TKey id, Func<TKey, TEntry> load)
+        public TEntry Get<TKey, TEntry>(TKey id, Func<TKey, TEntry> load)
         {
             lock (_syncContext)
             {
@@ -44,11 +81,11 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <typeparam name="TEntry">The type of entry to add or update</typeparam>
         /// <param name="id">The id of the entry to add or update</param>
         /// <param name="value">The value to add or update</param>
-        public static void AddOrUpdate<TKey, TEntry>(TKey id, TEntry value)
+        public void AddOrUpdate<TKey, TEntry>(TKey id, TEntry value)
         {
             lock (_syncContext)
             {
-                var table = GetTable<TEntry>();
+                var table = GetTable<TEntry>(true);
 
                 table.AddOrUpdate(id, value, (a, b) => value);
             }
@@ -60,11 +97,16 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <typeparam name="TKey">The type of id for the object to remove</typeparam>
         /// <typeparam name="TEntry">The type of entry to remove</typeparam>
         /// <param name="id">The id of the entry to remove</param>
-        public static void Remove<TKey, TEntry>(TKey id)
+        public void Remove<TKey, TEntry>(TKey id)
         {
             lock (_syncContext)
             {
-                var table = GetTable<TEntry>();
+                var table = GetTable<TEntry>(false);
+
+                if (table == null)
+                {
+                    return;
+                }
 
                 table.TryRemove(id, out _);
             }
@@ -74,7 +116,7 @@ namespace MarkSFrancis.Data.LazyLoad
         /// Clear a table from the cache
         /// </summary>
         /// <typeparam name="T">The type of the table to clear</typeparam>
-        public static void Clear<T>()
+        public void Clear<T>()
         {
             lock (_syncContext)
             {
@@ -85,7 +127,7 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <summary>
         /// Clear the entire cache
         /// </summary>
-        public static void Clear()
+        public void Clear()
         {
             lock (_syncContext)
             {
@@ -94,29 +136,20 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Get the total number of items cached
-        /// </summary>
-        public static long TotalItemsCachedCount
-        {
-            get
-            {
-                lock (_syncContext)
-                {
-                    return _cache.Sum(c => (long)c.Value.Count);
-                }
-            }
-        }
-
-        /// <summary>
         /// Get the number of items cached in a specific table
         /// </summary>
         /// <typeparam name="T">The type of the table to get the total items cached in</typeparam>
         /// <returns></returns>
-        public static int TableItemsCachedCount<T>()
+        public int TableItemsCachedCount<T>()
         {
             lock (_syncContext)
             {
-                var table = GetTable(typeof(T));
+                var table = GetTable<T>(false);
+
+                if (table == null)
+                {
+                    return 0;
+                }
 
                 return table.Count;
             }
