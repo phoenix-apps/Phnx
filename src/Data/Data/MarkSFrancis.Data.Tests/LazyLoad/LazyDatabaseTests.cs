@@ -1,6 +1,7 @@
 ﻿using MarkSFrancis.Data.LazyLoad;
 using MarkSFrancis.Data.Tests.LazyLoad.TestData;
 using NUnit.Framework;
+using System;
 
 namespace MarkSFrancis.Data.Tests.LazyLoad
 {
@@ -74,6 +75,36 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
 
             Assert.AreEqual(2, people.TimesLoaded);
             Assert.AreEqual(3, roles.TimesLoaded);
+        }
+
+        [Test]
+        public void GetFromDatabase_WhenLifetimeHasExpired_Reloads()
+        {
+            var database = new LazyDatabase(TimeSpan.Zero);
+            var people = new PersonRepository();
+
+            database.TryAddTable<int, Person>(people.GetSingle);
+
+            database.TryGet<int, Person>(1, out _);
+            database.TryGet<int, Person>(1, out _);
+            database.Get(1, people.GetSingle);
+
+            Assert.AreEqual(3, people.TimesLoaded);
+        }
+
+        [Test]
+        public void GetFromDatabase_WhenLifetimeHasNotExpired_DoesNotReload()
+        {
+            var database = new LazyDatabase(TimeSpan.FromHours(100));
+            var people = new PersonRepository();
+
+            database.TryAddTable<int, Person>(people.GetSingle);
+
+            database.TryGet<int, Person>(1, out _);
+            database.TryGet<int, Person>(1, out _);
+            database.Get(1, people.GetSingle);
+
+            Assert.AreEqual(1, people.TimesLoaded);
         }
     }
 }

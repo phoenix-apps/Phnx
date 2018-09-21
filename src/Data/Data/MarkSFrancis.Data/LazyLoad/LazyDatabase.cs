@@ -53,7 +53,16 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <returns>Whether the table was added to the cache database</returns>
         public bool TryAddTable<TKey, TValue>(Func<TKey, TValue> getFromExternalSource)
         {
-            var newTable = new LazyDictionary<object, object>(key => getFromExternalSource((TKey)key));
+            LazyDictionary<object, object> newTable;
+
+            if (EntriesHaveDefaultMaximumLifetime)
+            {
+                newTable = new LazyDictionary<object, object>(key => getFromExternalSource((TKey)key), EntriesDefaultMaximumLifetime.Value);
+            }
+            else
+            {
+                newTable = new LazyDictionary<object, object>(key => getFromExternalSource((TKey)key));
+            }
 
             return _cache.TryAdd(typeof(TValue), newTable);
         }
