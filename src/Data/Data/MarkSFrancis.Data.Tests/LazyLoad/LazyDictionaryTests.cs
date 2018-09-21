@@ -110,7 +110,7 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
 
             cache.AddOrUpdate(sample.Id, sample);
 
-            cache.Remove(sample.Id);
+            cache.TryRemove(sample.Id);
 
             Assert.AreEqual(0, cache.CachedCount);
         }
@@ -122,7 +122,7 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
 
             Person sample = SamplePerson();
 
-            cache.Remove(sample.Id);
+            cache.TryRemove(sample.Id);
 
             Assert.AreEqual(0, cache.CachedCount);
         }

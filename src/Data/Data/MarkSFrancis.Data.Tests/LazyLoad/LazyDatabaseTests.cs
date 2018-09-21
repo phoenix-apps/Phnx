@@ -13,9 +13,9 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
             var people = new PersonRepository();
             var person = people.GetSingle(1);
 
-            database.AddOrUpdate(1, person);
+            database.TryAddTable<int, Person>(people.GetSingle);
+            database.TryAddOrUpdate(1, person);
 
-            Assert.AreEqual(1, database.TotalItemsCachedCount);
             Assert.AreEqual(1, database.TableItemsCachedCount<Person>());
             Assert.AreEqual(0, database.TableItemsCachedCount<Role>());
         }
@@ -29,12 +29,10 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
             var roles = new RoleRepository();
             var role = roles.GetSingle(1);
 
-            database.AddOrUpdate(1, person);
-            database.AddOrUpdate(1, role);
+            database.AddOrUpdate(1, person, people.GetSingle);
+            database.AddOrUpdate(1, role, roles.GetSingle);
 
             database.Get(1, people.GetSingle);
-
-            Assert.AreEqual(2, database.TotalItemsCachedCount);
 
             Assert.AreEqual(1, database.TableItemsCachedCount<Person>());
             Assert.AreEqual(1, database.TableItemsCachedCount<Role>());

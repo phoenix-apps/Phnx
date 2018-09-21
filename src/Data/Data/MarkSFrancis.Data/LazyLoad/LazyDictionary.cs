@@ -6,23 +6,23 @@ namespace MarkSFrancis.Data.LazyLoad
     /// <summary>
     /// A lazy loaded dictionary, which is thread-safe
     /// </summary>
-    /// <typeparam name="TKey">The type of identifier for this entry</typeparam>
-    /// <typeparam name="TEntry">The type of data in this table</typeparam>
-    public class LazyDictionary<TKey, TEntry>
+    /// <typeparam name="TKey">The type of identifier for this value</typeparam>
+    /// <typeparam name="TValue">The type of data in this table</typeparam>
+    public class LazyDictionary<TKey, TValue>
     {
-        private readonly ConcurrentDictionary<TKey, CachedItem<TEntry>> _cache;
+        private readonly ConcurrentDictionary<TKey, CachedItem<TValue>> _cache;
 
-        private readonly Func<TKey, TEntry> _getFromExternalSource;
+        private readonly Func<TKey, TValue> _getFromExternalSource;
 
         /// <summary>
         /// The maximum lifetime for entries in the cache. This is <see langword="null"/> if there is no maximum lifetime
         /// </summary>
-        public TimeSpan? EntriesMaximumLifetime { get; }
+        public TimeSpan? ValuesMaximumLifetime { get; }
 
         /// <summary>
-        /// Whether this <see cref="LazyDictionary{TKey, TEntry}"/> has been set up with an auto-expiration for entries
+        /// Whether this <see cref="LazyDictionary{TKey, TValue}"/> has been set up with an auto-expiration for entries
         /// </summary>
-        public bool EntriesHaveMaximumLifetime => EntriesMaximumLifetime.HasValue;
+        public bool ValuesHaveMaximumLifetime => ValuesMaximumLifetime.HasValue;
 
         /// <summary>
         /// The number of items cached. This includes expired records if a timeout has been set
@@ -30,61 +30,61 @@ namespace MarkSFrancis.Data.LazyLoad
         public int CachedCount => _cache.Count;
 
         /// <summary>
-        /// Create a new <see cref="LazyDictionary{TKey,TEntry}"/>
+        /// Create a new <see cref="LazyDictionary{TKey,TValue}"/>
         /// </summary>
-        /// <param name="getFromExternalSource">The method to use when loading an item from an external source. This is called only once per entry, when the entry is first loaded</param>
-        public LazyDictionary(Func<TKey, TEntry> getFromExternalSource)
+        /// <param name="getFromExternalSource">The method to use when loading an item from an external source. This is called only once per value, when the value is first loaded</param>
+        public LazyDictionary(Func<TKey, TValue> getFromExternalSource)
         {
             _getFromExternalSource = getFromExternalSource ?? throw new ArgumentNullException(nameof(getFromExternalSource));
 
-            EntriesMaximumLifetime = null;
-            _cache = new ConcurrentDictionary<TKey, CachedItem<TEntry>>();
+            ValuesMaximumLifetime = null;
+            _cache = new ConcurrentDictionary<TKey, CachedItem<TValue>>();
         }
 
         /// <summary>
-        /// Create a new <see cref="LazyDictionary{TKey,TEntry}"/> with a maximum lifetime for any entries
+        /// Create a new <see cref="LazyDictionary{TKey,TValue}"/> with a maximum lifetime for any entries
         /// </summary>
-        /// <param name="getFromExternalSource">The method to use when getting an itemfrom an external source. This is called once per entry when the entry is first loaded, and when the entry is loaded, but has expired</param>
+        /// <param name="getFromExternalSource">The method to use when getting an itemfrom an external source. This is called once per value when the value is first loaded, and when the value is loaded, but has expired</param>
         /// <param name="cacheLifetime">The maximum lifetime for any record in the cache. If a record is older than the maximum lifetime, it is automatically reloaded from the external source next time it is requested</param>
-        public LazyDictionary(Func<TKey, TEntry> getFromExternalSource, TimeSpan cacheLifetime)
+        public LazyDictionary(Func<TKey, TValue> getFromExternalSource, TimeSpan cacheLifetime)
         {
             _getFromExternalSource = getFromExternalSource ?? throw new ArgumentNullException(nameof(getFromExternalSource));
 
-            EntriesMaximumLifetime = cacheLifetime;
-            _cache = new ConcurrentDictionary<TKey, CachedItem<TEntry>>();
+            ValuesMaximumLifetime = cacheLifetime;
+            _cache = new ConcurrentDictionary<TKey, CachedItem<TValue>>();
         }
 
         /// <summary>
-        /// Add or update an entry in the cache
+        /// Add or update an value in the cache
         /// </summary>
-        /// <param name="key">The key to the entry to add or update</param>
-        /// <param name="entry">The entry to add or update</param>
-        public void AddOrUpdate(TKey key, TEntry entry)
+        /// <param name="key">The key to the value to add or update</param>
+        /// <param name="value">The value to add or update</param>
+        public void AddOrUpdate(TKey key, TValue value)
         {
-            var cachedEntry = new CachedItem<TEntry>(entry);
+            var cachedValue = new CachedItem<TValue>(value);
 
-            _cache.AddOrUpdate(key, cachedEntry, (_, old) => cachedEntry);
+            _cache.AddOrUpdate(key, cachedValue, (_, old) => cachedValue);
         }
 
         /// <summary>
-        /// Get the entry which belongs to <paramref name="key"/> from the cache, or loads it from the external source if it does not exist or has expired
+        /// Get the value which belongs to <paramref name="key"/> from the cache, or loads it from the external source if it does not exist or has expired
         /// </summary>
         /// <param name="key">The key to the item to get</param>
         /// <returns>Returns the item belonging to <paramref name="key"/></returns>
-        public TEntry Get(TKey key)
+        public TValue Get(TKey key)
         {
-            CachedItem<TEntry> cached = null;
+            CachedItem<TValue> cached = null;
 
             _cache.AddOrUpdate(key, id =>
             {
                 // Insert into cache
-                return cached = new CachedItem<TEntry>(_getFromExternalSource(key));
+                return cached = new CachedItem<TValue>(_getFromExternalSource(key));
             }, (id, old) =>
             {
-                if (old.Expired(EntriesMaximumLifetime))
+                if (old.Expired(ValuesMaximumLifetime))
                 {
                     // Update cache
-                    return cached = new CachedItem<TEntry>(_getFromExternalSource(key));
+                    return cached = new CachedItem<TValue>(_getFromExternalSource(key));
                 }
                 else
                 {
@@ -97,12 +97,12 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Remove an entry from the cache
+        /// Remove an value from the cache
         /// </summary>
         /// <param name="key">The key to the item to remove from the cache</param>
-        public void Remove(TKey key)
+        public bool TryRemove(TKey key)
         {
-            _cache.TryRemove(key, out _);
+            return _cache.TryRemove(key, out _);
         }
 
         /// <summary>
