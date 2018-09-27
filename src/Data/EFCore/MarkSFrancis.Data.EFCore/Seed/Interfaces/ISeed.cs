@@ -1,13 +1,13 @@
 ﻿namespace MarkSFrancis.Data.EFCore.Seed.Interfaces
 {
     /// <summary>
-    /// Provides an interface for asyncronous seeding of data
+    /// Provides an interface for seeding databases
     /// </summary>
     public interface ISeed
     {
         /// <summary>
-        /// The data to seed
+        /// Run this seed
         /// </summary>
-        void Seed();
+        void Run();
     }
 }

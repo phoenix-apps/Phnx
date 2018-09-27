@@ -1,18 +1,19 @@
 ﻿using MarkSFrancis.Data.EFCore.Seed.Interfaces;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MarkSFrancis.Data.EFCore.Seed
 {
     /// <summary>
     /// A group of seeds, used to help setup and organise seed operations for a database
     /// </summary>
-    public class SeedGroup : ISeed
+    public class SeedGroupAsync : ISeedAsync
     {
         /// <summary>
         /// Create a new seed group from a range of seeds
         /// </summary>
         /// <param name="seeds">The seed group to initalise from</param>
-        public SeedGroup(params ISeed[] seeds) : this((IEnumerable<ISeed>)seeds)
+        public SeedGroupAsync(params ISeedAsync[] seeds) : this((IEnumerable<ISeedAsync>)seeds)
         {
         }
 
@@ -20,22 +21,22 @@ namespace MarkSFrancis.Data.EFCore.Seed
         /// Create a new seed group from a range of seeds
         /// </summary>
         /// <param name="seeds">The seed group to initalise from</param>
-        public SeedGroup(IEnumerable<ISeed> seeds)
+        public SeedGroupAsync(IEnumerable<ISeedAsync> seeds)
         {
-            Seeds = new List<ISeed>(seeds);
+            Seeds = new List<ISeedAsync>(seeds);
         }
 
         /// <summary>
         /// The collection of seeds in this seed group
         /// </summary>
-        public List<ISeed> Seeds { get; set; }
+        public List<ISeedAsync> Seeds { get; set; }
 
         /// <summary>
         /// Add a single seed
         /// </summary>
         /// <param name="seed">The seed to add</param>
         /// <returns>This seed group</returns>
-        public SeedGroup Add(ISeed seed)
+        public SeedGroupAsync Add(ISeedAsync seed)
         {
             Seeds.Add(seed);
             return this;
@@ -46,9 +47,9 @@ namespace MarkSFrancis.Data.EFCore.Seed
         /// </summary>
         /// <param name="seeds">The range of seeds to add</param>
         /// <returns>This seed group</returns>
-        public SeedGroup Add(params ISeed[] seeds)
+        public SeedGroupAsync Add(params ISeedAsync[] seeds)
         {
-            return Add((IEnumerable<ISeed>)seeds);
+            return Add((IEnumerable<ISeedAsync>)seeds);
         }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace MarkSFrancis.Data.EFCore.Seed
         /// </summary>
         /// <param name="seeds">The range of seeds to add</param>
         /// <returns>This seed group</returns>
-        public SeedGroup Add(IEnumerable<ISeed> seeds)
+        public SeedGroupAsync Add(IEnumerable<ISeedAsync> seeds)
         {
             Seeds.AddRange(seeds);
             return this;
@@ -65,12 +66,43 @@ namespace MarkSFrancis.Data.EFCore.Seed
         /// <summary>
         /// Run all the <see cref="Seeds"/>
         /// </summary>
-        public void Run()
+        /// <param name="runParallel"></param>
+        public void SeedSync(bool runParallel)
         {
-            for (int i = 0; i < Seeds.Count; i++)
+            var task = Seed(runParallel);
+
+            task.Wait();
+        }
+
+        /// <summary>
+        /// Run all the <see cref="Seeds"/>
+        /// </summary>
+        /// <param name="runParallel">Whether to run the seeds in parallel</param>
+        public Task Seed(bool runParallel)
+        {
+            if (runParallel)
             {
-                Seeds[i].Run();
+                return Task.Run(() => Parallel.ForEach(Seeds, seed => seed.RunAsync()));
             }
+            else
+            {
+                return Task.Run(() =>
+                {
+                    foreach (var seed in Seeds)
+                    {
+                        var task = seed.RunAsync();
+                        task.Wait();
+                    }
+                });
+            }
+        }
+
+        /// <summary>
+        /// Run all the <see cref="Seeds"/> in series
+        /// </summary>
+        public Task RunAsync()
+        {
+            return Seed(false);
         }
     }
 }
