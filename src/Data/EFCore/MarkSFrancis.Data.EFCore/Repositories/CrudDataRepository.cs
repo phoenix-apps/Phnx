@@ -1,9 +1,7 @@
 ﻿using MarkSFrancis.Data.EFCore.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MarkSFrancis.Data.EFCore.Repositories
 {
@@ -13,7 +11,7 @@ namespace MarkSFrancis.Data.EFCore.Repositories
     /// <typeparam name="TDbContext">The <see cref="DbContext"/> that <typeparamref name="TEntity"/> is stored in</typeparam>
     /// <typeparam name="TEntity">The model this CRUD repository controls</typeparam>
     /// <typeparam name="TKey">The primary key for this model</typeparam>
-    public class CrudRepository<TDbContext, TEntity, TKey> : ICrudRepository<TEntity, TKey>
+    public class CrudDataRepository<TDbContext, TEntity, TKey> : ICrudRepository<TEntity, TKey>
         where TEntity : class, IIdDataModel<TKey>
         where TDbContext : DbContext
     {
@@ -28,23 +26,23 @@ namespace MarkSFrancis.Data.EFCore.Repositories
         protected DbSet<TEntity> Table { get; }
 
         /// <summary>
-        /// Create a new <see cref="CrudRepository{TDbContext, T, TKey}"/>
+        /// Create a new <see cref="CrudDataRepository{TDbContext, TEntity, TKey}"/>
         /// </summary>
-        /// <param name="context">The <see cref="DbContext"/> to use</param>
-        /// <param name="accessor">The <see cref="DbSet{T}"/> to use</param>
-        /// <exception cref="ArgumentNullException"><paramref name="context"/> or <paramref name="accessor"/> was <see langword="null"/></exception>
-        /// <exception cref="ArgumentException"><paramref name="accessor"/> returns <see langword="null"/></exception>
-        public CrudRepository(TDbContext context, Func<TDbContext, DbSet<TEntity>> accessor)
+        /// <param name="context">The <typeparamref name="TDbContext"/> to use</param>
+        /// <param name="tableAccessor">The <see cref="DbSet{TEntity}"/> to use</param>
+        /// <exception cref="ArgumentNullException"><paramref name="context"/> or <paramref name="tableAccessor"/> was <see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="tableAccessor"/> returns <see langword="null"/></exception>
+        public CrudDataRepository(TDbContext context, Func<TDbContext, DbSet<TEntity>> tableAccessor)
         {
             Context = context ?? throw new ArgumentNullException(nameof(context));
 
-            if (accessor is null)
+            if (tableAccessor is null)
             {
-                throw new ArgumentNullException(nameof(accessor));
+                throw new ArgumentNullException(nameof(tableAccessor));
             }
 
-            Table = accessor(Context) ??
-                throw new ArgumentException($"{nameof(accessor)} gave a null table", nameof(accessor));
+            Table = tableAccessor(Context) ??
+                throw new ArgumentException($"{nameof(tableAccessor)} gave a null table", nameof(tableAccessor));
         }
 
         /// <summary>
@@ -91,18 +89,6 @@ namespace MarkSFrancis.Data.EFCore.Repositories
         public virtual void Delete(TEntity data)
         {
             Table.Remove(data);
-        }
-
-        /// <summary>
-        /// Save all changes that have been committed
-        /// </summary>
-        /// <returns>An asyncronous task representing the save operation</returns>
-        /// <exception cref="DbUpdateException">An error is encountered while saving to the database</exception>
-        /// <exception cref="DbUpdateConcurrencyException">A concurrency violation is encountered while saving to the database. A concurrency violation occurs when an unexpected number of rows are affected during save. This is usually because the data in the database has been modified since it was loaded into memory</exception>
-        /// <remarks>This method will automatically call <see cref="ChangeTracker.DetectChanges"/> to discover any changes to entity instances before saving to the underlying database. This can be disabled via <see cref="ChangeTracker.AutoDetectChangesEnabled"/>. Multiple active operations on the same context instance are not supported. Use <see langword="await"/> to ensure that any asynchronous operations have completed before calling another method on this context.</remarks>
-        public virtual async Task SaveChangesAsync()
-        {
-            await Context.SaveChangesAsync();
         }
     }
 }
