@@ -48,7 +48,6 @@ namespace MarkSFrancis.Data.LazyLoad
         public event ValueGetEvent ValueGet;
 
         private T _cachedValue;
-        private bool _valueIsCached;
 
         /// <summary>
         /// Whether the value for this <see cref="LazyGetSet{T}"/> can be set
@@ -59,6 +58,11 @@ namespace MarkSFrancis.Data.LazyLoad
         /// Whether the value of this has ever been set
         /// </summary>
         public bool ValueChangedInLife { get; private set; }
+
+        /// <summary>
+        /// Whether the value is currently cached
+        /// </summary>
+        public bool IsCached { get; private set; }
 
         /// <summary>
         /// Create a new read-only <see cref="LazyGetSet{T}"/> using a function to load the data from an external source when requested
@@ -88,10 +92,10 @@ namespace MarkSFrancis.Data.LazyLoad
         {
             get
             {
-                if (!_valueIsCached)
+                if (!IsCached)
                 {
                     _cachedValue = _getFromExternal();
-                    _valueIsCached = true;
+                    IsCached = true;
                     ValueChangedInLife = false;
 
                     ValueCached?.Invoke(this, _cachedValue);
@@ -109,7 +113,7 @@ namespace MarkSFrancis.Data.LazyLoad
 
                 _setToExternal(value);
                 _cachedValue = value;
-                _valueIsCached = true;
+                IsCached = true;
                 ValueChangedInLife = true;
 
                 ValueSet?.Invoke(this, _cachedValue);
@@ -122,7 +126,7 @@ namespace MarkSFrancis.Data.LazyLoad
         /// </summary>
         public void ClearCache()
         {
-            _valueIsCached = false;
+            IsCached = false;
         }
     }
 }

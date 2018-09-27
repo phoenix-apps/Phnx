@@ -1,4 +1,5 @@
 ﻿using MarkSFrancis.Data.LazyLoad;
+using MarkSFrancis.Data.Tests.LazyLoad.TestData;
 using NUnit.Framework;
 using System;
 
@@ -6,12 +7,6 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
 {
     public class LazyGetSetTests
     {
-        public LazyGetSet<object> GetOnlyLazy =>
-            new LazyGetSet<object>(() => null);
-
-        public LazyGetSet<object> GetSetLazy =>
-            new LazyGetSet<object>(() => null, o => { });
-
         [Test]
         public void CreateLazyLoad_WithNullGetFunc_InGetOnly_ThrowsArgumentNullException()
         {
@@ -33,7 +28,7 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         [Test]
         public void FirstLoad_CallsLoadEventsInOrder()
         {
-            var lazy = GetSetLazy;
+            var lazy = new LazyGetSetTester<object>(null, null).LazyGetSet;
 
             int eventsCalledCount = 0,
                 valueCachedCallOrder = 0,
@@ -62,46 +57,36 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         [Test]
         public void SetLazyValue_WithoutSetAction_ThrowsInvalidOperation()
         {
-            var lazy = GetOnlyLazy;
+            var lazy = new LazyGetSetTester<object>();
 
-            Assert.Throws<NotSupportedException>(() => lazy.Value = null);
+            Assert.Throws<NotSupportedException>(() => lazy.LazyGetSet.Value = null);
         }
 
         [Test]
         public void SetLazyValue_WithSetAction_CallsSetAction()
         {
-            bool wasCalled = false;
+            var lazy = new LazyGetSetTester<object>(null, null);
+            lazy.LazyGetSet.Value = null;
 
-            var lazy = new LazyGetSet<object>(() => null, o => wasCalled = true)
-            {
-                Value = null
-            };
-
-            Assert.IsTrue(wasCalled);
+            Assert.GreaterOrEqual(1, lazy.SetCount);
         }
 
         [Test]
         public void GetLazyValue_WithGetFunc_CallsGetFunc()
         {
-            bool wasCalled = false;
+            var lazy = new LazyGetSetTester<object>();
 
-            var lazy = new LazyGetSet<object>(() =>
-            {
-                wasCalled = true;
-                return null;
-            });
+            _ = lazy.LazyGetSet.Value;
 
-            var val = lazy.Value;
-
-            Assert.IsTrue(wasCalled);
+            Assert.GreaterOrEqual(1, lazy.GetCount);
         }
 
         [Test]
         public void GetLazyValue_WithNull_LoadsValue()
         {
-            var lazy = new LazyGetSet<object>(() => null);
+            var lazy = new LazyGetSetTester<object>(() => null);
 
-            var val = lazy.Value;
+            var val = lazy.LazyGetSet.Value;
 
             Assert.AreEqual(null, val);
         }
@@ -109,12 +94,11 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         [Test]
         public void SetLazyValue_WithNull_SetsCachedValue()
         {
-            var lazy = new LazyGetSet<object>(() => null, o => { })
-            {
-                Value = null
-            };
+            var lazy = new LazyGetSetTester<object>(null, o => { });
 
-            Assert.AreEqual(null, lazy.Value);
+            lazy.LazyGetSet.Value = null;
+
+            Assert.AreEqual(null, lazy.LazyGetSet.Value);
         }
 
         [Test]
@@ -122,27 +106,37 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         {
             var firstVal = 167;
             var secondVal = "asdf";
-            int timesGetCalled = 0;
 
-            var lazy =
-                new LazyGetSet<object>(() =>
-                    {
-                        ++timesGetCalled;
-                        return firstVal;
-                    },
-                    o => { });
+            var lazy = new LazyGetSetTester<object>(() => firstVal, null);
 
-            Assert.AreEqual(firstVal, lazy.Value);
-            Assert.AreEqual(1, timesGetCalled);
+            Assert.AreEqual(firstVal, lazy.LazyGetSet.Value);
+            Assert.AreEqual(1, lazy.GetCount);
 
-            lazy.Value = secondVal;
-            Assert.AreEqual(1, timesGetCalled);
+            lazy.LazyGetSet.Value = secondVal;
+            Assert.AreEqual(1, lazy.GetCount);
 
-            Assert.AreEqual(secondVal, lazy.Value);
-            Assert.AreEqual(1, timesGetCalled);
+            Assert.AreEqual(secondVal, lazy.LazyGetSet.Value);
+            Assert.AreEqual(1, lazy.GetCount);
+        }
 
-            Assert.AreEqual(secondVal, lazy.Value);
-            Assert.AreEqual(1, timesGetCalled);
+        [Test]
+        public void ClearCache_WhenItWasPreviouslyCached_SetsIsCachedToFalseAndReloadsOnNextRequest()
+        {
+            var lazy = new LazyGetSetTester<object>();
+
+            _ = lazy.LazyGetSet.Value;
+
+            Assert.IsTrue(lazy.LazyGetSet.IsCached);
+            Assert.AreEqual(1, lazy.GetCount);
+
+            lazy.LazyGetSet.ClearCache();
+
+            Assert.IsFalse(lazy.LazyGetSet.IsCached);
+
+            _ = lazy.LazyGetSet.Value;
+
+            Assert.IsTrue(lazy.LazyGetSet.IsCached);
+            Assert.AreEqual(2, lazy.GetCount);
         }
     }
 }
