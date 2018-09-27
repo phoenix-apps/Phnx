@@ -18,9 +18,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MarkSFrancis" Version="1.1.0-beta2" />
-    <PackageReference Include="MarkSFrancis.Data" Version="1.1.0-beta" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MarkSFrancis">
+      <HintPath>..\..\..\MarkSFrancis\MarkSFrancis\bin\Debug\netstandard2.0\MarkSFrancis.dll</HintPath>
+    </Reference>
+    <Reference Include="MarkSFrancis.Data">
+      <HintPath>..\..\Data\MarkSFrancis.Data\bin\Debug\netstandard2.0\MarkSFrancis.Data.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

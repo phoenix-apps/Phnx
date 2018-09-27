@@ -20,7 +20,7 @@ namespace MarkSFrancis.Data.EFCore.Repositories.Interfaces
         /// Get all records of <typeparamref name="T"/> from the database
         /// </summary>
         /// <returns>All records of <typeparamref name="T"/> in the database</returns>
-        IQueryable<T> GetAll();
+        IQueryable<T> Get();
 
         /// <summary>
         /// Get a single item from the database with the key <paramref name="id"/>
@@ -45,6 +45,6 @@ namespace MarkSFrancis.Data.EFCore.Repositories.Interfaces
         /// Save all changes that have been committed
         /// </summary>
         /// <returns>An asyncronous task representing the save operation</returns>
-        Task SaveChanges();
+        Task SaveChangesAsync();
     }
 }
