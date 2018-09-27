@@ -32,7 +32,7 @@ namespace MarkSFrancis.Data.EFCore.Repositories
 
         public void Delete(TEntity data)
         {
-            cache.TryRemove<TEntity>(data.Id);
+            cache.TryRemove<TKey, TEntity>(data.Id);
         }
 
         public IQueryable<TEntity> Get()
