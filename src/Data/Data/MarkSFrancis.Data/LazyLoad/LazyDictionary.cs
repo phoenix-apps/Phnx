@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace MarkSFrancis.Data.LazyLoad
 {
@@ -94,6 +95,33 @@ namespace MarkSFrancis.Data.LazyLoad
             });
 
             return cached.Value;
+        }
+
+        /// <summary>
+        /// Gets all the items in the cache
+        /// </summary>
+        /// <returns>All the items in the cache</returns>
+        public IEnumerable<KeyValuePair<TKey, TValue>> GetAll()
+        {
+            // TODO This sucks
+
+            var itemsToRemove = new List<TKey>();
+            foreach (var item in _cache)
+            {
+                if (!item.Value.Expired(ValuesMaximumLifetime))
+                {
+                    yield return new KeyValuePair<TKey, TValue>(item.Key, item.Value.Value);
+                }
+                else
+                {
+                    itemsToRemove.Add(item.Key);
+                }
+            }
+
+            foreach (var itemToRemove in itemsToRemove)
+            {
+                TryRemove(itemToRemove);
+            }
         }
 
         /// <summary>
