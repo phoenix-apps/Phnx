@@ -1,16 +1,20 @@
 @echo off
-set buildFiles="IO/Threaded" "MarkSFrancis" "Benchmark" "Collections" "Console" "Core/Configuration" "Data/Data" "Data/EFCore" "Drawing" "IO/IO" "IO/Json" "Random" "Reflection" "Security" "Serialization" "Web" "Windows/Windows" "Windows/Configuration"
+setlocal enabledelayedexpansion
 
-call :build "IO/Threaded"
-if %ERRORLEVEL% GEQ 1 goto :quit
+REM The list of projects to build. This can be a solution, .csproj, or a folder containing either. These are executed in order
+set buildFiles= "IO/Threaded" "MarkSFrancis" "Benchmark" "Collections" "Console" "Core/Configuration" "Data/Data" "Data/EFCore" "Drawing" "IO/IO" "IO/Json" "Random" "Reflection" "Security" "Serialization" "Web" "Windows/Windows" "Windows/Configuration"
+
+REM The build status of the most recently completed build
+set buildStatus=0
 
 echo Starting builds...
 for %%a in (%buildFiles%) do (
 	echo Building %%a...
+	
 	call :build %%a
 	
-	if %ERRORLEVEL% GEQ 1 echo Quitting...
-	if %ERRORLEVEL% GEQ 1 goto :quit
+	REM Exit this process if the last build was not successful
+	if !buildStatus! GEQ 1 goto :quit
 )
 
 echo Finished builds
@@ -18,11 +22,15 @@ goto :quit
 
 :build
 dotnet restore %~1
-if %ERRORLEVEL% GEQ 1 goto :EOF
+set buildStatus=%ERRORLEVEL%
+
+REM Cancel the build if the restore is faulted
+if %buildStatus% GEQ 1 goto :EOF
 
 dotnet build %~1
-if %ERRORLEVEL% GEQ 1 echo BUILD FAILED WEEEEEEEEEEEE
+set buildStatus=%ERRORLEVEL%
 goto :EOF
 
 :quit
-exit /b %ERRORLEVEL%
+REM Use the exit code from the last build status as the exit code for this process
+exit /b %buildStatus%
