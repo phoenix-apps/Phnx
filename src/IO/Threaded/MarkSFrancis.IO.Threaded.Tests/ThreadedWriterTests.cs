@@ -1,9 +1,9 @@
-﻿using System;
+﻿using MarkSFrancis.IO.Factories;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MarkSFrancis.IO.Factories;
-using NUnit.Framework;
 
 namespace MarkSFrancis.IO.Threaded.Tests
 {
@@ -15,6 +15,12 @@ namespace MarkSFrancis.IO.Threaded.Tests
         }
 
         private MemoryStreamFactory StreamFactory { get; }
+
+        [Test]
+        public void CreateThreadedWriter_WithNullWriteFunc_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ThreadedWriter<object>(null));
+        }
 
         [Test]
         public void Write_WithValidEntries_WritesFirstValue()
@@ -60,7 +66,7 @@ namespace MarkSFrancis.IO.Threaded.Tests
             string[] results;
             using (StreamReader reader = new StreamReader(ms))
             {
-                results = reader.ReadToEnd().Split(new [] {Environment.NewLine}, StringSplitOptions.None);
+                results = reader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
             }
 
             // A blank line is added by the WriteLine method used. This removes that blank line from the end

@@ -66,7 +66,7 @@ namespace MarkSFrancis.IO.Threaded
         {
             _manualReadNextSyncContext = new object();
 
-            _readFunc = readFunc;
+            _readFunc = readFunc ?? throw new ArgumentNullException(nameof(readFunc));
             _resultQueue = new ConcurrentQueue<ThreadReadResult<T>>();
             LookAheadCount = lookAheadCount;
             SleepTime = sleepTime;
@@ -102,7 +102,7 @@ namespace MarkSFrancis.IO.Threaded
                 _resultQueue.TryDequeue(out returnT);
             }
 
-            if (returnT.Faulted)
+            if (returnT.ErrorOccured)
             {
                 throw returnT.Error;
             }

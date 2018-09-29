@@ -50,8 +50,8 @@ namespace MarkSFrancis.IO.Threaded
         {
             _errorSyncContext = new object();
 
+            _writeFunc = writeFunc ?? throw new ArgumentNullException(nameof(writeFunc));
             _writeQueue = new ConcurrentQueue<T>();
-            _writeFunc = writeFunc;
             WriteQueueCount = writeQueueCount;
             SleepTime = sleepTime;
 

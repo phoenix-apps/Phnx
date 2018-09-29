@@ -1,9 +1,10 @@
+using MarkSFrancis.IO.Factories;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using MarkSFrancis.IO.Factories;
-using NUnit.Framework;
 
 namespace MarkSFrancis.IO.Threaded.Tests
 {
@@ -15,6 +16,12 @@ namespace MarkSFrancis.IO.Threaded.Tests
         }
 
         private MemoryStreamFactory StreamFactory { get; }
+
+        [Test]
+        public void CreateThreadedReader_WithNullReadFunc_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new ThreadedReader<object>(null));
+        }
 
         [Test]
         public void ReadFromList_WithValidEntries_ReturnsFirstValue()

@@ -11,12 +11,13 @@ namespace MarkSFrancis.IO.Threaded
 
         public ThreadReadResult(Exception error)
         {
-            Error = error;
+            Error = error ?? throw new ArgumentNullException(nameof(error));
         }
 
         public T Data { get; }
 
-        public bool Faulted => Error != null;
         public Exception Error { get; }
+
+        public bool ErrorOccured => Error != null;
     }
 }
