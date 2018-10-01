@@ -128,5 +128,19 @@ namespace MarkSFrancis.Data.LazyLoad
         {
             IsCached = false;
         }
+
+        /// <summary>
+        /// Get the value of <paramref name="lazy"/> implicitly
+        /// </summary>
+        /// <param name="lazy">The <see cref="LazyGetSet{T}"/> to get the value of</param>
+        public static implicit operator T(LazyGetSet<T> lazy)
+        {
+            if (lazy is null)
+            {
+                throw new ArgumentNullException(nameof(lazy));
+            }
+
+            return lazy.Value;
+        }
     }
 }

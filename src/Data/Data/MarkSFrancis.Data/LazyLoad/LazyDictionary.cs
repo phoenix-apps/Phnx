@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace MarkSFrancis.Data.LazyLoad
 {
@@ -11,9 +13,14 @@ namespace MarkSFrancis.Data.LazyLoad
     /// <typeparam name="TValue">The type of data in this table</typeparam>
     public class LazyDictionary<TKey, TValue>
     {
-        private readonly ConcurrentDictionary<TKey, CachedItem<TValue>> _cache;
+        private readonly ConcurrentDictionary<TKey, CacheEntry> _cache;
+        private ConcurrentQueue<Lifetime> _expirationTimes;
 
         private readonly Func<TKey, TValue> _getFromExternalSource;
+
+        private readonly Timer _expirationTimer;
+        private readonly object _expirationTimesLock;
+        private bool _expirationTimerIsRunning;
 
         /// <summary>
         /// The maximum lifetime for entries in the cache. This is <see langword="null"/> if there is no maximum lifetime
@@ -31,6 +38,11 @@ namespace MarkSFrancis.Data.LazyLoad
         public int CachedCount => _cache.Count;
 
         /// <summary>
+        /// Gets <see cref="DateTime.UtcNow"/> for use with managing lifetimes and expiration
+        /// </summary>
+        private DateTime Now => DateTime.UtcNow;
+
+        /// <summary>
         /// Create a new <see cref="LazyDictionary{TKey,TValue}"/>
         /// </summary>
         /// <param name="getFromExternalSource">The method to use when loading an item from an external source. This is called only once per value, when the value is first loaded</param>
@@ -38,8 +50,9 @@ namespace MarkSFrancis.Data.LazyLoad
         {
             _getFromExternalSource = getFromExternalSource ?? throw new ArgumentNullException(nameof(getFromExternalSource));
 
+            _expirationTimesLock = new object();
             ValuesMaximumLifetime = null;
-            _cache = new ConcurrentDictionary<TKey, CachedItem<TValue>>();
+            _cache = new ConcurrentDictionary<TKey, CacheEntry>();
         }
 
         /// <summary>
@@ -52,7 +65,49 @@ namespace MarkSFrancis.Data.LazyLoad
             _getFromExternalSource = getFromExternalSource ?? throw new ArgumentNullException(nameof(getFromExternalSource));
 
             ValuesMaximumLifetime = cacheLifetime;
-            _cache = new ConcurrentDictionary<TKey, CachedItem<TValue>>();
+            _cache = new ConcurrentDictionary<TKey, CacheEntry>();
+
+            _expirationTimes = new ConcurrentQueue<Lifetime>();
+            _expirationTimesLock = new object();
+            _expirationTimerIsRunning = false;
+            _expirationTimer = new Timer(ItemExpirationHandler);
+        }
+
+        private void ItemExpirationHandler(object state)
+        {
+            // Remove any expired entries from the lifetimes
+            lock (_expirationTimesLock)
+            {
+                while (_expirationTimes.TryPeek(out var expiredEntry))
+                {
+                    var now = DateTime.UtcNow;
+
+                    // Double check timer
+                    if (!expiredEntry.IsExpired(now, ValuesMaximumLifetime.Value))
+                    {
+                        // Item not expired, timer was over enthusiastic
+                        // Set timer
+                        var expiresIn = (expiredEntry.CachedOn + ValuesMaximumLifetime.Value) - now;
+                        _expirationTimer.Change((long)expiresIn.TotalMilliseconds, -1L);
+                        return;
+                    }
+
+                    // Remove consumed time
+                    _expirationTimes.TryDequeue(out _);
+
+                    // If item has not been updated since that lifetime expiration
+                    if (_cache.TryGetValue(expiredEntry.Key, out var entry) && entry.LastUpdated == expiredEntry.CachedOn)
+                    {
+                        // Remove expired item
+                        _cache.TryRemove(expiredEntry.Key, out _);
+                    }
+                }
+            }
+
+            lock (_expirationTimesLock)
+            {
+                _expirationTimerIsRunning = false;
+            }
         }
 
         /// <summary>
@@ -62,9 +117,32 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <param name="value">The value to add or update</param>
         public void AddOrUpdate(TKey key, TValue value)
         {
-            var cachedValue = new CachedItem<TValue>(value);
+            DateTime now = Now;
+            var cachedValue = new CacheEntry(now, value);
+
+            PrepareAutoExpiration(now, key);
 
             _cache.AddOrUpdate(key, cachedValue, (_, old) => cachedValue);
+        }
+
+        private void PrepareAutoExpiration(DateTime creationTime, TKey key)
+        {
+            if (!ValuesHaveMaximumLifetime)
+            {
+                return;
+            }
+
+            lock (_expirationTimesLock)
+            {
+                // Do inside lock to try to reduce diff between creation time and expiration timer
+                _expirationTimes.Enqueue(new Lifetime(creationTime, key));
+
+                if (!_expirationTimerIsRunning)
+                {
+                    _expirationTimer.Change((long)ValuesMaximumLifetime.Value.TotalMilliseconds, -1L);
+                    _expirationTimerIsRunning = true;
+                }
+            }
         }
 
         /// <summary>
@@ -74,27 +152,42 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <returns>Returns the item belonging to <paramref name="key"/></returns>
         public TValue Get(TKey key)
         {
-            CachedItem<TValue> cached = null;
+            // ConcurrentDictionary double-calls get if remove is called whilst adding or updating
+            lock (_expirationTimesLock)
+            {
+                var cached = _cache.AddOrUpdate(key, id =>
+                {
+                    // Insert into cache
+                    var value = _getFromExternalSource(key);
+                    var now = Now;
+                    var cacheEntry = new CacheEntry(now, value);
+                    PrepareAutoExpiration(now, key);
 
-            _cache.AddOrUpdate(key, id =>
-            {
-                // Insert into cache
-                return cached = new CachedItem<TValue>(_getFromExternalSource(key));
-            }, (id, old) =>
-            {
-                if (old.Expired(ValuesMaximumLifetime))
+                    return cacheEntry;
+                }, (id, old) =>
                 {
-                    // Update cache
-                    return cached = new CachedItem<TValue>(_getFromExternalSource(key));
-                }
-                else
-                {
+                    if (ValuesHaveMaximumLifetime)
+                    {
+                        // Check expiry
+                        var now = Now;
+                        if (old.LastUpdated + ValuesMaximumLifetime.Value <= now)
+                        {
+                            var value = _getFromExternalSource(key);
+
+                            // replace
+                            var cacheEntry = new CacheEntry(now, value);
+                            PrepareAutoExpiration(now, key);
+
+                            return cacheEntry;
+                        }
+                    }
+
                     // Don't need to update
-                    return cached = old;
-                }
-            });
+                    return old;
+                });
 
-            return cached.Value;
+                return cached.Value;
+            }
         }
 
         /// <summary>
@@ -103,25 +196,7 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <returns>All the items in the cache</returns>
         public IEnumerable<KeyValuePair<TKey, TValue>> GetAll()
         {
-            // TODO This sucks
-
-            var itemsToRemove = new List<TKey>();
-            foreach (var item in _cache)
-            {
-                if (!item.Value.Expired(ValuesMaximumLifetime))
-                {
-                    yield return new KeyValuePair<TKey, TValue>(item.Key, item.Value.Value);
-                }
-                else
-                {
-                    itemsToRemove.Add(item.Key);
-                }
-            }
-
-            foreach (var itemToRemove in itemsToRemove)
-            {
-                TryRemove(itemToRemove);
-            }
+            return _cache.Select(c => new KeyValuePair<TKey, TValue>(c.Key, c.Value.Value));
         }
 
         /// <summary>
@@ -138,36 +213,50 @@ namespace MarkSFrancis.Data.LazyLoad
         /// </summary>
         public void Clear()
         {
-            _cache.Clear();
+            if (ValuesHaveMaximumLifetime)
+            {
+                lock (_expirationTimesLock)
+                {
+                    _cache.Clear();
+
+                    // Drop the existing queue and rebuild a new one
+                    _expirationTimes = new ConcurrentQueue<Lifetime>();
+                }
+            }
+            else
+            {
+                _cache.Clear();
+            }
         }
 
-        private class CachedItem<T>
+        private class Lifetime
         {
-            private static DateTime Now => DateTime.UtcNow;
-
-            public CachedItem()
+            public Lifetime(DateTime now, TKey key)
             {
-                CachedOn = Now;
+                CachedOn = now;
+                Key = key;
             }
 
-            public CachedItem(T value) : this()
-            {
-                Value = value;
-            }
-
-            public T Value { get; set; }
+            public TKey Key { get; set; }
 
             public DateTime CachedOn { get; set; }
 
-            public bool Expired(TimeSpan? maxLifetime)
+            public bool IsExpired(DateTime now, TimeSpan maxLifetime)
             {
-                if (maxLifetime == null)
-                {
-                    return false;
-                }
-
-                return CachedOn.Add(maxLifetime.Value) < Now;
+                return CachedOn + maxLifetime < now;
             }
+        }
+
+        private class CacheEntry
+        {
+            public CacheEntry(DateTime lastUpdated, TValue value)
+            {
+                LastUpdated = lastUpdated;
+                Value = value;
+            }
+
+            public DateTime LastUpdated { get; }
+            public TValue Value { get; }
         }
     }
 }

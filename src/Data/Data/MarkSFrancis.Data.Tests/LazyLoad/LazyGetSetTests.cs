@@ -138,5 +138,22 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
             Assert.IsTrue(lazy.LazyGetSet.IsCached);
             Assert.AreEqual(2, lazy.GetCount);
         }
+
+        [Test]
+        public void ImplictCast_WhenLazyIsNull_ThrowsArgumentNullException()
+        {
+            LazyGetSet<int> lazy = null;
+            Assert.Throws<ArgumentNullException>(() => { int value = lazy; });
+        }
+
+        [Test]
+        public void ImplictCast_WhenLazyIsotNull_GetsValue()
+        {
+            const int expected = 5;
+            LazyGetSet<int> lazy = new LazyGetSet<int>(() => expected);
+            int value = lazy;
+
+            Assert.AreEqual(expected, value);
+        }
     }
 }

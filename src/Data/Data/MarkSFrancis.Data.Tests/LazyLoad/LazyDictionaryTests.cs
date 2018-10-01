@@ -104,12 +104,22 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
         [Test]
         public void GettingEntry_ThatIsExpired_Reloads()
         {
-            var cache = CreateLifetimeDictionary(out var people);
+            // Check thread stability by calling many times
+            for (int index = 0; index < 500; ++index)
+            {
+                var cache = CreateLifetimeDictionary(out var people);
 
-            cache.Get(1);
-            cache.Get(1);
+                cache.Get(1);
+                cache.Get(1);
+                cache.Get(1);
+                cache.Get(1);
+                cache.Get(1);
+                cache.Get(1);
+                cache.Get(1);
 
-            Assert.AreEqual(2, people.TimesLoaded);
+                // Assert.AreEqual(7, cache.TimesUpdated);
+                Assert.AreEqual(7, people.TimesLoaded);
+            }
         }
 
         [Test]
@@ -134,6 +144,28 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
             Person sample = SamplePerson();
 
             cache.TryRemove(sample.Id);
+
+            Assert.AreEqual(0, cache.CachedCount);
+        }
+
+        [Test]
+        public void ClearingTheCache_WhenTheCacheHasALifetime_Clears()
+        {
+            var cache = CreateLifetimeDictionary(out _);
+
+            cache.AddOrUpdate(1, null);
+            cache.Clear();
+
+            Assert.AreEqual(0, cache.CachedCount);
+        }
+
+        [Test]
+        public void ClearingTheCache_WhenTheCacheHasNoLifetime_Clears()
+        {
+            var cache = CreateNoLifetimeDictionary(out _);
+
+            cache.AddOrUpdate(1, null);
+            cache.Clear();
 
             Assert.AreEqual(0, cache.CachedCount);
         }

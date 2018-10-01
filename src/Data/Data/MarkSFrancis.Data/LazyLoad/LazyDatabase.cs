@@ -80,11 +80,20 @@ namespace MarkSFrancis.Data.LazyLoad
         /// <typeparam name="TKey"></typeparam>
         /// <typeparam name="TValue"></typeparam>
         /// <param name="getFromExternalSource"></param>
-        /// <param name="overrideLifetime">The new lifetime for objects in this table only. This overrides <see cref="EntriesDefaultMaximumLifetime"/></param>
+        /// <param name="overrideLifetime">The new lifetime for objects in this table only. This overrides <see cref="EntriesDefaultMaximumLifetime"/>. If this is <see langword="null"/>, this table's entries are set to never expire</param>
         /// <returns>Whether the table was added to the cache database</returns>
-        public bool TryAddTable<TKey, TValue>(Func<TKey, TValue> getFromExternalSource, TimeSpan overrideLifetime)
+        public bool TryAddTable<TKey, TValue>(Func<TKey, TValue> getFromExternalSource, TimeSpan? overrideLifetime)
         {
-            var newTable = new LazyDictionary<object, object>(key => getFromExternalSource((TKey)key), overrideLifetime);
+            LazyDictionary<object, object> newTable;
+
+            if (overrideLifetime.HasValue)
+            {
+                newTable = new LazyDictionary<object, object>(key => getFromExternalSource((TKey)key), overrideLifetime.Value);
+            }
+            else
+            {
+                newTable = new LazyDictionary<object, object>(key => getFromExternalSource((TKey)key));
+            }
 
             return _cache.TryAdd(typeof(TValue), newTable);
         }
@@ -95,13 +104,13 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Load entire table from the cache as an <see cref="IEnumerable{TEntry}"/>
+        /// Load all cached entries for a table
         /// </summary>
         /// <typeparam name="TKey">The type of id for the object to load</typeparam>
         /// <typeparam name="TEntry">The type of entry to load</typeparam>
         /// <param name="value">The value that was loaded</param>
         /// <returns>Whether the value was successfully loaded</returns>
-        public bool TryGet<TKey, TEntry>(out IEnumerable<KeyValuePair<TKey, TEntry>> value)
+        public bool TryGetCache<TKey, TEntry>(out IEnumerable<KeyValuePair<TKey, TEntry>> value)
         {
             if (!TryGetTable<TEntry>(out var table))
             {
@@ -116,13 +125,13 @@ namespace MarkSFrancis.Data.LazyLoad
         }
 
         /// <summary>
-        /// Lazy load an entry from the cache
+        /// Lazy load an entry from the cache. Returns <see langword="false"/> if the table for <typeparamref name="TEntry"/> is not configured
         /// </summary>
         /// <typeparam name="TKey">The type of id for the object to load</typeparam>
         /// <typeparam name="TEntry">The type of entry to load</typeparam>
         /// <param name="id">The id of the entry to load</param>
         /// <param name="value">The value that was loaded</param>
-        /// <returns>Whether the value was successfully loaded</returns>
+        /// <returns>Whether the value was successfully loaded. This is <see langword="false"/> if the table for <typeparamref name="TEntry"/> is not configured</returns>
         public bool TryGet<TKey, TEntry>(TKey id, out TEntry value)
         {
             if (!TryGetTable<TEntry>(out var table))
