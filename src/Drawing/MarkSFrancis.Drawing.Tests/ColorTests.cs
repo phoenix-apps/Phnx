@@ -1,5 +1,5 @@
-using System.Drawing;
 using NUnit.Framework;
+using System.Drawing;
 
 namespace MarkSFrancis.Drawing.Tests
 {
@@ -12,7 +12,7 @@ namespace MarkSFrancis.Drawing.Tests
             var black = Color.Black;
 
             // Act
-            var hex = new Hexadecimal(black);
+            var hex = new Hex(black);
             var hexCode = hex.ToString();
 
             // Assert

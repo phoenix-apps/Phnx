@@ -16,7 +16,7 @@ namespace MarkSFrancis.Drawing
         [Pure]
         public static string GetHexCode(Color color)
         {
-            var hex = new Hexadecimal(color);
+            var hex = new Hex(color);
 
             return hex.ToString();
         }
@@ -29,7 +29,7 @@ namespace MarkSFrancis.Drawing
         [Pure]
         public static Color FromHexCode(string hexCode)
         {
-            var hex = new Hexadecimal(hexCode);
+            var hex = new Hex(hexCode);
 
             return hex.ToColor();
         }

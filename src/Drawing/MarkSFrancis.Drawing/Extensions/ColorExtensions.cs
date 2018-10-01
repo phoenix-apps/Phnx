@@ -14,9 +14,9 @@ namespace MarkSFrancis.Drawing.Extensions
         /// <param name="color">The color to convert</param>
         /// <returns>The hex code for the given color (e.g "FF0000" for red)</returns>
         [Pure]
-        public static Hexadecimal GetHex(this Color color)
+        public static Hex ToHex(this Color color)
         {
-            return new Hexadecimal(color);
+            return new Hex(color);
         }
     }
 }
