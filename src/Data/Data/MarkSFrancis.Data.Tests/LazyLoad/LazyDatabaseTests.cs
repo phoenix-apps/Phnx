@@ -2,7 +2,6 @@
 using MarkSFrancis.Data.Tests.LazyLoad.TestData;
 using NUnit.Framework;
 using System;
-using System.Linq;
 
 namespace MarkSFrancis.Data.Tests.LazyLoad
 {
@@ -155,32 +154,6 @@ namespace MarkSFrancis.Data.Tests.LazyLoad
             var database = Fake.Database(true, true);
 
             Assert.AreEqual(2, database.TotalTablesCount);
-        }
-
-        [Test]
-        public void TryGetCache_WithNoTableConfigured_ReturnsFalse()
-        {
-            var database = new LazyDatabase();
-
-            var result = database.TryGetCache<int, Person>(out var people);
-
-            Assert.IsFalse(result);
-            Assert.IsNull(people);
-        }
-
-        [Test]
-        public void TryGetCache_WithTableConfigured_GetsTable()
-        {
-            var database = Fake.Database(true);
-
-            database.TryGet(1, out Person _);
-            database.TryGet(2, out Person _);
-
-            var result = database.TryGetCache<int, Person>(out var cachedPeople);
-
-            Assert.IsTrue(result);
-            Assert.IsNotNull(cachedPeople);
-            Assert.AreEqual(2, cachedPeople.Count());
         }
 
         [Test]

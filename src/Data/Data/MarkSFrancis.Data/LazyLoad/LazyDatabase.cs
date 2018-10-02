@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MarkSFrancis.Data.LazyLoad
 {
@@ -101,27 +99,6 @@ namespace MarkSFrancis.Data.LazyLoad
         private bool TryGetTable<T>(out LazyDictionary<object, object> table)
         {
             return _cache.TryGetValue(typeof(T), out table);
-        }
-
-        /// <summary>
-        /// Load all cached entries for a table
-        /// </summary>
-        /// <typeparam name="TKey">The type of id for the object to load</typeparam>
-        /// <typeparam name="TEntry">The type of entry to load</typeparam>
-        /// <param name="value">The value that was loaded</param>
-        /// <returns>Whether the value was successfully loaded</returns>
-        public bool TryGetCache<TKey, TEntry>(out IEnumerable<KeyValuePair<TKey, TEntry>> value)
-        {
-            if (!TryGetTable<TEntry>(out var table))
-            {
-                value = null;
-                return false;
-            }
-
-            value = table.GetAll().Select(kvp =>
-                new KeyValuePair<TKey, TEntry>((TKey)kvp.Key, (TEntry)kvp.Value));
-
-            return true;
         }
 
         /// <summary>

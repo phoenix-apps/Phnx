@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace MarkSFrancis.Data.LazyLoad
@@ -188,15 +186,6 @@ namespace MarkSFrancis.Data.LazyLoad
 
                 return cached.Value;
             }
-        }
-
-        /// <summary>
-        /// Gets all the items in the cache
-        /// </summary>
-        /// <returns>All the items in the cache</returns>
-        public IEnumerable<KeyValuePair<TKey, TValue>> GetAll()
-        {
-            return _cache.Select(c => new KeyValuePair<TKey, TValue>(c.Key, c.Value.Value));
         }
 
         /// <summary>
