@@ -11,7 +11,7 @@ namespace MarkSFrancis.Benchmark.Tests
         {
             var actions = new Action<object>[0];
 
-            var benchmark = new Benchmark<object>(actions);
+            var benchmark = new BenchmarkMethods<object>(actions);
             var result = benchmark.Run(new object[0]);
 
             Assert.IsEmpty(result);
@@ -26,7 +26,7 @@ namespace MarkSFrancis.Benchmark.Tests
                 ignore => ++timesExecuted
             };
 
-            var benchmark = new Benchmark<object>(actions);
+            var benchmark = new BenchmarkMethods<object>(actions);
             var result = benchmark.Run(new object[0]);
 
             Assert.AreEqual(0, timesExecuted);
@@ -46,7 +46,7 @@ namespace MarkSFrancis.Benchmark.Tests
                 ignore => ++timesExecuted[4]
             };
 
-            var benchmark = new Benchmark<object>(actions);
+            var benchmark = new BenchmarkMethods<object>(actions);
 
             var result = benchmark.Run(new object[10]);
 
@@ -69,7 +69,7 @@ namespace MarkSFrancis.Benchmark.Tests
                 ignore => { }
             };
 
-            var benchmark = new Benchmark<object>(actions);
+            var benchmark = new BenchmarkMethods<object>(actions);
 
             var result = benchmark.Run(new object[0]);
 
@@ -87,7 +87,7 @@ namespace MarkSFrancis.Benchmark.Tests
                 item => items.Add(item)
             };
 
-            var benchmark = new Benchmark<int>(actions);
+            var benchmark = new BenchmarkMethods<int>(actions);
 
             var result = benchmark.Run(expectedItems.ToArray() /*Pass copy*/);
 

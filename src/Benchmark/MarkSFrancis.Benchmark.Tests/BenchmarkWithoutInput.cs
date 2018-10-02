@@ -10,7 +10,7 @@ namespace MarkSFrancis.Benchmark.Tests
         {
             var actions = new Action[0];
 
-            var benchmark = new Benchmark(actions);
+            var benchmark = new BenchmarkMethods(actions);
             var result = benchmark.Run();
 
             Assert.IsEmpty(result);
@@ -25,7 +25,7 @@ namespace MarkSFrancis.Benchmark.Tests
                 () => ++timesExecuted
             };
 
-            var benchmark = new Benchmark(actions);
+            var benchmark = new BenchmarkMethods(actions);
             var result = benchmark.Run(0);
 
             Assert.AreEqual(0, timesExecuted);
@@ -45,7 +45,7 @@ namespace MarkSFrancis.Benchmark.Tests
                 () => ++timesExecuted[4]
             };
 
-            var benchmark = new Benchmark(actions);
+            var benchmark = new BenchmarkMethods(actions);
 
             var result = benchmark.Run(10);
 
@@ -68,7 +68,7 @@ namespace MarkSFrancis.Benchmark.Tests
                 () => { }
             };
 
-            var benchmark = new Benchmark(actions);
+            var benchmark = new BenchmarkMethods(actions);
 
             var result = benchmark.Run();
 

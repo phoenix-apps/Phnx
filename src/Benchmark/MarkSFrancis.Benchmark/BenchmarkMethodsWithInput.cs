@@ -8,7 +8,7 @@ namespace MarkSFrancis.Benchmark
     /// Benchmark a function or series of functions by generating values and then sending those values to each function, timing how long each function takes to compute all values
     /// </summary>
     /// <typeparam name="T">The type passed to each function as an input</typeparam>
-    public class Benchmark<T>
+    public class BenchmarkMethods<T>
     {
         /// <summary>
         /// The methods that are being benchmarked
@@ -31,11 +31,11 @@ namespace MarkSFrancis.Benchmark
         private bool WriteToLog => _log != null;
 
         /// <summary>
-        /// Create a new <see cref="Benchmark{T}"/>
+        /// Create a new <see cref="BenchmarkMethods{T}"/>
         /// </summary>
         /// <param name="computeMethods">The methods to benchmark</param>
         /// <param name="log">The function called when events such as "values generated" occur, with the event description passed in</param>
-        public Benchmark(Action<T>[] computeMethods, Action<string> log = null)
+        public BenchmarkMethods(Action<T>[] computeMethods, Action<string> log = null)
         {
             _computeMethods = computeMethods;
 
