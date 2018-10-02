@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace MarkSFrancis.Benchmark
+namespace MarkSFrancis
 {
     /// <summary>
     /// Extensions for <see cref="ErrorMessage"/>
     /// </summary>
-    public static class ErrorMessageExtensions
+    internal static class BenchmarkErrorMessageExtensions
     {
         /// <summary>
         /// An error that explains that the benchmark's time cannot be retrieved until the section finishes executing
