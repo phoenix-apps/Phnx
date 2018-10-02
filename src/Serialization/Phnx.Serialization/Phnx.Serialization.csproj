@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.1.0-beta</Version>
+    <Description>Provides ways to easily serialize to JSON, XML and Binary, as well as deep and shallow object clones</Description>
+    <Copyright>org-phnx</Copyright>
+    <Company>org-phnx</Company>
+    <Authors>org-phnx</Authors>
+    <PackageLicenseUrl>https://github.com/org-phnx/Phnx/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/org-phnx/Phnx</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/org-phnx/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/org-phnx/Phnx</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\Phnx.Serialization.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MarkSFrancis.Collections" Version="1.1.0-beta2" />
+    <PackageReference Include="MarkSFrancis.IO.Json" Version="1.1.0-beta" />
+  </ItemGroup>
+
+</Project>

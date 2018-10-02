@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <AssemblyName>Phnx.Drawing</AssemblyName>
+    <RootNamespace>Phnx.Drawing</RootNamespace>
+    <Version>1.1.0-beta</Version>
+    <Description>A series of helpers for drawing, including helpers for Hexidecimal types, and basic 2D shape geometry</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>org-phnx</Copyright>
+    <Company>org-phnx</Company>
+    <Authors>org-phnx</Authors>
+    <PackageLicenseUrl>https://github.com/org-phnx/Phnx/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/org-phnx/Phnx</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/org-phnx/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/org-phnx/Phnx</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\Phnx.Drawing.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Phnx">
+      <HintPath>..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
+    </Reference>
+    <Reference Include="Phnx.Collections">
+      <HintPath>..\..\Collections\Phnx.Collections\bin\Debug\netstandard2.0\Phnx.Collections.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

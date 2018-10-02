@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Phnx.Collections\Phnx.Collections.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Phnx">
+      <HintPath>..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

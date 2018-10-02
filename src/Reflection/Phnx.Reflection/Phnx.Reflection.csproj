@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Simplifies managing reflection, including reflecting on properties and fields within a type</Description>
+    <Copyright>org-phnx</Copyright>
+    <Company>org-phnx</Company>
+    <Authors>org-phnx</Authors>
+    <PackageLicenseUrl>https://github.com/org-phnx/Phnx/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/org-phnx/Phnx</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/org-phnx/Phnx</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/org-phnx/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
+    <RepositoryType>Git</RepositoryType>
+    <Version>1.1.0-beta3</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\Phnx.Reflection.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MarkSFrancis" Version="1.1.0-beta2" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0-preview2-26406-04" />
+  </ItemGroup>
+
+</Project>

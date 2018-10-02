@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Phnx.AspNet.Windows</id>
+    <version>1.1.0-beta2</version>
+    <authors>org-phnx</authors>
+    <owners>org-phnx</owners>
+    <copyright>org-phnx</copyright>
+    <licenseUrl>https://github.com/org-phnx/Phnx/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/org-phnx/Phnx</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/org-phnx/Phnx/master/qrcode-link-to-github.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides helpers (designed for dependancy injection) for request and response meta (such as cookies and headers), session helpers, Tag Helpers, HTML encoding helpers and more for ASP.NET MVC</description>
+  </metadata>
+</package>

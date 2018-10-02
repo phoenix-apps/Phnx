@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.1.0-beta3</Version>
+    <PackageLicenseUrl>https://github.com/org-phnx/Phnx/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/org-phnx/Phnx</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/org-phnx/Phnx</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+    <Copyright>org-phnx</Copyright>
+    <Company>org-phnx</Company>
+    <Authors>org-phnx</Authors>
+    <Description>Core parts of the Phnx framework, shared across all components</Description>
+    <PackageIconUrl>https://raw.githubusercontent.com/org-phnx/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
+    <Authors>Phnx</Authors>
+    <PackageId>Phnx</PackageId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\Phnx.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>

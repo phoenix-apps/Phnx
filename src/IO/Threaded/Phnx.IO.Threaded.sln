@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phnx.IO.Threaded", "Phnx.IO.Threaded\Phnx.IO.Threaded.csproj", "{AE95DA8B-F3F2-4980-A1E5-F92F9D5D2E98}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phnx.IO.Threaded.Tests", "Phnx.IO.Threaded.Tests\Phnx.IO.Threaded.Tests.csproj", "{770F4D4A-0221-4633-8477-4808EC4D5F0E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE95DA8B-F3F2-4980-A1E5-F92F9D5D2E98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE95DA8B-F3F2-4980-A1E5-F92F9D5D2E98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE95DA8B-F3F2-4980-A1E5-F92F9D5D2E98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE95DA8B-F3F2-4980-A1E5-F92F9D5D2E98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{770F4D4A-0221-4633-8477-4808EC4D5F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{770F4D4A-0221-4633-8477-4808EC4D5F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{770F4D4A-0221-4633-8477-4808EC4D5F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{770F4D4A-0221-4633-8477-4808EC4D5F0E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F9647F8-D1FE-4317-AFC7-12E63D1855FA}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>1.1.0-beta</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>org-phnx</Copyright>
+    <Company>org-phnx</Company>
+    <Authors>org-phnx</Authors>
+    <Product>Phnx.Configuration</Product>
+    <Description>Helpers for loading from the application configuration, including connection strings and app settings. This includes loading an app setting as a type</Description>
+    <PackageLicenseUrl>https://github.com/org-phnx/Phnx/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/org-phnx/Phnx</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/org-phnx/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/org-phnx/Phnx</RepositoryUrl>
+    <RepositoryType>Git</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\Phnx.Configuration.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MarkSFrancis.Collections" Version="1.1.0-beta2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
+  </ItemGroup>
+
+</Project>

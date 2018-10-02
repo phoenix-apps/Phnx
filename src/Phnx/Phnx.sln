@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phnx", "Phnx\Phnx.csproj", "{BF64797F-265B-4124-90C8-BC5E2F4C76BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phnx.Tests", "Phnx.Tests\Phnx.Tests.csproj", "{F07ADD49-BA71-4C20-8025-889BCD7365F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF64797F-265B-4124-90C8-BC5E2F4C76BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF64797F-265B-4124-90C8-BC5E2F4C76BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF64797F-265B-4124-90C8-BC5E2F4C76BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF64797F-265B-4124-90C8-BC5E2F4C76BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F07ADD49-BA71-4C20-8025-889BCD7365F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F07ADD49-BA71-4C20-8025-889BCD7365F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F07ADD49-BA71-4C20-8025-889BCD7365F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F07ADD49-BA71-4C20-8025-889BCD7365F6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CA499DC2-F181-4E4F-8302-CE616AC6091C}
+	EndGlobalSection
+EndGlobal
