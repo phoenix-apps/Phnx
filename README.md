@@ -1,5 +1,5 @@
-# MarkSFrancis
-`MarkSFrancis` is a framework designed to work with the `.NET` family of libraries to take common tasks and code, and simplify them into easy to use and implement code. This ranges from simplifying password hashing to creating API requests.
+# Phnx
+`Phnx` is a framework designed to work with the `.NET` family of libraries to take common tasks and code, and simplify them into easy to use and implement code. This ranges from simplifying password hashing to creating API requests.
 
 The framework is split into multiple packages, so that developers can pick and choose which parts of the framework they want to use, without needing to add the entire piece. 
 
@@ -22,7 +22,7 @@ All `.NET Core`, `EntityFrameworkCore`, `AspNetCore` or `.NET Standard` librarie
 * All other projects use `.NET Standard`
 
 ## Help & Documentation
-A wiki for this project is maintained on GitHub, in the Wiki tab. This can be found [here](https://github.com/MarkSFrancis/MarkSFrancis/wiki)
+A wiki for this project is maintained on GitHub, in the Wiki tab. This can be found [here](https://github.com/org-phnx/Phnx/wiki)
 
 ## Contributing
 We welcome contributions. Please submit a pull request with your changes, and follow the `Documentation Language Specification` when updating software documentation for your changes (where necessary). 
