@@ -1,26 +1,23 @@
 ﻿namespace MarkSFrancis
 {
     /// <summary>
-    /// An exception factory which contains a series of common errors and messages. To extend this object, use extension methods instead of inheriting
+    /// An factory which contains a series of common errors and messages. To extend this object, use extension methods instead of inheriting
     /// </summary>
     /// <example>
     /// To use an error message from the <see cref="ErrorMessage"/>
     /// <code>
-    /// void MustNotBeNegative(int argument)
+    /// void MethodThatIsntImplemented()
     /// {
-    ///     if (argument &lt; 0)
-    ///     {
-    ///         string errorMessage = ErrorMessages.Factory.ArgumentLessThanZero();
-    ///         throw new ArgumentOutOfRangeException(nameof(argument), errorMessage);
-    ///     }
+    ///     string errorMessage = ErrorMessage.Factory.NotImplemented("Populate this method with something");
+    ///     throw new NotImplementedException(errorMessage);
     /// }
     /// </code>
     /// 
     /// To add more errors messages to the factory, and improve it within your own applications with additional standardised error messages, use extension methods for <see cref="ErrorMessage"/>.
     /// <code>
-    /// public static class ErrorMessagesExtensions
+    /// public static class ErrorMessageExtensions
     /// {
-    ///     public static string MyCustomError(this ErrorMessages messages)
+    ///     public static string MyCustomError(this ErrorMessage messages)
     ///     {
     ///         return "This is a custom error message";
     ///     }
