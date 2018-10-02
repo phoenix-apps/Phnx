@@ -1,4 +1,4 @@
-﻿namespace MarkSFrancis.Extensions
+﻿namespace MarkSFrancis
 {
     /// <summary>
     /// Extensions for <see cref="char"/>

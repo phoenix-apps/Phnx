@@ -1,5 +1,4 @@
-﻿using MarkSFrancis.Extensions;
-using MarkSFrancis.Tests.Fakes.TypeFakes;
+﻿using MarkSFrancis.Tests.Fakes.TypeFakes;
 using NUnit.Framework;
 using System;
 using System.Reflection;

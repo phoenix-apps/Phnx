@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace MarkSFrancis.Extensions.Time
+namespace MarkSFrancis
 {
     /// <summary>
     /// Extensions for <see cref="DateTime"/>

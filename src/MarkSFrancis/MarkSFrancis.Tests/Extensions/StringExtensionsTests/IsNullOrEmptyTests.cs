@@ -1,5 +1,4 @@
-﻿using MarkSFrancis.Extensions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace MarkSFrancis.Tests.Extensions.StringExtensionsTests
 {

@@ -1,8 +1,7 @@
-﻿using MarkSFrancis.Extensions.Numeric;
-using System;
+﻿using System;
 using System.Text;
 
-namespace MarkSFrancis.Extensions.Time
+namespace MarkSFrancis
 {
     /// <summary>
     /// A collection of <see cref="TimeSpan"/> components, used for formatting in <see cref="TimeSpanExtensions.ToString"/>

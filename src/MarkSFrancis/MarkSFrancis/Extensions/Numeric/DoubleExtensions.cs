@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MarkSFrancis.Extensions.Numeric
+namespace MarkSFrancis
 {
     /// <summary>
     /// Extensions for <see cref="double"/>

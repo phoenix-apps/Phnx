@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MarkSFrancis.Extensions.Numeric
+namespace MarkSFrancis
 {
     /// <summary>
     /// Extensions for <see cref="long"/>
@@ -17,7 +17,7 @@ namespace MarkSFrancis.Extensions.Numeric
         {
             return number.ToString("d" + minimumNumberOfDigitsToShow);
         }
-        
+
         /// <summary>
         /// Round to the nearest value
         /// </summary>

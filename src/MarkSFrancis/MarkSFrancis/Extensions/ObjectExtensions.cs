@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MarkSFrancis.Extensions
+namespace MarkSFrancis
 {
     /// <summary>
     /// Extensions for <see cref="object"/>

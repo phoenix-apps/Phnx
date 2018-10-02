@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MarkSFrancis.Extensions
+namespace MarkSFrancis
 {
     /// <summary>
     /// Extensions for <see cref="Func{TResult}"/> and <see cref="Action"/>, helping with asynchronous operations
