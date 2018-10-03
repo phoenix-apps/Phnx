@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Phnx.Data.EFCore.Repositories;
+using Phnx.Data.LazyLoad;
 using System;
 
 namespace Phnx.Data.EFCore.Tests.Fakes
@@ -36,8 +38,18 @@ namespace Phnx.Data.EFCore.Tests.Fakes
             "Taylor"
         };
 
-        public static string FullName()
+        public static LazyDatabase Cache()
         {
+            return new LazyDatabase();
+        }
+
+        public static string FullName(bool looksReal = true)
+        {
+            if (!looksReal)
+            {
+                return Guid.NewGuid().ToString();
+            }
+
             var firstName = FirstNames[rnd.Next(0, FirstNames.Length)];
 
             var surname = Surnames[rnd.Next(0, Surnames.Length)];
@@ -58,15 +70,24 @@ namespace Phnx.Data.EFCore.Tests.Fakes
         {
             var options = new DbContextOptionsBuilder<FakeDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                 .Options;
 
             return new FakeDbContext(options);
         }
 
-        public static FakeRepo Repo(out FakeDbContext ctx)
+        public static FakeRepo Repo()
         {
-            ctx = DbContext();
+            var ctx = DbContext();
             return new FakeRepo(ctx);
+        }
+
+        public static CachedCrud<DataModel, int> CacheRepo(out FakeRepo repo, out LazyDatabase cache)
+        {
+            cache = Cache();
+            repo = Repo();
+
+            return new CachedCrud<DataModel, int>(cache, repo);
         }
     }
 }

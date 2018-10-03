@@ -1,13 +1,13 @@
 ﻿using System.Linq;
 
-namespace Phnx.Data.EFCore.Repositories.Interfaces
+namespace Phnx.Data.EFCore.Repositories
 {
     /// <summary>
     /// Provides an interface for CRUD operations on data
     /// </summary>
     /// <typeparam name="TEntity">The model this CRUD repository controls</typeparam>
     /// <typeparam name="TKey">The primary key for this model</typeparam>
-    public interface ICrudRepository<TEntity, in TKey>
+    public interface ICrud<TEntity, in TKey>
     {
         /// <summary>
         /// Commit <paramref name="data"/> to the database, ready to save
