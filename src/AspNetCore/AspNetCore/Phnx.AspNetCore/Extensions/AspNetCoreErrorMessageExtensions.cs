@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
 
-namespace Phnx.AspNet
+namespace Phnx
 {
     /// <summary>
     /// Extensions for <see cref="ErrorMessage"/>
     /// </summary>
-    public static class ErrorMessageExtensions
+    public static class AspNetCoreErrorMessageExtensions
     {
         /// <summary>
-        /// Create a <see cref="NullReferenceException"/> describing that the <see cref="System.Web.HttpContext"/> cannot be <see langword="null"/>
+        /// Create a message describing that the <see cref="HttpContext"/> cannot be <see langword="null"/>
         /// </summary>
         /// <param name="factory">The <see cref="ErrorMessage"/> to extend</param>
-        /// <returns>A message describing that the <see cref="System.Web.HttpContext"/> cannot be <see langword="null"/></returns>
+        /// <returns>A message describing that the <see cref="HttpContext"/> cannot be <see langword="null"/></returns>
         public static string HttpContextRequired(this ErrorMessage factory)
         {
             return "A http context is required";

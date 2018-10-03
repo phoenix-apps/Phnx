@@ -1,9 +1,9 @@
-﻿namespace Phnx.Data
+﻿namespace Phnx
 {
     /// <summary>
     /// Extends <see cref="ErrorMessage"/> with new messages related to <see cref="Data"/>
     /// </summary>
-    public static class ErrorMessagesExtensions
+    public static class DataErrorMessageExtensions
     {
         /// <summary>
         /// Gets the default message for being unable to set a value

@@ -1,9 +1,9 @@
-﻿namespace Phnx.Collections
+﻿namespace Phnx
 {
     /// <summary>
     /// Extends <see cref="ErrorMessage"/> with new messages related to <see cref="Collections"/>
     /// </summary>
-    public static class ErrorMessageExtensions
+    public static class CollectionsErrorMessageExtensions
     {
         /// <summary>
         /// Gets the default message for an empty collection

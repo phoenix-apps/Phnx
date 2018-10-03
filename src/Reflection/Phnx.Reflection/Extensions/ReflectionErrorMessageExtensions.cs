@@ -1,12 +1,12 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Phnx.Reflection
+namespace Phnx
 {
     /// <summary>
     /// Extensions for <see cref="ErrorMessage"/>
     /// </summary>
-    internal static class ErrorMessageExtensions
+    internal static class ReflectionErrorMessageExtensions
     {
         /// <summary>
         /// An error to describe that the <see cref="Expression"/> does not point to a field or property

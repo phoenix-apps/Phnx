@@ -1,11 +1,11 @@
 ﻿using Phnx.Security.Passwords.Interface;
 
-namespace Phnx.Security
+namespace Phnx
 {
     /// <summary>
     /// Extensions for <see cref="ErrorMessage"/>
     /// </summary>
-    public static class ErrorMessageExtensions
+    public static class SecurityErrorMessageExtensions
     {
         /// <summary>
         /// An error to describe that the salt length is invalid
