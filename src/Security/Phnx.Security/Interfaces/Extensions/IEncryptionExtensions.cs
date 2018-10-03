@@ -1,7 +1,7 @@
-﻿using System.Text;
-using Phnx.Security.Interfaces;
+﻿using Phnx.Security.Interfaces;
+using System.Text;
 
-namespace Phnx.Security.Extensions
+namespace Phnx.Security
 {
     /// <summary>
     /// Extension for <see cref="IEncryption"/>

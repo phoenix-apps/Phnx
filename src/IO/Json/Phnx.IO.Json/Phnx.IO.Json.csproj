@@ -20,8 +20,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MarkSFrancis.IO" Version="1.1.0-beta" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Phnx.IO">
+      <HintPath>..\..\IO\Phnx.IO\bin\Debug\netstandard2.0\Phnx.IO.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

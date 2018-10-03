@@ -1,7 +1,6 @@
-﻿using System.Security.Cryptography;
-using MarkSFrancis;
-using Phnx.Security.Extensions;
-using Phnx.Security.Interfaces;
+﻿using Phnx.Security.Interfaces;
+using System;
+using System.Security.Cryptography;
 
 namespace Phnx.Security
 {
@@ -55,7 +54,8 @@ namespace Phnx.Security
         {
             if (salt.Length != SaltBytesLength)
             {
-                throw ErrorFactory.Default.InvalidSaltSize(SaltBytesLength, salt.Length);
+                string msg = ErrorMessage.Factory.InvalidSaltSize(SaltBytesLength, salt.Length);
+                throw new ArgumentOutOfRangeException(nameof(salt), msg);
             }
 
             using (var pbkdf2 = new Rfc2898DeriveBytes(data, salt, IterationCount))

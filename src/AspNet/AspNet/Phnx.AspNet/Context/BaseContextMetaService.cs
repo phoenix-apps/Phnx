@@ -1,4 +1,4 @@
-﻿using MarkSFrancis;
+﻿using System;
 using System.Web;
 
 namespace Phnx.AspNet.Context
@@ -22,7 +22,8 @@ namespace Phnx.AspNet.Context
             {
                 if (Context == null)
                 {
-                    throw ErrorFactory.Default.HttpContextRequired();
+                    string err = ErrorMessage.Factory.HttpContextRequired();
+                    throw new NullReferenceException(err);
                 }
 
                 return Context.Request;
@@ -38,7 +39,8 @@ namespace Phnx.AspNet.Context
             {
                 if (Context == null)
                 {
-                    throw ErrorFactory.Default.HttpContextRequired();
+                    string err = ErrorMessage.Factory.HttpContextRequired();
+                    throw new NullReferenceException(err);
                 }
 
                 return Context.Response;

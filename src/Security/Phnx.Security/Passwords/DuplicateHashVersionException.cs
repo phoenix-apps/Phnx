@@ -1,5 +1,5 @@
-﻿using System;
-using Phnx.Security.Passwords.Interface;
+﻿using Phnx.Security.Passwords.Interface;
+using System;
 
 namespace Phnx.Security.Passwords
 {
@@ -9,6 +9,14 @@ namespace Phnx.Security.Passwords
     [Serializable]
     public class DuplicateHashVersionException : InvalidOperationException
     {
+        /// <summary>
+        /// Create a new instance of the <see cref="DuplicateHashVersionException"/> with an error message describing that <paramref name="hashVersion"/> has already been added
+        /// </summary>
+        /// <param name="hashVersion">The hash version which is a duplicate</param>
+        public DuplicateHashVersionException(int hashVersion) : base($"{hashVersion} is already configured and cannot be re-added")
+        {
+        }
+
         /// <summary>
         /// Create a new instance of the <see cref="DuplicateHashVersionException"/> with an error message
         /// </summary>

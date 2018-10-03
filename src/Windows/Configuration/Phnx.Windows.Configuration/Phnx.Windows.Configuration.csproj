@@ -21,8 +21,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MarkSFrancis.Collections" Version="1.1.0-beta2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Phnx">
+      <HintPath>..\..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
+    </Reference>
+    <Reference Include="Phnx.Collections">
+      <HintPath>..\..\..\Collections\Phnx.Collections\bin\Debug\netstandard2.0\Phnx.Collections.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

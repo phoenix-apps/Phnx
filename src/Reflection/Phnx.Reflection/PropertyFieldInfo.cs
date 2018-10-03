@@ -1,5 +1,4 @@
-﻿using MarkSFrancis;
-using System;
+﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -101,7 +100,8 @@ namespace Phnx.Reflection
             }
             else
             {
-                throw ErrorFactory.Default.ExpressionIsNotPropertyOrFieldAccess(nameof(expression));
+                string msg = ErrorMessage.Factory.ExpressionIsNotPropertyOrFieldAccess();
+                throw new ArgumentException(msg, nameof(expression));
             }
 
             LoadMember(member);
@@ -123,7 +123,8 @@ namespace Phnx.Reflection
                     Field = field;
                     break;
                 default:
-                    throw ErrorFactory.Default.MemberIsNotPropertyOrField(nameof(member));
+                    string msg = ErrorMessage.Factory.MemberIsNotPropertyOrField();
+                    throw new ArgumentException(msg, nameof(member));
             }
         }
 
@@ -168,8 +169,10 @@ namespace Phnx.Reflection
 
             if (prop == null)
             {
-                ErrorFactory.Default.InvalidCast(propFieldInfo.Name, typeof(PropertyFieldInfo),
+                string err = ErrorMessage.Factory.InvalidCast(propFieldInfo.Name, typeof(PropertyFieldInfo),
                     typeof(PropertyInfo));
+
+                throw new InvalidCastException(err);
             }
 
             return prop;
@@ -186,8 +189,10 @@ namespace Phnx.Reflection
 
             if (field == null)
             {
-                ErrorFactory.Default.InvalidCast(propFieldInfo.Name, typeof(PropertyFieldInfo),
+                string err = ErrorMessage.Factory.InvalidCast(propFieldInfo.Name, typeof(PropertyFieldInfo),
                     typeof(FieldInfo));
+
+                throw new InvalidCastException(err);
             }
 
             return field;

@@ -1,5 +1,4 @@
-﻿using MarkSFrancis;
-using MarkSFrancis.Collections.Extensions;
+﻿using Phnx.Collections.Extensions;
 using System;
 using System.Collections.Specialized;
 using System.Configuration;
@@ -97,7 +96,7 @@ namespace Phnx.Configuration
         {
             if (key == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(key));
+                throw new ArgumentNullException(nameof(key));
             }
 
             if (!AppSettingsContainsKey(key))

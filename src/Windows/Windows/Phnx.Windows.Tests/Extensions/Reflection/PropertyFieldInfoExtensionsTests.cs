@@ -1,5 +1,5 @@
-﻿using MarkSFrancis.Reflection;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Phnx.Reflection;
 using Phnx.Windows.Extensions.Reflection;
 
 namespace Phnx.Windows.Tests.Extensions.Reflection

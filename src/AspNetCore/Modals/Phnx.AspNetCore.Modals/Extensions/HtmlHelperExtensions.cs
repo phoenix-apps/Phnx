@@ -1,9 +1,9 @@
-﻿using MarkSFrancis;
-using Microsoft.AspNetCore.Html;
+﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Phnx.AspNetCore.Modals.Interfaces;
+using System;
 
-namespace Phnx.AspNetCore.Modals.Extensions
+namespace Phnx.AspNetCore.Modals
 {
     /// <summary>
     /// Extensions for <see cref="IHtmlHelper"/> related to modals
@@ -23,7 +23,7 @@ namespace Phnx.AspNetCore.Modals.Extensions
         {
             if (string.IsNullOrWhiteSpace(partialViewName))
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(partialViewName));
+                throw new ArgumentNullException(nameof(partialViewName));
             }
 
             IHtmlContentBuilder content = new HtmlContentBuilder();

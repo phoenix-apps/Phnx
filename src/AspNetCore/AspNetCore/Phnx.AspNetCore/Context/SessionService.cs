@@ -1,8 +1,8 @@
-﻿using MarkSFrancis;
-using MarkSFrancis.Collections.Extensions;
-using MarkSFrancis.Serialization.Extensions;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Phnx.AspNetCore.Context.Interfaces;
+using Phnx.Serialization.Extensions;
+using System;
+using System.Collections.Generic;
 
 namespace Phnx.AspNetCore.Context
 {
@@ -42,12 +42,13 @@ namespace Phnx.AspNetCore.Context
         {
             if (Context == null)
             {
-                throw ErrorFactory.Default.HttpContextRequired();
+                string msg = ErrorMessage.Factory.HttpContextRequired();
+                throw new NullReferenceException(msg);
             }
 
             if (!Session.TryGetValue(key, out byte[] sessionBytes))
             {
-                throw ErrorFactory.Default.KeyNotFound(key);
+                throw new KeyNotFoundException($"The key \"{key}\" was not found in the session");
             }
 
             return sessionBytes.Deserialize<T>();
@@ -63,7 +64,9 @@ namespace Phnx.AspNetCore.Context
         {
             if (Context == null)
             {
-                throw ErrorFactory.Default.HttpContextRequired();
+                string msg = ErrorMessage.Factory.HttpContextRequired();
+
+                throw new NullReferenceException(msg);
             }
 
             var valueBytes = value.Serialize();

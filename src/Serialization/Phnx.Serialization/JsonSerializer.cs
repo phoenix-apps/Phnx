@@ -1,5 +1,5 @@
-﻿using MarkSFrancis.IO.Json.Streams;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using Phnx.IO.Json.Streams;
 using Phnx.Serialization.Interfaces;
 using System.IO;
 using System.Text;

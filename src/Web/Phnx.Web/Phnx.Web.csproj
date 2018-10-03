@@ -20,8 +20,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MarkSFrancis.Reflection" Version="1.1.0-beta4" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Phnx.Reflection">
+      <HintPath>..\..\Reflection\Phnx.Reflection\bin\Debug\netstandard2.0\Phnx.Reflection.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

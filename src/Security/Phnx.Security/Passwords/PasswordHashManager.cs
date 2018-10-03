@@ -1,6 +1,4 @@
-﻿using MarkSFrancis;
-using MarkSFrancis.Collections.Extensions;
-using Phnx.Security.Passwords.Extensions;
+﻿using Phnx.Collections.Extensions;
 using Phnx.Security.Passwords.Interface;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,7 +57,7 @@ namespace Phnx.Security.Passwords
         {
             if (HashGeneratorServices.Any(knownHashGenerator => knownHashGenerator.Version == hashGenerator.Version))
             {
-                throw ErrorFactory.Default.DuplicateHashVersion(hashGenerator.Version);
+                throw new DuplicateHashVersionException(hashGenerator.Version);
             }
 
             HashGeneratorServices.Add(hashGenerator);

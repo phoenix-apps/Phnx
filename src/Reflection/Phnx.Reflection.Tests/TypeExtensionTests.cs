@@ -1,5 +1,5 @@
-﻿using MarkSFrancis.Collections.Extensions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Phnx.Collections.Extensions;
 using Phnx.Reflection.Extensions;
 using Phnx.Reflection.Tests.TestClasses;
 using System.Linq;

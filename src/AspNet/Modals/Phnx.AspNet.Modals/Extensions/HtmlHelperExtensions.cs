@@ -1,6 +1,5 @@
-﻿using MarkSFrancis;
-using MarkSFrancis.AspNet.Windows.Extensions;
-using Phnx.AspNet.Modals.Interfaces;
+﻿using Phnx.AspNet.Modals.Interfaces;
+using System;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -26,7 +25,7 @@ namespace Phnx.AspNet.Modals.Extensions
         {
             if (string.IsNullOrWhiteSpace(partialViewName))
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(partialViewName));
+                throw new ArgumentNullException(nameof(partialViewName));
             }
 
             StringBuilder content = new StringBuilder();

@@ -1,4 +1,4 @@
-﻿using MarkSFrancis.Reflection;
+﻿using Phnx.Reflection;
 using System.Reflection;
 
 namespace Phnx.Windows.Extensions.Reflection

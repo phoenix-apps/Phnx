@@ -20,8 +20,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MarkSFrancis" Version="1.1.0-beta2" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.5.0-preview2-26406-04" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Phnx">
+      <HintPath>..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

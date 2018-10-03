@@ -1,6 +1,6 @@
 ﻿using System.Web;
 
-namespace Phnx.AspNet.Extensions
+namespace Phnx.AspNet
 {
     /// <summary>
     /// Extensions for <see cref="string"/>

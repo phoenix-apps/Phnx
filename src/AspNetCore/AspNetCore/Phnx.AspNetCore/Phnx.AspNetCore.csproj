@@ -20,10 +20,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MarkSFrancis.Serialization" Version="1.1.0-beta" />
-    <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Phnx">
+      <HintPath>..\..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
+    </Reference>
+    <Reference Include="Phnx.Collections">
+      <HintPath>..\..\..\Collections\Phnx.Collections\bin\Debug\netstandard2.0\Phnx.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Phnx.Serialization">
+      <HintPath>..\..\..\Serialization\Phnx.Serialization\bin\Debug\netstandard2.0\Phnx.Serialization.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

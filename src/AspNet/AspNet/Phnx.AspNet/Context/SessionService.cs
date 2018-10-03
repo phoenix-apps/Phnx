@@ -1,5 +1,5 @@
-﻿using MarkSFrancis;
-using Phnx.AspNet.Context.Interfaces;
+﻿using Phnx.AspNet.Context.Interfaces;
+using System;
 using System.Web;
 using System.Web.SessionState;
 
@@ -30,7 +30,8 @@ namespace Phnx.AspNet.Context
         {
             if (Context == null)
             {
-                throw ErrorFactory.Default.HttpContextRequired();
+                string msg = ErrorMessage.Factory.HttpContextRequired();
+                throw new NullReferenceException(msg);
             }
 
             return (T)Session[key];
@@ -46,7 +47,8 @@ namespace Phnx.AspNet.Context
         {
             if (Context == null)
             {
-                throw ErrorFactory.Default.HttpContextRequired();
+                string msg = ErrorMessage.Factory.HttpContextRequired();
+                throw new NullReferenceException(msg);
             }
 
             Session[key] = value;

@@ -1,5 +1,5 @@
-﻿using MarkSFrancis;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 
 namespace Phnx.AspNetCore.Context
 {
@@ -24,7 +24,8 @@ namespace Phnx.AspNetCore.Context
             {
                 if (Context == null)
                 {
-                    throw ErrorFactory.Default.HttpContextRequired();
+                    string msg = ErrorMessage.Factory.HttpContextRequired();
+                    throw new NullReferenceException(msg);
                 }
 
                 return Context.Request;
@@ -40,7 +41,8 @@ namespace Phnx.AspNetCore.Context
             {
                 if (Context == null)
                 {
-                    throw ErrorFactory.Default.HttpContextRequired();
+                    string err = ErrorMessage.Factory.HttpContextRequired();
+                    throw new NullReferenceException(err);
                 }
 
                 return Context.Response;

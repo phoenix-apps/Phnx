@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Phnx.Security.Passwords.Interface;
+using System;
 using System.Text;
-using MarkSFrancis;
-using Phnx.Security.Extensions;
-using Phnx.Security.Passwords.Interface;
 
 namespace Phnx.Security.Passwords
 {
@@ -52,19 +50,22 @@ namespace Phnx.Security.Passwords
             var hashLength = BytesUsedByVersionTag + PasswordHash.Length + Salt.Length;
             var hashLengthShouldBe = BytesUsedByVersionTag + generator.HashBytesLength + generator.SaltBytesLength;
 
-
-            if (hashLength != BytesUsedByVersionTag + generator.HashBytesLength + generator.SaltBytesLength)
+            if (hashLength != hashLengthShouldBe)
             {
-                throw ErrorFactory.Default.InvalidHashConfiguration(hashLength, hashLengthShouldBe, generator.Version);
+                string msg = ErrorMessage.Factory.InvalidHashConfiguration(hashLength, hashLengthShouldBe, generator.Version);
+
+                throw new TypeLoadException(msg);
             }
         }
 
         private void VerifyGenerator(int hashLength, IPasswordHashVersion generator)
         {
             var hashLengthShouldBe = BytesUsedByVersionTag + generator.HashBytesLength + generator.SaltBytesLength;
-            if (hashLength != BytesUsedByVersionTag + generator.HashBytesLength + generator.SaltBytesLength)
+            if (hashLength != hashLengthShouldBe)
             {
-                throw ErrorFactory.Default.InvalidHashConfiguration(hashLength, hashLengthShouldBe, generator.Version);
+                string msg = ErrorMessage.Factory.InvalidHashConfiguration(hashLength, hashLengthShouldBe, generator.Version);
+
+                throw new TypeLoadException(msg);
             }
         }
 

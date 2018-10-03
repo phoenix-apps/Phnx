@@ -1,5 +1,4 @@
-﻿using MarkSFrancis;
-using Phnx.Web.Models.Response;
+﻿using Phnx.Web.Models.Response;
 using Phnx.Web.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -36,7 +35,7 @@ namespace Phnx.Web.Fluent
         {
             if (builder == null)
             {
-                ErrorFactory.Default.ArgumentNull(nameof(builder));
+                throw new ArgumentNullException(nameof(builder));
             }
 
             var fluentUrl = new FluentRequestUrl(this);

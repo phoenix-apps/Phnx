@@ -1,5 +1,4 @@
-﻿using MarkSFrancis;
-using MarkSFrancis.Collections.Extensions;
+﻿using Phnx.Collections;
 using Phnx.Random.Generator;
 using System;
 using System.Collections.Generic;
@@ -186,14 +185,14 @@ namespace Phnx.Random
         {
             if (values == null)
             {
-                throw ErrorFactory.Default.ArgumentNull(nameof(values));
+                throw new ArgumentNullException(nameof(values));
             }
 
             var totalValues = values.Sum(v => v.Count);
 
             if (totalValues == 0)
             {
-                throw ErrorFactory.Default.CollectionEmpty(nameof(values));
+                string err = ErrorMessage.Factory.SequenceEmpty(nameof(values));
             }
 
             var indexToGet = Random.Next(0, totalValues);

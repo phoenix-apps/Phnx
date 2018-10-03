@@ -1,4 +1,4 @@
-﻿using MarkSFrancis.Collections.Extensions;
+﻿using Phnx.Collections.Extensions;
 using System.Drawing;
 
 namespace Phnx.Windows.Extensions.Drawing

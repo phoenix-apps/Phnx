@@ -20,8 +20,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MarkSFrancis.Collections" Version="1.1.0-beta2" />
-    <PackageReference Include="MarkSFrancis.IO.Json" Version="1.1.0-beta" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Phnx.Collections">
+      <HintPath>..\..\Collections\Phnx.Collections\bin\Debug\netstandard2.0\Phnx.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Phnx.IO">
+      <HintPath>..\..\IO\IO\Phnx.IO\bin\Debug\netstandard2.0\Phnx.IO.dll</HintPath>
+    </Reference>
+    <Reference Include="Phnx.IO.Json">
+      <HintPath>..\..\IO\Json\Phnx.IO.Json\bin\Debug\netstandard2.0\Phnx.IO.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
