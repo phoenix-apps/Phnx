@@ -11,7 +11,7 @@ namespace Phnx.Data.EFCore.Repositories
     /// <typeparam name="TDbContext">The <see cref="DbContext"/> that <typeparamref name="TEntity"/> is stored in</typeparam>
     /// <typeparam name="TEntity">The model this CRUD repository controls</typeparam>
     /// <typeparam name="TKey">The primary key for this model</typeparam>
-    public class CrudDbSet<TDbContext, TEntity, TKey> : ICrud<TEntity, TKey>
+    public class CrudDbSet<TDbContext, TEntity, TKey> : ICrud<TKey, TEntity>
         where TEntity : class, IIdDataModel<TKey>
         where TDbContext : DbContext
     {
