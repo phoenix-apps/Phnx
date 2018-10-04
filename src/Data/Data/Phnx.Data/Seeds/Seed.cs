@@ -23,8 +23,14 @@ namespace Phnx.Data.Seeds
         /// Convert a <see cref="Seed"/> to an <see cref="Action"/>
         /// </summary>
         /// <param name="seed">The seed to convert</param>
+        /// <exception cref="ArgumentNullException"><paramref name="seed"/> is <see langword="null"/></exception>
         public static implicit operator Action(Seed seed)
         {
+            if (seed is null)
+            {
+                return null;
+            }
+
             return seed.seed;
         }
 
@@ -32,8 +38,14 @@ namespace Phnx.Data.Seeds
         /// Convert an <see cref="Action"/> to a <see cref="Seed"/>
         /// </summary>
         /// <param name="seed">The action to convert</param>
+        /// <exception cref="ArgumentNullException"><paramref name="seed"/> is <see langword="null"/></exception>
         public static implicit operator Seed(Action seed)
         {
+            if (seed is null)
+            {
+                return null;
+            }
+
             return new Seed(seed);
         }
 

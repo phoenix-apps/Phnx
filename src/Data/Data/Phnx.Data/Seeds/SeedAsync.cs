@@ -26,6 +26,11 @@ namespace Phnx.Data.Seeds
         /// <param name="seed">The seed to convert</param>
         public static implicit operator Action(SeedAsync seed)
         {
+            if (seed is null)
+            {
+                return null;
+            }
+
             return seed.seedAsync;
         }
 
@@ -35,6 +40,11 @@ namespace Phnx.Data.Seeds
         /// <param name="seed">The action to convert</param>
         public static implicit operator SeedAsync(Action seed)
         {
+            if (seed is null)
+            {
+                return null;
+            }
+
             return new SeedAsync(seed);
         }
 
