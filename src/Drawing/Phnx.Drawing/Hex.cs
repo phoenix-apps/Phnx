@@ -44,18 +44,7 @@ namespace Phnx.Drawing
         /// <exception cref="FormatException"><paramref name="data"/> contains one or more characters that are not a valid digit in hex</exception>
         public Hex(string data)
         {
-            if (data is null)
-            {
-                HexCode = null;
-            }
-            else if (data.Length == 0)
-            {
-                HexCode = new byte[0];
-            }
-            else
-            {
-                HexCode = HexStringToBytes(data);
-            }
+            HexCode = HexStringToBytes(data);
         }
 
         /// <summary>
@@ -63,7 +52,7 @@ namespace Phnx.Drawing
         /// </summary>
         /// <param name="color">The color to build the hex structure from</param>
         /// <param name="includeAlpha">Whether the alpha property of the color should be included in the hex structure</param>
-        public Hex(Color color, bool includeAlpha = true)
+        public Hex(Color color, bool includeAlpha)
         {
             if (includeAlpha)
             {
@@ -85,6 +74,12 @@ namespace Phnx.Drawing
             else if (hexCode.Length == 0)
             {
                 return new byte[0];
+            }
+
+            if (hexCode.Length % 2 == 1)
+            {
+                // Append zero
+                hexCode += "0";
             }
 
             int NumberChars = hexCode.Length;
@@ -110,7 +105,7 @@ namespace Phnx.Drawing
         {
             get
             {
-                return HexCode?.ToHex();
+                return HexCode?.ToHex(true);
             }
             set
             {

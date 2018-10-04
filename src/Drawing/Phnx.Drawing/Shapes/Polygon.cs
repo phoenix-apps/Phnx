@@ -6,7 +6,7 @@ namespace Phnx.Drawing.Shapes
     /// <summary>
     /// A shape with an edge defined by a series of straight edges
     /// </summary>
-    public class Polygon
+    public class Polygon : IShape
     {
         /// <summary>
         /// Create a new <see cref="Polygon"/> with a range of corners as <see cref="Point"/>

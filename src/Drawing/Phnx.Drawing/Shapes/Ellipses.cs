@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using Phnx.Drawing.Interfaces;
 
 namespace Phnx.Drawing.Shapes
 {
