@@ -20,6 +20,24 @@ namespace Phnx.Data.Seeds
         }
 
         /// <summary>
+        /// Convert a <see cref="Seed"/> to an <see cref="Action"/>
+        /// </summary>
+        /// <param name="seed">The seed to convert</param>
+        public static implicit operator Action(Seed seed)
+        {
+            return seed.seed;
+        }
+
+        /// <summary>
+        /// Convert an <see cref="Action"/> to a <see cref="Seed"/>
+        /// </summary>
+        /// <param name="seed">The action to convert</param>
+        public static implicit operator Seed(Action seed)
+        {
+            return new Seed(seed);
+        }
+
+        /// <summary>
         /// Run this seed
         /// </summary>
         public void Run()

@@ -21,6 +21,24 @@ namespace Phnx.Data.Seeds
         }
 
         /// <summary>
+        /// Convert a <see cref="SeedAsync"/> to an <see cref="Action"/>
+        /// </summary>
+        /// <param name="seed">The seed to convert</param>
+        public static implicit operator Action(SeedAsync seed)
+        {
+            return seed.seedAsync;
+        }
+
+        /// <summary>
+        /// Convert an <see cref="Action"/> to a <see cref="SeedAsync"/>
+        /// </summary>
+        /// <param name="seed">The action to convert</param>
+        public static implicit operator SeedAsync(Action seed)
+        {
+            return new SeedAsync(seed);
+        }
+
+        /// <summary>
         /// Run this seed asyncronously
         /// </summary>
         public Task RunAsync()
