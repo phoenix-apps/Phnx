@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Phnx.Data.Seed
+namespace Phnx.Data.Seeds
 {
     /// <summary>
     /// Extension methods for <see cref="ISeed"/>
