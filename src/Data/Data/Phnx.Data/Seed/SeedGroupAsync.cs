@@ -1,8 +1,7 @@
-﻿using Phnx.Data.EFCore.Seed.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Phnx.Data.EFCore.Seed
+namespace Phnx.Data.Seed
 {
     /// <summary>
     /// A group of seeds, used to help setup and organise seed operations for a database
@@ -66,10 +65,10 @@ namespace Phnx.Data.EFCore.Seed
         /// <summary>
         /// Run all the <see cref="Seeds"/>
         /// </summary>
-        /// <param name="runParallel"></param>
-        public void SeedSync(bool runParallel)
+        /// <param name="runParallel">Whether to run the seeds in parallel (<see langword="true"/>) or series (<see langword="false"/>)</param>
+        public void RunSync(bool runParallel)
         {
-            var task = Seed(runParallel);
+            var task = RunAsync(runParallel);
 
             task.Wait();
         }
@@ -77,8 +76,8 @@ namespace Phnx.Data.EFCore.Seed
         /// <summary>
         /// Run all the <see cref="Seeds"/>
         /// </summary>
-        /// <param name="runParallel">Whether to run the seeds in parallel</param>
-        public Task Seed(bool runParallel)
+        /// <param name="runParallel">Whether to run the seeds in parallel (<see langword="true"/>) or series (<see langword="false"/>)</param>
+        public Task RunAsync(bool runParallel)
         {
             if (runParallel)
             {
@@ -102,7 +101,7 @@ namespace Phnx.Data.EFCore.Seed
         /// </summary>
         public Task RunAsync()
         {
-            return Seed(false);
+            return RunAsync(false);
         }
     }
 }

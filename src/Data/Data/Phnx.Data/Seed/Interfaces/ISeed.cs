@@ -1,4 +1,4 @@
-﻿namespace Phnx.Data.EFCore.Seed.Interfaces
+﻿namespace Phnx.Data.Seed
 {
     /// <summary>
     /// Provides an interface for seeding databases

@@ -1,7 +1,6 @@
-﻿using Phnx.Data.EFCore.Seed.Interfaces;
-using System;
+﻿using System;
 
-namespace Phnx.Data.EFCore.Seed
+namespace Phnx.Data.Seed
 {
     /// <summary>
     /// A seed defined by an <see cref="Action"/>

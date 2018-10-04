@@ -1,8 +1,7 @@
-﻿using Phnx.Data.EFCore.Seed.Interfaces;
-using System;
+﻿using System;
 using System.Threading.Tasks;
 
-namespace Phnx.Data.EFCore.Seed
+namespace Phnx.Data.Seed
 {
     /// <summary>
     /// A asyncronous seed defined by an <see cref="Action"/>

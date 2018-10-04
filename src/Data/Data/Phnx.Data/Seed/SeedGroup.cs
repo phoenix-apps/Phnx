@@ -1,7 +1,6 @@
-﻿using Phnx.Data.EFCore.Seed.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace Phnx.Data.EFCore.Seed
+namespace Phnx.Data.Seed
 {
     /// <summary>
     /// A group of seeds, used to help setup and organise seed operations for a database

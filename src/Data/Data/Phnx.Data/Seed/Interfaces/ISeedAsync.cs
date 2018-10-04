@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Phnx.Data.EFCore.Seed.Interfaces
+namespace Phnx.Data.Seed
 {
     /// <summary>
     /// Provides an interface for asyncronously seeding databases
