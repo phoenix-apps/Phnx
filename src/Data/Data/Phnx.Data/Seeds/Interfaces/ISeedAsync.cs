@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Phnx.Data.Seed
+namespace Phnx.Data.Seeds
 {
     /// <summary>
     /// Provides an interface for asyncronously seeding databases

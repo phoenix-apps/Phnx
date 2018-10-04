@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Phnx.Data.Seed
+namespace Phnx.Data.Seeds
 {
     /// <summary>
     /// A asyncronous seed defined by an <see cref="Action"/>
@@ -14,9 +14,10 @@ namespace Phnx.Data.Seed
         /// Create a new seed with a method to call to seed
         /// </summary>
         /// <param name="seedAsync">The method to seed with</param>
+        /// <exception cref="ArgumentNullException"><paramref name="seedAsync"/> is <see langword="null"/></exception>
         public SeedAsync(Action seedAsync)
         {
-            this.seedAsync = seedAsync;
+            this.seedAsync = seedAsync ?? throw new ArgumentNullException(nameof(seedAsync));
         }
 
         /// <summary>
