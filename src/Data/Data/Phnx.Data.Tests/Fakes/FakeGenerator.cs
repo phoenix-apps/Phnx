@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Phnx.Data.LazyLoad;
+﻿using Phnx.Data.LazyLoad;
+using Phnx.Data.Repositories;
 using System;
 
-namespace Phnx.Data.EFCore.Tests.Fakes
+namespace Phnx.Data.Tests.Fakes
 {
     public static class FakeGenerator
     {
@@ -37,11 +37,6 @@ namespace Phnx.Data.EFCore.Tests.Fakes
             "Taylor"
         };
 
-        public static LazyDatabase Cache()
-        {
-            return new LazyDatabase();
-        }
-
         public static string FullName(bool looksReal = true)
         {
             if (!looksReal)
@@ -65,20 +60,22 @@ namespace Phnx.Data.EFCore.Tests.Fakes
             };
         }
 
-        public static FakeDbContext DbContext()
+        public static LazyDatabase Cache()
         {
-            var options = new DbContextOptionsBuilder<FakeDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-                .Options;
-
-            return new FakeDbContext(options);
+            return new LazyDatabase();
         }
 
-        public static FakeRepo Repo()
+        public static DictionaryCrud<int, DataModel> DictionaryCrud()
         {
-            var ctx = DbContext();
-            return new FakeRepo(ctx);
+            return new DictionaryCrud<int, DataModel>();
+        }
+
+        public static CachedCrud<int, DataModel> CachedCrud(out LazyDatabase database, out FakeCrud repo)
+        {
+            repo = new FakeCrud();
+            database = Cache();
+
+            return new CachedCrud<int, DataModel>(database, repo);
         }
     }
 }

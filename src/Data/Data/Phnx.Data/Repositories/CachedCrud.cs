@@ -2,14 +2,14 @@
 using System;
 using System.Linq;
 
-namespace Phnx.Data.EFCore.Repositories
+namespace Phnx.Data.Repositories
 {
     /// <summary>
     /// Provides CRUD operations on data with an ID property for the primary key
     /// </summary>
-    /// <typeparam name="TEntity">The model this CRUD repository controls</typeparam>
     /// <typeparam name="TKey">The primary key for this model</typeparam>
-    public class CachedCrud<TEntity, TKey> : ICrud<TEntity, TKey>
+    /// <typeparam name="TEntity">The model this CRUD repository controls</typeparam>
+    public class CachedCrud<TKey, TEntity> : ICrud<TKey, TEntity>
         where TEntity : class, IIdDataModel<TKey>
     {
         /// <summary>
@@ -20,15 +20,15 @@ namespace Phnx.Data.EFCore.Repositories
         /// <summary>
         /// The underlying data source supported by this cache
         /// </summary>
-        public ICrud<TEntity, TKey> DataSource { get; }
+        public ICrud<TKey, TEntity> DataSource { get; }
 
         /// <summary>
         /// Create a new <see cref="CachedCrud{TEntity, TKey}"/>. If <typeparamref name="TEntity"/> is not configured for the <paramref name="cache"/>, it automatically adds it with the <paramref name="cache"/>'s default lifespan for entities
         /// </summary>
         /// <param name="cache">The cache to use for loading and commiting changes</param>
         /// <param name="dataSource">The data to cache</param>
-        /// <exception cref="ArgumentNullException"><paramref name="dataSource"/> was <see langword="null"/></exception>
-        public CachedCrud(LazyDatabase cache, ICrud<TEntity, TKey> dataSource)
+        /// <exception cref="ArgumentNullException"><paramref name="cache"/> or <paramref name="dataSource"/> was <see langword="null"/></exception>
+        public CachedCrud(LazyDatabase cache, ICrud<TKey, TEntity> dataSource)
         {
             Cache = cache ?? throw new ArgumentNullException(nameof(cache));
             DataSource = dataSource ?? throw new ArgumentNullException(nameof(dataSource));
