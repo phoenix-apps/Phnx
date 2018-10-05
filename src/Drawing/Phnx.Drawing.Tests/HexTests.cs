@@ -265,7 +265,7 @@ namespace Phnx.Drawing.Tests
         {
             var hex = new Hex();
 
-            Assert.IsFalse(hex.IsValidColor);
+            Assert.IsFalse(hex.IsColor);
         }
 
         [Test]
@@ -273,7 +273,7 @@ namespace Phnx.Drawing.Tests
         {
             var hex = new Hex(new byte[0]);
 
-            Assert.IsFalse(hex.IsValidColor);
+            Assert.IsFalse(hex.IsColor);
         }
 
         [Test]
@@ -281,7 +281,7 @@ namespace Phnx.Drawing.Tests
         {
             var hex = new Hex(new byte[] { 124, 12 });
 
-            Assert.IsFalse(hex.IsValidColor);
+            Assert.IsFalse(hex.IsColor);
         }
 
         [Test]
@@ -289,7 +289,7 @@ namespace Phnx.Drawing.Tests
         {
             var hex = new Hex(new byte[] { 124, 12, 124, 64, 25 });
 
-            Assert.IsFalse(hex.IsValidColor);
+            Assert.IsFalse(hex.IsColor);
         }
 
         [Test]
@@ -297,7 +297,7 @@ namespace Phnx.Drawing.Tests
         {
             var hex = new Hex(Color.Black, false);
 
-            Assert.IsTrue(hex.IsValidColor);
+            Assert.IsTrue(hex.IsColor);
         }
 
         [Test]
@@ -305,7 +305,7 @@ namespace Phnx.Drawing.Tests
         {
             var hex = new Hex(Color.Black, true);
 
-            Assert.IsTrue(hex.IsValidColor);
+            Assert.IsTrue(hex.IsColor);
         }
 
         [Test]

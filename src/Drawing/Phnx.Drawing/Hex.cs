@@ -124,7 +124,7 @@ namespace Phnx.Drawing
         /// <summary>
         /// Whether this hex structure represents a <see cref="Color"/>
         /// </summary>
-        public bool IsValidColor => HexCode != null && (HexCode.Length == 3 || HexCode.Length == 4);
+        public bool IsColor => HexCode != null && (HexCode.Length == 3 || HexCode.Length == 4);
 
         /// <summary>
         /// Whether <see cref="HexCode"/> represents a <see cref="Color"/> and has an alpha channel
@@ -134,7 +134,7 @@ namespace Phnx.Drawing
         {
             get
             {
-                if (!IsValidColor)
+                if (!IsColor)
                 {
                     return false;
                 }
@@ -164,7 +164,7 @@ namespace Phnx.Drawing
         /// <exception cref="InvalidCastException"><see cref="HexCode"/> does not represent a valid color</exception>
         public Color ToColor()
         {
-            if (!IsValidColor)
+            if (!IsColor)
             {
                 string errorMessage = ErrorMessage.Factory.InvalidCast(nameof(HexCode), typeof(byte[]), typeof(Color));
                 throw new InvalidCastException(errorMessage);
@@ -187,7 +187,7 @@ namespace Phnx.Drawing
         /// <returns>Whether the conversion was successful</returns>
         public bool TryToColor(out Color color)
         {
-            if (!IsValidColor)
+            if (!IsColor)
             {
                 color = default(Color);
                 return false;
