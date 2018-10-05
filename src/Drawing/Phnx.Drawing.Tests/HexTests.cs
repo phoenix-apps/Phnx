@@ -7,7 +7,7 @@ namespace Phnx.Drawing.Tests
     public class HexTests
     {
         [Test]
-        public void New_WithNullChars_GetsNullHex()
+        public void New_WithNullChars_CreatesNullHex()
         {
             char[] chars = null;
             var hex = new Hex(chars);
@@ -16,7 +16,7 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void New_WithEmptyChars_GetsHex()
+        public void New_WithEmptyChars_CreatesEmptyHex()
         {
             char[] chars = new char[0];
 
@@ -26,9 +26,20 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void New_WithValidChars_GetsHex()
+        public void New_WithValidChars_CreatesHex()
         {
-            byte[] expected = new byte[] { 170, 160 };
+            byte[] expected = new byte[] { 170 };
+
+            char[] chars = new[] { 'a', 'a' };
+            var hex = new Hex(chars);
+
+            CollectionAssert.AreEqual(expected, hex.HexCode);
+        }
+
+        [Test]
+        public void New_WithOddChars_DoublesHex()
+        {
+            byte[] expected = new byte[] { 170, 170, 170 };
 
             char[] chars = new[] { 'a', 'a', 'a' };
             var hex = new Hex(chars);
@@ -46,7 +57,7 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void New_WithByte_GetsHex()
+        public void New_WithByte_CreatesHex()
         {
             byte expected = 251;
 
@@ -67,7 +78,7 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void New_WithEmptyBytes_SetsBytes()
+        public void New_WithEmptyBytes_CreatesEmptyHex()
         {
             byte[] bytes = new byte[0];
 
@@ -77,7 +88,7 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void New_WithBytes_SetsBytes()
+        public void New_WithBytes_CreatesHex()
         {
             byte[] bytes = new byte[] { 1, 2, 4 };
             var copy = new byte[bytes.Length];
@@ -89,7 +100,7 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void New_WithNullstrings_GetsNullHex()
+        public void New_WithNullString_CreatesNullHex()
         {
             string text = null;
             var hex = new Hex(text);
@@ -98,7 +109,7 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void New_WithEmptystrings_GetsHex()
+        public void New_WithEmptyString_CreatesEmptyHex()
         {
             string text = string.Empty;
 
@@ -108,9 +119,20 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void New_WithValidstrings_GetsHex()
+        public void New_WithValidString_CreatesHex()
         {
-            byte[] expected = new byte[] { 170, 160 };
+            byte[] expected = new byte[] { 170, 170 };
+
+            string text = "aaaa";
+            var hex = new Hex(text);
+
+            CollectionAssert.AreEqual(expected, hex.HexCode);
+        }
+
+        [Test]
+        public void New_WithOddLengthString_DoublesHex()
+        {
+            byte[] expected = new byte[] { 170, 170, 170 };
 
             string text = "aaa";
             var hex = new Hex(text);
@@ -128,7 +150,7 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void New_WithColor_AndAlpha_GetsHex()
+        public void New_WithColor_AndAlpha_CreatesHex()
         {
             byte[] expected = new byte[] { 255, 0, 0, 0 };
 
@@ -138,7 +160,7 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void New_WithColor_AndNoAlpha_GetsHex()
+        public void New_WithColor_AndNoAlpha_CreatesHex()
         {
             byte[] expected = new byte[] { 0, 128, 0 };
 
@@ -148,7 +170,7 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void GetHexString_WhenCodeIsNull_GetsNullHex()
+        public void GetHexString_WhenCodeIsNotSet_GetsNullHex()
         {
             var hex = new Hex();
 
@@ -156,7 +178,7 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void GetHexString_WhenCodeIsEmpty_GetsHex()
+        public void GetHexString_WhenCodeIsEmpty_GetsEmptyHex()
         {
             string expected = string.Empty;
             byte[] code = new byte[0];
@@ -169,43 +191,55 @@ namespace Phnx.Drawing.Tests
         [Test]
         public void GetHexString_WhenCodeHasContents_GetsHex()
         {
-            string expected = "aaa";
-            byte[] code = new byte[] { 170, 160 };
+            string expected = "AAAA";
+            var code = new byte[] { 170, 170 };
 
-            var hex = new Hex();
-            hex.HexString = expected;
+            var hex = new Hex(code);
 
             Assert.AreEqual(expected, hex.HexString);
         }
 
         [Test]
-        public void SetHexString_WithNullstrings_GetsNullHex()
+        public void SetHexString_WithNullString_SetsHexToNull()
         {
             string text = null;
             var hex = new Hex();
+
             hex.HexString = text;
 
             Assert.IsNull(hex.HexCode);
         }
 
         [Test]
-        public void SetHexString_WithEmptystrings_GetsHex()
+        public void SetHexString_WithEmptyString_SetsHexToEmpty()
         {
             string text = string.Empty;
-
             var hex = new Hex();
+
             hex.HexString = text;
 
             CollectionAssert.IsEmpty(hex.HexCode);
         }
 
         [Test]
-        public void SetHexString_WithValidstrings_GetsHex()
+        public void SetHexString_WithValidString_SetsHex()
         {
-            byte[] expected = new byte[] { 170, 160 };
+            byte[] expected = new byte[] { 170, 170 };
+            string text = "aaaa";
+            var hex = new Hex();
 
+            hex.HexString = text;
+
+            CollectionAssert.AreEqual(expected, hex.HexCode);
+        }
+
+        [Test]
+        public void SetHexString_WithOddLengthString_DoublesHex()
+        {
+            byte[] expected = new byte[] { 170, 170, 170 };
             string text = "aaa";
             var hex = new Hex();
+
             hex.HexString = text;
 
             CollectionAssert.AreEqual(expected, hex.HexCode);

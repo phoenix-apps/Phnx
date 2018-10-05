@@ -1,6 +1,7 @@
 ﻿using Phnx.Collections.Extensions;
 using System;
 using System.Drawing;
+using System.Text;
 
 namespace Phnx.Drawing
 {
@@ -78,8 +79,15 @@ namespace Phnx.Drawing
 
             if (hexCode.Length % 2 == 1)
             {
-                // Append zero
-                hexCode += "0";
+                // Double each character
+                StringBuilder builder = new StringBuilder();
+                foreach (var code in hexCode)
+                {
+                    builder.Append(code);
+                    builder.Append(code);
+                }
+
+                hexCode = builder.ToString();
             }
 
             int NumberChars = hexCode.Length;
@@ -105,7 +113,7 @@ namespace Phnx.Drawing
         {
             get
             {
-                return HexCode?.ToHex(true);
+                return HexCode?.ToHex(false);
             }
             set
             {
