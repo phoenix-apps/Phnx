@@ -261,99 +261,32 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void IsValidColor_WhenHexCodeIsNull_ReturnsFalse()
+        public void ToBytes_WhenBytesAreNull_ReturnsNull()
         {
-            var hex = new Hex();
+            byte[] expected = null;
 
-            Assert.IsFalse(hex.IsColor);
+            var hex = new Hex(expected);
+
+            var bytes = hex.ToBytes();
+
+            Assert.AreEqual(expected, bytes);
         }
 
         [Test]
-        public void IsValidColor_WhenHexCodeIsEmpty_ReturnsFalse()
+        public void ToBytes_WhenBytesAreNotNull_ReturnsCopyOfBytes()
         {
-            var hex = new Hex(new byte[0]);
+            byte[] expected = new byte[] { 1, 52, 253 };
 
-            Assert.IsFalse(hex.IsColor);
-        }
+            var hex = new Hex(expected);
 
-        [Test]
-        public void IsValidColor_WhenHexCodeIsTooShort_ReturnsFalse()
-        {
-            var hex = new Hex(new byte[] { 124, 12 });
+            var bytes = hex.ToBytes();
 
-            Assert.IsFalse(hex.IsColor);
-        }
+            CollectionAssert.AreEqual(expected, bytes);
 
-        [Test]
-        public void IsValidColor_WhenHexCodeIsTooLong_ReturnsFalse()
-        {
-            var hex = new Hex(new byte[] { 124, 12, 124, 64, 25 });
+            // Edit first array to ensure that the result is a copy of the original, but not the original
+            expected[1]--;
 
-            Assert.IsFalse(hex.IsColor);
-        }
-
-        [Test]
-        public void IsValidColor_WhenHexIsOpaqueColor_ReturnsTrue()
-        {
-            var hex = new Hex(Color.Black, false);
-
-            Assert.IsTrue(hex.IsColor);
-        }
-
-        [Test]
-        public void IsValidColor_WhenHexIsTransparentColor_ReturnsTrue()
-        {
-            var hex = new Hex(Color.Black, true);
-
-            Assert.IsTrue(hex.IsColor);
-        }
-
-        [Test]
-        public void IsColorWithAlpha_WhenHexCodeIsNull_ReturnsFalse()
-        {
-            var hex = new Hex();
-
-            Assert.IsFalse(hex.IsColorWithAlpha);
-        }
-
-        [Test]
-        public void IsColorWithAlpha_WhenHexCodeIsEmpty_ReturnsFalse()
-        {
-            var hex = new Hex(new byte[0]);
-
-            Assert.IsFalse(hex.IsColorWithAlpha);
-        }
-
-        [Test]
-        public void IsColorWithAlpha_WhenHexCodeIsTooShort_ReturnsFalse()
-        {
-            var hex = new Hex(new byte[] { 124, 12 });
-
-            Assert.IsFalse(hex.IsColorWithAlpha);
-        }
-
-        [Test]
-        public void IsColorWithAlpha_WhenHexCodeIsTooLong_ReturnsFalse()
-        {
-            var hex = new Hex(new byte[] { 124, 12, 124, 64, 25 });
-
-            Assert.IsFalse(hex.IsColorWithAlpha);
-        }
-
-        [Test]
-        public void IsColorWithAlpha_WhenHexIsOpaqueColor_ReturnsFalse()
-        {
-            var hex = new Hex(Color.Black, false);
-
-            Assert.IsFalse(hex.IsColorWithAlpha);
-        }
-
-        [Test]
-        public void IsColorWithAlpha_WhenHexIsTransparentColor_ReturnsTrue()
-        {
-            var hex = new Hex(Color.Black, true);
-
-            Assert.IsTrue(hex.IsColorWithAlpha);
+            CollectionAssert.AreNotEqual(expected, bytes);
         }
     }
 }

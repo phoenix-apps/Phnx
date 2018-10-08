@@ -14,7 +14,7 @@ namespace Phnx.Drawing.Shapes
         /// <param name="points">The corners</param>
         public Polygon(Point[] points)
         {
-            Points = points;
+            Vertices = points;
         }
 
         /// <summary>
@@ -26,14 +26,14 @@ namespace Phnx.Drawing.Shapes
             {
                 int clockwiseSum = 0, antiClockwiseSum = 0;
 
-                for (int index = 0; index < Points.Length - 1; ++index)
+                for (int index = 0; index < Vertices.Length - 1; ++index)
                 {
-                    clockwiseSum += Points[index].X * Points[index + 1].Y;
-                    antiClockwiseSum += Points[index + 1].X * Points[index].Y;
+                    clockwiseSum += Vertices[index].X * Vertices[index + 1].Y;
+                    antiClockwiseSum += Vertices[index + 1].X * Vertices[index].Y;
                 }
 
-                clockwiseSum += Points[Points.Length - 1].X * Points[0].Y;
-                antiClockwiseSum += Points[0].X * Points[Points.Length - 1].Y;
+                clockwiseSum += Vertices[Vertices.Length - 1].X * Vertices[0].Y;
+                antiClockwiseSum += Vertices[0].X * Vertices[Vertices.Length - 1].Y;
 
                 var totalArea = Math.Abs(clockwiseSum - antiClockwiseSum) / 2d;
 
@@ -42,13 +42,36 @@ namespace Phnx.Drawing.Shapes
         }
 
         /// <summary>
-        /// The number of sides in this <see cref="Polygon"/>
+        /// The total number of sides
         /// </summary>
-        public int SidesCount => Points.Length;
+        public int SidesCount => Vertices.Length < 2 ? 0 : Vertices.Length - 1;
 
         /// <summary>
-        /// The corners in this <see cref="Polygon"/>
+        /// All sides of this shape, as described by <see cref="Vertices"/>
         /// </summary>
-        public Point[] Points { get; }
+        public Side[] Sides
+        {
+            get
+            {
+                if (Vertices.Length == 0)
+                {
+                    return new Side[0];
+                }
+
+                Side[] sides = new Side[Vertices.Length - 1];
+
+                for (int vertexIndex = 0; vertexIndex < Vertices.Length - 1; vertexIndex++)
+                {
+                    sides[vertexIndex] = new Side(Vertices[vertexIndex], Vertices[vertexIndex + 1]);
+                }
+
+                return sides;
+            }
+        }
+
+        /// <summary>
+        /// All vertices (corners)
+        /// </summary>
+        public Point[] Vertices { get; set; }
     }
 }

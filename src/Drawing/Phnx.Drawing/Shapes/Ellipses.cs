@@ -17,24 +17,78 @@ namespace Phnx.Drawing.Shapes
         /// <param name="minorRadiusAngle">The angle at which the smallest radius occurs in degrees</param>
         public Ellipse(Point centerPoint, double minorRadiusSize, double majorRadiusSize, double minorRadiusAngle)
         {
-            CenterPoint = centerPoint;
+            CenterCoordinates = centerPoint;
+
+            if (minorRadiusSize < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(minorRadiusSize));
+            }
+
             MinorRadiusSize = minorRadiusSize;
+
+            if (majorRadiusSize < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(majorRadiusSize));
+            }
+
+            if (majorRadiusSize < minorRadiusSize)
+            {
+                throw new ArgumentException($"{nameof(majorRadiusSize)} cannot be less than {nameof(minorRadiusSize)}");
+            }
+
             MajorRadiusSize = majorRadiusSize;
-            MinorRadiusAngle = minorRadiusAngle;
+
+            if (minorRadiusAngle < 0)
+            {
+                minorRadiusAngle = 360 - Math.Abs(minorRadiusAngle);
+            }
+
+            MinorRadiusAngle = minorRadiusAngle % 360;
         }
 
         /// <summary>
-        /// The center point of this <see cref="Ellipse"/>
+        /// Create a new ellipse
         /// </summary>
-        public Point CenterPoint { get; set; }
+        /// <param name="x">The X coordinate of the center of the ellipse</param>
+        /// <param name="y">The Y coordinate of the center of the ellipse</param>
+        /// <param name="minorRadiusSize">The smallest radius within the ellipse</param>
+        /// <param name="majorRadiusSize">The largest radius within the ellipse</param>
+        /// <param name="minorRadiusAngle">The angle at which the smallest radius occurs in degrees</param>
+        public Ellipse(int x, int y, double minorRadiusSize, double majorRadiusSize, double minorRadiusAngle)
+            : this(new Point(x, y), minorRadiusSize, majorRadiusSize, minorRadiusAngle)
+        {
+        }
 
         /// <summary>
-        /// The smallest radius within this <see cref="Ellipse"/>
+        /// The coordinates of the center
+        /// </summary>
+        public Point CenterCoordinates
+        {
+            get => new Point(X, Y);
+            set
+            {
+                X = value.X;
+                Y = value.Y;
+            }
+        }
+
+        /// <summary>
+        /// The X coordinate of the center
+        /// </summary>
+        public int X { get; set; }
+
+        /// <summary>
+        /// The Y coordinate of the center
+        /// </summary>
+        public int Y { get; set; }
+
+        /// <summary>
+        /// The smaller radius
         /// </summary>
         public double MinorRadiusSize { get; set; }
 
         /// <summary>
-        /// The largest radius within this <see cref="Ellipse"/>
+        /// The larger radius
         /// </summary>
         public double MajorRadiusSize { get; set; }
 
@@ -44,7 +98,7 @@ namespace Phnx.Drawing.Shapes
         public double MinorRadiusAngle { get; set; }
 
         /// <summary>
-        /// The area of this <see cref="Ellipse"/>
+        /// The total area
         /// </summary>
         public double Area => MinorRadiusSize * MajorRadiusSize * Math.PI;
     }

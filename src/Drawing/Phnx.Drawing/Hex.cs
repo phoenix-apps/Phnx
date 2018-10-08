@@ -149,12 +149,7 @@ namespace Phnx.Drawing
         /// <returns>A <see cref="T:byte[]"/> representation of the hex code</returns>
         public byte[] ToBytes()
         {
-            if (HexCode == null)
-            {
-                return null;
-            }
-
-            return HexCode.ShallowCopy();
+            return HexCode?.ShallowCopy();
         }
 
         /// <summary>
@@ -164,20 +159,13 @@ namespace Phnx.Drawing
         /// <exception cref="InvalidCastException"><see cref="HexCode"/> does not represent a valid color</exception>
         public Color ToColor()
         {
-            if (!IsColor)
+            if (!TryToColor(out var color))
             {
-                string errorMessage = ErrorMessage.Factory.InvalidCast(nameof(HexCode), typeof(byte[]), typeof(Color));
+                string errorMessage = ErrorMessage.Factory.InvalidCast(nameof(HexCode), typeof(Hex), typeof(Color));
                 throw new InvalidCastException(errorMessage);
             }
 
-            if (IsColorWithAlpha)
-            {
-                return Color.FromArgb(HexCode[0], HexCode[1], HexCode[2], HexCode[3]);
-            }
-            else
-            {
-                return Color.FromArgb(HexCode[0], HexCode[1], HexCode[2]);
-            }
+            return color;
         }
 
         /// <summary>

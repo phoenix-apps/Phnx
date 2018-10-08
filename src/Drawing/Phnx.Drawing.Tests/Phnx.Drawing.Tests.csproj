@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Phnx.Drawing\Phnx.Drawing.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Phnx">
+      <HintPath>..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
