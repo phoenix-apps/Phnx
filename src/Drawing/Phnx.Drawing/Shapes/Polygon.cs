@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 
 namespace Phnx.Drawing.Shapes
 {
@@ -12,7 +13,7 @@ namespace Phnx.Drawing.Shapes
         /// Create a new <see cref="Polygon"/> with a range of corners as <see cref="Point"/>
         /// </summary>
         /// <param name="points">The corners</param>
-        public Polygon(Point[] points)
+        public Polygon(params PointD[] points)
         {
             Vertices = points;
         }
@@ -24,7 +25,7 @@ namespace Phnx.Drawing.Shapes
         {
             get
             {
-                int clockwiseSum = 0, antiClockwiseSum = 0;
+                double clockwiseSum = 0, antiClockwiseSum = 0;
 
                 for (int index = 0; index < Vertices.Length - 1; ++index)
                 {
@@ -47,6 +48,11 @@ namespace Phnx.Drawing.Shapes
         public int SidesCount => Vertices.Length < 2 ? 0 : Vertices.Length - 1;
 
         /// <summary>
+        /// The total length of all sides combined
+        /// </summary>
+        public double TotalLength => Sides.Sum(s => s.Length);
+
+        /// <summary>
         /// All sides of this shape, as described by <see cref="Vertices"/>
         /// </summary>
         public Side[] Sides
@@ -58,12 +64,14 @@ namespace Phnx.Drawing.Shapes
                     return new Side[0];
                 }
 
-                Side[] sides = new Side[Vertices.Length - 1];
+                Side[] sides = new Side[Vertices.Length];
 
                 for (int vertexIndex = 0; vertexIndex < Vertices.Length - 1; vertexIndex++)
                 {
                     sides[vertexIndex] = new Side(Vertices[vertexIndex], Vertices[vertexIndex + 1]);
                 }
+
+                sides[sides.Length - 1] = new Side(Vertices[Vertices.Length - 1], Vertices[0]);
 
                 return sides;
             }
@@ -72,6 +80,6 @@ namespace Phnx.Drawing.Shapes
         /// <summary>
         /// All vertices (corners)
         /// </summary>
-        public Point[] Vertices { get; set; }
+        public PointD[] Vertices { get; set; }
     }
 }
