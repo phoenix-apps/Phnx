@@ -1,4 +1,4 @@
-﻿namespace Phnx.Drawing.Interfaces
+﻿namespace Phnx.Drawing.Shapes
 {
     /// <summary>
     /// Provides common properties and methods for two-dimensional shapes
