@@ -32,9 +32,8 @@ namespace Phnx
         /// Converts the bytes to a hex code equivalent
         /// </summary>
         /// <param name="b">The bytes to convert to hex</param>
-        /// <param name="removeTrailingZeros">Whether to automatically remove trailing zeroes from the resulting hex</param>
         /// <returns>The equivalent hex code</returns>
-        public static string ToHex(this byte[] b, bool removeTrailingZeros = false)
+        public static string ToHex(this byte[] b)
         {
             if (b == null)
             {
@@ -43,7 +42,7 @@ namespace Phnx
 
             var converted = BitConverter.ToString(b).Replace("-", string.Empty);
 
-            return removeTrailingZeros ? converted.TrimEnd('0') : converted;
+            return converted;
         }
     }
 }

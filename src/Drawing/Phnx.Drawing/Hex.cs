@@ -113,7 +113,7 @@ namespace Phnx.Drawing
         {
             get
             {
-                return HexCode?.ToHex(false);
+                return HexCode?.ToHex();
             }
             set
             {
