@@ -40,7 +40,9 @@ namespace Phnx
                 throw new ArgumentNullException(nameof(b));
             }
 
-            return BitConverter.ToString(b).Replace("-", string.Empty);
+            var converted = BitConverter.ToString(b).Replace("-", string.Empty);
+
+            return converted;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Phnx.Collections.Extensions;
 using System;
 using System.Drawing;
+using System.Text;
 
 namespace Phnx.Drawing
 {
@@ -44,18 +45,7 @@ namespace Phnx.Drawing
         /// <exception cref="FormatException"><paramref name="data"/> contains one or more characters that are not a valid digit in hex</exception>
         public Hex(string data)
         {
-            if (data is null)
-            {
-                HexCode = null;
-            }
-            else if (data.Length == 0)
-            {
-                HexCode = new byte[0];
-            }
-            else
-            {
-                HexCode = HexStringToBytes(data);
-            }
+            HexCode = HexStringToBytes(data);
         }
 
         /// <summary>
@@ -63,7 +53,7 @@ namespace Phnx.Drawing
         /// </summary>
         /// <param name="color">The color to build the hex structure from</param>
         /// <param name="includeAlpha">Whether the alpha property of the color should be included in the hex structure</param>
-        public Hex(Color color, bool includeAlpha = true)
+        public Hex(Color color, bool includeAlpha)
         {
             if (includeAlpha)
             {
@@ -85,6 +75,19 @@ namespace Phnx.Drawing
             else if (hexCode.Length == 0)
             {
                 return new byte[0];
+            }
+
+            if (hexCode.Length % 2 == 1)
+            {
+                // Double each character
+                StringBuilder builder = new StringBuilder();
+                foreach (var code in hexCode)
+                {
+                    builder.Append(code);
+                    builder.Append(code);
+                }
+
+                hexCode = builder.ToString();
             }
 
             int NumberChars = hexCode.Length;
@@ -121,7 +124,7 @@ namespace Phnx.Drawing
         /// <summary>
         /// Whether this hex structure represents a <see cref="Color"/>
         /// </summary>
-        public bool IsValidColor => HexCode != null && (HexCode.Length == 3 || HexCode.Length == 4);
+        public bool IsColor => HexCode != null && (HexCode.Length == 3 || HexCode.Length == 4);
 
         /// <summary>
         /// Whether <see cref="HexCode"/> represents a <see cref="Color"/> and has an alpha channel
@@ -131,7 +134,7 @@ namespace Phnx.Drawing
         {
             get
             {
-                if (!IsValidColor)
+                if (!IsColor)
                 {
                     return false;
                 }
@@ -146,12 +149,7 @@ namespace Phnx.Drawing
         /// <returns>A <see cref="T:byte[]"/> representation of the hex code</returns>
         public byte[] ToBytes()
         {
-            if (HexCode == null)
-            {
-                return null;
-            }
-
-            return HexCode.ShallowCopy();
+            return HexCode?.ShallowCopy();
         }
 
         /// <summary>
@@ -161,20 +159,13 @@ namespace Phnx.Drawing
         /// <exception cref="InvalidCastException"><see cref="HexCode"/> does not represent a valid color</exception>
         public Color ToColor()
         {
-            if (!IsValidColor)
+            if (!TryToColor(out var color))
             {
-                string errorMessage = ErrorMessage.Factory.InvalidCast(nameof(HexCode), typeof(byte[]), typeof(Color));
+                string errorMessage = ErrorMessage.Factory.InvalidCast(nameof(HexCode), typeof(Hex), typeof(Color));
                 throw new InvalidCastException(errorMessage);
             }
 
-            if (IsColorWithAlpha)
-            {
-                return Color.FromArgb(HexCode[0], HexCode[1], HexCode[2], HexCode[3]);
-            }
-            else
-            {
-                return Color.FromArgb(HexCode[0], HexCode[1], HexCode[2]);
-            }
+            return color;
         }
 
         /// <summary>
@@ -184,7 +175,7 @@ namespace Phnx.Drawing
         /// <returns>Whether the conversion was successful</returns>
         public bool TryToColor(out Color color)
         {
-            if (!IsValidColor)
+            if (!IsColor)
             {
                 color = default(Color);
                 return false;
