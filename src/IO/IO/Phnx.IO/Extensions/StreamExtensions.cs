@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace Phnx.IO.Extensions
+namespace Phnx.IO
 {
     /// <summary>
     /// Extensions for <see cref="Stream"/> and <see cref="TextReader"/>
@@ -17,6 +17,11 @@ namespace Phnx.IO.Extensions
         /// <exception cref="ObjectDisposedException">Methods were called after the stream was closed</exception>
         public static byte[] ReadToEnd(this Stream stream)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             byte[] data = new byte[stream.Length - stream.Position];
 
             stream.Read(data, 0, data.Length);
