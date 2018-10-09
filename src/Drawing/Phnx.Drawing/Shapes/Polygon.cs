@@ -7,7 +7,7 @@ namespace Phnx.Drawing.Shapes
     /// <summary>
     /// A shape with an edge defined by a series of straight edges
     /// </summary>
-    public class Polygon : IShape
+    public struct Polygon : IShape
     {
         /// <summary>
         /// Create a new <see cref="Polygon"/> with a range of corners as <see cref="Point"/>
@@ -25,6 +25,11 @@ namespace Phnx.Drawing.Shapes
         {
             get
             {
+                if (SidesCount <= 2)
+                {
+                    return 0;
+                }
+
                 double clockwiseSum = 0, antiClockwiseSum = 0;
 
                 for (int index = 0; index < Vertices.Length - 1; ++index)
@@ -45,12 +50,35 @@ namespace Phnx.Drawing.Shapes
         /// <summary>
         /// The total number of sides
         /// </summary>
-        public int SidesCount => Vertices.Length < 2 ? 0 : Vertices.Length - 1;
+        public int SidesCount
+        {
+            get
+            {
+                if (Vertices is null || Vertices.Length < 2)
+                {
+                    return 0;
+                }
+
+                return Vertices.Length;
+            }
+        }
 
         /// <summary>
         /// The total length of all sides combined
         /// </summary>
-        public double TotalLength => Sides.Sum(s => s.Length);
+        public double TotalLength
+        {
+            get
+            {
+                var sides = Sides;
+                if (sides is null)
+                {
+                    return 0;
+                }
+
+                return sides.Sum(s => s.Length);
+            }
+        }
 
         /// <summary>
         /// All sides of this shape, as described by <see cref="Vertices"/>
@@ -59,7 +87,12 @@ namespace Phnx.Drawing.Shapes
         {
             get
             {
-                if (Vertices.Length == 0)
+                if (Vertices is null)
+                {
+                    return null;
+                }
+
+                if (Vertices.Length < 2)
                 {
                     return new Side[0];
                 }
