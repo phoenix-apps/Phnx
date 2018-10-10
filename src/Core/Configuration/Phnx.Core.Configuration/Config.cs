@@ -1,5 +1,4 @@
-﻿using MarkSFrancis;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using System;
 
 namespace Phnx.Configuration
@@ -21,7 +20,7 @@ namespace Phnx.Configuration
         /// <exception cref="ArgumentNullException"><paramref name="configuration"/> is <see langword="null"/></exception>
         public Config(IConfiguration configuration)
         {
-            Configuration = configuration ?? throw ErrorFactory.Default.ArgumentNull(nameof(configuration));
+            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
         }
 
         /// <summary>
