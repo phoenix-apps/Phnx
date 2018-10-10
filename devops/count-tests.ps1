@@ -1,6 +1,7 @@
 $testText = "\[Test\]"
 
 $testsCount = 0
+$testFilesCount = 0
 
 Get-ChildItem ..\src -Filter *.cs -Recurse | ForEach-Object {
     $testsInFile = 0;
