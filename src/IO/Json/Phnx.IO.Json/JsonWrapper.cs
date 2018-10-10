@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json.Linq;
 
 namespace Phnx.IO.Json
 {
@@ -14,7 +14,7 @@ namespace Phnx.IO.Json
 
         public static Dictionary<string, string> Unwrap(string json)
         {
-            var jObject = JObjectConverter.FromJson(json);
+            var jObject = JObject.Parse(json);
 
             return Unwrap(jObject);
         }
@@ -25,9 +25,9 @@ namespace Phnx.IO.Json
 
             foreach (var val in obj)
             {
-                if (val.Value is JObject jObjValue)
+                if (val.Value is JObject valAsParent)
                 {
-                    var childProperties = Unwrap(jObjValue, baseSource + val.Key + ChildPropertyDelimiter);
+                    var childProperties = Unwrap(valAsParent, baseSource + val.Key + ChildPropertyDelimiter);
 
                     foreach (var property in childProperties)
                     {
@@ -76,26 +76,25 @@ namespace Phnx.IO.Json
 
                 Stack<string> missingParents = new Stack<string>();
 
-                string tempKey = parentKey;
-                while (tempKey.Contains(".") && !heirarchySoFar.ContainsKey(tempKey))
+                string ancestoryKey = parentKey;
+                while (ancestoryKey.Contains(".") && !heirarchySoFar.ContainsKey(ancestoryKey))
                 {
-                    missingParents.Push(tempKey);
+                    missingParents.Push(ancestoryKey);
 
-                    tempKey = tempKey.Substring(0, tempKey.LastIndexOf(ChildPropertyDelimiter, StringComparison.Ordinal));
+                    ancestoryKey = ancestoryKey.Substring(0, ancestoryKey.LastIndexOf(ChildPropertyDelimiter, StringComparison.Ordinal));
                 }
 
                 JObject curParent;
-                if (!heirarchySoFar.ContainsKey(tempKey))
+                if (!heirarchySoFar.ContainsKey(ancestoryKey))
                 {
                     curParent = baseObject;
-                    missingParents.Push(tempKey);
+                    missingParents.Push(ancestoryKey);
                 }
                 else
                 {
                     // Append object to existing object in heirarchy
-                    curParent = heirarchySoFar[tempKey];
+                    curParent = heirarchySoFar[ancestoryKey];
                 }
-
 
                 while (missingParents.Count > 0)
                 {

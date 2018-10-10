@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Phnx.IO.Json.Streams
 {
@@ -47,7 +47,7 @@ namespace Phnx.IO.Json.Streams
         /// </summary>
         public virtual void WriteJson(string json)
         {
-            var newObj = JObjectConverter.FromJson(json);
+            var newObj = JObject.Parse(json);
 
             WriteJObject(newObj);
         }
@@ -58,7 +58,7 @@ namespace Phnx.IO.Json.Streams
         /// <param name="o">The object to write to the stream</param>
         public virtual void WriteObject(object o)
         {
-            var newObj = JObjectConverter.FromObject(o);
+            var newObj = JObject.FromObject(o);
 
             WriteJObject(newObj);
         }
@@ -69,7 +69,7 @@ namespace Phnx.IO.Json.Streams
         /// <param name="data">The property dictionary to write</param>
         public virtual void WritePropertyDictionary(Dictionary<string, string> data)
         {
-            var loadedValue = JObjectConverter.FromPropertyDictionary(data);
+            var loadedValue = PropertyDictionaryConverter.FromPropertyDictionary(data);
 
             WriteJObject(loadedValue);
         }

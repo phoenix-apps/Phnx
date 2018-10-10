@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Phnx.IO.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,7 +52,7 @@ namespace Phnx.IO.Json.Streams
         {
             var loadedValue = ReadJObject();
 
-            return JObjectConverter.ToObject<T>(loadedValue);
+            return loadedValue.ToObject<T>();
         }
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace Phnx.IO.Json.Streams
         {
             var loadedValue = ReadJObject();
 
-            return JObjectConverter.ToPropertyDictionary(loadedValue);
+            return PropertyDictionaryConverter.ToPropertyDictionary(loadedValue);
         }
 
         /// <summary>
@@ -82,7 +81,8 @@ namespace Phnx.IO.Json.Streams
         /// <returns>A Json string</returns>
         public virtual string ReadJson()
         {
-            return JObjectConverter.ToJson(JObject.Load(Reader));
+            var jObject = JObject.Load(Reader);
+            return jObject.ToString();
         }
 
         /// <summary>
