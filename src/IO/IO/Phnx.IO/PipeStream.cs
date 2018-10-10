@@ -1,15 +1,19 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Phnx.IO
 {
     /// <summary>
-    /// Provides a piped stream with both input and output
+    /// Provides a piped stream with both input and output, where the output is "pulled" when the reader is ready
     /// </summary>
     public class PipeStream : Stream
     {
-        private ConcurrentQueue<byte> data;
+        /// <summary>
+        /// The backing data store for the stream
+        /// </summary>
+        private Queue<byte> data;
 
         /// <summary>
         /// Whether this stream can be read (always <see langword="true"/>)
@@ -17,14 +21,25 @@ namespace Phnx.IO
         public override bool CanRead => true;
 
         /// <summary>
+        /// Whether this stream can be written to (always <see langword="true"/>)
+        /// </summary>
+        public override bool CanWrite => true;
+
+        /// <summary>
         /// Whether this stream can seek (always <see langword="false"/>)
         /// </summary>
         public override bool CanSeek => false;
 
         /// <summary>
-        /// Whether this stream can be written to (always <see langword="true"/>)
+        /// Represents an event for data being written to a <see cref="PipeStream"/>
         /// </summary>
-        public override bool CanWrite => true;
+        /// <param name="sender">The stream that was written to</param>
+        public delegate void DataWrittenEvent(PipeStream sender);
+
+        /// <summary>
+        /// The event called when data is written
+        /// </summary>
+        public event DataWrittenEvent DataWritten;
 
         /// <summary>
         /// The total amount of data waiting to be read
@@ -64,7 +79,7 @@ namespace Phnx.IO
         /// </summary>
         public PipeStream()
         {
-            data = new ConcurrentQueue<byte>();
+            data = new Queue<byte>();
 
             In = new StreamWriter(this)
             {
@@ -72,6 +87,73 @@ namespace Phnx.IO
             };
 
             Out = new StreamReader(this);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="PipeStream"/> with some initial data
+        /// </summary>
+        /// <param name="initialData">The data to initialise the <see cref="PipeStream"/> with</param>
+        public PipeStream(string initialData) :
+            this()
+        {
+            In.Write(initialData);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="PipeStream"/> with some initial data
+        /// </summary>
+        /// <param name="initialData">The data to initialise the <see cref="PipeStream"/> with</param>
+        /// <exception cref="ArgumentNullException"><paramref name="initialData"/> is <see langword="null"/></exception>
+        public PipeStream(byte[] initialData) :
+            this()
+        {
+            if (initialData is null)
+            {
+                throw new ArgumentNullException(nameof(initialData));
+            }
+
+            Write(initialData, 0, initialData.Length);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="PipeStream"/> with some initial data loaded from a buffer
+        /// </summary>
+        /// <param name="buffer">The data to initialise the <see cref="PipeStream"/> with</param>
+        /// <param name="offset">The zero-based byte offset in <paramref name="buffer"/> at which to begin copying bytes to the current stream</param>
+        /// <param name="count">The number of bytes to be written to the current stream</param>
+        /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> or <paramref name="offset"/> is less than zero</exception>
+        public PipeStream(byte[] buffer, int offset, int count) :
+            this()
+        {
+            Write(buffer, offset, count);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="PipeStream"/> with custom text encoding
+        /// </summary>
+        /// <param name="encoding">The text encoding to use</param>
+        public PipeStream(Encoding encoding)
+        {
+            data = new Queue<byte>();
+
+            In = new StreamWriter(this, encoding)
+            {
+                AutoFlush = true
+            };
+
+            Out = new StreamReader(this, encoding);
+        }
+
+        /// <summary>
+        /// Create a new <see cref="PipeStream"/> with some initial data in custom text encoding
+        /// </summary>
+        /// <param name="initialData">The data to initialise the <see cref="PipeStream"/> with</param>
+        /// <param name="encoding">The text encoding to use</param>
+        public PipeStream(string initialData, Encoding encoding) :
+            this(encoding)
+        {
+            In.Write(initialData);
         }
 
         /// <summary>
@@ -94,16 +176,11 @@ namespace Phnx.IO
 
             lock (data)
             {
-                for (; readCount < count; ++readCount)
+                for (; readCount < count && data.Count > 0; ++readCount)
                 {
-                    if (!data.TryDequeue(out var dataEntry))
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        buffer[offset + readCount] = dataEntry;
-                    }
+                    var dataEntry = data.Dequeue();
+
+                    buffer[offset + readCount] = dataEntry;
                 }
             }
 
@@ -111,7 +188,7 @@ namespace Phnx.IO
         }
 
         /// <summary>
-        /// Seeking is not supported in a <see cref="PipeStream"/>, 
+        /// Seeking is not supported in a <see cref="PipeStream"/>
         /// </summary>
         /// <exception cref="NotSupportedException">Cannot seek in a <see cref="PipeStream"/></exception>
         public override long Seek(long offset, SeekOrigin origin)
@@ -120,11 +197,12 @@ namespace Phnx.IO
         }
 
         /// <summary>
-        /// This does nothing in <see cref="PipeStream"/>
+        /// Setting the length is not supported in a <see cref="PipeStream"/>
         /// </summary>
+        /// <exception cref="NotSupportedException">Cannot set the length of a <see cref="PipeStream"/></exception>
         public override void SetLength(long value)
         {
-            // Do nothing
+            throw new NotSupportedException($"Cannot set the length of a {nameof(PipeStream)}");
         }
 
         /// <summary>
@@ -133,8 +211,9 @@ namespace Phnx.IO
         /// <param name="buffer">An array of bytes. This method copies <paramref name="count"/> bytes from buffer to the current stream</param>
         /// <param name="offset">The zero-based byte offset in <paramref name="buffer"/> at which to begin copying bytes to the current stream</param>
         /// <param name="count">The number of bytes to be written to the current stream</param>
+        /// <exception cref="ArgumentException">The sum of offset and count is greater than the buffer length</exception>
         /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> or <paramref name="offset"/> is less than zero</exception>
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="count"/> or <paramref name="offset"/> is less than zero</exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
             if (buffer == null)
@@ -143,22 +222,47 @@ namespace Phnx.IO
             }
             if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(offset));
+                throw new ArgumentLessThanZeroException(nameof(offset));
             }
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentLessThanZeroException(nameof(count));
+            }
+            if (offset + count > buffer.Length)
+            {
+                throw new ArgumentException($"{nameof(offset)} and {nameof(count)} combined were greater than the number of elements in {nameof(buffer)}");
             }
 
             lock (data)
             {
-                for (int writeCount = 0; writeCount < count; ++writeCount)
+                for (int writeCount = 0; writeCount < count && offset + writeCount < buffer.Length; ++writeCount)
                 {
                     var valueToWrite = buffer[offset + writeCount];
 
                     data.Enqueue(valueToWrite);
                 }
             }
+
+            DataWritten?.Invoke(this);
+        }
+
+        /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="PipeStream"/> and optionally releases the managed resources
+        /// </summary>
+        /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources</param>
+        protected override void Dispose(bool disposing)
+        {
+            // TODO Add the idea of being disposed
+
+            if (data != null)
+            {
+                lock (data)
+                {
+                    data.Clear();
+                }
+            }
+
+            base.Dispose(disposing);
         }
     }
 }
