@@ -23,20 +23,20 @@ namespace Phnx.IO.Json
         {
             Dictionary<string, string> retValue = new Dictionary<string, string>();
 
-            foreach (var val in obj)
+            foreach (var property in obj)
             {
-                if (val.Value is JObject valAsParent)
+                if (property.Value is JObject jObjProperty)
                 {
-                    var childProperties = Unwrap(valAsParent, baseSource + val.Key + ChildPropertyDelimiter);
+                    var childProperties = Unwrap(jObjProperty, baseSource + property.Key + ChildPropertyDelimiter);
 
-                    foreach (var property in childProperties)
+                    foreach (var childProperty in childProperties)
                     {
-                        retValue.Add(property.Key, property.Value);
+                        retValue.Add(childProperty.Key, childProperty.Value);
                     }
                 }
                 else
                 {
-                    retValue.Add(baseSource + val.Key, val.Value.ToString().Trim('{', '}'));
+                    retValue.Add(baseSource + property.Key, property.Value.ToString().Trim('{', '}'));
                 }
             }
 
