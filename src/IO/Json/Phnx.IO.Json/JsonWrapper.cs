@@ -12,38 +12,41 @@ namespace Phnx.IO.Json
     {
         public const string ChildPropertyDelimiter = ".";
 
-        public static Dictionary<string, string> Unwrap(string json)
+        public static Dictionary<string, string> ToDictionary(JObject obj)
         {
-            var jObject = JObject.Parse(json);
+            Dictionary<string, string> propertyDictionary = new Dictionary<string, string>();
 
-            return Unwrap(jObject);
+            ToDictionary(obj, propertyDictionary, string.Empty);
+
+            return propertyDictionary;
         }
 
-        public static Dictionary<string, string> Unwrap(JObject obj, string baseSource = "")
+        private static void ToDictionary(JObject obj, Dictionary<string, string> propertyDictionarySoFar, string currentPropertyFullName)
         {
-            Dictionary<string, string> retValue = new Dictionary<string, string>();
-
             foreach (var property in obj)
             {
+                string propertyFullName = currentPropertyFullName + property.Key;
+
                 if (property.Value is JObject jObjProperty)
                 {
-                    var childProperties = Unwrap(jObjProperty, baseSource + property.Key + ChildPropertyDelimiter);
-
-                    foreach (var childProperty in childProperties)
-                    {
-                        retValue.Add(childProperty.Key, childProperty.Value);
-                    }
+                    // Has children to be deserialized
+                    ToDictionary(
+                        jObjProperty,
+                        propertyDictionarySoFar,
+                        propertyFullName + ChildPropertyDelimiter);
                 }
                 else
                 {
-                    retValue.Add(baseSource + property.Key, property.Value.ToString().Trim('{', '}'));
+                    var jsonValue = property.Value.ToString();
+
+                    propertyDictionarySoFar.Add(
+                        propertyFullName,
+                        jsonValue.Trim('{', '}'));
                 }
             }
-
-            return retValue;
         }
 
-        public static JObject Wrap(Dictionary<string, string> data)
+        public static JObject FromDictionary(Dictionary<string, string> data)
         {
             JObject newJObj = new JObject();
 
@@ -58,7 +61,7 @@ namespace Phnx.IO.Json
                 }
                 else
                 {
-                    // Child property
+                    // Contains child property
                     AppendToHeirarchy(newJObj, heirarchy, dataProp.Key, dataProp.Value);
                 }
             }
@@ -68,7 +71,13 @@ namespace Phnx.IO.Json
 
         private static void AppendToHeirarchy(JObject baseObject, Dictionary<string, JObject> heirarchySoFar, string key, string value)
         {
-            string parentKey = key.Substring(0, key.LastIndexOf(ChildPropertyDelimiter, StringComparison.Ordinal));
+            string parentKey = GetMemberParentFullyQualifiedName(key);
+
+            if (parentKey is null)
+            {
+                // No parents
+                return;
+            }
 
             if (!heirarchySoFar.ContainsKey(parentKey))
             {
@@ -84,16 +93,16 @@ namespace Phnx.IO.Json
                     ancestoryKey = ancestoryKey.Substring(0, ancestoryKey.LastIndexOf(ChildPropertyDelimiter, StringComparison.Ordinal));
                 }
 
-                JObject curParent;
+                JObject knownAncestor;
                 if (!heirarchySoFar.ContainsKey(ancestoryKey))
                 {
-                    curParent = baseObject;
+                    knownAncestor = baseObject;
                     missingParents.Push(ancestoryKey);
                 }
                 else
                 {
                     // Append object to existing object in heirarchy
-                    curParent = heirarchySoFar[ancestoryKey];
+                    knownAncestor = heirarchySoFar[ancestoryKey];
                 }
 
                 while (missingParents.Count > 0)
@@ -104,8 +113,8 @@ namespace Phnx.IO.Json
 
                     heirarchySoFar.Add(newParentKey, newParent);
 
-                    curParent.Add(GetJObjectKeyNameFromFullyQualifiedName(newParentKey), newParent);
-                    curParent = newParent;
+                    knownAncestor.Add(GetPropertyName(newParentKey), newParent);
+                    knownAncestor = newParent;
                 }
             }
 
@@ -113,13 +122,47 @@ namespace Phnx.IO.Json
             heirarchySoFar[parentKey].Add(key.Substring(key.LastIndexOf(ChildPropertyDelimiter, StringComparison.Ordinal) + 1), value);
         }
 
-        private static string GetJObjectKeyNameFromFullyQualifiedName(string fullyQualifiedName)
+        private static string GetMemberParentFullyQualifiedName(string memberFullyQualifiedName)
         {
-            if (fullyQualifiedName.Contains(ChildPropertyDelimiter))
+            int parentEndIndex = memberFullyQualifiedName.LastIndexOf(ChildPropertyDelimiter, StringComparison.Ordinal);
+
+            if (parentEndIndex < 0)
+            {
+                // No parent
+                return null;
+            }
+
+            return memberFullyQualifiedName.Substring(0, parentEndIndex);
+        }
+
+        private static void AddAncestors(string key)
+        {
+
+        }
+
+        private static IEnumerable<string> GetMemberAncestors(string fullyQualifiedName)
+        {
+            int ancestorEndIndex = fullyQualifiedName.IndexOf(ChildPropertyDelimiter, StringComparison.Ordinal);
+
+            while (ancestorEndIndex >= 0)
+            {
+                yield return fullyQualifiedName.Substring(0, ancestorEndIndex);
+
+                fullyQualifiedName = fullyQualifiedName.Substring(ancestorEndIndex + ChildPropertyDelimiter.Length);
+
+                ancestorEndIndex = fullyQualifiedName.IndexOf(ChildPropertyDelimiter);
+            }
+        }
+
+        private static string GetPropertyName(string fullyQualifiedName)
+        {
+            var lastDelimiterIndex = fullyQualifiedName.LastIndexOf(ChildPropertyDelimiter,
+                    StringComparison.Ordinal);
+
+            if (lastDelimiterIndex >= 0)
             {
                 // Is a child property
-                return fullyQualifiedName.Substring(fullyQualifiedName.LastIndexOf(ChildPropertyDelimiter,
-                    StringComparison.Ordinal));
+                return fullyQualifiedName.Substring(lastDelimiterIndex + ChildPropertyDelimiter.Length);
             }
 
             // Is already property name

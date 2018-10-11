@@ -63,7 +63,7 @@ namespace Phnx.IO.Json.Streams
         {
             var loadedValue = ReadJObject();
 
-            return PropertyDictionaryConverter.ToPropertyDictionary(loadedValue);
+            return PropertyDictionaryConverter.To(loadedValue);
         }
 
         /// <summary>

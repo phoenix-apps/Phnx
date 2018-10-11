@@ -69,7 +69,7 @@ namespace Phnx.IO.Json.Streams
         /// <param name="data">The property dictionary to write</param>
         public virtual void WritePropertyDictionary(Dictionary<string, string> data)
         {
-            var loadedValue = PropertyDictionaryConverter.FromPropertyDictionary(data);
+            var loadedValue = PropertyDictionaryConverter.From(data);
 
             WriteJObject(loadedValue);
         }
