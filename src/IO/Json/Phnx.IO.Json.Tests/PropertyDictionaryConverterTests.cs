@@ -104,6 +104,39 @@ namespace Phnx.IO.Json.Tests
         }
 
         [Test]
+        public void ObjectTo_WhenReallyDeepArray_GetsDictionary()
+        {
+            var expected = new Dictionary<string, string>
+            {
+                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection) + "." + nameof(ShallowFake.Id), "7" },
+                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Single), string.Empty },
+                { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Single) +"." + nameof(ShallowFake.Id), "12"},
+                { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Collection), string.Empty }
+            };
+
+            object o = new ReallyDeepFake
+            {
+                First = new DeepFake
+                {
+                    Single = new ShallowFake
+                    {
+                        Id = 7
+                    }
+                },
+                Second = new DeepFake
+                {
+                    Single = new ShallowFake
+                    {
+                        Id = 12
+                    }
+                }
+            };
+
+            var propDict = _converter.To(o);
+            ValidateDictionariesMatch(expected, propDict);
+        }
+
+        [Test]
         public void FromT_WhenNull_ThrowsArgumentNullException()
         {
             Dictionary<string, string> dict = null;
@@ -176,6 +209,44 @@ namespace Phnx.IO.Json.Tests
             {
                 { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Single) + "." + nameof(ShallowFake.Id), "7" },
                 { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection), string.Empty },
+                { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Single) +"." + nameof(ShallowFake.Id), "12"},
+                { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Collection), string.Empty }
+            };
+
+            var converted = _converter.From<ReallyDeepFake>(dict);
+
+            Assert.AreEqual(expected.First.Single.Id, converted.First.Single.Id);
+            Assert.AreEqual(expected.Second.Single.Id, converted.Second.Single.Id);
+        }
+
+        [Test]
+        public void FromT_WhenReallyDeepWithArray_GetsObject()
+        {
+            var expected = new ReallyDeepFake
+            {
+                First = new DeepFake
+                {
+                    Collection = new List<ShallowFake>
+                    {
+                        new ShallowFake
+                        {
+                            Id = 7
+                        }
+                    }
+                },
+                Second = new DeepFake
+                {
+                    Single = new ShallowFake
+                    {
+                        Id = 12
+                    }
+                }
+            };
+
+            var dict = new Dictionary<string, string>
+            {
+                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection) + "." + nameof(ShallowFake.Id), "7" },
+                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Single), string.Empty },
                 { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Single) +"." + nameof(ShallowFake.Id), "12"},
                 { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Collection), string.Empty }
             };
