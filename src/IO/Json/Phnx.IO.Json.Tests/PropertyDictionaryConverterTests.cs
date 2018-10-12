@@ -26,7 +26,7 @@ namespace Phnx.IO.Json.Tests
         }
 
         [Test]
-        public void ObjectTo_WhenShallow_GetsObject()
+        public void ObjectTo_WhenShallow_GetsDictionary()
         {
             var expected = new Dictionary<string, string>
             {
@@ -43,7 +43,7 @@ namespace Phnx.IO.Json.Tests
         }
 
         [Test]
-        public void ObjectTo_WhenDeep_GetsObject()
+        public void ObjectTo_WhenDeep_GetsDictionary()
         {
             var expected = new Dictionary<string, string>
             {
@@ -64,7 +64,7 @@ namespace Phnx.IO.Json.Tests
         }
 
         [Test]
-        public void ObjectTo_WhenReallyDeep_GetsObject()
+        public void ObjectTo_WhenReallyDeep_GetsDictionary()
         {
             var expected = new Dictionary<string, string>
             {

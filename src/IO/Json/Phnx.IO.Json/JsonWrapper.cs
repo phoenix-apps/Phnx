@@ -27,6 +27,7 @@ namespace Phnx.IO.Json
             {
                 string propertyFullName = currentPropertyFullName + property.Key;
 
+                // Could cause StackOverflowException in deep objects. Can this be optimised to use tailed recursion?
                 if (property.Value is JObject jObjProperty)
                 {
                     // Has children to be deserialized

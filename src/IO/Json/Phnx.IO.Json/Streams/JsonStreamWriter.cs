@@ -9,43 +9,55 @@ namespace Phnx.IO.Json.Streams
     /// <summary>
     /// Provides a way to write Json data to a stream from a series of objects
     /// </summary>
-    public class JsonWriteStream : IDisposable
+    public class JsonStreamWriter : IDisposable
     {
         /// <summary>
-        /// Create a new <see cref="JsonWriteStream"/>
+        /// Create a new <see cref="JsonStreamWriter"/>
         /// </summary>
-        /// <param name="stream">The stream to write Json to</param>
-        /// <param name="closeStreamWhenDisposed">Whether to close the stream when this <see cref="JsonWriteStream"/> is disposed</param>
-        public JsonWriteStream(TextWriter stream, bool closeStreamWhenDisposed = true)
+        /// <param name="output">The stream to write Json to</param>
+        /// <param name="closeStreamWhenDisposed">Whether to close the stream when this <see cref="JsonStreamWriter"/> is disposed</param>
+        public JsonStreamWriter(TextWriter output, bool closeStreamWhenDisposed = true)
         {
-            TextWriter = stream;
+            if (output is null)
+            {
+                throw new ArgumentNullException(nameof(output));
+            }
+
             CloseStreamWhenDisposed = closeStreamWhenDisposed;
 
-            Writer = new JsonTextWriter(stream)
+            BaseJsonWriter = new JsonTextWriter(output)
             {
                 CloseOutput = CloseStreamWhenDisposed
             };
         }
 
         /// <summary>
-        /// The writer used to serialize objects to json
+        /// Create a new <see cref="JsonStreamWriter"/>
         /// </summary>
-        protected JsonWriter Writer { get; }
+        /// <param name="jsonWriter">The output to write Json to</param>
+        public JsonStreamWriter(JsonTextWriter jsonWriter)
+        {
+            BaseJsonWriter = jsonWriter ?? throw new ArgumentNullException(nameof(jsonWriter));
+        }
 
         /// <summary>
-        /// The stream to write Json data to
+        /// The writer used to serialize objects to json
         /// </summary>
-        protected TextWriter TextWriter { get; }
+        public JsonWriter BaseJsonWriter { get; }
 
         /// <summary>
         /// Whether to close the stream when this is disposed
         /// </summary>
-        public bool CloseStreamWhenDisposed { get; set; }
+        public bool CloseStreamWhenDisposed
+        {
+            get => BaseJsonWriter.CloseOutput;
+            set => BaseJsonWriter.CloseOutput = value;
+        }
 
         /// <summary>
         /// Write Json text to the stream after validating that it is valid Json
         /// </summary>
-        public virtual void WriteJson(string json)
+        public void WriteJson(string json)
         {
             var newObj = JObject.Parse(json);
 
@@ -56,7 +68,7 @@ namespace Phnx.IO.Json.Streams
         /// Serialize and write an object as Json
         /// </summary>
         /// <param name="o">The object to write to the stream</param>
-        public virtual void WriteObject(object o)
+        public void WriteObject(object o)
         {
             var newObj = JObject.FromObject(o);
 
@@ -67,7 +79,7 @@ namespace Phnx.IO.Json.Streams
         /// Serialize, then write a property dictionary as Json
         /// </summary>
         /// <param name="data">The property dictionary to write</param>
-        public virtual void WritePropertyDictionary(Dictionary<string, string> data)
+        public void WritePropertyDictionary(Dictionary<string, string> data)
         {
             var loadedValue = PropertyDictionaryConverter.From(data);
 
@@ -80,7 +92,7 @@ namespace Phnx.IO.Json.Streams
         /// <param name="jObject">The object to write to the stream</param>
         public virtual void WriteJObject(JObject jObject)
         {
-            jObject.WriteTo(Writer);
+            jObject.WriteTo(BaseJsonWriter);
         }
 
         /// <summary>
@@ -88,14 +100,9 @@ namespace Phnx.IO.Json.Streams
         /// </summary>
         public virtual void Dispose()
         {
-            Writer?.Flush();
+            BaseJsonWriter?.Flush();
 
-            Writer?.Close();
-
-            if (CloseStreamWhenDisposed)
-            {
-                TextWriter?.Dispose();
-            }
+            BaseJsonWriter?.Close();
         }
     }
 }
