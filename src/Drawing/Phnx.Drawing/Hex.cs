@@ -1,4 +1,4 @@
-﻿using Phnx.Collections.Extensions;
+﻿using Phnx.Collections;
 using System;
 using System.Drawing;
 using System.Text;

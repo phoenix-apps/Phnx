@@ -1,5 +1,4 @@
-﻿using Phnx.Collections.Extensions;
-using Phnx.Collections.Tests.TestHelpers;
+﻿using Phnx.Collections.Tests.TestHelpers;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

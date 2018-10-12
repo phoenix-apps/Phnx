@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Phnx.Collections.Extensions
+namespace Phnx.Collections
 {
     /// <summary>
     /// Extensions for <see cref="IEnumerable{T}"/> related to querying collections
@@ -252,7 +252,7 @@ namespace Phnx.Collections.Extensions
         /// <returns>A one dimensional collection containing all the two dimensional collection's values</returns>
         public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> source)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -273,6 +273,84 @@ namespace Phnx.Collections.Extensions
         }
 
         /// <summary>
+        /// Flatten a tree into a single one dimensional collection, using a selector to get the children of <typeparamref name="T"/>, traversing down the tree before traversing across the tree
+        /// </summary>
+        /// <typeparam name="T">The type of items in the tree</typeparam>
+        /// <param name="source">The tree source</param>
+        /// <param name="childSelector">The selector to get children of the current item</param>
+        /// <remarks>This method is non-recursive</remarks>
+        /// <returns>A flattened tree, with the deepest elements of the first item first</returns>
+        public static IEnumerable<T> DepthFirstFlatten<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> childSelector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (childSelector is null)
+            {
+                throw new ArgumentNullException(nameof(childSelector));
+            }
+
+            var list = new LinkedList<T>(source);
+
+            while (list.Count > 0)
+            {
+                var item = list.First.Value;
+                yield return item;
+                list.RemoveFirst();
+
+                var node = list.First;
+                foreach (var child in childSelector(item))
+                {
+                    if (node is null)
+                    {
+                        // List is empty, add to list
+                        list.AddLast(child);
+                    }
+                    else
+                    {
+                        list.AddBefore(node, child);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Flatten a tree into a single one dimensional collection, using a selector to get the children of <typeparamref name="T"/>, traversing across the tree before traversing down the tree
+        /// </summary>
+        /// <typeparam name="T">The type of items in the tree</typeparam>
+        /// <param name="source">The tree source</param>
+        /// <param name="childSelector">The selector to get children of the current item</param>
+        /// <returns>A flattened tree, with the children of the topmost elements first</returns>
+        public static IEnumerable<T> BreadthFirstFlatten<T>(this IEnumerable<T> source, Func<T, IEnumerable<T>> childSelector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (childSelector is null)
+            {
+                throw new ArgumentNullException(nameof(childSelector));
+            }
+
+            var queue = new Queue<T>(source);
+
+            while (queue.Count > 0)
+            {
+                var item = queue.Dequeue();
+                yield return item;
+
+                foreach (var child in childSelector(item))
+                {
+                    // Prepare child for traversal after traversing current children
+                    queue.Enqueue(child);
+                }
+            }
+        }
+
+        /// <summary>
         /// Get the index of an item that matches a criteria
         /// </summary>
         /// <typeparam name="T">The type of values in the collection</typeparam>
@@ -287,6 +365,7 @@ namespace Phnx.Collections.Extensions
             {
                 throw new ArgumentNullException(nameof(source));
             }
+
             if (isMatch == null)
             {
                 throw new ArgumentNullException(nameof(isMatch));
@@ -322,6 +401,7 @@ namespace Phnx.Collections.Extensions
             {
                 throw new ArgumentNullException(nameof(source));
             }
+
             if (isMatch == null)
             {
                 throw new ArgumentNullException(nameof(isMatch));

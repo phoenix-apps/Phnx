@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Phnx.Collections.Extensions
+namespace Phnx.Collections
 {
     /// <summary>
     /// Extensions for <see cref="IEnumerable{T}"/>

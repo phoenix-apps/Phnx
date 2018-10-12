@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Phnx.IO.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -84,11 +83,6 @@ namespace Phnx.IO.Json.Streams
         {
             return JObjectConverter.ToJson(JObject.Load(Reader));
         }
-
-        /// <summary>
-        /// Whether the end of the stream has been reached
-        /// </summary>
-        public bool ReachedEnd => TextReader.ReachedEnd();
 
         /// <summary>
         /// Dispose of this reader, and close the stream if specified

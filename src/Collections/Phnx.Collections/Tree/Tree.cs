@@ -1,14 +1,14 @@
-﻿using Phnx.Collections.Extensions;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Phnx.Collections.Tree
+namespace Phnx.Collections
 {
     /// <summary>
     /// Manages a tree data structure of values, with each node having a many-to-many relationship with other nodes
     /// </summary>
     /// <typeparam name="T">The type of data to store in the tree</typeparam>
-    public class Tree<T>
+    public class Tree<T> : IEnumerable<T>
     {
         private readonly List<TreeNode<T>> _topNodes;
 
@@ -35,7 +35,7 @@ namespace Phnx.Collections.Tree
         }
 
         /// <summary>
-        /// Get all data nodes in the tree
+        /// Get all data nodes in the tree, depth first. Each node is only returned once, so if a node has two parents, it only appears once in the result
         /// </summary>
         public IEnumerable<TreeNode<T>> AllNodes
         {
@@ -72,6 +72,42 @@ namespace Phnx.Collections.Tree
             _topNodes.Add(newNode);
 
             return newNode;
+        }
+
+        /// <summary>
+        /// Gets all nodes in the tree, depth first. This can contain duplicate nodes if two parents refer to the same node
+        /// </summary>
+        /// <returns>All nodes in the tree, depth first. This can contain duplicate nodes if two parents refer to the same node</returns>
+        public IEnumerable<T> TraverseDepthFirst()
+        {
+            return
+                TopNodes.DepthFirstFlatten(node => node.Children)
+                .Select(n => n.Value);
+        }
+
+        /// <summary>
+        /// Gets all nodes in the tree, breadth first. This can contain duplicate nodes if two parents refer to the same node
+        /// </summary>
+        /// <returns>All nodes in the tree, breadth first. This can contain duplicate nodes if two parents refer to the same node</returns>
+        public IEnumerable<T> TraverseBreadthFirst()
+        {
+            return
+                TopNodes.BreadthFirstFlatten(node => node.Children)
+                .Select(n => n.Value);
+        }
+
+        /// <summary>
+        /// Returns an enumerator for the <see cref="TopNodes"/> values. To traverse the entire tree, use <see cref="AllNodes"/>, <see cref="TraverseDepthFirst"/> or <see cref="TraverseBreadthFirst"/>
+        /// </summary>
+        /// <returns>An enumerator for the <see cref="TopNodes"/> values</returns>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return TopNodes.Select(n => n.Value).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
