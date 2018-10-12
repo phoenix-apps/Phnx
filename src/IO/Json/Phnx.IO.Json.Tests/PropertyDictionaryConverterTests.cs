@@ -7,6 +7,13 @@ namespace Phnx.IO.Json.Tests
 {
     public class PropertyDictionaryConverterTests
     {
+        private readonly PropertyDictionaryConverter _converter;
+
+        public PropertyDictionaryConverterTests()
+        {
+            _converter = new PropertyDictionaryConverter();
+        }
+
         private void ValidateDictionariesMatch<TKey, TValue>(Dictionary<TKey, TValue> expected, Dictionary<TKey, TValue> actual)
         {
             Assert.AreEqual(expected.Count, actual.Count);
@@ -22,7 +29,7 @@ namespace Phnx.IO.Json.Tests
         public void ObjectTo_WhenNull_ThrowsArgumentNullException()
         {
             object o = null;
-            Assert.Throws<ArgumentNullException>(() => PropertyDictionaryConverter.To(o));
+            Assert.Throws<ArgumentNullException>(() => _converter.To(o));
         }
 
         [Test]
@@ -38,7 +45,7 @@ namespace Phnx.IO.Json.Tests
                 Id = 7
             };
 
-            var propDict = PropertyDictionaryConverter.To(o);
+            var propDict = _converter.To(o);
             ValidateDictionariesMatch(expected, propDict);
         }
 
@@ -59,7 +66,7 @@ namespace Phnx.IO.Json.Tests
                 }
             };
 
-            var propDict = PropertyDictionaryConverter.To(o);
+            var propDict = _converter.To(o);
             ValidateDictionariesMatch(expected, propDict);
         }
 
@@ -92,7 +99,7 @@ namespace Phnx.IO.Json.Tests
                 }
             };
 
-            var propDict = PropertyDictionaryConverter.To(o);
+            var propDict = _converter.To(o);
             ValidateDictionariesMatch(expected, propDict);
         }
 
@@ -100,7 +107,7 @@ namespace Phnx.IO.Json.Tests
         public void FromT_WhenNull_ThrowsArgumentNullException()
         {
             Dictionary<string, string> dict = null;
-            Assert.Throws<ArgumentNullException>(() => PropertyDictionaryConverter.From<object>(dict));
+            Assert.Throws<ArgumentNullException>(() => _converter.From<object>(dict));
         }
 
         [Test]
@@ -116,7 +123,7 @@ namespace Phnx.IO.Json.Tests
                 { nameof(ShallowFake.Id), "7"}
             };
 
-            var converted = PropertyDictionaryConverter.From<ShallowFake>(dict);
+            var converted = _converter.From<ShallowFake>(dict);
 
             Assert.AreEqual(expected.Id, converted.Id);
         }
@@ -138,7 +145,7 @@ namespace Phnx.IO.Json.Tests
                 { nameof(DeepFake.Collection), string.Empty }
             };
 
-            var converted = PropertyDictionaryConverter.From<DeepFake>(dict);
+            var converted = _converter.From<DeepFake>(dict);
 
             Assert.AreEqual(expected.Single.Id, converted.Single.Id);
             CollectionAssert.AreEqual(expected.Collection, converted.Collection);
@@ -173,7 +180,7 @@ namespace Phnx.IO.Json.Tests
                 { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Collection), string.Empty }
             };
 
-            var converted = PropertyDictionaryConverter.From<ReallyDeepFake>(dict);
+            var converted = _converter.From<ReallyDeepFake>(dict);
 
             Assert.AreEqual(expected.First.Single.Id, converted.First.Single.Id);
             Assert.AreEqual(expected.Second.Single.Id, converted.Second.Single.Id);

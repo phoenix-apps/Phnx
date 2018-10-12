@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Phnx.IO.Json.Streams
@@ -58,17 +57,6 @@ namespace Phnx.IO.Json.Streams
             var loadedValue = ReadJObject();
 
             return loadedValue.ToObject<T>();
-        }
-
-        /// <summary>
-        /// Read a deserialize a Json object from the stream, returning it as a property dictionary instead of an object
-        /// </summary>
-        /// <returns>A property dictionary, where the key is the name of the property, and the value is the value of that property</returns>
-        public Dictionary<string, string> ReadPropertyDictionary()
-        {
-            var loadedValue = ReadJObject();
-
-            return PropertyDictionaryConverter.To(loadedValue);
         }
 
         /// <summary>

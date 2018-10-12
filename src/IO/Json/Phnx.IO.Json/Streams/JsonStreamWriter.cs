@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Phnx.IO.Json.Streams
@@ -73,17 +72,6 @@ namespace Phnx.IO.Json.Streams
             var newObj = JObject.FromObject(o);
 
             WriteJObject(newObj);
-        }
-
-        /// <summary>
-        /// Serialize, then write a property dictionary as Json
-        /// </summary>
-        /// <param name="data">The property dictionary to write</param>
-        public void WritePropertyDictionary(Dictionary<string, string> data)
-        {
-            var loadedValue = PropertyDictionaryConverter.From(data);
-
-            WriteJObject(loadedValue);
         }
 
         /// <summary>
