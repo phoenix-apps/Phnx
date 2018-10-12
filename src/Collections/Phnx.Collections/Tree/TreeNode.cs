@@ -1,8 +1,7 @@
-﻿using Phnx.Collections.Extensions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Phnx.Collections.Tree
+namespace Phnx.Collections
 {
     /// <summary>
     /// A node of data within a <see cref="Tree{T}"/>

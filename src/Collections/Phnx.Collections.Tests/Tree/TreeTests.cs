@@ -1,5 +1,4 @@
-﻿using Phnx.Collections.Tree;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Phnx.Collections.Tests.Tree
 {
