@@ -46,115 +46,99 @@ namespace Phnx.IO.Json
             }
         }
 
-        public static JObject FromDictionary(Dictionary<string, string> data)
+        public static JObject FromDictionary(Dictionary<string, string> properties)
         {
-            JObject newJObj = new JObject();
+            JObject result = new JObject();
 
-            var sortedData = data.OrderBy(d => d.Key);
+            var sortedProperties = properties.OrderBy(d => d.Key);
 
-            Dictionary<string, JObject> heirarchy = new Dictionary<string, JObject>();
-            foreach (var dataProp in sortedData)
+            Dictionary<string, JObject> knownProperties = new Dictionary<string, JObject>();
+            foreach (var property in sortedProperties)
             {
-                if (!dataProp.Key.Contains(ChildPropertyDelimiter))
+                AddToJObject(knownProperties, result, property.Key, property.Value);
+            }
+
+            return result;
+        }
+
+        private static void AddToJObject(Dictionary<string, JObject> knownProperties, JObject baseObject, string propertyName, JToken propertyValue)
+        {
+            JObject keyParent = baseObject;
+            Stack<string> missingAncestors = new Stack<string>();
+            foreach (var parent in GetMemberAncestors(propertyName))
+            {
+                if (knownProperties.TryGetValue(parent, out keyParent))
                 {
-                    newJObj.Add(dataProp.Key, dataProp.Value);
+                    break;
                 }
                 else
                 {
-                    // Contains child property
-                    AppendToHeirarchy(newJObj, heirarchy, dataProp.Key, dataProp.Value);
+                    missingAncestors.Push(parent);
                 }
             }
 
-            return newJObj;
+            if (keyParent is null)
+            {
+                keyParent = baseObject;
+            }
+
+            keyParent = AddMissingAncestors(knownProperties, keyParent, missingAncestors);
+
+            keyParent.Add(GetMemberName(propertyName), propertyValue);
         }
 
-        private static void AppendToHeirarchy(JObject baseObject, Dictionary<string, JObject> heirarchySoFar, string key, string value)
+        /// <param name="knownProperties"></param>
+        /// <param name="knownAncestor">The parent of the first missing ancestor</param>
+        /// <param name="missingAncestors">Must be sorted with the closest to the root first</param>
+        private static JObject AddMissingAncestors(IDictionary<string, JObject> knownProperties, JObject knownAncestor, IEnumerable<string> missingAncestors)
         {
-            string parentKey = GetMemberParentFullyQualifiedName(key);
+            JObject missingAncestorParent = knownAncestor;
+            JObject missingAncestorValue = missingAncestorParent;
 
-            if (parentKey is null)
+            foreach (var missingAncestor in missingAncestors)
             {
-                // No parents
-                return;
+                missingAncestorValue = new JObject();
+
+                // Add to jObject
+                missingAncestorParent.Add(GetMemberName(missingAncestor), missingAncestorValue);
+
+                //Add to known properties
+                knownProperties.Add(missingAncestor, missingAncestorValue);
             }
 
-            if (!heirarchySoFar.ContainsKey(parentKey))
-            {
-                // Create parent jObject(s)
-
-                Stack<string> missingParents = new Stack<string>();
-
-                string ancestoryKey = parentKey;
-                while (ancestoryKey.Contains(".") && !heirarchySoFar.ContainsKey(ancestoryKey))
-                {
-                    missingParents.Push(ancestoryKey);
-
-                    ancestoryKey = ancestoryKey.Substring(0, ancestoryKey.LastIndexOf(ChildPropertyDelimiter, StringComparison.Ordinal));
-                }
-
-                JObject knownAncestor;
-                if (!heirarchySoFar.ContainsKey(ancestoryKey))
-                {
-                    knownAncestor = baseObject;
-                    missingParents.Push(ancestoryKey);
-                }
-                else
-                {
-                    // Append object to existing object in heirarchy
-                    knownAncestor = heirarchySoFar[ancestoryKey];
-                }
-
-                while (missingParents.Count > 0)
-                {
-                    // Create and append missing parents
-                    var newParentKey = missingParents.Pop();
-                    var newParent = new JObject();
-
-                    heirarchySoFar.Add(newParentKey, newParent);
-
-                    knownAncestor.Add(GetPropertyName(newParentKey), newParent);
-                    knownAncestor = newParent;
-                }
-            }
-
-            // Append to parent jObject
-            heirarchySoFar[parentKey].Add(key.Substring(key.LastIndexOf(ChildPropertyDelimiter, StringComparison.Ordinal) + 1), value);
+            return missingAncestorValue;
         }
 
-        private static string GetMemberParentFullyQualifiedName(string memberFullyQualifiedName)
+        /// <returns>Ancestors in descending order (child-most first, so a.b.c, then a.b, then a)</returns>
+        private static IEnumerable<string> GetMemberAncestors(string fullyQualifiedName)
         {
-            int parentEndIndex = memberFullyQualifiedName.LastIndexOf(ChildPropertyDelimiter, StringComparison.Ordinal);
+            string parentName = GetParentFullName(fullyQualifiedName);
 
-            if (parentEndIndex < 0)
+            while (parentName != null)
+            {
+                yield return parentName;
+
+                parentName = GetParentFullName(parentName);
+            }
+        }
+
+        /// <returns>Returns <see langword="null"/> if <paramref name="fullyQualifiedName"/> has no parents</returns>
+        private static string GetParentFullName(string fullyQualifiedName)
+        {
+            var lastDelimiterIndex = fullyQualifiedName.LastIndexOf(ChildPropertyDelimiter,
+                    StringComparison.Ordinal);
+
+            if (lastDelimiterIndex < 0)
             {
                 // No parent
                 return null;
             }
 
-            return memberFullyQualifiedName.Substring(0, parentEndIndex);
+            // Has parent
+            return fullyQualifiedName.Substring(0, lastDelimiterIndex);
         }
 
-        private static void AddAncestors(string key)
-        {
-
-        }
-
-        private static IEnumerable<string> GetMemberAncestors(string fullyQualifiedName)
-        {
-            int ancestorEndIndex = fullyQualifiedName.IndexOf(ChildPropertyDelimiter, StringComparison.Ordinal);
-
-            while (ancestorEndIndex >= 0)
-            {
-                yield return fullyQualifiedName.Substring(0, ancestorEndIndex);
-
-                fullyQualifiedName = fullyQualifiedName.Substring(ancestorEndIndex + ChildPropertyDelimiter.Length);
-
-                ancestorEndIndex = fullyQualifiedName.IndexOf(ChildPropertyDelimiter);
-            }
-        }
-
-        private static string GetPropertyName(string fullyQualifiedName)
+        private static string GetMemberName(string fullyQualifiedName)
         {
             var lastDelimiterIndex = fullyQualifiedName.LastIndexOf(ChildPropertyDelimiter,
                     StringComparison.Ordinal);
