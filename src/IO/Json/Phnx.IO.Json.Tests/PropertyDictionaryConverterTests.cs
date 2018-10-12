@@ -108,7 +108,8 @@ namespace Phnx.IO.Json.Tests
         {
             var expected = new Dictionary<string, string>
             {
-                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection) + "." + nameof(ShallowFake.Id), "7" },
+                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection) + "[0]." + nameof(ShallowFake.Id), "7" },
+                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection) + "[1]." + nameof(ShallowFake.Id), "14" },
                 { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Single), string.Empty },
                 { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Single) +"." + nameof(ShallowFake.Id), "12"},
                 { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Collection), string.Empty }
@@ -118,9 +119,16 @@ namespace Phnx.IO.Json.Tests
             {
                 First = new DeepFake
                 {
-                    Single = new ShallowFake
+                    Collection = new List<ShallowFake>
                     {
-                        Id = 7
+                        new ShallowFake
+                        {
+                            Id = 7
+                        },
+                        new ShallowFake
+                        {
+                            Id = 14
+                        }
                     }
                 },
                 Second = new DeepFake
@@ -231,6 +239,10 @@ namespace Phnx.IO.Json.Tests
                         new ShallowFake
                         {
                             Id = 7
+                        },
+                        new ShallowFake
+                        {
+                            Id = 14
                         }
                     }
                 },
@@ -245,7 +257,8 @@ namespace Phnx.IO.Json.Tests
 
             var dict = new Dictionary<string, string>
             {
-                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection) + "." + nameof(ShallowFake.Id), "7" },
+                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection) + "[0]." + nameof(ShallowFake.Id), "7" },
+                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection) + "[1]." + nameof(ShallowFake.Id), "7" },
                 { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Single), string.Empty },
                 { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Single) +"." + nameof(ShallowFake.Id), "12"},
                 { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Collection), string.Empty }
@@ -253,7 +266,9 @@ namespace Phnx.IO.Json.Tests
 
             var converted = _converter.From<ReallyDeepFake>(dict);
 
-            Assert.AreEqual(expected.First.Single.Id, converted.First.Single.Id);
+            Assert.AreEqual(expected.First.Collection.Count, converted.First.Collection.Count);
+            Assert.AreEqual(expected.First.Collection[0].Id, converted.First.Collection[0].Id);
+            Assert.AreEqual(expected.First.Collection[1].Id, converted.First.Collection[1].Id);
             Assert.AreEqual(expected.Second.Single.Id, converted.Second.Single.Id);
         }
     }

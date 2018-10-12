@@ -20,7 +20,7 @@ namespace Phnx.IO.Json
         /// </summary>
         /// <param name="propertyDictionary">The property dictionary to convert</param>
         /// <returns><paramref name="propertyDictionary"/> as a <see cref="JObject"/></returns>
-        public JObject From(Dictionary<string, string> propertyDictionary)
+        public JToken From(Dictionary<string, string> propertyDictionary)
         {
             if (propertyDictionary is null)
             {
@@ -89,33 +89,52 @@ namespace Phnx.IO.Json
         /// </summary>
         public const string ChildPropertyDelimiter = ".";
 
-        private static void ToDictionary(JObject obj, Dictionary<string, string> propertyDictionarySoFar, string currentPropertyFullName)
+        private static void ToDictionary(JToken obj, Dictionary<string, string> propertyDictionarySoFar, string currentPropertyFullName)
         {
-            foreach (var property in obj)
+            if (obj is JObject complexType)
             {
-                string propertyFullName = currentPropertyFullName + property.Key;
-
-                // Could cause StackOverflowException in deep objects. Can this be optimised to use tailed recursion?
-                if (property.Value is JObject jObjProperty)
+                foreach (var property in complexType)
                 {
+                    string childPropertyName;
+                    if (string.IsNullOrEmpty(currentPropertyFullName))
+                    {
+                        childPropertyName = property.Key;
+                    }
+                    else
+                    {
+                        childPropertyName = currentPropertyFullName + ChildPropertyDelimiter + property.Key;
+                    }
+
+                    // Could cause StackOverflowException in deep objects. Can this be optimised to use tailed recursion?
                     // Has children to be deserialized
                     ToDictionary(
-                        jObjProperty,
+                        property.Value,
                         propertyDictionarySoFar,
-                        propertyFullName + ChildPropertyDelimiter);
-                }
-                else
-                {
-                    var jsonValue = property.Value.ToString();
-
-                    propertyDictionarySoFar.Add(
-                        propertyFullName,
-                        jsonValue.Trim('{', '}'));
+                        childPropertyName);
                 }
             }
+            else if (obj is JArray jArrayProperty)
+            {
+                // Enumerate through array, and convert each
+                for (var index = 0; index < jArrayProperty.Count; index++)
+                {
+                    var curEntry = jArrayProperty[index];
+
+                    ToDictionary(curEntry, propertyDictionarySoFar, currentPropertyFullName + $"[{index}]");
+                }
+            }
+            else
+            {
+                var jsonValue = obj.ToString();
+
+                propertyDictionarySoFar.Add(
+                    currentPropertyFullName,
+                    jsonValue.Trim('{', '}'));
+            }
+
         }
 
-        private static JObject FromDictionary(Dictionary<string, string> properties)
+        private static JToken FromDictionary(Dictionary<string, string> properties)
         {
             JObject result = new JObject();
 
