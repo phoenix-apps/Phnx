@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Phnx.Collections.Extensions
+namespace Phnx.Collections
 {
     /// <summary>
     /// Extensions for <see cref="List{T}"/>

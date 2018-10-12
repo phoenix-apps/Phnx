@@ -1,5 +1,4 @@
-﻿using Phnx.Collections.Extensions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 
 namespace Phnx.Collections.Tests.Extensions.ArrayExtensions

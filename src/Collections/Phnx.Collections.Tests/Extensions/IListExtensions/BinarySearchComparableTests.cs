@@ -1,6 +1,5 @@
-﻿using Phnx.Collections.Extensions;
+﻿using NUnit.Framework;
 using Phnx.Collections.Tests.TestHelpers;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
