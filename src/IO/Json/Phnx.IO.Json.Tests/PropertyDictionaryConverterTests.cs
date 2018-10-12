@@ -258,7 +258,7 @@ namespace Phnx.IO.Json.Tests
             var dict = new Dictionary<string, string>
             {
                 { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection) + "[0]." + nameof(ShallowFake.Id), "7" },
-                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection) + "[1]." + nameof(ShallowFake.Id), "7" },
+                { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Collection) + "[1]." + nameof(ShallowFake.Id), "14" },
                 { nameof(ReallyDeepFake.First) + "." + nameof(DeepFake.Single), string.Empty },
                 { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Single) +"." + nameof(ShallowFake.Id), "12"},
                 { nameof(ReallyDeepFake.Second) + "." + nameof(DeepFake.Collection), string.Empty }

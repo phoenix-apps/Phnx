@@ -185,10 +185,42 @@ namespace Phnx.IO.Json
 
             foreach (var missingAncestor in missingAncestors)
             {
-                missingAncestorValue = new JObject();
+                if (IsArrayProperty(missingAncestor))
+                {
+                    // Parent becomes the current value - got to jump a generation
+                    missingAncestorParent = missingAncestorValue;
+                    missingAncestorValue = new JObject();
 
-                // Add to jObject
-                missingAncestorParent.Add(GetMemberName(missingAncestor), missingAncestorValue);
+                    // Is JArray - check if JArray already exists
+                    var jArrayMemberName = GetMemberName(missingAncestor);
+
+                    JArray jArray;
+                    if (missingAncestorParent.TryGetValue(jArrayMemberName, out var token))
+                    {
+                        jArray = token as JArray;
+
+                        if (jArray is null)
+                        {
+                            // Another property with the same name as the array, which is not part of the array, was in the json
+                            throw new FormatException($"Could not cast to {nameof(JObject)} due to bad array formatting for {missingAncestor}");
+                        }
+                    }
+                    else
+                    {
+                        jArray = new JArray();
+
+                        missingAncestorParent.Add(jArrayMemberName, jArray);
+                    }
+
+                    jArray.Add(missingAncestorValue);
+                }
+                else
+                {
+                    missingAncestorValue = new JObject();
+
+                    // Add to jObject
+                    missingAncestorParent.Add(GetMemberName(missingAncestor), missingAncestorValue);
+                }
 
                 //Add to known properties
                 knownProperties.Add(missingAncestor, missingAncestorValue);
@@ -226,6 +258,11 @@ namespace Phnx.IO.Json
             return fullyQualifiedName.Substring(0, lastDelimiterIndex);
         }
 
+        private static bool IsArrayProperty(string name)
+        {
+            return name.EndsWith("]");
+        }
+
         private static string GetMemberName(string fullyQualifiedName)
         {
             var lastDelimiterIndex = fullyQualifiedName.LastIndexOf(ChildPropertyDelimiter,
@@ -234,11 +271,29 @@ namespace Phnx.IO.Json
             if (lastDelimiterIndex >= 0)
             {
                 // Is a child property
-                return fullyQualifiedName.Substring(lastDelimiterIndex + ChildPropertyDelimiter.Length);
+                var memberName = fullyQualifiedName.Substring(lastDelimiterIndex + ChildPropertyDelimiter.Length);
+
+                if (IsArrayProperty(memberName))
+                {
+                    // Trim array off end
+                    return memberName.Substring(0, memberName.LastIndexOf('['));
+                }
+                else
+                {
+                    return memberName;
+                }
             }
 
             // Is already property name
-            return fullyQualifiedName;
+            if (IsArrayProperty(fullyQualifiedName))
+            {
+                // Trim array off end
+                return fullyQualifiedName.Substring(fullyQualifiedName.LastIndexOf('['));
+            }
+            else
+            {
+                return fullyQualifiedName;
+            }
         }
     }
 }
