@@ -11,14 +11,34 @@ namespace Phnx.IO.Json.Tests.Streams
     public class JsonStreamReaderTests
     {
         [Test]
-        public void New_WithNullTextReader_ThrowsArgumentNullException()
+        public void New_WhenTextReaderIsNull_ThrowsArgumentNullException()
         {
             TextReader reader = null;
             Assert.Throws<ArgumentNullException>(() => new JsonStreamReader(reader));
         }
 
         [Test]
-        public void New_WithNullJsonReader_ThrowsArgumentNullException()
+        public void New_WhenCloseStreamIsTrue_SetsCloseStreamToTrue()
+        {
+            var reader = new PipeStream().Out;
+
+            var jsonReader = new JsonStreamReader(reader, true);
+
+            Assert.IsTrue(jsonReader.CloseStreamWhenDisposed);
+        }
+
+        [Test]
+        public void New_WhenCloseStreamIsFalse_SetsCloseStreamToFalse()
+        {
+            var reader = new PipeStream().Out;
+
+            var jsonReader = new JsonStreamReader(reader, false);
+
+            Assert.IsFalse(jsonReader.CloseStreamWhenDisposed);
+        }
+
+        [Test]
+        public void New_WhenJsonReaderIsNull_ThrowsArgumentNullException()
         {
             JsonTextReader jsonReader = null;
             Assert.Throws<ArgumentNullException>(() => new JsonStreamReader(jsonReader));
@@ -141,6 +161,32 @@ namespace Phnx.IO.Json.Tests.Streams
             var result = jsonStream.ReadJson(Formatting.Indented);
 
             Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void Dispose_WhenCloseStreamWhenDisposedIsTrue_ClosesStream()
+        {
+            var stream = new FakeStream();
+            var reader = new JsonStreamReader(stream);
+            reader.CloseStreamWhenDisposed = true;
+
+            Assert.IsTrue(stream.IsOpen);
+            reader.Dispose();
+
+            Assert.IsFalse(stream.IsOpen);
+        }
+
+        [Test]
+        public void Dispose_WhenCloseStreamWhenDisposedIsFalse_DoesNotCloseStream()
+        {
+            var stream = new FakeStream();
+            var reader = new JsonStreamReader(stream);
+            reader.CloseStreamWhenDisposed = false;
+
+            Assert.IsTrue(stream.IsOpen);
+            reader.Dispose();
+
+            Assert.IsTrue(stream.IsOpen);
         }
     }
 }
