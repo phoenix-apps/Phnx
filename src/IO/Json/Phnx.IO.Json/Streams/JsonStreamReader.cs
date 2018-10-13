@@ -89,11 +89,12 @@ namespace Phnx.IO.Json.Streams
         /// <summary>
         /// Read but don't deserialize a Json object from the stream, returning it as a raw Json string. The string is validated as Json
         /// </summary>
+        /// <param name="jsonFormatting">Whether to indent the resulting JSON. It is recommended to use <see cref="Formatting.Indented"/> for display as it's more readable, but <see cref="Formatting.None"/> for anything else, as it results in a smaller string</param>
         /// <returns>A Json string</returns>
-        public virtual string ReadJson()
+        public virtual string ReadJson(Formatting jsonFormatting = Formatting.None)
         {
             var jObject = ReadJObject();
-            return jObject.ToString();
+            return jObject.ToString(jsonFormatting);
         }
 
         /// <summary>

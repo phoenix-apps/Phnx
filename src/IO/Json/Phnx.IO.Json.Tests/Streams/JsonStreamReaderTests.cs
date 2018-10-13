@@ -100,5 +100,47 @@ namespace Phnx.IO.Json.Tests.Streams
             Assert.AreEqual(expectedFirst, firstResult);
             Assert.AreEqual(expectedSecond, secondResult);
         }
+
+        [Test]
+        public void Read_WhenStreamIsEmpty_ThrowsEndOfStreamException()
+        {
+            var reader = new JsonStreamReader(new PipeStream().Out);
+
+            Assert.Throws<EndOfStreamException>(() => reader.ReadJObject());
+        }
+
+        [Test]
+        public void ReadJson_WhenStreamContainsUnformattedObject_ReadsAsJsonString()
+        {
+            var expectedObject = new ShallowFake
+            {
+                Id = 1245
+            };
+
+            var expected = JsonConvert.SerializeObject(expectedObject);
+
+            var jsonStream = new JsonStreamReader(new PipeStream(expected).Out);
+
+            var result = jsonStream.ReadJson(Formatting.None);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void ReadJson_WhenStreamContainsIndentedObject_ReadsAsJsonString()
+        {
+            var expectedObject = new ShallowFake
+            {
+                Id = 1245
+            };
+
+            var expected = JsonConvert.SerializeObject(expectedObject, Formatting.Indented);
+
+            var jsonStream = new JsonStreamReader(new PipeStream(expected).Out);
+
+            var result = jsonStream.ReadJson(Formatting.Indented);
+
+            Assert.AreEqual(expected, result);
+        }
     }
 }
