@@ -166,7 +166,7 @@ namespace Phnx.IO.Json.Tests
 
             var converted = _converter.From<ShallowFake>(dict);
 
-            Assert.AreEqual(expected.Id, converted.Id);
+            Assert.AreEqual(expected, converted);
         }
 
         [Test]
@@ -188,7 +188,7 @@ namespace Phnx.IO.Json.Tests
 
             var converted = _converter.From<DeepFake>(dict);
 
-            Assert.AreEqual(expected.Single.Id, converted.Single.Id);
+            Assert.AreEqual(expected.Single, converted.Single);
             CollectionAssert.AreEqual(expected.Collection, converted.Collection);
         }
 
@@ -223,8 +223,8 @@ namespace Phnx.IO.Json.Tests
 
             var converted = _converter.From<ReallyDeepFake>(dict);
 
-            Assert.AreEqual(expected.First.Single.Id, converted.First.Single.Id);
-            Assert.AreEqual(expected.Second.Single.Id, converted.Second.Single.Id);
+            Assert.AreEqual(expected.First.Single, converted.First.Single);
+            Assert.AreEqual(expected.Second.Single, converted.Second.Single);
         }
 
         [Test]
@@ -266,10 +266,8 @@ namespace Phnx.IO.Json.Tests
 
             var converted = _converter.From<ReallyDeepFake>(dict);
 
-            Assert.AreEqual(expected.First.Collection.Count, converted.First.Collection.Count);
-            Assert.AreEqual(expected.First.Collection[0].Id, converted.First.Collection[0].Id);
-            Assert.AreEqual(expected.First.Collection[1].Id, converted.First.Collection[1].Id);
-            Assert.AreEqual(expected.Second.Single.Id, converted.Second.Single.Id);
+            CollectionAssert.AreEqual(expected.First.Collection, converted.First.Collection);
+            Assert.AreEqual(expected.Second.Single, converted.Second.Single);
         }
     }
 }

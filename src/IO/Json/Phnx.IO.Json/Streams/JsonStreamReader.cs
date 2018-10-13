@@ -10,26 +10,38 @@ namespace Phnx.IO.Json.Streams
     /// </summary>
     public class JsonStreamReader : IDisposable
     {
+        private readonly JsonSerializer _jsonSerializer;
+
         /// <summary>
         /// Create a new <see cref="JsonStreamReader"/>
         /// </summary>
         /// <param name="stream">The stream to read Json from</param>
         /// <param name="closeStreamWhenDisposed">Whether to close the stream when this <see cref="JsonStreamReader"/> is disposed</param>
-        public JsonStreamReader(TextReader stream, bool closeStreamWhenDisposed = true)
+        public JsonStreamReader(TextReader stream, bool closeStreamWhenDisposed = false)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             BaseJsonReader = new JsonTextReader(stream)
             {
-                CloseInput = closeStreamWhenDisposed
+                CloseInput = closeStreamWhenDisposed,
+                SupportMultipleContent = true
             };
+
+            _jsonSerializer = new JsonSerializer();
         }
 
         /// <summary>
         /// Create a new <see cref="JsonStreamReader"/>
         /// </summary>
         /// <param name="jsonReader">The input to read Json from</param>
+        /// <remarks>To support streaming, <paramref name="jsonReader"/>'s property <see cref="JsonReader.SupportMultipleContent"/> will be set to <see langword="true"/></remarks>
         public JsonStreamReader(JsonTextReader jsonReader)
         {
-            BaseJsonReader = jsonReader;
+            BaseJsonReader = jsonReader ?? throw new ArgumentNullException(nameof(jsonReader));
+            BaseJsonReader.SupportMultipleContent = true;
         }
 
         /// <summary>
@@ -63,8 +75,14 @@ namespace Phnx.IO.Json.Streams
         /// Read and deserialize a Json object as a <see cref="JObject"/>
         /// </summary>
         /// <returns>A <see cref="JObject"/> representing the Json object read from the stream</returns>
+        /// <exception cref="EndOfStreamException"></exception>
         public virtual JObject ReadJObject()
         {
+            if (!BaseJsonReader.Read())
+            {
+                throw new EndOfStreamException();
+            }
+
             return JObject.Load(BaseJsonReader);
         }
 

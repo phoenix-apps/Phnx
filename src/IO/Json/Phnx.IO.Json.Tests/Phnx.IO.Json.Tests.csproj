@@ -16,4 +16,10 @@
     <ProjectReference Include="..\Phnx.IO.Json\Phnx.IO.Json.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Phnx.IO">
+      <HintPath>..\..\IO\Phnx.IO\bin\Debug\netstandard2.0\Phnx.IO.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
