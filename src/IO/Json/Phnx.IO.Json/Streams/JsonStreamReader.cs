@@ -38,7 +38,7 @@ namespace Phnx.IO.Json.Streams
         /// </summary>
         /// <param name="jsonReader">The input to read Json from</param>
         /// <remarks>To support streaming, <paramref name="jsonReader"/>'s property <see cref="JsonReader.SupportMultipleContent"/> will be set to <see langword="true"/></remarks>
-        public JsonStreamReader(JsonTextReader jsonReader)
+        public JsonStreamReader(JsonReader jsonReader)
         {
             BaseJsonReader = jsonReader ?? throw new ArgumentNullException(nameof(jsonReader));
             BaseJsonReader.SupportMultipleContent = true;
