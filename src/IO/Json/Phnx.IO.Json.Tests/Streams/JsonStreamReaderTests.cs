@@ -81,18 +81,13 @@ namespace Phnx.IO.Json.Tests.Streams
                 Id = 25
             };
 
-            var pipe = new MemoryStream();
+            var pipe = new PipeStream();
             {
                 var expectedFirstAsJson = JsonConvert.SerializeObject(expectedFirst);
-                var input = new StreamWriter(pipe);
-                input.WriteLine(expectedFirstAsJson);
+                pipe.In.Write(expectedFirstAsJson);
 
                 var expectedSecondAsJson = JsonConvert.SerializeObject(expectedSecond);
-                input.WriteLine(expectedSecondAsJson);
-
-                input.Flush();
-
-                pipe.Position = 0;
+                pipe.In.Write(expectedSecondAsJson);
             }
 
             var reader = new JsonTextReader(new StreamReader(pipe));
