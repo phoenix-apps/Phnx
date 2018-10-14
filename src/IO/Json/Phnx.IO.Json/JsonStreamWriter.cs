@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 
-namespace Phnx.IO.Json.Streams
+namespace Phnx.IO.Json
 {
     /// <summary>
     /// Provides a way to write Json data to a stream from a series of objects

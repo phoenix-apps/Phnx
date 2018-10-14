@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
-using Phnx.IO.Json.Streams;
 using Phnx.IO.Json.Tests.Fakes;
 using System;
 using System.Collections.Generic;
@@ -56,7 +55,7 @@ namespace Phnx.IO.Json.Tests.Streams
         }
 
         [Test]
-        public void Write_WhenJsonWriterContainsSingleJson_WritesObject()
+        public void Write_OneComplexObject_WritesObject()
         {
             var expectedAsObject = new DeepFake
             {
@@ -74,22 +73,18 @@ namespace Phnx.IO.Json.Tests.Streams
             };
 
             var expected = JsonConvert.SerializeObject(expectedAsObject);
-
             var pipe = new PipeStream();
-
             var writer = new JsonTextWriter(pipe.In);
-
             var jsonStream = new JsonStreamWriter(writer);
 
             jsonStream.WriteObject(expectedAsObject);
 
             var result = pipe.ReadToEndAsString();
-
             Assert.AreEqual(expected, result);
         }
 
         [Test]
-        public void Write_WhenJsonWriterContainsTwoJson_WritesOneThenNext()
+        public void Write_TwoComplexObjects_WritesOneThenNext()
         {
             var expectedFirst = new ShallowFake
             {

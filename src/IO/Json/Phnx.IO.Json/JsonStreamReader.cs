@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 
-namespace Phnx.IO.Json.Streams
+namespace Phnx.IO.Json
 {
     /// <summary>
     /// Provides a way to read a stream containing Json data into a series of objects

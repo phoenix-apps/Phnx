@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using NUnit.Framework;
-using Phnx.IO.Json.Streams;
 using Phnx.IO.Json.Tests.Fakes;
 using System;
 using System.Collections.Generic;
