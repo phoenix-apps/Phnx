@@ -13,21 +13,21 @@ namespace Phnx.IO.Json.Streams
         /// <summary>
         /// Create a new <see cref="JsonStreamWriter"/>
         /// </summary>
-        /// <param name="output">The stream to write Json to</param>
+        /// <param name="stream">The stream to write Json to</param>
         /// <param name="closeStreamWhenDisposed">Whether to close the stream when this <see cref="JsonStreamWriter"/> is disposed</param>
-        public JsonStreamWriter(TextWriter output, bool closeStreamWhenDisposed = true)
+        public JsonStreamWriter(TextWriter stream, bool closeStreamWhenDisposed = false)
         {
-            if (output is null)
+            if (stream is null)
             {
-                throw new ArgumentNullException(nameof(output));
+                throw new ArgumentNullException(nameof(stream));
             }
 
-            CloseStreamWhenDisposed = closeStreamWhenDisposed;
-
-            BaseJsonWriter = new JsonTextWriter(output)
+            BaseJsonWriter = new JsonTextWriter(stream)
             {
-                CloseOutput = CloseStreamWhenDisposed
+                CloseOutput = closeStreamWhenDisposed
             };
+
+            CloseStreamWhenDisposed = closeStreamWhenDisposed;
         }
 
         /// <summary>
