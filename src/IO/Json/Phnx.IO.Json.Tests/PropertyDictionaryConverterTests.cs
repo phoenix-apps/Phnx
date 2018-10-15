@@ -196,6 +196,26 @@ namespace Phnx.IO.Json.Tests
         }
 
         [Test]
+        public void ObjectTo_WhenShallowWithArray_GetsDictionary()
+        {
+            var expected = new Dictionary<string, string>
+            {
+                { nameof(ShallowFake.Id), "-1" },
+                { nameof(ShallowFake.Collection) + "[0]", "test1" },
+                { nameof(ShallowFake.Collection) + "[1]", "test2" }
+            };
+
+            var o = new ShallowFake
+            {
+                Collection = new string[] { "test1", "test2" },
+                Id = -1
+            };
+
+            var propDict = _converter.To(o);
+            ValidateDictionariesMatch(expected, propDict);
+        }
+
+        [Test]
         public void FromT_WhenNull_ThrowsArgumentNullException()
         {
             Dictionary<string, string> dict = null;
