@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 using Phnx.IO.Json.Tests.Fakes;
 using System;
@@ -55,6 +56,28 @@ namespace Phnx.IO.Json.Tests.Streams
         }
 
         [Test]
+        public void Write_WhenObjectIsNull_ThrowsArgumentNullException()
+        {
+            var pipe = new PipeStream();
+            var jsonStream = new JsonStreamWriter(pipe.In);
+
+            object dataToWrite = null;
+
+            Assert.Throws<ArgumentNullException>(() => jsonStream.Write(dataToWrite));
+        }
+
+        [Test]
+        public void Write_WhenJObjectIsNull_ThrowsArgumentNullException()
+        {
+            var pipe = new PipeStream();
+            var jsonStream = new JsonStreamWriter(pipe.In);
+
+            JObject dataToWrite = null;
+
+            Assert.Throws<ArgumentNullException>(() => jsonStream.Write(dataToWrite));
+        }
+
+        [Test]
         public void Write_OneComplexObject_WritesObject()
         {
             var expectedAsObject = new DeepFake
@@ -77,7 +100,7 @@ namespace Phnx.IO.Json.Tests.Streams
             var writer = new JsonTextWriter(pipe.In);
             var jsonStream = new JsonStreamWriter(writer);
 
-            jsonStream.WriteObject(expectedAsObject);
+            jsonStream.Write(expectedAsObject);
 
             var result = pipe.ReadToEndAsString();
             Assert.AreEqual(expected, result);
@@ -96,16 +119,51 @@ namespace Phnx.IO.Json.Tests.Streams
                 Id = 25
             };
 
-            var expected = 
-                JsonConvert.SerializeObject(expectedFirst) + 
+            var expected =
+                JsonConvert.SerializeObject(expectedFirst) +
                 JsonConvert.SerializeObject(expectedSecond);
 
             var pipe = new PipeStream();
-            var writer = new JsonTextWriter(pipe.In);
-            var jsonStream = new JsonStreamWriter(writer);
+            var jsonStream = new JsonStreamWriter(pipe.In);
 
-            jsonStream.WriteObject(expectedFirst);
-            jsonStream.WriteObject(expectedSecond);
+            jsonStream.Write(expectedFirst);
+            jsonStream.Write(expectedSecond);
+
+            var result = pipe.ReadToEndAsString();
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void Write_WhenJsonIsNull_ThrowsArgumentNullException()
+        {
+            var pipe = new PipeStream();
+            var jsonStream = new JsonStreamWriter(pipe.In);
+
+            Assert.Throws<ArgumentNullException>(() => jsonStream.Write((string)null));
+        }
+
+        [Test]
+        public void Write_InvalidJSON_ThrowsJsonReaderException()
+        {
+            var pipe = new PipeStream();
+            var jsonStream = new JsonStreamWriter(pipe.In);
+
+            Assert.Throws<JsonReaderException>(() => jsonStream.Write("this is just a tribute"));
+        }
+
+        [Test]
+        public void Write_ValidJSON_WritesJsonToStream()
+        {
+            var expectedObject = new ShallowFake
+            {
+                Id = 25
+            };
+            var expected = JsonConvert.SerializeObject(expectedObject);
+
+            var pipe = new PipeStream();
+            var jsonStream = new JsonStreamWriter(pipe.In);
+
+            jsonStream.Write(expected);
 
             var result = pipe.ReadToEndAsString();
             Assert.AreEqual(expected, result);
@@ -115,8 +173,10 @@ namespace Phnx.IO.Json.Tests.Streams
         public void Dispose_WhenCloseStreamWhenDisposedIsTrue_ClosesStream()
         {
             var stream = new FakeWriter();
-            var writer = new JsonStreamWriter(stream);
-            writer.CloseStreamWhenDisposed = true;
+            var writer = new JsonStreamWriter(stream)
+            {
+                CloseStreamWhenDisposed = true
+            };
 
             Assert.IsTrue(stream.IsOpen);
             writer.Dispose();
@@ -128,8 +188,10 @@ namespace Phnx.IO.Json.Tests.Streams
         public void Dispose_WhenCloseStreamWhenDisposedIsFalse_DoesNotCloseStream()
         {
             var stream = new FakeWriter();
-            var writer = new JsonStreamWriter(stream);
-            writer.CloseStreamWhenDisposed = false;
+            var writer = new JsonStreamWriter(stream)
+            {
+                CloseStreamWhenDisposed = false
+            };
 
             Assert.IsTrue(stream.IsOpen);
             writer.Dispose();

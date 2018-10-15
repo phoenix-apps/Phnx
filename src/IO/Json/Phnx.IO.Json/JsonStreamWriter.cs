@@ -15,6 +15,7 @@ namespace Phnx.IO.Json
         /// </summary>
         /// <param name="stream">The stream to write Json to</param>
         /// <param name="closeStreamWhenDisposed">Whether to close the stream when this <see cref="JsonStreamWriter"/> is disposed</param>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/></exception>
         public JsonStreamWriter(TextWriter stream, bool closeStreamWhenDisposed = false)
         {
             if (stream is null)
@@ -34,6 +35,7 @@ namespace Phnx.IO.Json
         /// Create a new <see cref="JsonStreamWriter"/>
         /// </summary>
         /// <param name="jsonWriter">The output to write Json to</param>
+        /// <exception cref="ArgumentNullException"><paramref name="jsonWriter"/> is <see langword="null"/></exception>
         public JsonStreamWriter(JsonTextWriter jsonWriter)
         {
             BaseJsonWriter = jsonWriter ?? throw new ArgumentNullException(nameof(jsonWriter));
@@ -56,31 +58,50 @@ namespace Phnx.IO.Json
         /// <summary>
         /// Write Json text to the stream after validating that it is valid Json
         /// </summary>
-        public void WriteJson(string json)
+        /// <exception cref="ArgumentNullException"><paramref name="json"/> is <see langword="null"/></exception>
+        /// <exception cref="JsonReaderException">><paramref name="json"/> is not valid JSON</exception>
+        public void Write(string json)
         {
+            if (json is null)
+            {
+                throw new ArgumentNullException(nameof(json));
+            }
+
             var newObj = JObject.Parse(json);
 
-            WriteJObject(newObj);
+            Write(newObj);
         }
 
         /// <summary>
         /// Serialize and write an object as Json
         /// </summary>
-        /// <param name="o">The object to write to the stream</param>
-        public void WriteObject(object o)
+        /// <param name="objectToWrite">The object to write to the stream</param>
+        /// <exception cref="ArgumentNullException"><paramref name="objectToWrite"/> is <see langword="null"/></exception>
+        public void Write(object objectToWrite)
         {
-            var newObj = JObject.FromObject(o);
+            if (objectToWrite is null)
+            {
+                throw new ArgumentNullException(nameof(objectToWrite));
+            }
 
-            WriteJObject(newObj);
+            var newObj = JObject.FromObject(objectToWrite);
+
+            Write(newObj);
         }
 
         /// <summary>
         /// Serialize and write a <see cref="JObject"/> as Json
         /// </summary>
-        /// <param name="jObject">The object to write to the stream</param>
-        public virtual void WriteJObject(JObject jObject)
+        /// <param name="jObjectToWrite">The object to write to the stream</param>
+        /// <exception cref="ArgumentNullException"><paramref name="jObjectToWrite"/> is <see langword="null"/></exception>
+        public virtual void Write(JObject jObjectToWrite)
         {
-            jObject.WriteTo(BaseJsonWriter);
+            if (jObjectToWrite is null)
+            {
+                throw new ArgumentNullException(nameof(jObjectToWrite));
+            }
+
+            jObjectToWrite.WriteTo(BaseJsonWriter);
         }
 
         /// <summary>

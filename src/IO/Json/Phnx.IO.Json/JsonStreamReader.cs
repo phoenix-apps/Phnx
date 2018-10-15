@@ -17,6 +17,7 @@ namespace Phnx.IO.Json
         /// </summary>
         /// <param name="stream">The stream to read Json from</param>
         /// <param name="closeStreamWhenDisposed">Whether to close the stream when this <see cref="JsonStreamReader"/> is disposed</param>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/></exception>
         public JsonStreamReader(TextReader stream, bool closeStreamWhenDisposed = false)
         {
             if (stream is null)
@@ -38,6 +39,7 @@ namespace Phnx.IO.Json
         /// </summary>
         /// <param name="jsonReader">The input to read Json from</param>
         /// <remarks>To support streaming, <paramref name="jsonReader"/>'s property <see cref="JsonReader.SupportMultipleContent"/> will be set to <see langword="true"/></remarks>
+        /// <exception cref="ArgumentNullException"><paramref name="jsonReader"/> is <see langword="null"/></exception>
         public JsonStreamReader(JsonReader jsonReader)
         {
             BaseJsonReader = jsonReader ?? throw new ArgumentNullException(nameof(jsonReader));

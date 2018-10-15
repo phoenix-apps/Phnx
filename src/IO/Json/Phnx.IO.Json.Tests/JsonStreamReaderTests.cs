@@ -166,8 +166,10 @@ namespace Phnx.IO.Json.Tests.Streams
         public void Dispose_WhenCloseStreamWhenDisposedIsTrue_ClosesStream()
         {
             var stream = new FakeReader();
-            var reader = new JsonStreamReader(stream);
-            reader.CloseStreamWhenDisposed = true;
+            var reader = new JsonStreamReader(stream)
+            {
+                CloseStreamWhenDisposed = true
+            };
 
             Assert.IsTrue(stream.IsOpen);
             reader.Dispose();
@@ -179,8 +181,10 @@ namespace Phnx.IO.Json.Tests.Streams
         public void Dispose_WhenCloseStreamWhenDisposedIsFalse_DoesNotCloseStream()
         {
             var stream = new FakeReader();
-            var reader = new JsonStreamReader(stream);
-            reader.CloseStreamWhenDisposed = false;
+            var reader = new JsonStreamReader(stream)
+            {
+                CloseStreamWhenDisposed = false
+            };
 
             Assert.IsTrue(stream.IsOpen);
             reader.Dispose();
