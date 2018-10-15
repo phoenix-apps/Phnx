@@ -29,6 +29,6 @@ We welcome contributions. Please submit a pull request with your changes, and fo
 
 Please do not submit a pull request without an issue attached. If there isn't an issue reported for the fix (or refactoring) you're trying to make, please create one. This makes it easier for us to understand the reasons behind your change(s). 
 
-Before getting started, run the `build_all.cmd` (for Windows) or `build_all.sh` (for Linux/Mac OS) to build all projects. Rerunning this after you're finished is a good idea, but not necessary as long as the projects you've changed build.
+Before getting started, run the `build_all_core.cmd` (for Windows) or `build_all_core.sh` (for Linux/Mac OS) to build all standard and core projects. Rerunning this after you're finished is a good idea, but not necessary as long as the projects you've changed build.
 
 Any additional logic or changes you make should have automated tests that validate their logic. Avoid writing tests that test _how_ your code works (such as calling other methods), but assert that the code produces the result (or exception) you expect. 
