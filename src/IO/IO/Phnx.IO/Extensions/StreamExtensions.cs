@@ -136,5 +136,22 @@ namespace Phnx.IO
 
             return stream.Position == stream.Length;
         }
+
+        /// <summary>
+        /// Get whether this text reader has been read to the end
+        /// </summary>
+        /// <param name="reader">The reader to check</param>
+        /// <returns>Whether this reader has been read to the end</returns>
+        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="ObjectDisposedException"><paramref name="reader"/> is closed</exception>
+        public static bool ReachedEnd(this TextReader reader)
+        {
+            if (reader is null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            return reader.Peek() > -1;
+        }
     }
 }
