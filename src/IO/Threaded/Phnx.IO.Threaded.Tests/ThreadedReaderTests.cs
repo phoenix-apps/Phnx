@@ -17,72 +17,59 @@ namespace Phnx.IO.Threaded.Tests
         [Test]
         public void ReadFromList_WithValidEntries_ReturnsFirstValue()
         {
-            // Arrange
             List<string> values = new List<string> { "asdf", "asdf2", "asdf3" };
             string expectedResult = values.First();
 
             var index = 0;
+            string value;
             using (ThreadedReader<string> reader = new ThreadedReader<string>(() => values[index++]))
             {
-                // Act
-                string value = reader.Read();
-
-                // Assert
-                Assert.AreEqual(expectedResult, value);
+                value = reader.Read();
             }
+
+            Assert.AreEqual(expectedResult, value);
         }
 
         [Test]
-        public void ReadFromListUsingLookAhead_WithValidEntries_ReturnsIndexedValue()
+        public void Read_WhenUsingLookAhead_ReturnsIndexedValue()
         {
-            // Arrange
             List<string> values = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
-            List<string> results = new List<string>(values.Count);
+            string[] results = new string[values.Count];
 
             int index = 0;
             using (ThreadedReader<string> reader = new ThreadedReader<string>(() => values[index++], 20))
             {
-                Thread.Sleep(100);
-
-                // Act
                 for (int followerIndex = 0; followerIndex < values.Count; followerIndex++)
                 {
-                    results.Add(reader.Read());
+                    results[followerIndex] = reader.Read();
                 }
             }
 
-            //Assert
-            Assert.AreEqual(values, results);
+            CollectionAssert.AreEqual(values, results);
         }
 
         [Test]
-        public void ReadFromStreamUsingLookAhead_WithValidEntries_ReturnsAllValues()
+        public void Read_WhenReadThrows_Rethrows()
         {
-            // Arrange
-            List<string> values = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
+            string[] values = new string[0];
 
-            var pipe = new PipeStream();
-
-            foreach (var value in values)
+            using (ThreadedReader<string> reader = new ThreadedReader<string>(() => values[0], 5))
             {
-                pipe.In.WriteLine(value);
+                Assert.Throws<IndexOutOfRangeException>(() => reader.Read());
             }
+        }
 
-            List<string> results = new List<string>(values.Count);
+        [Test]
+        public void Read_UsingLookAhead_CachesAheadOfReads()
+        {
+            string[] values = new string[] { "test1", "test2", "test3" };
 
-            using (ThreadedReader<string> reader = new ThreadedReader<string>(() => pipe.Out.ReadLine(), 20))
+            int index = 0;
+            using (ThreadedReader<string> reader = new ThreadedReader<string>(() => values[index++], 2))
             {
-                Thread.Sleep(100);
-
-                // Act
-                for (int followerIndex = 0; followerIndex < values.Count; followerIndex++)
-                {
-                    results.Add(reader.Read());
-                }
+                Thread.Sleep(2);
+                Assert.AreEqual(2, reader.CachedCount);
             }
-
-            //Assert
-            Assert.AreEqual(values, results);
         }
     }
 }

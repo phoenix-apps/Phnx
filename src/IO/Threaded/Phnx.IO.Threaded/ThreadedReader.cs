@@ -110,11 +110,6 @@ namespace Phnx.IO.Threaded
                     return;
                 }
 
-                if (CachedCount == LookAheadCount)
-                {
-                    _readRequestEvent.Reset();
-                }
-
                 try
                 {
                     T data = _readFunc();
@@ -124,6 +119,16 @@ namespace Phnx.IO.Threaded
                 {
                     _errorOccured = true;
                     _resultQueue.Enqueue(new ThreadReadResult<T>(ex));
+                }
+
+                if (_errorOccured)
+                {
+                    return;
+                }
+
+                if (CachedCount == LookAheadCount)
+                {
+                    _readRequestEvent.Reset();
                 }
 
                 _itemReadEvent.Set();
@@ -142,7 +147,7 @@ namespace Phnx.IO.Threaded
 
             while (_readThread.IsAlive)
             {
-                Thread.Sleep(10);
+                Thread.Sleep(1);
             }
         }
     }
