@@ -9,7 +9,7 @@ namespace Phnx.IO.Threaded.Tests
     public class ThreadedReaderTests
     {
         [Test]
-        public void CreateThreadedReader_WithNullReadFunc_ThrowsArgumentNullException()
+        public void New_WithNullReadFunc_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() => new ThreadedReader<object>(null));
         }
@@ -21,7 +21,8 @@ namespace Phnx.IO.Threaded.Tests
             List<string> values = new List<string> { "asdf", "asdf2", "asdf3" };
             string expectedResult = values.First();
 
-            using (ThreadedReader<string> reader = new ThreadedReader<string>(() => values.First()))
+            var index = 0;
+            using (ThreadedReader<string> reader = new ThreadedReader<string>(() => values[index++]))
             {
                 // Act
                 string value = reader.Read();
@@ -39,13 +40,7 @@ namespace Phnx.IO.Threaded.Tests
             List<string> results = new List<string>(values.Count);
 
             int index = 0;
-            using (ThreadedReader<string> reader = new ThreadedReader<string>(() =>
-                {
-                    var returnValue = values[index];
-                    index++;
-                    return returnValue;
-                }
-                , 20, 3))
+            using (ThreadedReader<string> reader = new ThreadedReader<string>(() => values[index++], 20))
             {
                 Thread.Sleep(100);
 
@@ -75,7 +70,7 @@ namespace Phnx.IO.Threaded.Tests
 
             List<string> results = new List<string>(values.Count);
 
-            using (ThreadedReader<string> reader = new ThreadedReader<string>(() => pipe.Out.ReadLine(), 20, 3))
+            using (ThreadedReader<string> reader = new ThreadedReader<string>(() => pipe.Out.ReadLine(), 20))
             {
                 Thread.Sleep(100);
 

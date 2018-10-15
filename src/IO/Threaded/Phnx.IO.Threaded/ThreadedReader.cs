@@ -19,20 +19,14 @@ namespace Phnx.IO.Threaded
         public int CachedCount => _resultQueue.Count;
 
         /// <summary>
-        /// Whether to read the next value
+        /// Set after an item is read
         /// </summary>
-        private bool ReadNext => _manualReadNext > 0 ||
-                                 (!_errorOccured && LookAheadCount > _resultQueue.Count);
+        private readonly ManualResetEventSlim _itemReadEvent;
 
         /// <summary>
-        /// The number of times that a manual read has been requested. This only happens if the user has emptied the cache. Lock <see cref="_manualReadNextSyncContext"/> before accessing this member
+        /// Set when an item should be read
         /// </summary>
-        private int _manualReadNext;
-
-        /// <summary>
-        /// The sync context for <see cref="_manualReadNext"/>
-        /// </summary>
-        private readonly object _manualReadNextSyncContext;
+        private readonly ManualResetEventSlim _readRequestEvent;
 
         /// <summary>
         /// The maximum number of items to cache
@@ -49,11 +43,6 @@ namespace Phnx.IO.Threaded
         /// </summary>
         private bool _safeExit;
 
-        /// <summary>
-        /// The number of milliseconds to sleep if the cache is full, or if the main thread is waiting for an entry in the cache
-        /// </summary>
-        public int SleepTime { get; }
-
         private readonly Thread _readThread;
 
         /// <summary>
@@ -61,15 +50,14 @@ namespace Phnx.IO.Threaded
         /// </summary>
         /// <param name="readFunc"></param>
         /// <param name="lookAheadCount">The maximum number of values to cache</param>
-        /// <param name="sleepTime">How long in ms to sleep if the look ahead is full, and no tasks are waiting</param>
-        public ThreadedReader(Func<T> readFunc, int lookAheadCount = 100, int sleepTime = 20)
+        public ThreadedReader(Func<T> readFunc, int lookAheadCount = 100)
         {
-            _manualReadNextSyncContext = new object();
+            _itemReadEvent = new ManualResetEventSlim(false);
+            _readRequestEvent = new ManualResetEventSlim(true);
 
             _readFunc = readFunc ?? throw new ArgumentNullException(nameof(readFunc));
             _resultQueue = new ConcurrentQueue<ThreadReadResult<T>>();
             LookAheadCount = lookAheadCount;
-            SleepTime = sleepTime;
 
             _readThread = new Thread(ReadThreadMethod);
             _readThread.Start();
@@ -81,6 +69,8 @@ namespace Phnx.IO.Threaded
         /// <returns>The object read from the data source</returns>
         public T Read()
         {
+            _readRequestEvent.Set();
+
             ThreadReadResult<T> returnT;
             if (_resultQueue.Count > 0)
             {
@@ -88,18 +78,18 @@ namespace Phnx.IO.Threaded
             }
             else
             {
-                lock (_manualReadNextSyncContext)
-                {
-                    ++_manualReadNext;
-                }
-
                 // Wait for read
-                while (_resultQueue.Count == 0)
+                while (!_resultQueue.TryDequeue(out returnT))
                 {
-                    Thread.Sleep(SleepTime);
-                }
+                    // Wait for signal
+                    _itemReadEvent.Wait();
+                    _itemReadEvent.Reset();
 
-                _resultQueue.TryDequeue(out returnT);
+                    if (_safeExit)
+                    {
+                        throw new ObjectDisposedException("Read object disposed before read could be completed");
+                    }
+                }
             }
 
             if (returnT.ErrorOccured)
@@ -112,37 +102,31 @@ namespace Phnx.IO.Threaded
 
         private void ReadThreadMethod()
         {
-            while (!_safeExit)
+            while (true)
             {
-                if (ReadNext)
+                _readRequestEvent.Wait();
+                if (_safeExit)
                 {
-                    lock (_manualReadNextSyncContext)
-                    {
-                        if (_manualReadNext > 0)
-                        {
-                            --_manualReadNext;
-                        }
-                    }
+                    return;
+                }
 
-                    try
-                    {
-                        lock (_readFunc)
-                        {
-                            T data = _readFunc();
-                            _resultQueue.Enqueue(new ThreadReadResult<T>(data));
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _errorOccured = true;
-                        _resultQueue.Enqueue(new ThreadReadResult<T>(ex));
-                    }
-                }
-                else
+                if (CachedCount == LookAheadCount)
                 {
-                    // Sleep thread briefly as no reads are needed right now
-                    Thread.Sleep(SleepTime);
+                    _readRequestEvent.Reset();
                 }
+
+                try
+                {
+                    T data = _readFunc();
+                    _resultQueue.Enqueue(new ThreadReadResult<T>(data));
+                }
+                catch (Exception ex)
+                {
+                    _errorOccured = true;
+                    _resultQueue.Enqueue(new ThreadReadResult<T>(ex));
+                }
+
+                _itemReadEvent.Set();
             }
         }
 
@@ -153,9 +137,12 @@ namespace Phnx.IO.Threaded
         {
             _safeExit = true;
 
+            _itemReadEvent.Set();
+            _readRequestEvent.Set();
+
             while (_readThread.IsAlive)
             {
-                Thread.Sleep(SleepTime);
+                Thread.Sleep(10);
             }
         }
     }

@@ -8,7 +8,7 @@ namespace Phnx.IO.Threaded.Tests
     public class ThreadedWriterTests
     {
         [Test]
-        public void CreateThreadedWriter_WithNullWriteFunc_ThrowsArgumentNullException()
+        public void New_WithNullWriteFunc_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() => new ThreadedWriter<object>(null));
         }

@@ -18,6 +18,6 @@ namespace Phnx.IO.Threaded
 
         public Exception Error { get; }
 
-        public bool ErrorOccured => Error != null;
+        public bool ErrorOccured => !(Error is null);
     }
 }
