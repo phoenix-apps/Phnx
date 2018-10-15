@@ -6,6 +6,8 @@ namespace Phnx.IO.Json.Tests.Fakes
     {
         public int Id { get; set; }
 
+        public string[] Collection { get; set; }
+
         public override bool Equals(object other)
         {
             if (!(other is ShallowFake sOther)) return false;

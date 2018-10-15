@@ -19,15 +19,21 @@ namespace Phnx.IO.Json
         /// Convert a property dictionary to a <see cref="JObject"/>
         /// </summary>
         /// <param name="propertyDictionary">The property dictionary to convert</param>
+        /// <param name="childPropertyDelimiter">The delimiter to seperate child properties from parents in complex objects</param>
         /// <returns><paramref name="propertyDictionary"/> as a <see cref="JObject"/></returns>
-        public JToken From(Dictionary<string, string> propertyDictionary)
+        /// <exception cref="ArgumentNullException"><paramref name="propertyDictionary"/> or <paramref name="childPropertyDelimiter"/> is <see langword="null"/></exception>
+        public JToken From(Dictionary<string, string> propertyDictionary, string childPropertyDelimiter = ".")
         {
             if (propertyDictionary is null)
             {
                 throw new ArgumentNullException(nameof(propertyDictionary));
             }
+            if (childPropertyDelimiter is null)
+            {
+                throw new ArgumentNullException(nameof(childPropertyDelimiter));
+            }
 
-            return FromDictionary(propertyDictionary);
+            return FromDictionary(propertyDictionary, childPropertyDelimiter);
         }
 
         /// <summary>
@@ -35,15 +41,21 @@ namespace Phnx.IO.Json
         /// </summary>
         /// <typeparam name="T">The type of object represented by <paramref name="propertyDictionary"/></typeparam>
         /// <param name="propertyDictionary">The property dictionary to convert</param>
+        /// <param name="childPropertyDelimiter">The delimiter to seperate child properties from parents in complex objects</param>
         /// <returns><paramref name="propertyDictionary"/> as a <see cref="JObject"/></returns>
-        public T From<T>(Dictionary<string, string> propertyDictionary)
+        /// <exception cref="ArgumentNullException"><paramref name="propertyDictionary"/> or <paramref name="childPropertyDelimiter"/> is <see langword="null"/></exception>
+        public T From<T>(Dictionary<string, string> propertyDictionary, string childPropertyDelimiter = ".")
         {
             if (propertyDictionary is null)
             {
                 throw new ArgumentNullException(nameof(propertyDictionary));
             }
+            if (childPropertyDelimiter is null)
+            {
+                throw new ArgumentNullException(nameof(childPropertyDelimiter));
+            }
 
-            var jObject = From(propertyDictionary);
+            var jObject = From(propertyDictionary, childPropertyDelimiter);
 
             return jObject.ToObject<T>();
         }
@@ -51,45 +63,52 @@ namespace Phnx.IO.Json
         /// <summary>
         /// Convert an <see cref="object"/> to a property dictionary
         /// </summary>
-        /// <param name="o">The <see cref="object"/> to convert</param>
-        /// <returns><paramref name="o"/> as a property dictionary</returns>
-        public Dictionary<string, string> To(object o)
+        /// <param name="objectToConvert">The <see cref="object"/> to convert</param>
+        /// <param name="childPropertyDelimiter">The delimiter to seperate child properties from parents in complex objects</param>
+        /// <returns><paramref name="objectToConvert"/> as a property dictionary</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="objectToConvert"/> or <paramref name="childPropertyDelimiter"/> is <see langword="null"/></exception>
+        public Dictionary<string, string> To(object objectToConvert, string childPropertyDelimiter = ".")
         {
-            if (o is null)
+            if (objectToConvert is null)
             {
-                throw new ArgumentNullException(nameof(o));
+                throw new ArgumentNullException(nameof(objectToConvert));
+            }
+            if (childPropertyDelimiter is null)
+            {
+                throw new ArgumentNullException(nameof(childPropertyDelimiter));
             }
 
-            var jObject = JObject.FromObject(o);
+            var jObject = JObject.FromObject(objectToConvert);
 
-            return To(jObject);
+            return To(jObject, childPropertyDelimiter);
         }
 
         /// <summary>
         /// Convert a <see cref="JObject"/> to a property dictionary
         /// </summary>
-        /// <param name="jObj">The <see cref="JObject"/> to convert</param>
-        /// <returns><paramref name="jObj"/> as a property dictionary</returns>
-        public Dictionary<string, string> To(JObject jObj)
+        /// <param name="jObjectToConvert">The <see cref="JObject"/> to convert</param>
+        /// <param name="childPropertyDelimiter">The delimiter to seperate child properties from parents in complex objects</param>
+        /// <returns><paramref name="jObjectToConvert"/> as a property dictionary</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="jObjectToConvert"/> or <paramref name="childPropertyDelimiter"/> is <see langword="null"/></exception>
+        public Dictionary<string, string> To(JObject jObjectToConvert, string childPropertyDelimiter = ".")
         {
-            if (jObj is null)
+            if (jObjectToConvert is null)
             {
-                throw new ArgumentNullException(nameof(jObj));
+                throw new ArgumentNullException(nameof(jObjectToConvert));
+            }
+            if (childPropertyDelimiter is null)
+            {
+                throw new ArgumentNullException(nameof(childPropertyDelimiter));
             }
 
             Dictionary<string, string> propertyDictionary = new Dictionary<string, string>();
 
-            ToDictionary(jObj, propertyDictionary, string.Empty);
+            ToDictionary(jObjectToConvert, childPropertyDelimiter, propertyDictionary, string.Empty);
 
             return propertyDictionary;
         }
 
-        /// <summary>
-        /// The delimiter between properties and children in property dictionaries
-        /// </summary>
-        public const string ChildPropertyDelimiter = ".";
-
-        private static void ToDictionary(JToken obj, Dictionary<string, string> propertyDictionarySoFar, string currentPropertyFullName)
+        private static void ToDictionary(JToken obj, string childPropertyDelimiter, Dictionary<string, string> propertyDictionarySoFar, string currentPropertyFullName)
         {
             if (obj is JObject complexType)
             {
@@ -102,13 +121,14 @@ namespace Phnx.IO.Json
                     }
                     else
                     {
-                        childPropertyName = currentPropertyFullName + ChildPropertyDelimiter + property.Key;
+                        childPropertyName = currentPropertyFullName + childPropertyDelimiter + property.Key;
                     }
 
                     // Could cause StackOverflowException in deep objects. Can this be optimised to use tailed recursion?
                     // Has children to be deserialized
                     ToDictionary(
                         property.Value,
+                        childPropertyDelimiter,
                         propertyDictionarySoFar,
                         childPropertyName);
                 }
@@ -120,7 +140,7 @@ namespace Phnx.IO.Json
                 {
                     var curEntry = jArrayProperty[index];
 
-                    ToDictionary(curEntry, propertyDictionarySoFar, currentPropertyFullName + $"[{index}]");
+                    ToDictionary(curEntry, childPropertyDelimiter, propertyDictionarySoFar, currentPropertyFullName + $"[{index}]");
                 }
             }
             else
@@ -134,7 +154,7 @@ namespace Phnx.IO.Json
 
         }
 
-        private static JToken FromDictionary(Dictionary<string, string> properties)
+        private static JToken FromDictionary(Dictionary<string, string> properties, string childPropertyDelimiter)
         {
             JObject result = new JObject();
 
@@ -143,17 +163,17 @@ namespace Phnx.IO.Json
             Dictionary<string, JObject> knownProperties = new Dictionary<string, JObject>();
             foreach (var property in sortedProperties)
             {
-                AddToJObject(knownProperties, result, property.Key, property.Value);
+                AddToJObject(knownProperties, result, childPropertyDelimiter, property.Key, property.Value);
             }
 
             return result;
         }
 
-        private static void AddToJObject(Dictionary<string, JObject> knownProperties, JObject baseObject, string propertyName, JToken propertyValue)
+        private static void AddToJObject(Dictionary<string, JObject> knownProperties, JObject baseObject, string childPropertyDelimiter, string propertyName, JToken propertyValue)
         {
             JObject keyParent = baseObject;
             Stack<string> missingAncestors = new Stack<string>();
-            foreach (var parent in GetMemberAncestors(propertyName))
+            foreach (var parent in GetMemberAncestors(propertyName, childPropertyDelimiter))
             {
                 if (knownProperties.TryGetValue(parent, out keyParent))
                 {
@@ -170,15 +190,24 @@ namespace Phnx.IO.Json
                 keyParent = baseObject;
             }
 
-            keyParent = AddMissingAncestors(knownProperties, keyParent, missingAncestors);
+            keyParent = AddMissingAncestors(knownProperties, childPropertyDelimiter, keyParent, missingAncestors);
 
-            keyParent.Add(GetMemberName(propertyName), propertyValue);
+            if (IsArrayProperty(propertyName))
+            {
+                // Form array
+                AppendArrayElement(baseObject, propertyName, childPropertyDelimiter, propertyValue);
+            }
+            else
+            {
+                keyParent.Add(GetMemberName(propertyName, childPropertyDelimiter), propertyValue);
+            }
         }
 
         /// <param name="knownProperties"></param>
+        /// <param name="childPropertyDelimiter"></param>
         /// <param name="knownAncestor">The parent of the first missing ancestor</param>
         /// <param name="missingAncestors">Must be sorted with the closest to the root first</param>
-        private static JObject AddMissingAncestors(IDictionary<string, JObject> knownProperties, JObject knownAncestor, IEnumerable<string> missingAncestors)
+        private static JObject AddMissingAncestors(IDictionary<string, JObject> knownProperties, string childPropertyDelimiter, JObject knownAncestor, IEnumerable<string> missingAncestors)
         {
             JObject missingAncestorParent = knownAncestor;
             JObject missingAncestorValue = missingAncestorParent;
@@ -191,35 +220,14 @@ namespace Phnx.IO.Json
                     missingAncestorParent = missingAncestorValue;
                     missingAncestorValue = new JObject();
 
-                    // Is JArray - check if JArray already exists
-                    var jArrayMemberName = GetMemberName(missingAncestor);
-
-                    JArray jArray;
-                    if (missingAncestorParent.TryGetValue(jArrayMemberName, out var token))
-                    {
-                        jArray = token as JArray;
-
-                        if (jArray is null)
-                        {
-                            // Another property with the same name as the array, which is not part of the array, was in the json
-                            throw new FormatException($"Could not cast to {nameof(JObject)} due to bad array formatting for {missingAncestor}");
-                        }
-                    }
-                    else
-                    {
-                        jArray = new JArray();
-
-                        missingAncestorParent.Add(jArrayMemberName, jArray);
-                    }
-
-                    jArray.Add(missingAncestorValue);
+                    AppendArrayElement(missingAncestorParent, missingAncestor, childPropertyDelimiter, missingAncestorValue);
                 }
                 else
                 {
                     missingAncestorValue = new JObject();
 
                     // Add to jObject
-                    missingAncestorParent.Add(GetMemberName(missingAncestor), missingAncestorValue);
+                    missingAncestorParent.Add(GetMemberName(missingAncestor, childPropertyDelimiter), missingAncestorValue);
                 }
 
                 //Add to known properties
@@ -229,23 +237,49 @@ namespace Phnx.IO.Json
             return missingAncestorValue;
         }
 
-        /// <returns>Ancestors in descending order (child-most first, so a.b.c, then a.b, then a)</returns>
-        private static IEnumerable<string> GetMemberAncestors(string fullyQualifiedName)
+        private static void AppendArrayElement(JObject myParent, string currentArrayMemberName, string childPropertyDelimiter, JToken value)
         {
-            string parentName = GetParentFullName(fullyQualifiedName);
+            // Is JArray - check if JArray already exists
+            var jArrayMemberName = GetMemberName(currentArrayMemberName, childPropertyDelimiter);
+
+            JArray jArray;
+            if (myParent.TryGetValue(jArrayMemberName, out var token))
+            {
+                jArray = token as JArray;
+
+                if (jArray is null)
+                {
+                    // Another property with the same name as the array, which is not part of the array, was in the json
+                    throw new FormatException($"Could not cast to {nameof(JObject)} due to bad array formatting for {currentArrayMemberName}");
+                }
+            }
+            else
+            {
+                jArray = new JArray();
+
+                myParent.Add(jArrayMemberName, jArray);
+            }
+
+            jArray.Add(value);
+        }
+
+        /// <returns>Ancestors in descending order (child-most first, so a.b.c, then a.b, then a)</returns>
+        private static IEnumerable<string> GetMemberAncestors(string fullyQualifiedName, string childPropertyDelimiter)
+        {
+            string parentName = GetParentFullName(fullyQualifiedName, childPropertyDelimiter);
 
             while (parentName != null)
             {
                 yield return parentName;
 
-                parentName = GetParentFullName(parentName);
+                parentName = GetParentFullName(parentName, childPropertyDelimiter);
             }
         }
 
         /// <returns>Returns <see langword="null"/> if <paramref name="fullyQualifiedName"/> has no parents</returns>
-        private static string GetParentFullName(string fullyQualifiedName)
+        private static string GetParentFullName(string fullyQualifiedName, string childPropertyDelimiter)
         {
-            var lastDelimiterIndex = fullyQualifiedName.LastIndexOf(ChildPropertyDelimiter,
+            var lastDelimiterIndex = fullyQualifiedName.LastIndexOf(childPropertyDelimiter,
                     StringComparison.Ordinal);
 
             if (lastDelimiterIndex < 0)
@@ -263,15 +297,15 @@ namespace Phnx.IO.Json
             return name.EndsWith("]");
         }
 
-        private static string GetMemberName(string fullyQualifiedName)
+        private static string GetMemberName(string fullyQualifiedName, string childPropertyDelimiter)
         {
-            var lastDelimiterIndex = fullyQualifiedName.LastIndexOf(ChildPropertyDelimiter,
+            var lastDelimiterIndex = fullyQualifiedName.LastIndexOf(childPropertyDelimiter,
                     StringComparison.Ordinal);
 
             if (lastDelimiterIndex >= 0)
             {
                 // Is a child property
-                var memberName = fullyQualifiedName.Substring(lastDelimiterIndex + ChildPropertyDelimiter.Length);
+                var memberName = fullyQualifiedName.Substring(lastDelimiterIndex + childPropertyDelimiter.Length);
 
                 if (IsArrayProperty(memberName))
                 {
@@ -288,7 +322,7 @@ namespace Phnx.IO.Json
             if (IsArrayProperty(fullyQualifiedName))
             {
                 // Trim array off end
-                return fullyQualifiedName.Substring(fullyQualifiedName.LastIndexOf('['));
+                return fullyQualifiedName.Substring(0, fullyQualifiedName.LastIndexOf('['));
             }
             else
             {
