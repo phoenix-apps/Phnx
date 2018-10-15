@@ -1,21 +1,12 @@
 ﻿using NUnit.Framework;
-using Phnx.IO.Factories;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Phnx.IO.Threaded.Tests
 {
     public class ThreadedWriterTests
     {
-        public ThreadedWriterTests()
-        {
-            StreamFactory = new MemoryStreamFactory();
-        }
-
-        private MemoryStreamFactory StreamFactory { get; }
-
         [Test]
         public void CreateThreadedWriter_WithNullWriteFunc_ThrowsArgumentNullException()
         {
@@ -47,11 +38,9 @@ namespace Phnx.IO.Threaded.Tests
             // Arrange
             List<string> values = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
 
-            var ms = StreamFactory.Create();
+            var pipe = new PipeStream();
 
-            StreamWriter msWriter = new StreamWriter(ms);
-
-            using (ThreadedWriter<string> writer = new ThreadedWriter<string>(s => msWriter.WriteLine(s)))
+            using (ThreadedWriter<string> writer = new ThreadedWriter<string>(s => pipe.In.WriteLine(s)))
             {
                 for (int index = 0; index < values.Count; index++)
                 {
@@ -59,15 +48,7 @@ namespace Phnx.IO.Threaded.Tests
                 }
             }
 
-            msWriter.Flush();
-
-            ms.Position = 0;
-
-            string[] results;
-            using (StreamReader reader = new StreamReader(ms))
-            {
-                results = reader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
-            }
+            string[] results = pipe.Out.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
 
             // A blank line is added by the WriteLine method used. This removes that blank line from the end
             var resultsWithoutFinalBlankLine = results.Take(results.Length - 1).ToList();

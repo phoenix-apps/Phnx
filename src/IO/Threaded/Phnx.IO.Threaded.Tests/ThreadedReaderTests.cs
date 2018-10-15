@@ -1,8 +1,6 @@
-using Phnx.IO.Factories;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -10,13 +8,6 @@ namespace Phnx.IO.Threaded.Tests
 {
     public class ThreadedReaderTests
     {
-        public ThreadedReaderTests()
-        {
-            StreamFactory = new MemoryStreamFactory();
-        }
-
-        private MemoryStreamFactory StreamFactory { get; }
-
         [Test]
         public void CreateThreadedReader_WithNullReadFunc_ThrowsArgumentNullException()
         {
@@ -75,13 +66,16 @@ namespace Phnx.IO.Threaded.Tests
             // Arrange
             List<string> values = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
 
-            var ms = StreamFactory.Create(values);
+            var pipe = new PipeStream();
 
-            StreamReader msReader = new StreamReader(ms);
+            foreach (var value in values)
+            {
+                pipe.In.WriteLine(value);
+            }
 
             List<string> results = new List<string>(values.Count);
 
-            using (ThreadedReader<string> reader = new ThreadedReader<string>(() => msReader.ReadLine(), 20, 3))
+            using (ThreadedReader<string> reader = new ThreadedReader<string>(() => pipe.Out.ReadLine(), 20, 3))
             {
                 Thread.Sleep(100);
 
