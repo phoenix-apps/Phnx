@@ -34,11 +34,6 @@ namespace Phnx.IO.Threaded
         public int LookAheadCount { get; }
 
         /// <summary>
-        /// Whether an error has occured with the reading thread
-        /// </summary>
-        private bool _errorOccured;
-
-        /// <summary>
         /// Whether the parent thread has asked to have the read thread exit
         /// </summary>
         private bool _safeExit;
@@ -87,7 +82,7 @@ namespace Phnx.IO.Threaded
 
                     if (_safeExit)
                     {
-                        throw new ObjectDisposedException("Read object disposed before read could be completed");
+                        throw new ObjectDisposedException("Reader", "Read object disposed before read could be completed");
                     }
                 }
             }
@@ -117,12 +112,8 @@ namespace Phnx.IO.Threaded
                 }
                 catch (Exception ex)
                 {
-                    _errorOccured = true;
                     _resultQueue.Enqueue(new ThreadReadResult<T>(ex));
-                }
-
-                if (_errorOccured)
-                {
+                    _itemReadEvent.Set();
                     return;
                 }
 

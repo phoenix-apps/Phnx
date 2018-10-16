@@ -14,49 +14,53 @@ namespace Phnx.IO.Threaded
         private readonly ConcurrentQueue<T> _writeQueue;
 
         /// <summary>
+        /// Set after an item is written
+        /// </summary>
+        private readonly ManualResetEventSlim _itemWrittenEvent;
+
+        /// <summary>
+        /// Set when an item should be written
+        /// </summary>
+        private readonly ManualResetEventSlim _writeRequestEvent;
+
+        /// <summary>
         /// Whether the parent thread has asked to have the write thread exit
         /// </summary>
         private bool _safeExit;
 
         /// <summary>
-        /// The maximum number of items to cache
+        /// The number of <see cref="Write(T)"/> requests currently queued
         /// </summary>
-        public int WriteQueueCount { get; }
+        public int CurrentQueueCount => _writeQueue.Count;
 
         /// <summary>
-        /// The most recent writing error. This will be thrown either when the object is disposed, or when the next write is called. Lock <see cref="_errorSyncContext"/> before accessing this member
+        /// The maximum number of items to cache
+        /// </summary>
+        public int MaximumOutputQueueCount { get; }
+
+        /// <summary>
+        /// The most recent writing error. This will be thrown either when the object is disposed, or when the next write is called
         /// </summary>
         private Exception _error;
 
-        /// <summary>
-        /// The sync context for <see cref="_error"/>
-        /// </summary>
-        private readonly object _errorSyncContext;
-
-        /// <summary>
-        /// The number of milliseconds to sleep if the cache is empty
-        /// </summary>
-        public int SleepTime { get; }
-
-        private readonly Thread _taskRunner;
+        private readonly Thread _writeThread;
 
         /// <summary>
         ///
         /// </summary>
         /// <param name="writeFunc"></param>
         /// <param name="writeQueueCount">The maximum size of the write queue. If this is exceeded, write will be paused whilst waiting for space in the queue to add the new entry</param>
-        /// <param name="sleepTime">How long in ms to sleep if there are no queued tasks</param>
-        public ThreadedWriter(Action<T> writeFunc, int writeQueueCount = 100, int sleepTime = 20)
+        public ThreadedWriter(Action<T> writeFunc, int writeQueueCount = 100)
         {
-            _errorSyncContext = new object();
+            _itemWrittenEvent = new ManualResetEventSlim(false);
+            _writeRequestEvent = new ManualResetEventSlim(true);
 
             _writeFunc = writeFunc ?? throw new ArgumentNullException(nameof(writeFunc));
             _writeQueue = new ConcurrentQueue<T>();
-            WriteQueueCount = writeQueueCount;
-            SleepTime = sleepTime;
+            MaximumOutputQueueCount = writeQueueCount;
 
-            _taskRunner = new Thread(WriteThreadMethod);
-            _taskRunner.Start();
+            _writeThread = new Thread(WriteThreadMethod);
+            _writeThread.Start();
         }
 
         /// <summary>
@@ -65,68 +69,72 @@ namespace Phnx.IO.Threaded
         /// <param name="valueToWrite">The value to write</param>
         public void Write(T valueToWrite)
         {
-            lock (_errorSyncContext)
+            if (!_writeThread.IsAlive)
             {
                 if (_error != null)
                 {
+                    // Exited because of error
                     throw _error;
                 }
-            }
-
-            while (_writeQueue.Count >= WriteQueueCount)
-            {
-                Thread.Sleep(SleepTime);
-
-                lock (_errorSyncContext)
+                else
                 {
-                    if (_error != null)
+                    // Exited because of disposal
+                    if (_safeExit)
                     {
-                        throw _error;
+                        throw new ObjectDisposedException("Writer", "Writer object disposed before write could be completed");
+                    }
+                    else
+                    {
+                        // Thread is closed for an unknown reason
+                        throw new ThreadStateException("Writer thread is aborted for an unknown reason");
                     }
                 }
             }
 
-            lock (_errorSyncContext)
+            // Queue is full - wait for space before adding more entries
+            while (MaximumOutputQueueCount > 0 && CurrentQueueCount >= MaximumOutputQueueCount)
             {
-                if (_error != null)
+                _itemWrittenEvent.Wait();
+
+                if (_safeExit)
                 {
-                    throw _error;
+                    throw new ObjectDisposedException("Writer", "Writer object disposed before write could be completed");
                 }
             }
 
             _writeQueue.Enqueue(valueToWrite);
+            _writeRequestEvent.Set();
         }
 
         private void WriteThreadMethod()
         {
-            while (!_safeExit)
+            while (true)
             {
-                bool hasError;
-                lock (_errorSyncContext)
+                _writeRequestEvent.Wait();
+
+                if (_safeExit)
                 {
-                    hasError = _error != null;
+                    return;
                 }
 
-                if (!hasError && _writeQueue.Count > 0)
+                if (_writeQueue.TryDequeue(out var objectToWrite))
                 {
-                    // Write
-                    _writeQueue.TryDequeue(out var objectToWrite);
-
                     try
                     {
                         _writeFunc(objectToWrite);
                     }
                     catch (Exception ex)
                     {
-                        lock (_errorSyncContext)
-                        {
-                            _error = ex;
-                        }
+                        _error = ex;
+                        _itemWrittenEvent.Set();
+                        return;
                     }
+
+                    _itemWrittenEvent.Set();
                 }
                 else
                 {
-                    Thread.Sleep(SleepTime);
+                    _writeRequestEvent.Reset();
                 }
             }
         }
@@ -137,51 +145,28 @@ namespace Phnx.IO.Threaded
         /// <param name="finishWriting">Whether to finish writing to all background threads</param>
         public void Dispose(bool finishWriting)
         {
-            lock (_errorSyncContext)
-            {
-                if (_error != null)
-                {
-                    throw _error;
-                }
-            }
-
             if (finishWriting)
             {
+                _writeRequestEvent.Set();
+
                 while (_writeQueue.Count > 0)
                 {
-                    lock (_errorSyncContext)
-                    {
-                        if (_error != null)
-                        {
-                            throw _error;
-                        }
-                    }
-
-                    Thread.Sleep(SleepTime);
+                    Thread.Sleep(1);
                 }
             }
 
             _safeExit = true;
+            _writeRequestEvent.Set();
+            _itemWrittenEvent.Set();
 
-            while (_taskRunner.IsAlive)
+            while (_writeThread.IsAlive)
             {
-                Thread.Sleep(SleepTime);
-
-                lock (_errorSyncContext)
-                {
-                    if (_error != null)
-                    {
-                        throw _error;
-                    }
-                }
+                Thread.Sleep(1);
             }
 
-            lock (_errorSyncContext)
+            if (_error != null)
             {
-                if (_error != null)
-                {
-                    throw _error;
-                }
+                throw _error;
             }
         }
 
