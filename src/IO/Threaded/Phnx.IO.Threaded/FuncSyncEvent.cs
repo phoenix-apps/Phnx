@@ -43,7 +43,7 @@ namespace Phnx.IO.Threaded
             }
 
             // Busy wait. Blocks a thread, but much more responsive than Thread.Sleep
-            if (SpinWait.SpinUntil(untilThisIsTrue, 2))
+            if (SpinWait.SpinUntil(untilThisIsTrue, 10))
             {
                 return;
             }

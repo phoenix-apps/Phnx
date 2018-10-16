@@ -84,24 +84,24 @@ namespace Phnx.IO.Threaded.Tests
             Assert.AreEqual(expected.Count, results.Count);
         }
 
-        //[Test]
-        //public void Write_ThreadStabilityTest_AlwaysWritesAll()
-        //{
-        //    var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
+        [Test]
+        public void Write_ThreadStabilityTest_AlwaysWritesAll()
+        {
+            var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
 
-        //    for (int loopCount = 0; loopCount < 1000; loopCount++)
-        //    {
-        //        var results = new List<string>(5);
-        //        using (var writer = new ThreadedWriter<string>(s => results.Add(s), 0))
-        //        {
-        //            foreach (var item in expected)
-        //            {
-        //                writer.Write(item);
-        //            }
-        //        }
+            for (int loopCount = 0; loopCount < 1000; loopCount++)
+            {
+                var results = new List<string>(5);
+                using (var writer = new ThreadedWriter<string>(s => results.Add(s), 0))
+                {
+                    foreach (var item in expected)
+                    {
+                        writer.Write(item);
+                    }
+                }
 
-        //        Assert.AreEqual(expected, results);
-        //    }
-        //}
+                Assert.AreEqual(expected, results);
+            }
+        }
     }
 }

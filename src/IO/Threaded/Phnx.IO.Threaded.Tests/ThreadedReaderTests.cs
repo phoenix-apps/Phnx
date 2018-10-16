@@ -14,21 +14,9 @@ namespace Phnx.IO.Threaded.Tests
         }
 
         [Test]
-        public void Read_WithZeroLookAhead_Reads()
+        public void Read_WithZeroLookAhead_ThrowsArgumentOutOfRangeException()
         {
-            List<string> values = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
-            string[] results = new string[values.Count];
-
-            int index = 0;
-            using (var reader = new ThreadedReader<string>(() => values[index++], 0))
-            {
-                for (int followerIndex = 0; followerIndex < values.Count; followerIndex++)
-                {
-                    results[followerIndex] = reader.Read();
-                }
-            }
-
-            CollectionAssert.AreEqual(values, results);
+            Assert.Throws<ArgumentOutOfRangeException>(() => new ThreadedReader<string>(() => null, 0));
         }
 
         [Test]
@@ -90,27 +78,27 @@ namespace Phnx.IO.Threaded.Tests
             CollectionAssert.AreEqual(expected, results);
         }
 
-        //[Test]
-        //public void Read_ThreadStabilityTest_AlwaysReadsAll()
-        //{
-        //    var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
+        [Test]
+        public void Read_ThreadStabilityTest_AlwaysReadsAll()
+        {
+            var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
 
-        //    for (int loopCount = 0; loopCount < 1000; loopCount++)
-        //    {
-        //        List<string> results = new List<string>(5);
+            for (int loopCount = 0; loopCount < 100; loopCount++)
+            {
+                List<string> results = new List<string>(5);
 
-        //        int index = 0;
-        //        using (var reader = new ThreadedReader<string>(() => expected[index++], 0))
-        //        {
-        //            results.Add(reader.Read());
-        //            results.Add(reader.Read());
-        //            results.Add(reader.Read());
-        //            results.Add(reader.Read());
-        //            results.Add(reader.Read());
-        //        }
+                int index = 0;
+                using (var reader = new ThreadedReader<string>(() => index >= expected.Count ? null : expected[index++], 5))
+                {
+                    results.Add(reader.Read());
+                    results.Add(reader.Read());
+                    results.Add(reader.Read());
+                    results.Add(reader.Read());
+                    results.Add(reader.Read());
+                }
 
-        //        CollectionAssert.AreEqual(expected, results);
-        //    }
-        //}
+                CollectionAssert.AreEqual(expected, results);
+            }
+        }
     }
 }

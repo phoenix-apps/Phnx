@@ -12,26 +12,7 @@ namespace Phnx.IO.Threaded
     {
         private readonly Func<T> _readFunc;
         private readonly ConcurrentQueue<ThreadReadResult<T>> _resultQueue;
-
-        /// <summary>
-        /// The number of items currently cached
-        /// </summary>
-        public int CachedCount => _resultQueue.Count;
-
-        /// <summary>
-        /// Set after an item is read
-        /// </summary>
-        private readonly ManualResetEventSlim _itemReadEvent;
-
-        /// <summary>
-        /// Set when an item should be read
-        /// </summary>
-        private readonly ManualResetEventSlim _readRequestEvent;
-
-        /// <summary>
-        /// The maximum number of items to cache
-        /// </summary>
-        public int LookAheadCount { get; }
+        private readonly FuncSyncEvent _sync;
 
         /// <summary>
         /// Whether the parent thread has asked to have the read thread exit
@@ -41,14 +22,28 @@ namespace Phnx.IO.Threaded
         private readonly Thread _readThread;
 
         /// <summary>
-        ///
+        /// The number of items currently cached
         /// </summary>
-        /// <param name="readFunc"></param>
+        public int CachedCount => _resultQueue.Count;
+
+        /// <summary>
+        /// The maximum number of items to cache
+        /// </summary>
+        public int LookAheadCount { get; }
+
+        /// <summary>
+        /// Create a new <see cref="ThreadedReader{T}"/>
+        /// </summary>
+        /// <param name="readFunc">The function to use when loading resources from an external source</param>
         /// <param name="lookAheadCount">The maximum number of values to cache</param>
         public ThreadedReader(Func<T> readFunc, int lookAheadCount = 100)
         {
-            _itemReadEvent = new ManualResetEventSlim(false);
-            _readRequestEvent = new ManualResetEventSlim(true);
+            if (lookAheadCount <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(lookAheadCount));
+            }
+
+            _sync = new FuncSyncEvent();
 
             _readFunc = readFunc ?? throw new ArgumentNullException(nameof(readFunc));
             _resultQueue = new ConcurrentQueue<ThreadReadResult<T>>();
@@ -64,27 +59,13 @@ namespace Phnx.IO.Threaded
         /// <returns>The object read from the data source</returns>
         public T Read()
         {
-            _readRequestEvent.Set();
+            ThreadReadResult<T> returnT = null;
+            // Wait for read
+            _sync.WaitUntil(() => _resultQueue.TryDequeue(out returnT) || _safeExit, 1);
 
-            ThreadReadResult<T> returnT;
-            if (_resultQueue.Count > 0)
+            if (_safeExit)
             {
-                _resultQueue.TryDequeue(out returnT);
-            }
-            else
-            {
-                // Wait for read
-                while (!_resultQueue.TryDequeue(out returnT))
-                {
-                    // Wait for signal
-                    _itemReadEvent.Wait();
-                    _itemReadEvent.Reset();
-
-                    if (_safeExit)
-                    {
-                        throw new ObjectDisposedException("Reader", "Read object disposed before read could be completed");
-                    }
-                }
+                throw new ObjectDisposedException("Reader", "Read object disposed before read could be completed");
             }
 
             if (returnT.ErrorOccured)
@@ -99,7 +80,8 @@ namespace Phnx.IO.Threaded
         {
             while (true)
             {
-                _readRequestEvent.Wait();
+                _sync.WaitUntil(() => CachedCount < LookAheadCount || _safeExit, 1);
+
                 if (_safeExit)
                 {
                     return;
@@ -113,16 +95,8 @@ namespace Phnx.IO.Threaded
                 catch (Exception ex)
                 {
                     _resultQueue.Enqueue(new ThreadReadResult<T>(ex));
-                    _itemReadEvent.Set();
                     return;
                 }
-
-                if (CachedCount == LookAheadCount)
-                {
-                    _readRequestEvent.Reset();
-                }
-
-                _itemReadEvent.Set();
             }
         }
 
@@ -132,9 +106,6 @@ namespace Phnx.IO.Threaded
         public void Dispose()
         {
             _safeExit = true;
-
-            _itemReadEvent.Set();
-            _readRequestEvent.Set();
 
             while (_readThread.IsAlive)
             {
