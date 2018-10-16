@@ -36,7 +36,7 @@ namespace Phnx.IO.Threaded
         /// <summary>
         /// Whether the parent thread has asked to have the read thread exit
         /// </summary>
-        private bool _safeExit;
+        private volatile bool _safeExit;
 
         private readonly Thread _readThread;
 

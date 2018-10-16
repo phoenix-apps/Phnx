@@ -26,7 +26,7 @@ namespace Phnx.IO.Threaded
         /// <summary>
         /// Whether the parent thread has asked to have the write thread exit
         /// </summary>
-        private bool _safeExit;
+        private volatile bool _safeExit;
 
         /// <summary>
         /// The number of <see cref="Write(T)"/> requests currently queued
@@ -41,7 +41,7 @@ namespace Phnx.IO.Threaded
         /// <summary>
         /// The most recent writing error. This will be thrown either when the object is disposed, or when the next write is called
         /// </summary>
-        private Exception _error;
+        private volatile Exception _error;
 
         private readonly Thread _writeThread;
 
