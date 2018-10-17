@@ -1,11 +1,9 @@
-﻿using Phnx.Random.Generator.Interfaces;
-
-namespace Phnx.Random.Generator
+﻿namespace Phnx.Random.Generator
 {
     /// <summary>
     /// Provides methods for generating a random <see cref="char"/> from only letters of the alphabet
     /// </summary>
-    public class RandomLetterGenerator : IRandomGenerator<char>
+    public static class RandomLetterGenerator
     {
         /// <summary>
         /// The uppercase alphabet in a <see cref="T:char[]"/>
@@ -27,9 +25,9 @@ namespace Phnx.Random.Generator
         /// Get a random upper or lower case letter of the alphabet
         /// </summary>
         /// <returns>A random upper or lower case letter of the alphabet</returns>
-        public char Get()
+        public static char Get()
         {
-            if (RandomHelper.GetBool())
+            if (GetRandom.Bool())
             {
                 // Get upper case
                 return GetUpperCase();
@@ -45,9 +43,9 @@ namespace Phnx.Random.Generator
         /// Get a random upper case letter of the alphabet
         /// </summary>
         /// <returns>A random upper case letter of the alphabet</returns>
-        public char GetUpperCase()
+        public static char GetUpperCase()
         {
-            return RandomHelper.OneOf(UpperCaseAlphabet);
+            return GetRandom.OneOf(UpperCaseAlphabet);
         }
 
 
@@ -55,9 +53,9 @@ namespace Phnx.Random.Generator
         /// Get a random lower case letter of the alphabet
         /// </summary>
         /// <returns>A random lower case letter of the alphabet</returns>
-        public char GetLowerCase()
+        public static char GetLowerCase()
         {
-            return RandomHelper.OneOf(LowerCaseAlphabet);
+            return GetRandom.OneOf(LowerCaseAlphabet);
         }
     }
 }

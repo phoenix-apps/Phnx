@@ -1,28 +1,17 @@
 ﻿using System;
-using Phnx.Random.Generator.Interfaces;
 
 namespace Phnx.Random.Generator
 {
     /// <summary>
     /// Provides methods for generating a random <see cref="DateTime"/>
     /// </summary>
-    public class RandomDateTimeGenerator : IRandomNumberGenerator<DateTime>
+    public static class RandomDateTimeGenerator
     {
-        /// <summary>
-        /// Create a new instance of <see cref="RandomDateTimeGenerator"/>
-        /// </summary>
-        public RandomDateTimeGenerator()
-        {
-            RandomLongGenerator = new RandomLongGenerator();
-        }
-
-        private RandomLongGenerator RandomLongGenerator { get; }
-
         /// <summary>
         /// Get a random <see cref="DateTime"/>
         /// </summary>
         /// <returns>A random <see cref="DateTime"/></returns>
-        public DateTime Get()
+        public static DateTime Get()
         {
             return Get(DateTime.MinValue, DateTime.MaxValue);
         }
@@ -33,7 +22,7 @@ namespace Phnx.Random.Generator
         /// <param name="from">The inclusive minimum value to generate</param>
         /// <param name="to">The inclusive maximum value to generate</param>
         /// <returns>A random instance of <see cref="DateTime"/> with the specified range</returns>
-        public DateTime Get(DateTime from, DateTime to)
+        public static DateTime Get(DateTime from, DateTime to)
         {
             var newDateTimeTicks = RandomLongGenerator.Get(from.Ticks, to.Ticks);
             return new DateTime(newDateTimeTicks);

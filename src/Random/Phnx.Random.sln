@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phnx.Random", "Phnx.Random\Phnx.Random.csproj", "{2F14616D-D7A1-46DF-86C6-1A853CE5C0E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phnx.Random.Tests", "Phnx.Random.Tests\Phnx.Random.Tests.csproj", "{87B9FDF3-F0E2-4022-95EF-3E96D55AC72A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{2F14616D-D7A1-46DF-86C6-1A853CE5C0E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F14616D-D7A1-46DF-86C6-1A853CE5C0E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F14616D-D7A1-46DF-86C6-1A853CE5C0E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87B9FDF3-F0E2-4022-95EF-3E96D55AC72A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87B9FDF3-F0E2-4022-95EF-3E96D55AC72A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87B9FDF3-F0E2-4022-95EF-3E96D55AC72A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87B9FDF3-F0E2-4022-95EF-3E96D55AC72A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

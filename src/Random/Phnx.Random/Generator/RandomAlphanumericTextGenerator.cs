@@ -1,11 +1,11 @@
-﻿using Phnx.Random.Generator.Interfaces;
+﻿using System.Text;
 
 namespace Phnx.Random.Generator
 {
     /// <summary>
     /// Provides methods for generating a random <see cref="string"/> from only alphanumeric characters
     /// </summary>
-    public class RandomAlphaNumericTextGenerator : IRandomGenerator<string>
+    public static class RandomAlphaNumericTextGenerator
     {
         /// <summary>
         /// All alphanumeric characters
@@ -15,23 +15,13 @@ namespace Phnx.Random.Generator
             '!', '\"', '£', '$', '%', '^', '&', '*', '(', ')', '\'', '-', '_', '=', '`', '¬', '|', '\\', ',', '<', '.', '>', '/', '?', ';', ':', '@', '~', '#', ']', '[', '}', '{', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
         };
 
-        private RandomIntGenerator RandomLengthGenerator { get; }
-
-        /// <summary>
-        /// Create a new instance of <see cref="RandomAlphaNumericTextGenerator"/>
-        /// </summary>
-        public RandomAlphaNumericTextGenerator()
-        {
-            RandomLengthGenerator = new RandomIntGenerator();
-        }
-
         /// <summary>
         /// Get a random <see cref="string"/> of alphanumeric characters between 1 and 20 characters long
         /// </summary>
         /// <returns>A random <see cref="string"/> of alphanumeric characters between 1 and 20 characters long</returns>
-        public string Get()
+        public static string Get()
         {
-            return Get(RandomLengthGenerator.Get(1, 20));
+            return Get(RandomIntGenerator.Get(1, 20));
         }
 
         /// <summary>
@@ -39,14 +29,14 @@ namespace Phnx.Random.Generator
         /// </summary>
         /// <param name="length">The length of the random <see cref="string"/> to generate</param>
         /// <returns>A random <see cref="string"/> of alphanumeric characters with a fixed length</returns>
-        public string Get(int length)
+        public static string Get(int length)
         {
-            string returnValue = "";
+            StringBuilder returnValue = new StringBuilder();
             for (int i = 0; i < length; i++)
             {
-                returnValue += RandomHelper.OneOf(AlphaNumericChars);
+                returnValue.Append(GetRandom.OneOf(AlphaNumericChars));
             }
-            return returnValue;
+            return returnValue.ToString();
         }
     }
 }

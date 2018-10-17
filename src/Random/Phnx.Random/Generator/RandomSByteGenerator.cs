@@ -1,18 +1,20 @@
-﻿using Phnx.Random.Generator.Interfaces;
-
-namespace Phnx.Random.Generator
+﻿namespace Phnx.Random.Generator
 {
-    class RandomSByteGenerator : IRandomNumberGenerator<sbyte>
+    /// <summary>
+    /// Provides methods for generating a random <see cref="sbyte"/>
+    /// </summary>
+    public static class RandomSByteGenerator
     {
-        sbyte IRandomGenerator<sbyte>.Get()
-        {
-            return Get();
-        }
-
-        public sbyte Get(sbyte inclusiveMinValue = sbyte.MinValue, sbyte inclusiveMaxValue = sbyte.MaxValue)
+        /// <summary>
+        /// Get a new random instance of <see cref="sbyte"/> within a limited range
+        /// </summary>
+        /// <param name="inclusiveMinValue">The inclusive minimum value to generate</param>
+        /// <param name="inclusiveMaxValue">The inclusive maximum value to generate</param>
+        /// <returns>A random instance of <see cref="sbyte"/> with the specified range</returns>
+        public static sbyte Get(sbyte inclusiveMinValue = sbyte.MinValue, sbyte inclusiveMaxValue = sbyte.MaxValue)
         {
             byte[] buffer = new byte[1];
-            RandomHelper.Random.NextBytes(buffer);
+            GetRandom.StaticRandom.NextBytes(buffer);
             sbyte randomGenerated = unchecked((sbyte)buffer[0]);
 
             var range = unchecked((inclusiveMaxValue - inclusiveMinValue) + 1);

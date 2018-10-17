@@ -26,6 +26,9 @@
     <Reference Include="Phnx.Collections">
       <HintPath>..\..\Collections\Phnx.Collections\bin\Debug\netstandard2.0\Phnx.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Phnx.Reflection">
+      <HintPath>..\..\Reflection\Phnx.Reflection\bin\Debug\netstandard2.0\Phnx.Reflection.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
