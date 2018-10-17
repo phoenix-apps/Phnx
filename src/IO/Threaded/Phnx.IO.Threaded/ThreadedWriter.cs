@@ -10,53 +10,55 @@ namespace Phnx.IO.Threaded
     /// <typeparam name="T">The type of data to write</typeparam>
     public class ThreadedWriter<T> : IDisposable
     {
+        private readonly FuncSyncEvent _sync;
         private readonly Action<T> _writeFunc;
         private readonly ConcurrentQueue<T> _writeQueue;
 
         /// <summary>
         /// Whether the parent thread has asked to have the write thread exit
         /// </summary>
-        private bool _safeExit;
+        private volatile bool _safeExit;
+
+        private ManualResetEventSlim _workerExited;
+
+        /// <summary>
+        /// The number of <see cref="Write(T)"/> requests currently queued
+        /// </summary>
+        public int CurrentQueueCount => _writeQueue.Count;
 
         /// <summary>
         /// The maximum number of items to cache
         /// </summary>
-        public int WriteQueueCount { get; }
+        public int MaximumQueueCount { get; }
 
         /// <summary>
-        /// The most recent writing error. This will be thrown either when the object is disposed, or when the next write is called. Lock <see cref="_errorSyncContext"/> before accessing this member
+        /// The most recent writing error. This will be thrown either when the object is disposed, or when the next write is called
         /// </summary>
-        private Exception _error;
+        private volatile Exception _error;
 
         /// <summary>
-        /// The sync context for <see cref="_error"/>
+        /// Create a new <see cref="ThreadedWriter{T}"/>
         /// </summary>
-        private readonly object _errorSyncContext;
-
-        /// <summary>
-        /// The number of milliseconds to sleep if the cache is empty
-        /// </summary>
-        public int SleepTime { get; }
-
-        private readonly Thread _taskRunner;
-
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="writeFunc"></param>
-        /// <param name="writeQueueCount">The maximum size of the write queue. If this is exceeded, write will be paused whilst waiting for space in the queue to add the new entry</param>
-        /// <param name="sleepTime">How long in ms to sleep if there are no queued tasks</param>
-        public ThreadedWriter(Action<T> writeFunc, int writeQueueCount = 100, int sleepTime = 20)
+        /// <param name="writeFunc">The function to use when writing data. This is ran from a different thread to the one that called <see cref="Write(T)"/> requests</param>
+        public ThreadedWriter(Action<T> writeFunc) : this(writeFunc, 0)
         {
-            _errorSyncContext = new object();
+        }
 
+        /// <summary>
+        /// Create a new <see cref="ThreadedWriter{T}"/> with a maximum queue size
+        /// </summary>
+        /// <param name="writeFunc">The function to use when writing data. This is ran from a different thread to the one that called <see cref="Write(T)"/> requests</param>
+        /// <param name="maximumQueueCount">The maximum size of the write queue. If this is exceeded, write will be paused whilst waiting for space in the queue to add the new entry. Set this to 0 to have no limit</param>
+        public ThreadedWriter(Action<T> writeFunc, int maximumQueueCount)
+        {
+            _sync = new FuncSyncEvent();
+
+            _workerExited = new ManualResetEventSlim();
             _writeFunc = writeFunc ?? throw new ArgumentNullException(nameof(writeFunc));
             _writeQueue = new ConcurrentQueue<T>();
-            WriteQueueCount = writeQueueCount;
-            SleepTime = sleepTime;
+            MaximumQueueCount = maximumQueueCount;
 
-            _taskRunner = new Thread(WriteThreadMethod);
-            _taskRunner.Start();
+            ThreadPool.QueueUserWorkItem(t => WriteThreadMethod());
         }
 
         /// <summary>
@@ -65,33 +67,17 @@ namespace Phnx.IO.Threaded
         /// <param name="valueToWrite">The value to write</param>
         public void Write(T valueToWrite)
         {
-            lock (_errorSyncContext)
+            // Queue is full - wait for space before adding more entries
+            _sync.WaitUntil(() => MaximumQueueCount == 0 || CurrentQueueCount < MaximumQueueCount || _safeExit || _error != null, 1);
+
+            if (_safeExit)
             {
-                if (_error != null)
-                {
-                    throw _error;
-                }
+                throw new ObjectDisposedException("Writer", "Writer object disposed before write could be completed");
             }
-
-            while (_writeQueue.Count >= WriteQueueCount)
+            else if (_error != null)
             {
-                Thread.Sleep(SleepTime);
-
-                lock (_errorSyncContext)
-                {
-                    if (_error != null)
-                    {
-                        throw _error;
-                    }
-                }
-            }
-
-            lock (_errorSyncContext)
-            {
-                if (_error != null)
-                {
-                    throw _error;
-                }
+                // Exited because of error
+                throw _error;
             }
 
             _writeQueue.Enqueue(valueToWrite);
@@ -99,18 +85,19 @@ namespace Phnx.IO.Threaded
 
         private void WriteThreadMethod()
         {
-            while (!_safeExit)
+            try
             {
-                bool hasError;
-                lock (_errorSyncContext)
+                while (true)
                 {
-                    hasError = _error != null;
-                }
+                    T objectToWrite = default(T);
+                    bool itemFound = false;
 
-                if (!hasError && _writeQueue.Count > 0)
-                {
-                    // Write
-                    _writeQueue.TryDequeue(out var objectToWrite);
+                    _sync.WaitUntil(() => (itemFound = _writeQueue.TryDequeue(out objectToWrite)) || _safeExit, 1);
+
+                    if (!itemFound && _safeExit)
+                    {
+                        return;
+                    }
 
                     try
                     {
@@ -118,16 +105,14 @@ namespace Phnx.IO.Threaded
                     }
                     catch (Exception ex)
                     {
-                        lock (_errorSyncContext)
-                        {
-                            _error = ex;
-                        }
+                        _error = ex;
+                        return;
                     }
                 }
-                else
-                {
-                    Thread.Sleep(SleepTime);
-                }
+            }
+            finally
+            {
+                _workerExited.Set();
             }
         }
 
@@ -137,51 +122,18 @@ namespace Phnx.IO.Threaded
         /// <param name="finishWriting">Whether to finish writing to all background threads</param>
         public void Dispose(bool finishWriting)
         {
-            lock (_errorSyncContext)
-            {
-                if (_error != null)
-                {
-                    throw _error;
-                }
-            }
-
             if (finishWriting)
             {
-                while (_writeQueue.Count > 0)
-                {
-                    lock (_errorSyncContext)
-                    {
-                        if (_error != null)
-                        {
-                            throw _error;
-                        }
-                    }
-
-                    Thread.Sleep(SleepTime);
-                }
+                _sync.WaitUntil(() => _writeQueue.Count == 0 || _error != null, 1);
             }
 
             _safeExit = true;
 
-            while (_taskRunner.IsAlive)
-            {
-                Thread.Sleep(SleepTime);
+            _workerExited.Wait();
 
-                lock (_errorSyncContext)
-                {
-                    if (_error != null)
-                    {
-                        throw _error;
-                    }
-                }
-            }
-
-            lock (_errorSyncContext)
+            if (_error != null)
             {
-                if (_error != null)
-                {
-                    throw _error;
-                }
+                throw _error;
             }
         }
 

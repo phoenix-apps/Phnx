@@ -1,79 +1,107 @@
 ﻿using NUnit.Framework;
-using Phnx.IO.Factories;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Threading;
 
 namespace Phnx.IO.Threaded.Tests
 {
     public class ThreadedWriterTests
     {
-        public ThreadedWriterTests()
-        {
-            StreamFactory = new MemoryStreamFactory();
-        }
-
-        private MemoryStreamFactory StreamFactory { get; }
-
         [Test]
-        public void CreateThreadedWriter_WithNullWriteFunc_ThrowsArgumentNullException()
+        public void New_WithNullWriteFunc_ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() => new ThreadedWriter<object>(null));
         }
 
         [Test]
-        public void Write_WithValidEntries_WritesFirstValue()
+        public void Write_WithZeroQueue_WritesAllValues()
         {
             // Arrange
-            List<string> values = new List<string> { "asdf", "asdf2", "asdf3" };
-            string result = null;
-            string expectedResult = values.First();
+            var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
+            var result = new List<string>();
 
-            using (ThreadedWriter<string> writer = new ThreadedWriter<string>(s => result = s))
+            using (var writer = new ThreadedWriter<string>(s => result.Add(s), 0))
             {
-                // Act
-                writer.Write(values.First());
-                writer.Dispose();
-
-                // Assert
-                Assert.AreEqual(expectedResult, result);
-            }
-        }
-
-        [Test]
-        public void WriteToStreamUsingLookAhead_WithValidEntries_ReturnsAllValues()
-        {
-            // Arrange
-            List<string> values = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
-
-            var ms = StreamFactory.Create();
-
-            StreamWriter msWriter = new StreamWriter(ms);
-
-            using (ThreadedWriter<string> writer = new ThreadedWriter<string>(s => msWriter.WriteLine(s)))
-            {
-                for (int index = 0; index < values.Count; index++)
+                for (int index = 0; index < expected.Count; index++)
                 {
-                    writer.Write(values[index]);
+                    writer.Write(expected[index]);
                 }
             }
 
-            msWriter.Flush();
+            //Assert
+            CollectionAssert.AreEqual(expected, result);
+        }
 
-            ms.Position = 0;
+        [Test]
+        public void Write_WithQueue_WritesInOrder()
+        {
+            var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
+            var result = new List<string>();
 
-            string[] results;
-            using (StreamReader reader = new StreamReader(ms))
+            using (var writer = new ThreadedWriter<string>(s => result.Add(s)))
             {
-                results = reader.ReadToEnd().Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                for (int index = 0; index < expected.Count; index++)
+                {
+                    writer.Write(expected[index]);
+                }
             }
 
-            // A blank line is added by the WriteLine method used. This removes that blank line from the end
-            var resultsWithoutFinalBlankLine = results.Take(results.Length - 1).ToList();
+            CollectionAssert.AreEqual(expected, result);
+        }
 
-            //Assert
-            Assert.AreEqual(values, resultsWithoutFinalBlankLine);
+        [Test]
+        public void Write_WhenWriteThrows_RethrowsWhenDiposing()
+        {
+            var ex = new NullReferenceException();
+
+            var writer = new ThreadedWriter<string>(s => throw ex);
+            writer.Write(string.Empty);
+
+            Assert.Throws<NullReferenceException>(() => writer.Dispose());
+        }
+
+        [Test]
+        public void Write_WhenQueueIsFull_WaitsForPreviousToFinish()
+        {
+            var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
+            var results = new List<string>();
+
+            using (var writer = new ThreadedWriter<string>(s =>
+            {
+                Thread.Sleep(1);
+                results.Add(s);
+            }, 1))
+            {
+                for (int index = 0; index < expected.Count; index++)
+                {
+                    writer.Write(expected[index]);
+
+                    // Results have at least the current number of write requests minus the maximum queue size
+                    Assert.IsTrue(results.Count >= index - 1);
+                }
+            }
+
+            Assert.AreEqual(expected.Count, results.Count);
+        }
+
+        [Test]
+        public void Write_ThreadStabilityTest_AlwaysWritesAll()
+        {
+            var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
+
+            for (int loopCount = 0; loopCount < 10000; loopCount++)
+            {
+                var results = new List<string>(5);
+                using (var writer = new ThreadedWriter<string>(s => results.Add(s), 0))
+                {
+                    foreach (var item in expected)
+                    {
+                        writer.Write(item);
+                    }
+                }
+
+                CollectionAssert.AreEqual(expected, results);
+            }
         }
     }
 }

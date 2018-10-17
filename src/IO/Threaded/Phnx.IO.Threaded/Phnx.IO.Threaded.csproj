@@ -19,4 +19,10 @@
     <DocumentationFile>bin\Debug\netstandard2.0\Phnx.IO.Threaded.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="Phnx">
+      <HintPath>..\..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
