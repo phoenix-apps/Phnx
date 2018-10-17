@@ -19,6 +19,8 @@ namespace Phnx.IO.Threaded
         /// </summary>
         private volatile bool _safeExit;
 
+        private ManualResetEventSlim _workerExited;
+
         /// <summary>
         /// The number of <see cref="Write(T)"/> requests currently queued
         /// </summary>
@@ -27,30 +29,36 @@ namespace Phnx.IO.Threaded
         /// <summary>
         /// The maximum number of items to cache
         /// </summary>
-        public int MaximumOutputQueueCount { get; }
+        public int MaximumQueueCount { get; }
 
         /// <summary>
         /// The most recent writing error. This will be thrown either when the object is disposed, or when the next write is called
         /// </summary>
         private volatile Exception _error;
 
-        private readonly Thread _writeThread;
+        /// <summary>
+        /// Create a new <see cref="ThreadedWriter{T}"/>
+        /// </summary>
+        /// <param name="writeFunc">The function to use when writing data. This is ran from a different thread to the one that called <see cref="Write(T)"/> requests</param>
+        public ThreadedWriter(Action<T> writeFunc) : this(writeFunc, 0)
+        {
+        }
 
         /// <summary>
-        ///
+        /// Create a new <see cref="ThreadedWriter{T}"/> with a maximum queue size
         /// </summary>
-        /// <param name="writeFunc"></param>
-        /// <param name="writeQueueCount">The maximum size of the write queue. If this is exceeded, write will be paused whilst waiting for space in the queue to add the new entry</param>
-        public ThreadedWriter(Action<T> writeFunc, int writeQueueCount = 100)
+        /// <param name="writeFunc">The function to use when writing data. This is ran from a different thread to the one that called <see cref="Write(T)"/> requests</param>
+        /// <param name="maximumQueueCount">The maximum size of the write queue. If this is exceeded, write will be paused whilst waiting for space in the queue to add the new entry. Set this to 0 to have no limit</param>
+        public ThreadedWriter(Action<T> writeFunc, int maximumQueueCount)
         {
             _sync = new FuncSyncEvent();
 
+            _workerExited = new ManualResetEventSlim();
             _writeFunc = writeFunc ?? throw new ArgumentNullException(nameof(writeFunc));
             _writeQueue = new ConcurrentQueue<T>();
-            MaximumOutputQueueCount = writeQueueCount;
+            MaximumQueueCount = maximumQueueCount;
 
-            _writeThread = new Thread(WriteThreadMethod);
-            _writeThread.Start();
+            ThreadPool.QueueUserWorkItem(t => WriteThreadMethod());
         }
 
         /// <summary>
@@ -60,7 +68,7 @@ namespace Phnx.IO.Threaded
         public void Write(T valueToWrite)
         {
             // Queue is full - wait for space before adding more entries
-            _sync.WaitUntil(() => MaximumOutputQueueCount == 0 || CurrentQueueCount < MaximumOutputQueueCount || _safeExit || _error != null, 1);
+            _sync.WaitUntil(() => MaximumQueueCount == 0 || CurrentQueueCount < MaximumQueueCount || _safeExit || _error != null, 1);
 
             if (_safeExit)
             {
@@ -77,26 +85,34 @@ namespace Phnx.IO.Threaded
 
         private void WriteThreadMethod()
         {
-            while (true)
+            try
             {
-                T objectToWrite = default(T);
-
-                _sync.WaitUntil(() => _writeQueue.TryDequeue(out objectToWrite) || _safeExit, 1);
-
-                if (_safeExit)
+                while (true)
                 {
-                    return;
-                }
+                    T objectToWrite = default(T);
+                    bool itemFound = false;
 
-                try
-                {
-                    _writeFunc(objectToWrite);
+                    _sync.WaitUntil(() => (itemFound = _writeQueue.TryDequeue(out objectToWrite)) || _safeExit, 1);
+
+                    if (!itemFound && _safeExit)
+                    {
+                        return;
+                    }
+
+                    try
+                    {
+                        _writeFunc(objectToWrite);
+                    }
+                    catch (Exception ex)
+                    {
+                        _error = ex;
+                        return;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    _error = ex;
-                    return;
-                }
+            }
+            finally
+            {
+                _workerExited.Set();
             }
         }
 
@@ -113,7 +129,7 @@ namespace Phnx.IO.Threaded
 
             _safeExit = true;
 
-            _sync.WaitUntil(() => !_writeThread.IsAlive, 1);
+            _workerExited.Wait();
 
             if (_error != null)
             {

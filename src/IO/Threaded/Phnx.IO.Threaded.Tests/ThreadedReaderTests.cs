@@ -83,7 +83,7 @@ namespace Phnx.IO.Threaded.Tests
         {
             var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
 
-            for (int loopCount = 0; loopCount < 100; loopCount++)
+            for (int loopCount = 0; loopCount < 10000; loopCount++)
             {
                 List<string> results = new List<string>(5);
 

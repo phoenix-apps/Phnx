@@ -89,7 +89,7 @@ namespace Phnx.IO.Threaded.Tests
         {
             var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
 
-            for (int loopCount = 0; loopCount < 1000; loopCount++)
+            for (int loopCount = 0; loopCount < 10000; loopCount++)
             {
                 var results = new List<string>(5);
                 using (var writer = new ThreadedWriter<string>(s => results.Add(s), 0))
@@ -100,7 +100,7 @@ namespace Phnx.IO.Threaded.Tests
                     }
                 }
 
-                Assert.AreEqual(expected, results);
+                CollectionAssert.AreEqual(expected, results);
             }
         }
     }

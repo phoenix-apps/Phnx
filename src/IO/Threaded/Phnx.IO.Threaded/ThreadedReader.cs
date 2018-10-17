@@ -19,7 +19,7 @@ namespace Phnx.IO.Threaded
         /// </summary>
         private volatile bool _safeExit;
 
-        private readonly Thread _readThread;
+        private ManualResetEventSlim _workerExited;
 
         /// <summary>
         /// The number of items currently cached
@@ -45,12 +45,12 @@ namespace Phnx.IO.Threaded
 
             _sync = new FuncSyncEvent();
 
+            _workerExited = new ManualResetEventSlim();
             _readFunc = readFunc ?? throw new ArgumentNullException(nameof(readFunc));
             _resultQueue = new ConcurrentQueue<ThreadReadResult<T>>();
             LookAheadCount = lookAheadCount;
 
-            _readThread = new Thread(ReadThreadMethod);
-            _readThread.Start();
+            ThreadPool.QueueUserWorkItem(t => ReadThreadMethod());
         }
 
         /// <summary>
@@ -78,25 +78,32 @@ namespace Phnx.IO.Threaded
 
         private void ReadThreadMethod()
         {
-            while (true)
+            try
             {
-                _sync.WaitUntil(() => CachedCount < LookAheadCount || _safeExit, 1);
+                while (true)
+                {
+                    _sync.WaitUntil(() => CachedCount < LookAheadCount || _safeExit, 1);
 
-                if (_safeExit)
-                {
-                    return;
-                }
+                    if (_safeExit)
+                    {
+                        return;
+                    }
 
-                try
-                {
-                    T data = _readFunc();
-                    _resultQueue.Enqueue(new ThreadReadResult<T>(data));
+                    try
+                    {
+                        T data = _readFunc();
+                        _resultQueue.Enqueue(new ThreadReadResult<T>(data));
+                    }
+                    catch (Exception ex)
+                    {
+                        _resultQueue.Enqueue(new ThreadReadResult<T>(ex));
+                        return;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    _resultQueue.Enqueue(new ThreadReadResult<T>(ex));
-                    return;
-                }
+            }
+            finally
+            {
+                _workerExited.Set();
             }
         }
 
@@ -107,10 +114,7 @@ namespace Phnx.IO.Threaded
         {
             _safeExit = true;
 
-            while (_readThread.IsAlive)
-            {
-                Thread.Sleep(1);
-            }
+            _workerExited.Wait();
         }
     }
 }
