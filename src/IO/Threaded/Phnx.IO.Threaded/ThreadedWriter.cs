@@ -151,7 +151,7 @@ namespace Phnx.IO.Threaded
         /// <summary>
         /// Diposes this object, ensuring that the writer thread has safely exited. Also finishes writing to the output stream any pending output
         /// </summary>
-        /// <exception cref="Exception">A writing error occured with one of the queued items</exception>
+        /// <exception cref="IOException">A writing error occured with one of the queued items</exception>
         public void Dispose()
         {
             Dispose(true);
