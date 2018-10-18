@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace Phnx.IO.Threaded.Tests
@@ -56,26 +57,42 @@ namespace Phnx.IO.Threaded.Tests
         }
 
         [Test]
-        public void Write_WhenWriteThrows_RethrowsInNextWrite()
+        public void Write_WhenPreviousWriteThrows_ThrowsIOExceptionWithInnerMatchingException()
         {
-            var ex = new NullReferenceException();
+            var exToThrow = new NullReferenceException();
 
-            var writer = new ThreadedWriter<string>(s => throw ex);
+            var writer = new ThreadedWriter<string>(s => throw exToThrow);
             writer.Write(string.Empty);
             Thread.Sleep(2);
 
-            Assert.Throws<NullReferenceException>(() => writer.Write(string.Empty));
+            try
+            {
+                writer.Write(string.Empty);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOf<IOException>(ex);
+                Assert.IsInstanceOf<NullReferenceException>(ex.InnerException);
+            }
         }
 
         [Test]
-        public void Write_WhenWriteThrows_RethrowsWhenDiposing()
+        public void Dispose_WhenPreviousWriteThrows_ThrowsIOExceptionWithInnerMatchingException()
         {
-            var ex = new NullReferenceException();
+            var exToThrow = new NullReferenceException();
 
-            var writer = new ThreadedWriter<string>(s => throw ex);
+            var writer = new ThreadedWriter<string>(s => throw exToThrow);
             writer.Write(string.Empty);
 
-            Assert.Throws<NullReferenceException>(() => writer.Dispose());
+            try
+            {
+                writer.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOf<IOException>(ex);
+                Assert.IsInstanceOf<NullReferenceException>(ex.InnerException);
+            }
         }
 
         [Test]

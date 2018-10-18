@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 namespace Phnx.IO.Threaded.Tests
@@ -38,13 +39,21 @@ namespace Phnx.IO.Threaded.Tests
         }
 
         [Test]
-        public void Read_WhenReadThrows_Rethrows()
+        public void Read_WhenReadThrows_IOExceptionWithInnerMatchingException()
         {
-            var ex = new NullReferenceException();
+            var exToThrow = new NullReferenceException();
 
-            using (var reader = new ThreadedReader<string>(() => throw ex))
+            using (var reader = new ThreadedReader<string>(() => throw exToThrow))
             {
-                Assert.Throws<NullReferenceException>(() => reader.Read());
+                try
+                {
+                    reader.Read();
+                }
+                catch (Exception ex)
+                {
+                    Assert.IsInstanceOf<IOException>(ex);
+                    Assert.IsInstanceOf<NullReferenceException>(ex.InnerException);
+                }
             }
         }
 

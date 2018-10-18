@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Threading;
 
 namespace Phnx.IO.Threaded
@@ -73,7 +74,7 @@ namespace Phnx.IO.Threaded
         /// </summary>
         /// <param name="valueToWrite">The value to write</param>
         /// <exception cref="ObjectDisposedException">This object was disposed before the write could be queued</exception>
-        /// <exception cref="Exception">Writer error</exception>
+        /// <exception cref="IOException">Writer error</exception>
         public void Write(T valueToWrite)
         {
             // Queue is full - wait for space before adding more entries
@@ -86,7 +87,7 @@ namespace Phnx.IO.Threaded
             else if (_error != null)
             {
                 // Exited because of error
-                throw _error;
+                throw new IOException("An exception occured when writing", _error);
             }
 
             _writeQueue.Enqueue(valueToWrite);
@@ -129,7 +130,7 @@ namespace Phnx.IO.Threaded
         /// Diposes this object, ensuring that the writer thread has safely exited. Optionally finishes writing to the output stream any pending output
         /// </summary>
         /// <param name="finishWriting">Whether to finish writing to all background threads</param>
-        /// <exception cref="Exception">A writing error occured with one of the queued items</exception>
+        /// <exception cref="IOException">A writing error occured with one of the queued items</exception>
         public void Dispose(bool finishWriting)
         {
             if (finishWriting)
@@ -143,7 +144,7 @@ namespace Phnx.IO.Threaded
 
             if (_error != null)
             {
-                throw _error;
+                throw new IOException("An exception occured when writing", _error);
             }
         }
 

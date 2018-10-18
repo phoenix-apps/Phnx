@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.IO;
 using System.Threading;
 
 namespace Phnx.IO.Threaded
@@ -60,7 +61,7 @@ namespace Phnx.IO.Threaded
         /// </summary>
         /// <returns>The object read from the data source</returns>
         /// <exception cref="ObjectDisposedException">This object was disposed before the read could be completed</exception>
-        /// <exception cref="Exception">Reader error</exception>
+        /// <exception cref="IOException">Reader error</exception>
         public T Read()
         {
             ThreadReadResult<T> returnT = null;
@@ -74,7 +75,7 @@ namespace Phnx.IO.Threaded
 
             if (returnT.ErrorOccured)
             {
-                throw returnT.Error;
+                throw new IOException("An exception occured when reading", returnT.Error);
             }
 
             return returnT.Data;
