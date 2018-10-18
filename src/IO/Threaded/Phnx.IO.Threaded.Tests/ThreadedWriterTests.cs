@@ -14,6 +14,12 @@ namespace Phnx.IO.Threaded.Tests
         }
 
         [Test]
+        public void New_WithNegativeMaximumQueue_ThrowsArgumentLessThanZero()
+        {
+            Assert.Throws<ArgumentLessThanZeroException>(() => new ThreadedWriter<object>(o => { }, -1));
+        }
+
+        [Test]
         public void Write_WithZeroQueue_WritesAllValues()
         {
             // Arrange
@@ -47,6 +53,18 @@ namespace Phnx.IO.Threaded.Tests
             }
 
             CollectionAssert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void Write_WhenWriteThrows_RethrowsInNextWrite()
+        {
+            var ex = new NullReferenceException();
+
+            var writer = new ThreadedWriter<string>(s => throw ex);
+            writer.Write(string.Empty);
+            Thread.Sleep(2);
+
+            Assert.Throws<NullReferenceException>(() => writer.Write(string.Empty));
         }
 
         [Test]
@@ -85,6 +103,16 @@ namespace Phnx.IO.Threaded.Tests
         }
 
         [Test]
+        public void Write_AfterDispose_ThrowsObjectDisposedException()
+        {
+            var writer = new ThreadedWriter<object>(o => { });
+
+            writer.Dispose();
+
+            Assert.Throws<ObjectDisposedException>(() => writer.Write(null));
+        }
+
+        [Test]
         public void Write_ThreadStabilityTest_AlwaysWritesAll()
         {
             var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };
@@ -92,7 +120,7 @@ namespace Phnx.IO.Threaded.Tests
             for (int loopCount = 0; loopCount < 10000; loopCount++)
             {
                 var results = new List<string>(5);
-                using (var writer = new ThreadedWriter<string>(s => results.Add(s), 0))
+                using (var writer = new ThreadedWriter<string>(s => results.Add(s)))
                 {
                     foreach (var item in expected)
                     {

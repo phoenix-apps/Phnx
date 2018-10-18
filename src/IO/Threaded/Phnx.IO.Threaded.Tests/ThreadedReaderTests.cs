@@ -79,6 +79,16 @@ namespace Phnx.IO.Threaded.Tests
         }
 
         [Test]
+        public void Read_AfterReaderDisposed_ThrowsObjectDisposedException()
+        {
+            var reader = new ThreadedReader<object>(() => null);
+
+            reader.Dispose();
+
+            Assert.Throws<ObjectDisposedException>(() => reader.Read());
+        }
+
+        [Test]
         public void Read_ThreadStabilityTest_AlwaysReadsAll()
         {
             var expected = new List<string> { "asdf", "asdf2", "asdf3", "asdf4", "asdf5" };

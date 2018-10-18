@@ -36,18 +36,20 @@ namespace Phnx.IO.Threaded
         /// </summary>
         /// <param name="readFunc">The function to use when loading resources from an external source</param>
         /// <param name="lookAheadCount">The maximum number of values to cache</param>
+        /// <exception cref="ArgumentNullException"><paramref name="readFunc"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="lookAheadCount"/> is less than or equal to zero</exception>
         public ThreadedReader(Func<T> readFunc, int lookAheadCount = 100)
         {
-            if (lookAheadCount <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(lookAheadCount));
-            }
-
             _sync = new FuncSyncEvent();
 
             _workerExited = new ManualResetEventSlim();
             _readFunc = readFunc ?? throw new ArgumentNullException(nameof(readFunc));
             _resultQueue = new ConcurrentQueue<ThreadReadResult<T>>();
+
+            if (lookAheadCount <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(lookAheadCount));
+            }
             LookAheadCount = lookAheadCount;
 
             ThreadPool.QueueUserWorkItem(t => ReadThreadMethod());
@@ -57,6 +59,8 @@ namespace Phnx.IO.Threaded
         /// Read the next object
         /// </summary>
         /// <returns>The object read from the data source</returns>
+        /// <exception cref="ObjectDisposedException">This object was disposed before the read could be completed</exception>
+        /// <exception cref="Exception">Reader error</exception>
         public T Read()
         {
             ThreadReadResult<T> returnT = null;
@@ -108,7 +112,7 @@ namespace Phnx.IO.Threaded
         }
 
         /// <summary>
-        /// Cleans up the reading resource thread, finishing any currently active reads, then safely exits the reading thread
+        /// Cleans up the reading resource thread, finishing any currently active reads, then waits until the reading thread has been exited
         /// </summary>
         public void Dispose()
         {

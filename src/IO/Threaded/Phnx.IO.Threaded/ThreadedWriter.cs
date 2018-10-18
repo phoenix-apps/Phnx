@@ -49,6 +49,8 @@ namespace Phnx.IO.Threaded
         /// </summary>
         /// <param name="writeFunc">The function to use when writing data. This is ran from a different thread to the one that called <see cref="Write(T)"/> requests</param>
         /// <param name="maximumQueueCount">The maximum size of the write queue. If this is exceeded, write will be paused whilst waiting for space in the queue to add the new entry. Set this to 0 to have no limit</param>
+        /// <exception cref="ArgumentNullException"><paramref name="writeFunc"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="maximumQueueCount"/> is less than zero</exception>
         public ThreadedWriter(Action<T> writeFunc, int maximumQueueCount)
         {
             _sync = new FuncSyncEvent();
@@ -56,6 +58,11 @@ namespace Phnx.IO.Threaded
             _workerExited = new ManualResetEventSlim();
             _writeFunc = writeFunc ?? throw new ArgumentNullException(nameof(writeFunc));
             _writeQueue = new ConcurrentQueue<T>();
+
+            if (maximumQueueCount < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(maximumQueueCount));
+            }
             MaximumQueueCount = maximumQueueCount;
 
             ThreadPool.QueueUserWorkItem(t => WriteThreadMethod());
@@ -65,6 +72,8 @@ namespace Phnx.IO.Threaded
         /// Write the object
         /// </summary>
         /// <param name="valueToWrite">The value to write</param>
+        /// <exception cref="ObjectDisposedException">This object was disposed before the write could be queued</exception>
+        /// <exception cref="Exception">Writer error</exception>
         public void Write(T valueToWrite)
         {
             // Queue is full - wait for space before adding more entries
@@ -117,9 +126,10 @@ namespace Phnx.IO.Threaded
         }
 
         /// <summary>
-        /// Optionally finishes writing to the output stream any pending output, and then safely exits all background threads
+        /// Diposes this object, ensuring that the writer thread has safely exited. Optionally finishes writing to the output stream any pending output
         /// </summary>
         /// <param name="finishWriting">Whether to finish writing to all background threads</param>
+        /// <exception cref="Exception">A writing error occured with one of the queued items</exception>
         public void Dispose(bool finishWriting)
         {
             if (finishWriting)
@@ -138,8 +148,9 @@ namespace Phnx.IO.Threaded
         }
 
         /// <summary>
-        /// Disposes the object, finishing writing to the output first
+        /// Diposes this object, ensuring that the writer thread has safely exited. Also finishes writing to the output stream any pending output
         /// </summary>
+        /// <exception cref="Exception">A writing error occured with one of the queued items</exception>
         public void Dispose()
         {
             Dispose(true);

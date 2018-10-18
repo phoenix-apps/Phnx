@@ -25,6 +25,8 @@ namespace Phnx.IO.Threaded
         /// </summary>
         /// <param name="untilThisIsTrue">The function to evaluate to see whether to wait</param>
         /// <param name="reevaluateAfterMilliseconds">How long to wait after an evaluation results <see langword="false"/> before reevaluating again</param>
+        /// <exception cref="ArgumentNullException"><paramref name="untilThisIsTrue"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="reevaluateAfterMilliseconds"/> is less than zero</exception>
         public void WaitUntil(Func<bool> untilThisIsTrue, int reevaluateAfterMilliseconds)
         {
             if (untilThisIsTrue is null)
@@ -62,6 +64,9 @@ namespace Phnx.IO.Threaded
         /// <param name="reevaluateAfterMilliseconds">How long to wait after an evaluation results <see langword="false"/> before reevaluating again</param>
         /// <param name="millisecondsTimeout">The time after which to exit, regardless of the value of <paramref name="untilThisIsTrue"/>. Set to <see cref="Timeout.Infinite"/> to never timeout</param>
         /// <returns><see langword="true"/> if it exited because <paramref name="untilThisIsTrue"/> returned <see langword="true"/>, <see langword="false"/> if a timeout occured</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="untilThisIsTrue"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="reevaluateAfterMilliseconds"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="millisecondsTimeout"/> is less than -1</exception>
         public bool WaitUntil(Func<bool> untilThisIsTrue, int reevaluateAfterMilliseconds, int millisecondsTimeout)
         {
             long startTimeMilliseconds = _stopwatch.ElapsedMilliseconds;
