@@ -17,6 +17,13 @@ namespace Phnx.Random.Tests
             Assert.IsNotNull(randomT.Collection);
             Assert.IsNotNull(randomT.Single);
             Assert.IsNotNull(randomT.Recursive);
+            Assert.IsNotNull(randomT.Collections);
+
+            Assert.IsNotNull(randomT.Collections.Numbers);
+            Assert.IsNotNull(randomT.Collections.Numbers2);
+            Assert.IsNotNull(randomT.Collections.Text);
+            Assert.IsNotNull(randomT.Collections.Typeless);
+            Assert.IsNotNull(randomT.Collections.ChangesLog);
         }
 
         [Test]
@@ -29,6 +36,7 @@ namespace Phnx.Random.Tests
             Assert.IsNull(randomT.Collection);
             Assert.IsNull(randomT.Single);
             Assert.IsNull(randomT.Recursive);
+            Assert.IsNull(randomT.Collections);
         }
     }
 }

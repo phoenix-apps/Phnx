@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -37,13 +38,26 @@ namespace Phnx.Random.Generator
             return newArray;
         }
 
-        private static object ComplexGetRandom(Type instanceToCreate, Stack<Type> typeStack, bool shallow)
+        private static IList GetRandomList(Type enumerableElementsType, int maxIEnumerableSize, Stack<Type> knownTypes, bool shallow)
         {
-            if (instanceToCreate.IsInterface)
+            int size = GetRandom.Int(0, maxIEnumerableSize);
+
+            var listType = typeof(List<>);
+            var listTType = listType.MakeGenericType(enumerableElementsType);
+
+            var newCollection = (IList)Activator.CreateInstance(listTType);
+
+            for (int index = 0; index < size; index++)
             {
-                return null;
+                var newValue = ComplexGetRandom(enumerableElementsType, knownTypes, shallow);
+                newCollection.Add(newValue);
             }
 
+            return newCollection;
+        }
+
+        private static object ComplexGetRandom(Type instanceToCreate, Stack<Type> typeStack, bool shallow)
+        {
             // Check for recursive type
             if (typeStack.Contains(instanceToCreate))
             {
@@ -62,11 +76,43 @@ namespace Phnx.Random.Generator
             typeStack.Push(instanceToCreate);
             object instance;
 
-            if (instanceToCreate.IsArray)
+
+            if (instanceToCreate.IsInterface)
+            {
+                if (instanceToCreate.IsGenericType)
+                {
+                    var genericTypeDefinition = instanceToCreate.GetGenericTypeDefinition();
+                    if (genericTypeDefinition == typeof(IEnumerable<>) ||
+                        genericTypeDefinition == typeof(IList<>) ||
+                        genericTypeDefinition == typeof(ICollection<>))
+                    {
+                        instance = GetRandomList(instanceToCreate.GenericTypeArguments[0], 10, typeStack, shallow);
+                    }
+                    else
+                    {
+                        instance = null;
+                    }
+                }
+                else if (instanceToCreate == typeof(IEnumerable) ||
+                        instanceToCreate == typeof(IList) ||
+                        instanceToCreate == typeof(ICollection))
+                {
+                    instance = GetRandomList(typeof(object), 10, typeStack, shallow);
+                }
+                else
+                {
+                    instance = null;
+                }
+            }
+            else if (instanceToCreate.IsArray)
             {
                 var instanceArray = GetRandomOfArray(instanceToCreate.GetElementType(), 10, typeStack, shallow);
 
                 instance = instanceArray;
+            }
+            else if (instanceToCreate.IsGenericType && instanceToCreate.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                instance = GetRandomList(instanceToCreate.GenericTypeArguments[0], 10, typeStack, shallow);
             }
             else if (!TrySimpleGetRandom(instanceToCreate, out instance))
             {
@@ -101,7 +147,12 @@ namespace Phnx.Random.Generator
         /// </summary>
         private static bool TrySimpleGetRandom(Type instanceToCreate, out object instance)
         {
-            if (instanceToCreate == typeof(string))
+            if (instanceToCreate == typeof(object))
+            {
+                instance = new object();
+                return true;
+            }
+            else if (instanceToCreate == typeof(string))
             {
                 instance = GetRandom.AlphanumericText();
                 return true;
