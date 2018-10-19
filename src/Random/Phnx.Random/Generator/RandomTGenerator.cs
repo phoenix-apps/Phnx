@@ -1,7 +1,7 @@
-﻿using Phnx.Reflection.Extensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Phnx.Random.Generator
 {
@@ -22,20 +22,19 @@ namespace Phnx.Random.Generator
             return (T)ComplexGetRandom(typeof(T), typeStack, shallow);
         }
 
-        private static object[] GetRandomOfArray(Type arrayType, int maxArraySize, Stack<Type> knownTypes, bool shallow)
+        private static Array GetRandomOfArray(Type arrayElementsType, int maxArraySize, Stack<Type> knownTypes, bool shallow)
         {
-            // TODO Add support for multi-dimensional arrays
-
             int arraySize = GetRandom.Int(0, maxArraySize);
 
-            object[] collection = new object[arraySize];
+            var newArray = Array.CreateInstance(arrayElementsType, arraySize);
 
-            for (int index = 0; index < collection.Length; index++)
+            for (int index = 0; index < newArray.Length; index++)
             {
-                collection[index] = ComplexGetRandom(arrayType, knownTypes, shallow);
+                var newValue = ComplexGetRandom(arrayElementsType, knownTypes, shallow);
+                newArray.SetValue(newValue, index);
             }
 
-            return collection;
+            return newArray;
         }
 
         private static object ComplexGetRandom(Type instanceToCreate, Stack<Type> typeStack, bool shallow)
@@ -65,30 +64,31 @@ namespace Phnx.Random.Generator
 
             if (instanceToCreate.IsArray)
             {
-                instance = GetRandomOfArray(instanceToCreate, 10, typeStack, shallow);
-            }
+                var instanceArray = GetRandomOfArray(instanceToCreate.GetElementType(), 10, typeStack, shallow);
 
-            if (!TrySimpleGetRandom(instanceToCreate, out instance))
+                instance = instanceArray;
+            }
+            else if (!TrySimpleGetRandom(instanceToCreate, out instance))
             {
                 // Complex object
 
                 // Create instance and then set each property to a random value
                 instance = Activator.CreateInstance(instanceToCreate);
 
-                foreach (var property in instanceToCreate.GetPropertyFieldInfos().Where(p => p.CanSet))
+                foreach (var field in instanceToCreate.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public).Where(p => !p.IsInitOnly))
                 {
                     object propVal;
                     if (shallow)
                     {
                         // If it's a complex property, skip
-                        TrySimpleGetRandom(property.Type, out propVal);
+                        TrySimpleGetRandom(field.FieldType, out propVal);
                     }
                     else
                     {
-                        propVal = ComplexGetRandom(property.Type, typeStack, shallow);
+                        propVal = ComplexGetRandom(field.FieldType, typeStack, shallow);
                     }
 
-                    property.SetValue(instance, propVal);
+                    field.SetValue(instance, propVal);
                 }
             }
 
@@ -106,6 +106,11 @@ namespace Phnx.Random.Generator
                 instance = GetRandom.AlphanumericText();
                 return true;
             }
+            else if (instanceToCreate == typeof(int))
+            {
+                instance = GetRandom.Int();
+                return true;
+            }
             else if (instanceToCreate == typeof(bool))
             {
                 instance = GetRandom.Bool();
@@ -119,11 +124,6 @@ namespace Phnx.Random.Generator
             else if (instanceToCreate == typeof(DateTime))
             {
                 instance = GetRandom.DateTime();
-                return true;
-            }
-            else if (instanceToCreate == typeof(int))
-            {
-                instance = GetRandom.Int();
                 return true;
             }
             else if (instanceToCreate == typeof(char))
@@ -159,6 +159,11 @@ namespace Phnx.Random.Generator
             else if (instanceToCreate == typeof(ushort))
             {
                 instance = GetRandom.UShort();
+                return true;
+            }
+            else if (instanceToCreate == typeof(Guid))
+            {
+                instance = Guid.NewGuid();
                 return true;
             }
             else
