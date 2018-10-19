@@ -27,7 +27,7 @@ namespace Phnx.Random.Generator
                 return randomGenerated;
             }
 
-            return (short)((randomGenerated % range) + inclusiveMinValue);
+            return (short)(Math.Abs(randomGenerated % range) + inclusiveMinValue);
         }
     }
 }

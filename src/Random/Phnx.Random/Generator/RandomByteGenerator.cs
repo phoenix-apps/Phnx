@@ -1,4 +1,6 @@
-﻿namespace Phnx.Random.Generator
+﻿using System;
+
+namespace Phnx.Random.Generator
 {
     /// <summary>
     /// Provides methods for generating a random <see cref="byte"/>
@@ -25,7 +27,7 @@
                 return randomGenerated;
             }
 
-            return (byte)((randomGenerated % range) + inclusiveMinValue);
+            return (byte)(Math.Abs(randomGenerated % range) + inclusiveMinValue);
         }
     }
 }

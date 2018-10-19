@@ -25,7 +25,7 @@ namespace Phnx.Random.Generator
         public static DateTime Get(DateTime from, DateTime to)
         {
             var newDateTimeTicks = RandomLongGenerator.Get(from.Ticks, to.Ticks);
-            return new DateTime(newDateTimeTicks);
+            return new DateTime(Math.Abs(newDateTimeTicks));
         }
     }
 }
