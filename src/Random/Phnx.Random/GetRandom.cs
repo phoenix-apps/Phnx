@@ -168,9 +168,9 @@ namespace Phnx.Random
         /// <typeparam name="T">The type of object to create</typeparam>
         /// <param name="shallow">Whether to create a deep instance of a random, where all complex child properties are also randomized (non-recusively), or only shallow, where complex child properties are left as their defaults</param>
         /// <returns>A random instance of <typeparamref name="T"/></returns>
-        public static T InstanceOf<T>(bool shallow)
+        public static T Poco<T>(bool shallow)
         {
-            return RandomTGenerator.Get<T>(shallow);
+            return RandomPocoGenerator.Get<T>(shallow);
         }
 
         #endregion

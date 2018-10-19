@@ -7,9 +7,9 @@ using System.Reflection;
 namespace Phnx.Random.Generator
 {
     /// <summary>
-    /// Provides methods for generating a random generic type, by creating a random instance of all CLR properties
+    /// Provides methods for generating a random type, by creating a random instance of all CLR properties
     /// </summary>
-    public static class RandomTGenerator
+    public static class RandomPocoGenerator
     {
         /// <summary>
         /// Get a random instance of a generic type by creating an instance of itself if it's a CLR property, or a random instance of all properties if it's a complex type
@@ -114,7 +114,7 @@ namespace Phnx.Random.Generator
             {
                 instance = GetRandomList(instanceToCreate.GenericTypeArguments[0], 10, typeStack, shallow);
             }
-            else if (!TrySimpleGetRandom(instanceToCreate, out instance))
+            else if (!TryMapCLRType(instanceToCreate, out instance))
             {
                 // Complex object
 
@@ -127,7 +127,7 @@ namespace Phnx.Random.Generator
                     if (shallow)
                     {
                         // If it's a complex property, skip
-                        TrySimpleGetRandom(field.FieldType, out propVal);
+                        TryMapCLRType(field.FieldType, out propVal);
                     }
                     else
                     {
@@ -145,7 +145,7 @@ namespace Phnx.Random.Generator
         /// <summary>
         /// Gets a random instance of a type if it's a known CLR type
         /// </summary>
-        private static bool TrySimpleGetRandom(Type instanceToCreate, out object instance)
+        private static bool TryMapCLRType(Type instanceToCreate, out object instance)
         {
             if (instanceToCreate == typeof(object))
             {

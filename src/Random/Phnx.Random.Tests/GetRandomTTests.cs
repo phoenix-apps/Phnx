@@ -10,7 +10,7 @@ namespace Phnx.Random.Tests
         [Test]
         public void GetT_Deep_PopulatesChildProperties()
         {
-            var randomT = RandomTGenerator.Get<DeepFake>(false);
+            var randomT = RandomPocoGenerator.Get<DeepFake>(false);
 
             Assert.IsNotNull(randomT);
             Assert.AreNotEqual(Guid.Empty, randomT.Id);
@@ -29,7 +29,7 @@ namespace Phnx.Random.Tests
         [Test]
         public void GetT_Shallow_PopulatesOnlyCLRProperties()
         {
-            var randomT = RandomTGenerator.Get<DeepFake>(true);
+            var randomT = RandomPocoGenerator.Get<DeepFake>(true);
 
             Assert.IsNotNull(randomT);
             Assert.AreNotEqual(Guid.Empty, randomT.Id);
