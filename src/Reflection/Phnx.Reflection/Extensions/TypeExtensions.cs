@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Phnx.Reflection.Extensions
+namespace Phnx.Reflection
 {
     /// <summary>
     /// Extensions for <see cref="Type"/>

@@ -1,7 +1,6 @@
-﻿using System.Diagnostics;
-using Phnx.Reflection.Extensions;
+﻿using NUnit.Framework;
 using Phnx.Reflection.Tests.TestClasses;
-using NUnit.Framework;
+using System.Diagnostics;
 
 namespace Phnx.Reflection.Tests
 {

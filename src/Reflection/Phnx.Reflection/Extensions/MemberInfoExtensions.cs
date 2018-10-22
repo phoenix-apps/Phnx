@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Reflection;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
-namespace Phnx.Reflection.Extensions
+namespace Phnx.Reflection
 {
     /// <summary>
     /// Extensions for <see cref="MemberInfo"/>

@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
-using Phnx.Collections.Extensions;
-using Phnx.Reflection.Extensions;
+using Phnx.Collections;
 using Phnx.Reflection.Tests.TestClasses;
 using System.Linq;
 using System.Reflection;
