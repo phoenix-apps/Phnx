@@ -10,7 +10,7 @@ namespace Phnx.Security
         /// <summary>
         /// Create random secure keys for use by <see cref="Encrypt"/> and <see cref="Decrypt"/>
         /// </summary>
-        /// <param name="keySize">The total size of the asymetric key to generate. This does not guarantee the size of <paramref name="publicKey"/> or <paramref name="privateKey"/></param>
+        /// <param name="keySize">The size of the asymetric key to generate. This does not guarantee the size of <paramref name="publicKey"/> or <paramref name="privateKey"/></param>
         /// <param name="publicKey">The generated public key</param>
         /// <param name="privateKey">The generated private key</param>
         public void CreateRandomKeys(int keySize, out byte[] publicKey, out byte[] privateKey)
