@@ -1,5 +1,5 @@
-﻿using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using System.Text;
 
 namespace Phnx.Security.Tests
 {
@@ -16,7 +16,7 @@ namespace Phnx.Security.Tests
         public void EncryptingText_WithMessage_CreatesUnreadableBytes()
         {
             // Arrange
-            RsaEncryption.CreateRandomKeys(out byte[] publicBlob, out byte[] privateBlob);
+            RsaEncryption.CreateRandomKeys(1024, out byte[] publicBlob, out byte[] privateBlob);
 
             string plainText = "This is an awkwardly long message that must be secured in a meaningful way";
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
@@ -32,7 +32,7 @@ namespace Phnx.Security.Tests
         public void EncryptingAndDecryptingText_WithMessage_RestoresOriginalMessage()
         {
             // Arrange
-            RsaEncryption.CreateRandomKeys(out byte[] publicBlob, out byte[] privateBlob);
+            RsaEncryption.CreateRandomKeys(1024, out byte[] publicBlob, out byte[] privateBlob);
 
             string plainText = "This is an awkwardly long message that must be secured in a meaningful way";
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
