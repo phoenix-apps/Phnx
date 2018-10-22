@@ -1,4 +1,4 @@
-﻿namespace Phnx.Security.Passwords.Interface
+﻿namespace Phnx.Security.Passwords
 {
     /// <summary>
     /// A Password Hash Version ready for use by the <see cref="PasswordHashManager"/>

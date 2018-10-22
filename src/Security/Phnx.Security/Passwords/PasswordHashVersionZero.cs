@@ -1,6 +1,4 @@
-﻿using Phnx.Security.Passwords.Interface;
-
-namespace Phnx.Security.Passwords
+﻿namespace Phnx.Security.Passwords
 {
     /// <summary>
     /// A hash generator with a version of zero

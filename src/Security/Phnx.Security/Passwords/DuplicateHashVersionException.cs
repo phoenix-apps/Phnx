@@ -1,4 +1,4 @@
-﻿using Phnx.Security.Passwords.Interface;
+﻿using Phnx.Security.Passwords;
 using System;
 
 namespace Phnx.Security.Passwords

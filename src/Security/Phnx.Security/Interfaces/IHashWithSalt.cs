@@ -1,4 +1,4 @@
-﻿namespace Phnx.Security.Interfaces
+﻿namespace Phnx.Security
 {
     /// <summary>
     /// One way hashing using a salt. Useful for storing passwords

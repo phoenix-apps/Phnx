@@ -1,5 +1,4 @@
-﻿using Phnx.Collections.Extensions;
-using Phnx.Security.Passwords.Interface;
+﻿using Phnx.Collections;
 using System.Collections.Generic;
 using System.Linq;
 

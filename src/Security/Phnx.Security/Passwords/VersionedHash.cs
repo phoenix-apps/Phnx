@@ -1,5 +1,4 @@
-﻿using Phnx.Security.Passwords.Interface;
-using System;
+﻿using System;
 using System.Text;
 
 namespace Phnx.Security.Passwords

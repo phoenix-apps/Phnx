@@ -1,4 +1,4 @@
-﻿namespace Phnx.Security.Interfaces
+﻿namespace Phnx.Security
 {
     /// <summary>
     /// One way hashing without a salt. Useful for generating checksums for data at a fixed length

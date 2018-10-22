@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography;
-using Phnx.Security.Interfaces;
 
 namespace Phnx.Security
 {

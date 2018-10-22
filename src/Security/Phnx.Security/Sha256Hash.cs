@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using Phnx.Security.Interfaces;
 
 namespace Phnx.Security
 {

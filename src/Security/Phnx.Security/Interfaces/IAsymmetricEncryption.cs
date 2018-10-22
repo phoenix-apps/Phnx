@@ -1,4 +1,4 @@
-﻿namespace Phnx.Security.Interfaces
+﻿namespace Phnx.Security
 {
     /// <summary>
     /// An asymmetric encryption algorithm where seperate keys are used for encrypting and decrypting. Suitable for sending data to 3rd parties (such as sending messages), but not suited if the same user is encrypting and decrypting the data. Consider using <see cref="ISymmetricEncryption"/> if you don't need seperate keys for encrypting and decrypting data
