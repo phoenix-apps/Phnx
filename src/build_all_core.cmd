@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 
 REM The list of projects to build. This can be a solution, .csproj, or a folder containing either. These are executed in order
-set buildFiles= "Phnx" "Benchmark" "Collections" "Console" "Core/Configuration" "Data/Data" "Data/EFCore" "Drawing" "IO/IO" "IO/Json" "IO/Threaded" "Random" "Reflection" "Security" "Serialization" "Web" "AspNetCore/AspNetCore" "AspNetCore/Modals" "AspNetCore/Rest"
+set buildFiles= "Phnx" "Benchmark" "Collections" "Console" "Core/Configuration" "Data/Data" "Data/EFCore" "Drawing" "IO/IO" "IO/Json" "IO/Threaded" "Reflection" "Security" "Serialization" "Web" "AspNetCore/AspNetCore" "AspNetCore/Modals" "AspNetCore/Rest"
 
 REM The build status of the most recently completed build
 set buildStatus=0
