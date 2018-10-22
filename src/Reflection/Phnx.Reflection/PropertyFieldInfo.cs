@@ -115,9 +115,14 @@ namespace Phnx.Reflection
         /// <exception cref="TargetInvocationException">An error occurred while setting the property value. The <see cref="Exception.InnerException" /> property indicates the reason for the error</exception>
         public void SetValue(object baseObject, object valueToAssign)
         {
-            Property?.SetValue(baseObject, valueToAssign);
-
-            Field?.SetValue(baseObject, valueToAssign);
+            if (IsProperty)
+            {
+                Property.SetValue(baseObject, valueToAssign);
+            }
+            else
+            {
+                Field.SetValue(baseObject, valueToAssign);
+            }
         }
 
         /// <summary>
@@ -131,7 +136,14 @@ namespace Phnx.Reflection
         /// <exception cref="TargetInvocationException">An error occurred while retrieving the property value. The <see cref="Exception.InnerException" /> property indicates the reason for the error</exception>
         public object GetValue(object baseObject)
         {
-            return Property?.GetValue(baseObject) ?? Field?.GetValue(baseObject);
+            if (IsProperty)
+            {
+                return Property.GetValue(baseObject);
+            }
+            else
+            {
+                return Field.GetValue(baseObject);
+            }
         }
 
         /// <summary>

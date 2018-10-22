@@ -13,10 +13,7 @@ namespace Phnx.Reflection.Tests.TestClasses
             PublicGetOnlyProperty = getOnlyPropVal;
         }
 
-        public PropertyFieldClass(DateTime getOnlyFieldVal)
-        {
-            PublicFieldReadOnly = getOnlyFieldVal;
-        }
+        public PropertyFieldClass(DateTime getOnlyFieldVal) => PublicFieldReadOnly = getOnlyFieldVal;
 
         public PropertyFieldClass(string getOnlyPropVal, DateTime getOnlyFieldVal)
         {
@@ -34,8 +31,12 @@ namespace Phnx.Reflection.Tests.TestClasses
 
         private int PrivateProperty { get; set; }
 
-#pragma warning disable IDE0044 // Add readonly modifier
-        private PropertyFieldClass _privateField;
-#pragma warning restore IDE0044
+        private int _privateField;
+
+        private int PrivateMethod()
+        {
+            _privateField = 0;
+            return _privateField;
+        }
     }
 }
