@@ -18,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Phnx">
+      <HintPath>..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
+    </Reference>
     <Reference Include="Phnx.Collections">
       <HintPath>..\..\Collections\Phnx.Collections\bin\Debug\netstandard2.0\Phnx.Collections.dll</HintPath>
     </Reference>

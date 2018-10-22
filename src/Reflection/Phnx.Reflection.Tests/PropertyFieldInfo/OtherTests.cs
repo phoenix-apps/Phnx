@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NUnit.Framework;
 using Phnx.Reflection.Tests.TestClasses;
-using NUnit.Framework;
+using System;
 
 namespace Phnx.Reflection.Tests.PropertyFieldInfo
 {
-    public class PropertyFieldInfoTypeTests
+    public class OtherTests
     {
         [Test]
         public void GettingAMember_WhichIsAProperty_ReportsToBeAProperty()

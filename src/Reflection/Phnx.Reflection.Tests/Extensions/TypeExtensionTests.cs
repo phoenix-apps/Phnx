@@ -4,7 +4,7 @@ using Phnx.Reflection.Tests.TestClasses;
 using System.Linq;
 using System.Reflection;
 
-namespace Phnx.Reflection.Tests
+namespace Phnx.Reflection.Tests.Extensions
 {
     public class TypeExtensionTests
     {

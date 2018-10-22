@@ -1,11 +1,11 @@
-﻿using System;
-using System.Reflection;
+﻿using NUnit.Framework;
 using Phnx.Reflection.Tests.TestClasses;
-using NUnit.Framework;
+using System;
+using System.Reflection;
 
 namespace Phnx.Reflection.Tests.PropertyFieldInfo
 {
-    public class PropertyFieldInfoNameTests
+    public class NameTests
     {
         [Test]
         public void GettingAProperty_WhichIsPublic_GetsTheCorrectName()

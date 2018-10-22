@@ -4,20 +4,38 @@ namespace Phnx.Reflection.Tests.TestClasses
 {
     public class PropertyFieldClass
     {
+        public PropertyFieldClass()
+        {
+        }
+
+        public PropertyFieldClass(string getOnlyPropVal)
+        {
+            PublicGetOnlyProperty = getOnlyPropVal;
+        }
+
+        public PropertyFieldClass(DateTime getOnlyFieldVal)
+        {
+            PublicFieldReadOnly = getOnlyFieldVal;
+        }
+
+        public PropertyFieldClass(string getOnlyPropVal, DateTime getOnlyFieldVal)
+        {
+            PublicGetOnlyProperty = getOnlyPropVal;
+            PublicFieldReadOnly = getOnlyFieldVal;
+        }
+
         public string PublicProperty { get; set; }
 
-        // ReSharper disable once UnassignedGetOnlyAutoProperty
         public string PublicGetOnlyProperty { get; }
 
         public DateTime PublicField;
 
-        // ReSharper disable once UnassignedReadonlyField
         public readonly DateTime PublicFieldReadOnly;
 
         private int PrivateProperty { get; set; }
 
-#pragma warning disable 169
+#pragma warning disable IDE0044 // Add readonly modifier
         private PropertyFieldClass _privateField;
-#pragma warning restore 169
+#pragma warning restore IDE0044
     }
 }

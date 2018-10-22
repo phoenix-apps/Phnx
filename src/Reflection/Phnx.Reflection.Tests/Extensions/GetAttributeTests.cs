@@ -2,7 +2,7 @@
 using Phnx.Reflection.Tests.TestClasses;
 using System.Diagnostics;
 
-namespace Phnx.Reflection.Tests
+namespace Phnx.Reflection.Tests.Extensions
 {
     public class GetAttributeTests
     {

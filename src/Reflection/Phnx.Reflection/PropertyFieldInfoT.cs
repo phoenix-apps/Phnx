@@ -18,6 +18,11 @@ namespace Phnx.Reflection
         /// <exception cref="ArgumentException">The expression is not a property or field access</exception>
         public PropertyFieldInfo(Expression<Func<T, U>> expression)
         {
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
             LoadExpression(expression);
         }
 
@@ -44,6 +49,29 @@ namespace Phnx.Reflection
         /// <param name="field">The field</param>
         public PropertyFieldInfo(FieldInfo field) : base(field)
         {
+        }
+
+        /// <summary>
+        /// Loads an <see cref="Expression{T}"/> as a member access onto this
+        /// </summary>
+        /// <param name="expression">The expression that points to a property/ field</param>
+        /// <typeparam name="TObject">The object which member belongs to</typeparam>
+        /// <typeparam name="TMember">The type of the member to load onto this</typeparam>
+        /// <exception cref="ArgumentException">The expression is not a property or field access</exception>
+        protected void LoadExpression<TObject, TMember>(Expression<Func<TObject, TMember>> expression)
+        {
+            MemberInfo member;
+            if (expression.Body is MemberExpression memberExpression)
+            {
+                member = memberExpression.Member;
+            }
+            else
+            {
+                string msg = ErrorMessage.Factory.ExpressionIsNotPropertyOrFieldAccess();
+                throw new ArgumentException(msg, nameof(expression));
+            }
+
+            LoadMember(member);
         }
 
         /// <summary>

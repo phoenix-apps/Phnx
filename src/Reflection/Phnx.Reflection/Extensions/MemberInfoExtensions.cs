@@ -10,18 +10,21 @@ namespace Phnx.Reflection
     /// </summary>
     public static class MemberInfoExtensions
     {
-        /// <summary>Retrieves a custom attribute of a specified type that is applied to a specified member.</summary>
-        /// <param name="member">The member to inspect.</param>
-        /// <typeparam name="T">The type of attribute to search for.</typeparam>
-        /// <returns>A custom attribute that matches the type, or null if no such attribute is found.</returns>
-        /// <exception cref="ArgumentNullException">
-        /// <paramref name="member" /> is null. </exception>
-        /// <exception cref="NotSupportedException">
-        /// <paramref name="member" /> is not a constructor, method, property, event, type, or field. </exception>
-        /// <exception cref="AmbiguousMatchException">More than one of the requested attributes was found. </exception>
-        /// <exception cref="TypeLoadException">A custom attribute type cannot be loaded. </exception>
+        /// <summary>Retrieves a custom attribute of a specified type that is applied to a specified member</summary>
+        /// <param name="member">The member to inspect</param>
+        /// <typeparam name="T">The type of attribute to search for</typeparam>
+        /// <returns>A custom attribute that matches the type, or null if no such attribute is found</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="member" /> is null</exception>
+        /// <exception cref="NotSupportedException"><paramref name="member" /> is not a constructor, method, property, event, type, or field</exception>
+        /// <exception cref="AmbiguousMatchException">More than one of the requested attributes was found</exception>
+        /// <exception cref="TypeLoadException">A custom attribute type cannot be loaded</exception>
         public static T GetAttribute<T>(this MemberInfo member) where T : Attribute
         {
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
             return member.GetCustomAttribute<T>();
         }
 

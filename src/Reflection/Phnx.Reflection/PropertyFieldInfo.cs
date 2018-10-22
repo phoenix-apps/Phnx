@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
 using System.Reflection;
 
 namespace Phnx.Reflection
@@ -85,29 +84,6 @@ namespace Phnx.Reflection
         }
 
         /// <summary>
-        /// Loads an <see cref="Expression{T}"/> as a member access onto this
-        /// </summary>
-        /// <param name="expression">The expression that points to a property/ field</param>
-        /// <typeparam name="TObject">The object which member belongs to</typeparam>
-        /// <typeparam name="TMember">The type of the member to load onto this</typeparam>
-        /// <exception cref="ArgumentException">The expression is not a property or field access</exception>
-        protected void LoadExpression<TObject, TMember>(Expression<Func<TObject, TMember>> expression)
-        {
-            MemberInfo member;
-            if (expression.Body is MemberExpression memberExpression)
-            {
-                member = memberExpression.Member;
-            }
-            else
-            {
-                string msg = ErrorMessage.Factory.ExpressionIsNotPropertyOrFieldAccess();
-                throw new ArgumentException(msg, nameof(expression));
-            }
-
-            LoadMember(member);
-        }
-
-        /// <summary>
         /// Loads a <see cref="MemberInfo"/> onto either <see cref="Property"/> or <see cref="Field"/> depending on whichever it represents
         /// </summary>
         /// <param name="member">The member to load</param>
@@ -167,7 +143,7 @@ namespace Phnx.Reflection
         {
             var prop = propFieldInfo.Property;
 
-            if (prop == null)
+            if (!propFieldInfo.IsProperty)
             {
                 string err = ErrorMessage.Factory.InvalidCast(propFieldInfo.Name, typeof(PropertyFieldInfo),
                     typeof(PropertyInfo));
@@ -187,7 +163,7 @@ namespace Phnx.Reflection
         {
             var field = propFieldInfo.Field;
 
-            if (field == null)
+            if (propFieldInfo.IsProperty)
             {
                 string err = ErrorMessage.Factory.InvalidCast(propFieldInfo.Name, typeof(PropertyFieldInfo),
                     typeof(FieldInfo));
