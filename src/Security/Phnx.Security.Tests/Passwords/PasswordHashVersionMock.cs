@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using Phnx.Security.Passwords.Interface;
+﻿using Phnx.Security.Passwords;
 
 namespace Phnx.Security.Tests.Passwords
 {
@@ -8,13 +7,6 @@ namespace Phnx.Security.Tests.Passwords
         public int Version => 1;
         public int HashBytesLength => 24;
         public int SaltBytesLength => 24;
-
-        private RNGCryptoServiceProvider CryptoServiceProvider { get; }
-
-        public PasswordHashVersionMock()
-        {
-            CryptoServiceProvider = new RNGCryptoServiceProvider();
-        }
 
         public byte[] GenerateHash(byte[] password, byte[] salt)
         {
