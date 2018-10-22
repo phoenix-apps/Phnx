@@ -162,17 +162,6 @@ namespace Phnx.Random
             return RandomDateTimeGenerator.Get(from, to);
         }
 
-        /// <summary>
-        /// Get a random instance of a generic type by creating an instance of itself if it's a CLR property, or a random instance of all properties if it's a complex type
-        /// </summary>
-        /// <typeparam name="T">The type of object to create</typeparam>
-        /// <param name="shallow">Whether to create a deep instance of a random, where all complex child properties are also randomized (non-recusively), or only shallow, where complex child properties are left as their defaults</param>
-        /// <returns>A random instance of <typeparamref name="T"/></returns>
-        public static T Poco<T>(bool shallow)
-        {
-            return RandomPocoGenerator.Get<T>(shallow);
-        }
-
         #endregion
 
         /// <summary>
