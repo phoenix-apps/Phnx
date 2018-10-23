@@ -1,7 +1,7 @@
 ﻿namespace Phnx.Security.Passwords
 {
     /// <summary>
-    /// A hash generator with a version of zero
+    /// A hash generator with a version of zero. Uses <see cref="Pbkdf2Hash"/> with 1024 iterations
     /// </summary>
     public sealed class PasswordHashVersionZero : IPasswordHashVersion
     {
@@ -23,16 +23,16 @@
         /// <summary>
         /// The number of times this hash is ran on any passwords
         /// </summary>
-        public int IterationCount => HashGenerator.IterationCount;
+        public int IterationCount => _hashGenerator.IterationCount;
 
-        private Pbkdf2Hash HashGenerator { get; }
+        private readonly Pbkdf2Hash _hashGenerator;
 
         /// <summary>
         /// Create a new instance of <see cref="PasswordHashVersionZero"/>
         /// </summary>
         public PasswordHashVersionZero()
         {
-            HashGenerator = new Pbkdf2Hash();
+            _hashGenerator = new Pbkdf2Hash(1024);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@
         /// <returns></returns>
         public byte[] GenerateHash(byte[] password, byte[] salt)
         {
-            return HashGenerator.Hash(password, salt);
+            return _hashGenerator.Hash(password, salt);
         }
 
         /// <summary>
@@ -52,7 +52,7 @@
         /// <returns></returns>
         public byte[] GenerateSalt()
         {
-            return HashGenerator.GenerateSalt();
+            return _hashGenerator.GenerateSalt();
         }
     }
 }
