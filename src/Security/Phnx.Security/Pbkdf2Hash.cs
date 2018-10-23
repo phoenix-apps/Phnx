@@ -29,6 +29,11 @@ namespace Phnx.Security
         /// <param name="iterationCount">The number of times to run the algorithm when hashing data</param>
         public Pbkdf2Hash(int iterationCount = 1024)
         {
+            if (iterationCount < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(iterationCount));
+            }
+
             SaltBytesLength = 24;
 
             IterationCount = iterationCount;
@@ -49,12 +54,21 @@ namespace Phnx.Security
         /// <param name="data">The data to hash</param>
         /// <param name="salt">The salt to use. This must have the same length as <see cref="SaltBytesLength"/></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="data"/> or <paramref name="salt"/> is <see langword="null"/></exception>
         public byte[] Hash(byte[] data, byte[] salt)
         {
-            if (salt.Length != SaltBytesLength)
+            if (data is null)
             {
-                string msg = ErrorMessage.Factory.InvalidSaltSize(SaltBytesLength, salt.Length);
-                throw new ArgumentOutOfRangeException(nameof(salt), msg);
+                throw new ArgumentNullException(nameof(data));
+            }
+            if (salt is null)
+            {
+                throw new ArgumentNullException(nameof(salt));
+            }
+
+            if (IterationCount == 0)
+            {
+                return data;
             }
 
             using (var pbkdf2 = new Rfc2898DeriveBytes(data, salt, IterationCount))

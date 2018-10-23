@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System;
+using System.Security.Cryptography;
 
 namespace Phnx.Security
 {
@@ -21,8 +22,14 @@ namespace Phnx.Security
         /// Create a new <see cref="Sha256Hash"/>
         /// </summary>
         /// <param name="iterationCount">The number of times to run the algorithm when hashing data</param>
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="iterationCount"/> is less than zero</exception>
         public Sha256Hash(int iterationCount = 1)
         {
+            if (iterationCount < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(iterationCount));
+            }
+
             IterationCount = iterationCount;
         }
 
@@ -31,9 +38,15 @@ namespace Phnx.Security
         /// </summary>
         /// <param name="data">The data to hash</param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
         public byte[] Hash(byte[] data)
         {
-            if (IterationCount <= 0)
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            if (IterationCount == 0)
             {
                 return data;
             }
