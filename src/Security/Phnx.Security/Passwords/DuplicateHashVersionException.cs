@@ -1,5 +1,4 @@
-﻿using Phnx.Security.Passwords;
-using System;
+﻿using System;
 
 namespace Phnx.Security.Passwords
 {
@@ -7,7 +6,7 @@ namespace Phnx.Security.Passwords
     /// The exception that is thrown when two or more <see cref="IPasswordHashVersion"/> with the same version number are added to the <see cref="PasswordHashManager"/>
     /// </summary>
     [Serializable]
-    public class DuplicateHashVersionException : InvalidOperationException
+    public class DuplicateHashVersionException : ArgumentException
     {
         /// <summary>
         /// Create a new instance of the <see cref="DuplicateHashVersionException"/> with an error message describing that <paramref name="hashVersion"/> has already been added
