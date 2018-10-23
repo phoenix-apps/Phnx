@@ -105,7 +105,7 @@ namespace Phnx.Tests.Extensions.Numeric
         {
             var result = 0.ToOrdinal();
 
-            Assert.AreEqual("0th", result);
+            Assert.AreEqual("0", result);
         }
 
         [Test]

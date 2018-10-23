@@ -91,11 +91,21 @@ namespace Phnx
         /// <param name="stringToRemoveFrom">The string to remove from</param>
         /// <param name="textToRemove">The string to remove</param>
         /// <returns></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="stringToRemoveFrom"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="stringToRemoveFrom"/> is <see cref="string.Empty"/></exception>
         public static string Remove(this string stringToRemoveFrom, string textToRemove)
         {
             if (stringToRemoveFrom == null)
             {
                 throw new ArgumentNullException(nameof(stringToRemoveFrom));
+            }
+            if (textToRemove is null)
+            {
+                return stringToRemoveFrom;
+            }
+            if (stringToRemoveFrom == string.Empty)
+            {
+                return stringToRemoveFrom;
             }
 
             return stringToRemoveFrom.Replace(textToRemove, string.Empty);
@@ -157,11 +167,6 @@ namespace Phnx
             var wordDelimiters = new[] { ' ', '-', '_' };
 
             var words = stringToConvert.Split(wordDelimiters, StringSplitOptions.None);
-
-            if (words.Length == 0)
-            {
-                return string.Empty;
-            }
 
             string MakeWordCamelCase(string word)
             {

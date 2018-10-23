@@ -6,6 +6,45 @@ namespace Phnx.Tests.Extensions.StringExtensionsTests
     public class RemoveTests
     {
         [Test]
+        public void Remove_WhenStringIsNull_ThrowsArgumentNullException()
+        {
+            string testString = null;
+
+            Assert.Throws<ArgumentNullException>(() => testString.Remove(string.Empty));
+        }
+
+        [Test]
+        public void Remove_WhenTextToRemoveIsNull_DoesNotThrow()
+        {
+            string testString = "asdf";
+            string nullString = null;
+            var result = testString.Remove(nullString);
+
+            Assert.AreEqual(testString, result);
+        }
+
+        [Test]
+        public void Remove_WhenStringIsEmpty_ReturnsString()
+        {
+            string testString = string.Empty;
+
+            var result = testString.Remove("asdf");
+
+            Assert.AreEqual(string.Empty, result);
+        }
+
+        [Test]
+        public void Remove_WhenStringsAreValid_Removes()
+        {
+            string expected = "2";
+            string testString = "asdf2";
+
+            var result = testString.Remove("asdf");
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
         public void RemovingChars_WhenStringIsNull_ThrowsArgumentNullException()
         {
             string testString = null;
