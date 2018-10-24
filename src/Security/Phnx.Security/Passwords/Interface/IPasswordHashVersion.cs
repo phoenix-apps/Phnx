@@ -6,11 +6,6 @@
     public interface IPasswordHashVersion
     {
         /// <summary>
-        /// The version of this hashing algorithm
-        /// </summary>
-        int Version { get; }
-
-        /// <summary>
         /// The length of the hash produced by this algorithm
         /// </summary>
         int HashBytesLength { get; }

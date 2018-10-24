@@ -1,6 +1,5 @@
 ﻿using Phnx.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Phnx.Security.Passwords
 {
@@ -10,56 +9,31 @@ namespace Phnx.Security.Passwords
     public class PasswordHashManager
     {
         /// <summary>
-        /// A collection of all the hash generator services that have been added through <see cref="AddHashGenerator"/> or the constructor
+        /// A collection of all the hash generator services that have been added through <see cref="Add"/> or the constructor
         /// </summary>
-        protected List<IPasswordHashVersion> HashGeneratorServices { get; }
+        protected IDictionary<int, IPasswordHashVersion> Generators { get; }
 
         /// <summary>
-        /// The <see cref="HashGeneratorServices"/> with the highest version number
+        /// The <see cref="Generators"/> with the highest version number
         /// </summary>
-        protected IPasswordHashVersion LatestGenerateHashService => HashGeneratorServices.MaxBy(g => g.Version);
+        protected IPasswordHashVersion LatestGenerator => Generators[LatestGeneratorVersion];
 
         /// <summary>
-        /// Create a new instance of the <see cref="PasswordHashManager"/> from a collection of <see cref="IPasswordHashVersion"/>
+        /// The highest version number in the <see cref="Generators"/>
         /// </summary>
-        /// <param name="hashGenerators">The generators to register with the manager</param>
-        public PasswordHashManager(params IPasswordHashVersion[] hashGenerators)
-        {
-            HashGeneratorServices = new List<IPasswordHashVersion>(hashGenerators);
-        }
+        public int LatestGeneratorVersion => Generators.MaxBy(g => g.Key).Key;
 
         /// <summary>
         /// Create a new instance of the <see cref="PasswordHashManager"/> from a collection of <see cref="IPasswordHashVersion"/>
         /// </summary>
-        /// <param name="hashGenerators">The generators to register with the manager</param>
-        public PasswordHashManager(IEnumerable<IPasswordHashVersion> hashGenerators)
+        public PasswordHashManager()
         {
-            HashGeneratorServices = new List<IPasswordHashVersion>(hashGenerators);
+            Generators = new Dictionary<int, IPasswordHashVersion>();
         }
 
-        /// <summary>
-        /// Gets the hash generator with a version number that matches the one used by the <paramref name="hash"/>
-        /// </summary>
-        /// <param name="hash">The hash to get the generator that was used</param>
-        /// <returns></returns>
-        private IPasswordHashVersion GetHashGeneratorFromHash(byte[] hash)
+        public void Add(int version, IPasswordHashVersion generator)
         {
-            int hashVersion = VersionedHash.GetVersionFromBytes(hash);
-            return HashGeneratorServices.First(h => h.Version == hashVersion);
-        }
-
-        /// <summary>
-        /// Add a <see cref="IPasswordHashVersion"/> to the service
-        /// </summary>
-        /// <param name="hashGenerator">The hash generator to add</param>
-        public void AddHashGenerator(IPasswordHashVersion hashGenerator)
-        {
-            if (HashGeneratorServices.Any(knownHashGenerator => knownHashGenerator.Version == hashGenerator.Version))
-            {
-                throw new DuplicateHashVersionException(hashGenerator.Version);
-            }
-
-            HashGeneratorServices.Add(hashGenerator);
+            Generators.Add(version, generator);
         }
 
         /// <summary>
@@ -70,11 +44,12 @@ namespace Phnx.Security.Passwords
         /// <returns></returns>
         public bool PasswordMatchesHash(string password, byte[] hash)
         {
-            var hashGenerator = GetHashGeneratorFromHash(hash);
+            var version = VersionedHash.GetVersionFromBytes(hash);
+            var hashGenerator = Generators[version];
 
             var hashed = new VersionedHash(hash, hashGenerator);
 
-            var hashedPassword = new VersionedHash(password, hashed.Salt, hashGenerator);
+            var hashedPassword = new VersionedHash(password, hashed.Salt, version, hashGenerator);
 
             return HashesMatch(hashed.PasswordHash, hashedPassword.PasswordHash);
         }
@@ -88,7 +63,7 @@ namespace Phnx.Security.Passwords
         {
             int hashVersion = VersionedHash.GetVersionFromBytes(hash);
 
-            return hashVersion < LatestGenerateHashService.Version;
+            return hashVersion < LatestGeneratorVersion;
         }
 
         /// <summary>
@@ -96,9 +71,10 @@ namespace Phnx.Security.Passwords
         /// </summary>
         /// <param name="password">The password to hash</param>
         /// <returns></returns>
-        public byte[] HashPasswordWithLatestHashGenerator(string password)
+        public byte[] HashWithLatest(string password)
         {
-            VersionedHash pass = new VersionedHash(password, LatestGenerateHashService);
+            var latestVersion = LatestGeneratorVersion;
+            VersionedHash pass = new VersionedHash(password, latestVersion, Generators[latestVersion]);
 
             return pass.ToBytes();
         }

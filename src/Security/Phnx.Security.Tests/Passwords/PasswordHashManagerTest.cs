@@ -1,20 +1,27 @@
-﻿using Phnx.Security.Passwords;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Phnx.Security.Passwords;
 
 namespace Phnx.Security.Tests.Passwords
 {
     [TestFixture]
     public class PasswordHashManagerTest
     {
+        public PasswordHashManager NewPasswordManager()
+        {
+            var mgr = new PasswordHashManager();
+            mgr.Add(0, new PasswordHashVersionZero());
+            return mgr;
+        }
+
         [Test]
         public void HashingAPassword_WithANewSalt_GeneratesHash()
         {
             // Arrange
-            PasswordHashManager hashManager = new PasswordHashManager(new PasswordHashVersionZero());
+            PasswordHashManager hashManager = NewPasswordManager();
             string password = "password";
 
             // Act
-            byte[] securedPassword = hashManager.HashPasswordWithLatestHashGenerator(password);
+            byte[] securedPassword = hashManager.HashWithLatest(password);
 
             // Assert
             Assert.IsNotEmpty(securedPassword);
@@ -23,73 +30,58 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void CheckingIfPasswordsMatch_WithMatchingPasswords_MatchesPassword()
         {
-            // Arrange
-            PasswordHashManager hashManager = new PasswordHashManager(new PasswordHashVersionZero());
+            PasswordHashManager hashManager = NewPasswordManager();
             string password = "password";
 
-            // Act
-            byte[] securedPassword = hashManager.HashPasswordWithLatestHashGenerator(password);
+            byte[] securedPassword = hashManager.HashWithLatest(password);
             bool matchesPassword = hashManager.PasswordMatchesHash(password, securedPassword);
 
-            // Assert
             Assert.True(matchesPassword);
         }
 
         [Test]
         public void CheckingIfPasswordIsLatest_WithOldHash_AsksForRehash()
         {
-            // Arrange
-            PasswordHashManager hashManager = new PasswordHashManager(
-                new PasswordHashVersionZero());
+            PasswordHashManager hashManager = NewPasswordManager();
 
             string password = "password";
 
-            // Act
-            byte[] securedPassword = hashManager.HashPasswordWithLatestHashGenerator(password);
+            byte[] securedPassword = hashManager.HashWithLatest(password);
 
-            hashManager.AddHashGenerator(new PasswordHashVersionMock());
+            hashManager.Add(1, new PasswordHashVersionMock());
             bool needsUpdate = hashManager.ShouldUpdateHash(securedPassword);
 
-            // Assert
             Assert.True(needsUpdate);
         }
 
         [Test]
         public void CheckingIfPasswordIsLatest_WithNewHash_DoesNotAskForRehash()
         {
-            // Arrange
-            PasswordHashManager hashManager = new PasswordHashManager(
-                new PasswordHashVersionZero(),
-                new PasswordHashVersionMock());
+            PasswordHashManager hashManager = NewPasswordManager();
+            hashManager.Add(1, new PasswordHashVersionMock());
 
             string password = "password";
 
-            // Act
-            byte[] securedPassword = hashManager.HashPasswordWithLatestHashGenerator(password);
+            byte[] securedPassword = hashManager.HashWithLatest(password);
 
             bool needsUpdate = hashManager.ShouldUpdateHash(securedPassword);
 
-            // Assert
             Assert.False(needsUpdate);
         }
 
         [Test]
         public void LoggingIn_WithOldHash_StillLogsIn()
         {
-            // Arrange
-            PasswordHashManager hashManager = new PasswordHashManager(
-                new PasswordHashVersionZero());
+            PasswordHashManager hashManager = NewPasswordManager();
 
             string password = "password";
 
-            // Act
-            byte[] securedPassword = hashManager.HashPasswordWithLatestHashGenerator(password);
+            byte[] securedPassword = hashManager.HashWithLatest(password);
 
-            hashManager.AddHashGenerator(new PasswordHashVersionMock());
+            hashManager.Add(1, new PasswordHashVersionMock());
 
             bool passwordsMatch = hashManager.PasswordMatchesHash(password, securedPassword);
 
-            // Assert
             Assert.True(passwordsMatch);
         }
     }
