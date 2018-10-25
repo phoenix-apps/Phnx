@@ -1,4 +1,5 @@
 ﻿using Phnx.Collections;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Phnx.Security.Passwords
@@ -6,17 +7,17 @@ namespace Phnx.Security.Passwords
     /// <summary>
     /// A central place for managing all your password hashes, including whether they should be updated to the latest algorithm
     /// </summary>
-    public class PasswordHashManager
+    public class PasswordHashManager : IDictionary<int, IPasswordHash>, IReadOnlyDictionary<int, IPasswordHash>
     {
         /// <summary>
-        /// A collection of all the hash generator services that have been added through <see cref="Add"/> or the constructor
+        /// A collection of all the hash generators
         /// </summary>
-        protected IDictionary<int, IPasswordHashVersion> Generators { get; }
+        protected IDictionary<int, IPasswordHash> Generators { get; }
 
         /// <summary>
         /// The <see cref="Generators"/> with the highest version number
         /// </summary>
-        protected IPasswordHashVersion LatestGenerator => Generators[LatestGeneratorVersion];
+        protected IPasswordHash LatestGenerator => Generators[LatestGeneratorVersion];
 
         /// <summary>
         /// The highest version number in the <see cref="Generators"/>
@@ -24,14 +25,51 @@ namespace Phnx.Security.Passwords
         public int LatestGeneratorVersion => Generators.MaxBy(g => g.Key).Key;
 
         /// <summary>
-        /// Create a new instance of the <see cref="PasswordHashManager"/> from a collection of <see cref="IPasswordHashVersion"/>
+        /// Gets an <see cref="ICollection{T}"/> containing the known versions
+        /// </summary>
+        public ICollection<int> Keys => Generators.Keys;
+
+        /// <summary>
+        /// Gets an <see cref="ICollection{T}"/> containing the known <see cref="IPasswordHash"/>s
+        /// </summary>
+        public ICollection<IPasswordHash> Values => Generators.Values;
+
+        /// <summary>
+        /// Gets the number of known <see cref="IPasswordHash"/>s
+        /// </summary>
+        public int Count => Generators.Count;
+
+        bool ICollection<KeyValuePair<int, IPasswordHash>>.IsReadOnly => Generators.IsReadOnly;
+
+        IEnumerable<int> IReadOnlyDictionary<int, IPasswordHash>.Keys => Keys;
+
+        IEnumerable<IPasswordHash> IReadOnlyDictionary<int, IPasswordHash>.Values => Values;
+
+        /// <summary>
+        /// Gets or sets the element with the specified version
+        /// </summary>
+        /// <param name="version">The version of <see cref="IPasswordHash"/> to get or set</param>
+        /// <returns>The <see cref="IPasswordHash"/> with the specified version</returns>
+        public IPasswordHash this[int version]
+        {
+            get => Generators[version];
+            set => Generators[version] = value;
+        }
+
+        /// <summary>
+        /// Create a new empty <see cref="PasswordHashManager"/>
         /// </summary>
         public PasswordHashManager()
         {
-            Generators = new Dictionary<int, IPasswordHashVersion>();
+            Generators = new Dictionary<int, IPasswordHash>();
         }
 
-        public void Add(int version, IPasswordHashVersion generator)
+        /// <summary>
+        /// Add an <see cref="IPasswordHash"/> with a version number
+        /// </summary>
+        /// <param name="version">The version number for <paramref name="generator"/></param>
+        /// <param name="generator">The <see cref="IPasswordHash"/> to use for this version of passwords</param>
+        public void Add(int version, IPasswordHash generator)
         {
             Generators.Add(version, generator);
         }
@@ -58,7 +96,7 @@ namespace Phnx.Security.Passwords
         /// Gets whether a hash is using an old hashing algorithm, and should therefore be updated to the latest algorithm
         /// </summary>
         /// <param name="hash">The hash to check the version number of</param>
-        /// <returns></returns>
+        /// <returns><see langword="true"/> if a hash is using an old hashing algorithm, and should therefore be updated to the latest algorithm, otherwise <see langword="false"/></returns>
         public bool ShouldUpdateHash(byte[] hash)
         {
             int hashVersion = VersionedHash.GetVersionFromBytes(hash);
@@ -70,7 +108,7 @@ namespace Phnx.Security.Passwords
         /// Hash a password using the latest hash generator
         /// </summary>
         /// <param name="password">The password to hash</param>
-        /// <returns></returns>
+        /// <returns><paramref name="password"/> hashed with <see cref="LatestGenerator"/></returns>
         public byte[] HashWithLatest(string password)
         {
             var latestVersion = LatestGeneratorVersion;
@@ -84,10 +122,106 @@ namespace Phnx.Security.Passwords
         /// </summary>
         /// <param name="hash1">The first hash to compare</param>
         /// <param name="hash2">The second hash to compare</param>
-        /// <returns></returns>
+        /// <returns><see langword="true"/> if <paramref name="hash1"/> is the same as <paramref name="hash2"/>, otherwise <see langword="false"/></returns>
         protected bool HashesMatch(byte[] hash1, byte[] hash2)
         {
             return hash1.EqualsRange(hash2);
+        }
+
+        /// <summary>
+        /// Get whether a version is known
+        /// </summary>
+        /// <param name="key">The version to check for</param>
+        /// <returns></returns>
+        public bool ContainsKey(int key)
+        {
+            return Generators.ContainsKey(key);
+        }
+
+        /// <summary>
+        /// Remove a version and its <see cref="IPasswordHash"/>
+        /// </summary>
+        /// <param name="key">The version to remove</param>
+        /// <returns>Whether the version was removed</returns>
+        public bool Remove(int key)
+        {
+            return Generators.Remove(key);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="IPasswordHash"/> associated with the specified version
+        /// </summary>
+        /// <param name="key">The version to get</param>
+        /// <param name="value">The found <see cref="IPasswordHash"/>. If the version was not found, this is <see langword="null"/></param>
+        /// <returns><see langword="true"/> if the version is found, otherwise <see langword="false"/></returns>
+        public bool TryGetValue(int key, out IPasswordHash value)
+        {
+            return Generators.TryGetValue(key, out value);
+        }
+
+        /// <summary>
+        /// Add a version and <see cref="IPasswordHash"/>
+        /// </summary>
+        /// <param name="item">The version and <see cref="IPasswordHash"/> to add</param>
+        public void Add(KeyValuePair<int, IPasswordHash> item)
+        {
+            Generators.Add(item);
+        }
+
+        /// <summary>
+        /// Clear all versions and <see cref="IPasswordHash"/>s
+        /// </summary>
+        public void Clear()
+        {
+            Generators.Clear();
+        }
+
+        /// <summary>
+        /// Get whether this contains a specific version and <see cref="IPasswordHash"/> pair
+        /// </summary>
+        /// <param name="item">The pair to check for</param>
+        /// <returns>Whether this contains a specific version and <see cref="IPasswordHash"/> pair</returns>
+        public bool Contains(KeyValuePair<int, IPasswordHash> item)
+        {
+            return Generators.Contains(item);
+        }
+
+        /// <summary>
+        /// Copies the version and <see cref="IPasswordHash"/>s to a <see cref="T:[]"/>, starting at a particular index
+        /// </summary>
+        /// <param name="array">The destination array to copy to</param>
+        /// <param name="arrayIndex">The destination array's index at which copying should begin</param>
+        public void CopyTo(KeyValuePair<int, IPasswordHash>[] array, int arrayIndex)
+        {
+            Generators.CopyTo(array, arrayIndex);
+        }
+
+        /// <summary>
+        /// Remove a specific version and <see cref="IPasswordHash"/> pair
+        /// </summary>
+        /// <param name="item">The pair to remove</param>
+        /// <returns><see langword="true"/> if the specific version and <see cref="IPasswordHash"/> was removed successfully, otherwise <see langword="false"/></returns>
+        public bool Remove(KeyValuePair<int, IPasswordHash> item)
+        {
+            return Generators.Remove(item);
+        }
+
+        /// <summary>
+        /// Get an enumerator for all the version and <see cref="IPasswordHash"/>s
+        /// </summary>
+        /// <returns>An enumerator for all the version and <see cref="IPasswordHash"/>s</returns>
+        public IEnumerator<KeyValuePair<int, IPasswordHash>> GetEnumerator()
+        {
+            return Generators.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Get an enumerator for all the version and <see cref="IPasswordHash"/>s
+        /// </summary>
+        /// <returns>An enumerator for all the version and <see cref="IPasswordHash"/>s</returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

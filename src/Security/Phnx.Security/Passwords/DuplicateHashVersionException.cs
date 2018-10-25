@@ -3,7 +3,7 @@
 namespace Phnx.Security.Passwords
 {
     /// <summary>
-    /// The exception that is thrown when two or more <see cref="IPasswordHashVersion"/> with the same version number are added to the <see cref="PasswordHashManager"/>
+    /// The exception that is thrown when two or more <see cref="IPasswordHash"/> with the same version number are added to the <see cref="PasswordHashManager"/>
     /// </summary>
     [Serializable]
     public class DuplicateHashVersionException : ArgumentException

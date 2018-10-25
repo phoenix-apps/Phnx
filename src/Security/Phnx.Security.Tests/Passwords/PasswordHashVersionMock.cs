@@ -2,7 +2,7 @@
 
 namespace Phnx.Security.Tests.Passwords
 {
-    internal class PasswordHashVersionMock : IPasswordHashVersion
+    internal class PasswordHashVersionMock : IPasswordHash
     {
         public int Version => 1;
         public int HashBytesLength => 24;

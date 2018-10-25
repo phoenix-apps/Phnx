@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 namespace Phnx.Security
 {
     /// <summary>
-    /// A 1024 bit PBKDF2 hashing algorithm. Suitable for passwords, but generally too slow for checksums. Consider using <see cref="Sha256Hash"/> if you're generating checksums
+    /// A PBKDF2 hashing algorithm. Suitable for passwords, but generally too slow for checksums. Consider using <see cref="Sha256Hash"/> if you're generating checksums
     /// </summary>
     public class Pbkdf2Hash : IHashWithSalt
     {

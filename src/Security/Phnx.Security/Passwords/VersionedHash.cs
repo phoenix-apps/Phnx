@@ -9,7 +9,7 @@ namespace Phnx.Security.Passwords
 
         public const int BytesUsedByVersionTag = 4;
 
-        public VersionedHash(string password, int version, IPasswordHashVersion hashGenerator)
+        public VersionedHash(string password, int version, IPasswordHash hashGenerator)
         {
             Version = version;
             Salt = hashGenerator.GenerateSalt();
@@ -20,7 +20,7 @@ namespace Phnx.Security.Passwords
             VerifyGenerator(hashGenerator);
         }
 
-        public VersionedHash(string password, byte[] salt, int version, IPasswordHashVersion hashGenerator)
+        public VersionedHash(string password, byte[] salt, int version, IPasswordHash hashGenerator)
         {
             Version = version;
             Salt = salt;
@@ -31,7 +31,7 @@ namespace Phnx.Security.Passwords
             VerifyGenerator(hashGenerator);
         }
 
-        public VersionedHash(byte[] bytes, IPasswordHashVersion hashGenerator)
+        public VersionedHash(byte[] bytes, IPasswordHash hashGenerator)
         {
             VerifyGenerator(bytes.Length, hashGenerator);
 
@@ -44,7 +44,7 @@ namespace Phnx.Security.Passwords
             Array.Copy(bytes, BytesUsedByVersionTag + PasswordHash.Length, Salt, 0, Salt.Length);
         }
 
-        private void VerifyGenerator(IPasswordHashVersion generator)
+        private void VerifyGenerator(IPasswordHash generator)
         {
             var hashLength = BytesUsedByVersionTag + PasswordHash.Length + Salt.Length;
             var hashLengthShouldBe = BytesUsedByVersionTag + generator.HashBytesLength + generator.SaltBytesLength;
@@ -57,7 +57,7 @@ namespace Phnx.Security.Passwords
             }
         }
 
-        private void VerifyGenerator(int hashLength, IPasswordHashVersion generator)
+        private void VerifyGenerator(int hashLength, IPasswordHash generator)
         {
             var hashLengthShouldBe = BytesUsedByVersionTag + generator.HashBytesLength + generator.SaltBytesLength;
             if (hashLength != hashLengthShouldBe)

@@ -26,10 +26,10 @@ namespace Phnx
         /// <param name="factory">The factory to extend</param>
         /// <param name="hashLength">The length that the hash actually was</param>
         /// <param name="hashLengthShouldBe">The length that the hash should've been</param>
-        /// <returns>A message asking the developer to check the <see cref="IPasswordHashVersion"/> and the hash</returns>
+        /// <returns>A message asking the developer to check the <see cref="IPasswordHash"/> and the hash</returns>
         public static string InvalidHashConfiguration(this ErrorMessage factory, int hashLength, int hashLengthShouldBe)
         {
-            return $"The configuration for this hash generator does not match with the hash. The hash length should be {hashLengthShouldBe} but was {hashLength}. Please check that this hash belongs to the assigned {nameof(IPasswordHashVersion)}, and that the {nameof(IPasswordHashVersion.SaltBytesLength)} and {nameof(IPasswordHashVersion.HashBytesLength)} are correct";
+            return $"The configuration for this hash generator does not match with the hash. The hash length should be {hashLengthShouldBe} but was {hashLength}. Please check that this hash belongs to the assigned {nameof(IPasswordHash)}, and that the {nameof(IPasswordHash.SaltBytesLength)} and {nameof(IPasswordHash.HashBytesLength)} are correct";
         }
     }
 }

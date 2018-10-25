@@ -3,7 +3,7 @@
     /// <summary>
     /// A hash generator with a version of zero. Uses <see cref="Pbkdf2Hash"/> with 1024 iterations
     /// </summary>
-    public sealed class PasswordHashVersionZero : IPasswordHashVersion
+    public sealed class PasswordHashDefault : IPasswordHash
     {
         /// <summary>
         /// The version of this hashing algorithm
@@ -28,9 +28,9 @@
         private readonly Pbkdf2Hash _hashGenerator;
 
         /// <summary>
-        /// Create a new instance of <see cref="PasswordHashVersionZero"/>
+        /// Create a new instance of <see cref="PasswordHashDefault"/>
         /// </summary>
-        public PasswordHashVersionZero()
+        public PasswordHashDefault()
         {
             _hashGenerator = new Pbkdf2Hash(1024);
         }

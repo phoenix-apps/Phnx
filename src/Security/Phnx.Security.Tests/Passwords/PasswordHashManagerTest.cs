@@ -9,7 +9,7 @@ namespace Phnx.Security.Tests.Passwords
         public PasswordHashManager NewPasswordManager()
         {
             var mgr = new PasswordHashManager();
-            mgr.Add(0, new PasswordHashVersionZero());
+            mgr.Add(0, new PasswordHashDefault());
             return mgr;
         }
 
