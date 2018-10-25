@@ -1,4 +1,5 @@
 ﻿using Phnx.Collections;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -71,6 +72,11 @@ namespace Phnx.Security.Passwords
         /// <param name="generator">The <see cref="IPasswordHash"/> to use for this version of passwords</param>
         public void Add(int version, IPasswordHash generator)
         {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
             Generators.Add(version, generator);
         }
 
@@ -82,6 +88,15 @@ namespace Phnx.Security.Passwords
         /// <returns></returns>
         public bool PasswordMatchesHash(string password, byte[] hash)
         {
+            if (password is null)
+            {
+                throw new ArgumentNullException(nameof(password));
+            }
+            if (hash is null)
+            {
+                throw new ArgumentNullException(nameof(hash));
+            }
+
             var version = VersionedHash.GetVersionFromBytes(hash);
             var hashGenerator = Generators[version];
 
@@ -99,6 +114,11 @@ namespace Phnx.Security.Passwords
         /// <returns><see langword="true"/> if a hash is using an old hashing algorithm, and should therefore be updated to the latest algorithm, otherwise <see langword="false"/></returns>
         public bool ShouldUpdateHash(byte[] hash)
         {
+            if (hash is null)
+            {
+                throw new ArgumentNullException(nameof(hash));
+            }
+
             int hashVersion = VersionedHash.GetVersionFromBytes(hash);
 
             return hashVersion < LatestGeneratorVersion;
@@ -111,6 +131,11 @@ namespace Phnx.Security.Passwords
         /// <returns><paramref name="password"/> hashed with <see cref="LatestGenerator"/></returns>
         public byte[] HashWithLatest(string password)
         {
+            if (password is null)
+            {
+                throw new ArgumentNullException(nameof(password));
+            }
+
             var latestVersion = LatestGeneratorVersion;
             VersionedHash pass = new VersionedHash(password, latestVersion, Generators[latestVersion]);
 
@@ -125,6 +150,15 @@ namespace Phnx.Security.Passwords
         /// <returns><see langword="true"/> if <paramref name="hash1"/> is the same as <paramref name="hash2"/>, otherwise <see langword="false"/></returns>
         protected bool HashesMatch(byte[] hash1, byte[] hash2)
         {
+            if (hash1 is null)
+            {
+                throw new ArgumentNullException(nameof(hash1));
+            }
+            if (hash2 is null)
+            {
+                throw new ArgumentNullException(nameof(hash2));
+            }
+
             return hash1.EqualsRange(hash2);
         }
 
@@ -165,6 +199,11 @@ namespace Phnx.Security.Passwords
         /// <param name="item">The version and <see cref="IPasswordHash"/> to add</param>
         public void Add(KeyValuePair<int, IPasswordHash> item)
         {
+            if (item.Value is null)
+            {
+                throw new ArgumentException($"{nameof(item)}.{nameof(item.Value)} cannot be null", nameof(item));
+            }
+
             Generators.Add(item);
         }
 
@@ -191,8 +230,24 @@ namespace Phnx.Security.Passwords
         /// </summary>
         /// <param name="array">The destination array to copy to</param>
         /// <param name="arrayIndex">The destination array's index at which copying should begin</param>
+        /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="arrayIndex"/> is less than zero</exception>
+        /// <exception cref="ArgumentException">The number of known password hashes is greater than the available space from <paramref name="arrayIndex"/> to the end of the <paramref name="array"/></exception>
         public void CopyTo(KeyValuePair<int, IPasswordHash>[] array, int arrayIndex)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            if (arrayIndex < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(arrayIndex));
+            }
+            if (array.Length - arrayIndex < Generators.Count)
+            {
+                throw new ArgumentException($"The number of known password hashes is greater than the available space from {nameof(arrayIndex)} to the end of {nameof(array)}");
+            }
+
             Generators.CopyTo(array, arrayIndex);
         }
 

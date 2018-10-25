@@ -53,7 +53,7 @@ namespace Phnx.Security.Passwords
             {
                 string msg = ErrorMessage.Factory.InvalidHashConfiguration(hashLength, hashLengthShouldBe);
 
-                throw new TypeLoadException(msg);
+                throw new ArgumentException(msg, nameof(generator));
             }
         }
 

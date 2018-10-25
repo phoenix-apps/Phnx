@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Phnx.Security.Passwords;
+using System;
 
 namespace Phnx.Security.Tests.Passwords
 {
@@ -8,8 +9,11 @@ namespace Phnx.Security.Tests.Passwords
     {
         public PasswordHashManager NewPasswordManager()
         {
-            var mgr = new PasswordHashManager();
-            mgr.Add(0, new PasswordHashDefault());
+            var mgr = new PasswordHashManager
+            {
+                { 0, new PasswordHashDefault() }
+            };
+
             return mgr;
         }
 
@@ -83,6 +87,41 @@ namespace Phnx.Security.Tests.Passwords
             bool passwordsMatch = hashManager.PasswordMatchesHash(password, securedPassword);
 
             Assert.True(passwordsMatch);
+        }
+
+        [Test]
+        public void HashingAPassword_WithBrokenHashGenerator_ThrowsArgumentException()
+        {
+            var hashManager = new PasswordHashManager
+            {
+                { 0, new PasswordHashVersionBroken() }
+            };
+
+            Assert.Throws<ArgumentException>(() => hashManager.HashWithLatest("testPassword"));
+        }
+
+        [Test]
+        public void ShouldUpdateHash_WithNullHash_ThrowsArgumentNullException()
+        {
+            var hashManager = NewPasswordManager();
+
+            Assert.Throws<ArgumentNullException>(() => hashManager.ShouldUpdateHash(null));
+        }
+
+        [Test]
+        public void ShouldUpdateHash_WithHashMissingVersion_ThrowsArgumentException()
+        {
+            var hashManager = NewPasswordManager();
+
+            Assert.Throws<ArgumentException>(() => hashManager.ShouldUpdateHash(new byte[0]));
+        }
+
+        [Test]
+        public void PasswordMatchesHash_WithHashTooLong_ThrowsArgumentException()
+        {
+            var hashManager = NewPasswordManager();
+
+            Assert.Throws<ArgumentException>(() => hashManager.PasswordMatchesHash("asdf", new byte[200]));
         }
     }
 }
