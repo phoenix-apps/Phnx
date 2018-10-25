@@ -2,7 +2,6 @@
 using Phnx.Security.Passwords;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Phnx.Security.Tests.Passwords
 {
@@ -50,7 +49,8 @@ namespace Phnx.Security.Tests.Passwords
         public void Remove_WhenContainsMatch_ReturnsTrueAndRemoves()
         {
             var defaultHasher = new PasswordHashDefault();
-            var hashManager = new PasswordHashManager {
+            var hashManager = new PasswordHashManager
+            {
                 { 0, defaultHasher }
             };
 
@@ -69,7 +69,10 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void Remove_WhenValueToRemoveIsNull_DoesNotRemove()
         {
-            var hashManager = NewPasswordManager();
+            var hashManager = new PasswordHashManager
+            {
+                { 0, new PasswordHashDefault() }
+            };
 
             var result = hashManager.Remove(new KeyValuePair<int, IPasswordHash>(0, null));
 
