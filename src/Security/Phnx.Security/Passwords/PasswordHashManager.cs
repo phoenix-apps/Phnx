@@ -16,11 +16,6 @@ namespace Phnx.Security.Passwords
         protected IDictionary<int, IPasswordHash> Generators { get; }
 
         /// <summary>
-        /// The <see cref="Generators"/> with the highest version number
-        /// </summary>
-        protected IPasswordHash LatestGenerator => Generators[LatestGeneratorVersion];
-
-        /// <summary>
         /// The highest version number in the <see cref="Generators"/>
         /// </summary>
         public int LatestGeneratorVersion => Generators.MaxBy(g => g.Key).Key;
@@ -31,12 +26,12 @@ namespace Phnx.Security.Passwords
         public ICollection<int> Keys => Generators.Keys;
 
         /// <summary>
-        /// Gets an <see cref="ICollection{T}"/> containing the known <see cref="IPasswordHash"/>s
+        /// Gets an <see cref="ICollection{T}"/> containing the known <see cref="IPasswordHash"/>es
         /// </summary>
         public ICollection<IPasswordHash> Values => Generators.Values;
 
         /// <summary>
-        /// Gets the number of known <see cref="IPasswordHash"/>s
+        /// Gets the number of known <see cref="IPasswordHash"/>es
         /// </summary>
         public int Count => Generators.Count;
 
@@ -54,7 +49,15 @@ namespace Phnx.Security.Passwords
         public IPasswordHash this[int version]
         {
             get => Generators[version];
-            set => Generators[version] = value;
+            set
+            {
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
+                Generators[version] = value;
+            }
         }
 
         /// <summary>
@@ -142,7 +145,7 @@ namespace Phnx.Security.Passwords
         /// Hash a password using the latest hash generator
         /// </summary>
         /// <param name="password">The password to hash</param>
-        /// <returns><paramref name="password"/> hashed with <see cref="LatestGenerator"/></returns>
+        /// <returns><paramref name="password"/> hashed with the generator associated with the <see cref="LatestGeneratorVersion"/></returns>
         public byte[] HashWithLatest(string password)
         {
             if (password is null)
@@ -162,17 +165,8 @@ namespace Phnx.Security.Passwords
         /// <param name="hash1">The first hash to compare</param>
         /// <param name="hash2">The second hash to compare</param>
         /// <returns><see langword="true"/> if <paramref name="hash1"/> is the same as <paramref name="hash2"/>, otherwise <see langword="false"/></returns>
-        protected bool HashesMatch(byte[] hash1, byte[] hash2)
+        private bool HashesMatch(byte[] hash1, byte[] hash2)
         {
-            if (hash1 is null)
-            {
-                throw new ArgumentNullException(nameof(hash1));
-            }
-            if (hash2 is null)
-            {
-                throw new ArgumentNullException(nameof(hash2));
-            }
-
             return hash1.EqualsRange(hash2);
         }
 
@@ -208,7 +202,7 @@ namespace Phnx.Security.Passwords
         }
 
         /// <summary>
-        /// Clear all versions and <see cref="IPasswordHash"/>s
+        /// Clear all versions and <see cref="IPasswordHash"/>es
         /// </summary>
         public void Clear()
         {
@@ -226,7 +220,7 @@ namespace Phnx.Security.Passwords
         }
 
         /// <summary>
-        /// Copies the version and <see cref="IPasswordHash"/>s to a <see cref="T:[]"/>, starting at a particular index
+        /// Copies the version and <see cref="IPasswordHash"/>es to a <see cref="T:[]"/>, starting at a particular index
         /// </summary>
         /// <param name="array">The destination array to copy to</param>
         /// <param name="arrayIndex">The destination array's index at which copying should begin</param>
@@ -262,18 +256,18 @@ namespace Phnx.Security.Passwords
         }
 
         /// <summary>
-        /// Get an enumerator for all the version and <see cref="IPasswordHash"/>s
+        /// Get an enumerator for all the version and <see cref="IPasswordHash"/>es
         /// </summary>
-        /// <returns>An enumerator for all the version and <see cref="IPasswordHash"/>s</returns>
+        /// <returns>An enumerator for all the version and <see cref="IPasswordHash"/>es</returns>
         public IEnumerator<KeyValuePair<int, IPasswordHash>> GetEnumerator()
         {
             return Generators.GetEnumerator();
         }
 
         /// <summary>
-        /// Get an enumerator for all the version and <see cref="IPasswordHash"/>s
+        /// Get an enumerator for all the version and <see cref="IPasswordHash"/>es
         /// </summary>
-        /// <returns>An enumerator for all the version and <see cref="IPasswordHash"/>s</returns>
+        /// <returns>An enumerator for all the version and <see cref="IPasswordHash"/>es</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

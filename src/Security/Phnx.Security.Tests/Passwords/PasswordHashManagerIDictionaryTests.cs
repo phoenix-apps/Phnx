@@ -83,6 +83,108 @@ namespace Phnx.Security.Tests.Passwords
         }
 
         [Test]
+        public void IndexGet_WhenDoesContain_GetsValue()
+        {
+            var hasher = new PasswordHashDefault();
+            var hashManager = new PasswordHashManager
+            {
+                { 0, hasher }
+            };
+
+            var result = hashManager[0];
+
+            Assert.AreEqual(hasher, result);
+        }
+
+        [Test]
+        public void IndexGet_WhenDoesNotContain_ThrowsKeyNotFoundException()
+        {
+            var hashManager = new PasswordHashManager
+            {
+                { 1, new PasswordHashDefault() }
+            };
+
+            Assert.Throws<KeyNotFoundException>(() => _ = hashManager[0]);
+        }
+
+        [Test]
+        public void IndexSet_WhenDoesContain_SetsValue()
+        {
+            var hasher = new PasswordHashVersionMock();
+            var hashManager = new PasswordHashManager
+            {
+                { 0, new PasswordHashDefault() }
+            };
+
+            hashManager[0] = hasher;
+
+            Assert.AreEqual(hasher, hashManager[0]);
+        }
+
+        [Test]
+        public void IndexSet_WhenDoesContainButValueIsNull_ThrowsArgumentNullException()
+        {
+            var hasher = new PasswordHashDefault();
+            var hashManager = new PasswordHashManager
+            {
+                { 0, hasher }
+            };
+
+            Assert.Throws<ArgumentNullException>(() => hashManager[0] = null);
+        }
+
+        [Test]
+        public void IndexSet_WhenDoesNotContain_Adds()
+        {
+            var hasher = new PasswordHashVersionMock();
+            var hashManager = new PasswordHashManager
+            {
+                { 1, new PasswordHashDefault() }
+            };
+
+            hashManager[5] = hasher;
+
+            Assert.AreEqual(2, hashManager.Count);
+            Assert.AreEqual(hasher, hashManager[5]);
+        }
+
+        [Test]
+        public void KeysGet_GetsAllKeys()
+        {
+            var expected = new List<int> { 0, 1 };
+            var hashManager = new PasswordHashManager
+            {
+                { 0, new PasswordHashDefault() },
+                { 1, new PasswordHashVersionMock() }
+            };
+
+            CollectionAssert.AreEqual(expected, hashManager.Keys);
+            CollectionAssert.AreEqual(expected, ((IReadOnlyDictionary<int, IPasswordHash>)hashManager).Keys);
+        }
+
+        [Test]
+        public void ValuesGet_GetsAllValues()
+        {
+            var expected = new IPasswordHash[] { new PasswordHashDefault(), new PasswordHashVersionMock() };
+            var hashManager = new PasswordHashManager
+            {
+                { 0, expected[0] },
+                { 1, expected[1] }
+            };
+
+            CollectionAssert.AreEqual(expected, hashManager.Values);
+            CollectionAssert.AreEqual(expected, ((IReadOnlyDictionary<int, IPasswordHash>)hashManager).Values);
+        }
+
+        [Test]
+        public void IsReadOnly_IsFalse()
+        {
+            var hashManager = new PasswordHashManager();
+
+            Assert.IsFalse(((ICollection<KeyValuePair<int, IPasswordHash>>)hashManager).IsReadOnly);
+        }
+
+        [Test]
         public void ContainsKey_WhenEmpty_ReturnsFalse()
         {
             var hashManager = new PasswordHashManager();
