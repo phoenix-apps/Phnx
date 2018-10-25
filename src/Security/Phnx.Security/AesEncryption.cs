@@ -55,6 +55,15 @@ namespace Phnx.Security
         /// <exception cref="ArgumentException"><paramref name="key"/> is not equal in size to <see cref="KeyBits"/> / 8</exception>
         public byte[] Encrypt(byte[] data, byte[] key)
         {
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             byte[] iv = SecureRandomBytes.Generate(InitialisationVectorBits / 8);
 
             var encrypted = Encrypt(data, key, iv);
@@ -74,6 +83,19 @@ namespace Phnx.Security
         /// <exception cref="ArgumentException"><paramref name="key"/> is not equal in size to <see cref="KeyBits"/> / 8</exception>
         public byte[] Encrypt(byte[] data, byte[] key, byte[] iv)
         {
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+            if (iv is null)
+            {
+                throw new ArgumentNullException(nameof(iv));
+            }
+
             return Encrypt(data, 0, data.Length, key, iv);
         }
 
@@ -139,6 +161,10 @@ namespace Phnx.Security
             {
                 throw new ArgumentNullException(nameof(encryptedData));
             }
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
 
             // Extract IV
             var iv = new byte[InitialisationVectorBits / 8];
@@ -157,6 +183,19 @@ namespace Phnx.Security
         /// <exception cref="ArgumentNullException"><paramref name="encryptedData"/> or <paramref name="key"/> or <paramref name="iv"/> is <see langword="null"/></exception>
         public byte[] Decrypt(byte[] encryptedData, byte[] key, byte[] iv)
         {
+            if (encryptedData is null)
+            {
+                throw new ArgumentNullException(nameof(encryptedData));
+            }
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+            if (iv is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             return Decrypt(encryptedData, 0, encryptedData.Length, key, iv);
         }
 
@@ -217,15 +256,15 @@ namespace Phnx.Security
             };
         }
 
-        private byte[] DumpCryptoStream(ICryptoTransform crypto, byte[] data, int startIndex, int length)
+        private byte[] DumpCryptoStream(ICryptoTransform crypto, byte[] destination, int destinationStartIndex, int bytesToCopy)
         {
             var output = new MemoryStream();
             using (var cryptoStream = new CryptoStream(output, crypto, CryptoStreamMode.Write))
             {
                 cryptoStream.Write(
-                    data,
-                    startIndex,
-                    length
+                    destination,
+                    destinationStartIndex,
+                    bytesToCopy
                 );
             }
 
