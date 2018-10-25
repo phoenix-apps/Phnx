@@ -81,6 +81,20 @@ namespace Phnx.Security.Passwords
         }
 
         /// <summary>
+        /// Add a version and <see cref="IPasswordHash"/>
+        /// </summary>
+        /// <param name="item">The version and <see cref="IPasswordHash"/> to add</param>
+        public void Add(KeyValuePair<int, IPasswordHash> item)
+        {
+            if (item.Value is null)
+            {
+                throw new ArgumentException($"{nameof(item)}.{nameof(item.Value)} cannot be null", nameof(item));
+            }
+
+            Generators.Add(item);
+        }
+
+        /// <summary>
         /// Gets whether a password matches a hash
         /// </summary>
         /// <param name="password"></param>
@@ -191,20 +205,6 @@ namespace Phnx.Security.Passwords
         public bool TryGetValue(int key, out IPasswordHash value)
         {
             return Generators.TryGetValue(key, out value);
-        }
-
-        /// <summary>
-        /// Add a version and <see cref="IPasswordHash"/>
-        /// </summary>
-        /// <param name="item">The version and <see cref="IPasswordHash"/> to add</param>
-        public void Add(KeyValuePair<int, IPasswordHash> item)
-        {
-            if (item.Value is null)
-            {
-                throw new ArgumentException($"{nameof(item)}.{nameof(item.Value)} cannot be null", nameof(item));
-            }
-
-            Generators.Add(item);
         }
 
         /// <summary>
