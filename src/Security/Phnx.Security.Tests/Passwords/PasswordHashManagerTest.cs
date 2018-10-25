@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using Phnx.Security.Passwords;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Phnx.Security.Tests.Passwords
 {
@@ -123,5 +125,8 @@ namespace Phnx.Security.Tests.Passwords
 
             Assert.Throws<ArgumentException>(() => hashManager.PasswordMatchesHash("asdf", new byte[200]));
         }
+
+        #region IDictionary Tests
+        #endregion
     }
 }
