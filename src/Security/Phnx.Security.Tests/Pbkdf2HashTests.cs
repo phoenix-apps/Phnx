@@ -1,5 +1,6 @@
-﻿using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Phnx.Security.Algorithms;
+using System.Text;
 
 namespace Phnx.Security.Tests
 {
@@ -22,7 +23,7 @@ namespace Phnx.Security.Tests
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
 
             // Act
-            var result = Pbkdf2Hash.Hash(plainBytes, salt);
+            var result = Pbkdf2Hash.Hash(plainBytes, salt, 1);
 
             // Assert
             Assert.AreNotEqual(plainBytes, result);

@@ -1,4 +1,4 @@
-﻿namespace Phnx.Security
+﻿namespace Phnx.Security.Algorithms
 {
     /// <summary>
     /// Two way encryption for encrypting and decrypting data using a key

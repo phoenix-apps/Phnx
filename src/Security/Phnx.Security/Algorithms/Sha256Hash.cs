@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Phnx.Security
+namespace Phnx.Security.Algorithms
 {
     /// <summary>
     /// A 256 bit SHA2 hashing algorithm. Suitable for checksums, but generally not secure for passwords. Consider using <see cref="Pbkdf2Hash"/> if you're hashing passwords

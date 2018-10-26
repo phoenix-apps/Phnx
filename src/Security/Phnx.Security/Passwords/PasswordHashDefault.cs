@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Phnx.Security.Algorithms;
+using System;
 
 namespace Phnx.Security.Passwords
 {
@@ -22,9 +23,9 @@ namespace Phnx.Security.Passwords
         /// <summary>
         /// Create a new instance of <see cref="PasswordHashDefault"/>
         /// </summary>
-        public PasswordHashDefault()
+        public PasswordHashDefault(Pbkdf2Hash hashGenerator)
         {
-            _hashGenerator = new Pbkdf2Hash(1024);
+            _hashGenerator = hashGenerator;
         }
 
         /// <summary>
@@ -44,7 +45,7 @@ namespace Phnx.Security.Passwords
                 throw new ArgumentNullException(nameof(salt));
             }
 
-            return _hashGenerator.Hash(password, salt);
+            return _hashGenerator.Hash(password, salt, 1024);
         }
 
         /// <summary>

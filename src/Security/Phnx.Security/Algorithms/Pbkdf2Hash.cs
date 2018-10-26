@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Phnx.Security
+namespace Phnx.Security.Algorithms
 {
     /// <summary>
     /// A PBKDF2 hashing algorithm. Suitable for passwords, but generally too slow for checksums. Consider using <see cref="Sha256Hash"/> if you're generating checksums
@@ -19,24 +19,11 @@ namespace Phnx.Security
         public int SaltBytesLength { get; }
 
         /// <summary>
-        /// The number of times the algorithm is ran on data when using <see cref="Hash(byte[], byte[])"/>
-        /// </summary>
-        public int IterationCount { get; }
-
-        /// <summary>
         /// Create a new <see cref="Pbkdf2Hash"/>
         /// </summary>
-        /// <param name="iterationCount">The number of times to run the algorithm when hashing data</param>
-        public Pbkdf2Hash(int iterationCount = 1024)
+        public Pbkdf2Hash()
         {
-            if (iterationCount < 0)
-            {
-                throw new ArgumentLessThanZeroException(nameof(iterationCount));
-            }
-
             SaltBytesLength = 24;
-
-            IterationCount = iterationCount;
         }
 
         /// <summary>
@@ -53,9 +40,11 @@ namespace Phnx.Security
         /// </summary>
         /// <param name="data">The data to hash</param>
         /// <param name="salt">The salt to use. This must have the same length as <see cref="SaltBytesLength"/></param>
+        /// <param name="numberOfIterations">The number of times the algorithm is ran on <paramref name="data"/></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> or <paramref name="salt"/> is <see langword="null"/></exception>
-        public byte[] Hash(byte[] data, byte[] salt)
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="numberOfIterations"/> is less than zero</exception>
+        public byte[] Hash(byte[] data, byte[] salt, int numberOfIterations)
         {
             if (data is null)
             {
@@ -65,13 +54,17 @@ namespace Phnx.Security
             {
                 throw new ArgumentNullException(nameof(salt));
             }
+            if (numberOfIterations < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(numberOfIterations));
+            }
 
-            if (IterationCount == 0)
+            if (numberOfIterations == 0)
             {
                 return data;
             }
 
-            using (var pbkdf2 = new Rfc2898DeriveBytes(data, salt, IterationCount))
+            using (var pbkdf2 = new Rfc2898DeriveBytes(data, salt, numberOfIterations))
             {
                 return pbkdf2.GetBytes(HashBytesLength);
             }

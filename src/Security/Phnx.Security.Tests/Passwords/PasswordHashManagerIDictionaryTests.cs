@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Phnx.Security.Algorithms;
 using Phnx.Security.Passwords;
 using System;
 using System.Collections;
@@ -12,7 +13,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void Add_WhenGeneratorIsNotNull_Adds()
         {
-            var hasher = new PasswordHashDefault();
+            var hasher = new PasswordHashDefault(new Pbkdf2Hash());
             var hashManager = new PasswordHashManager
             {
                 { 5, hasher }
@@ -34,7 +35,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void Add_WhenVersionIsNegative_Adds()
         {
-            var hasher = new PasswordHashDefault();
+            var hasher = new PasswordHashDefault(new Pbkdf2Hash());
             var hashManager = new PasswordHashManager
             {
                 { -10, hasher }
@@ -48,7 +49,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void AddPair_WhenGeneratorIsNotNull_Adds()
         {
-            var hasher = new PasswordHashDefault();
+            var hasher = new PasswordHashDefault(new Pbkdf2Hash());
             var hashManager = new PasswordHashManager
             {
                 new KeyValuePair<int, IPasswordHash>(5, hasher)
@@ -71,7 +72,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void AddPair_WhenVersionIsNegative_Adds()
         {
-            var hasher = new PasswordHashDefault();
+            var hasher = new PasswordHashDefault(new Pbkdf2Hash());
             var hashManager = new PasswordHashManager
             {
                 new KeyValuePair<int, IPasswordHash>(-10, hasher)
@@ -85,7 +86,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void IndexGet_WhenDoesContain_GetsValue()
         {
-            var hasher = new PasswordHashDefault();
+            var hasher = new PasswordHashDefault(new Pbkdf2Hash());
             var hashManager = new PasswordHashManager
             {
                 { 0, hasher }
@@ -101,7 +102,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager
             {
-                { 1, new PasswordHashDefault() }
+                { 1, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             Assert.Throws<KeyNotFoundException>(() => _ = hashManager[0]);
@@ -113,7 +114,7 @@ namespace Phnx.Security.Tests.Passwords
             var hasher = new PasswordHashVersionMock();
             var hashManager = new PasswordHashManager
             {
-                { 0, new PasswordHashDefault() }
+                { 0, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             hashManager[0] = hasher;
@@ -124,7 +125,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void IndexSet_WhenDoesContainButValueIsNull_ThrowsArgumentNullException()
         {
-            var hasher = new PasswordHashDefault();
+            var hasher = new PasswordHashDefault(new Pbkdf2Hash());
             var hashManager = new PasswordHashManager
             {
                 { 0, hasher }
@@ -139,7 +140,7 @@ namespace Phnx.Security.Tests.Passwords
             var hasher = new PasswordHashVersionMock();
             var hashManager = new PasswordHashManager
             {
-                { 1, new PasswordHashDefault() }
+                { 1, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             hashManager[5] = hasher;
@@ -154,7 +155,7 @@ namespace Phnx.Security.Tests.Passwords
             var expected = new List<int> { 0, 1 };
             var hashManager = new PasswordHashManager
             {
-                { 0, new PasswordHashDefault() },
+                { 0, new PasswordHashDefault(new Pbkdf2Hash()) },
                 { 1, new PasswordHashVersionMock() }
             };
 
@@ -165,7 +166,11 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void ValuesGet_GetsAllValues()
         {
-            var expected = new IPasswordHash[] { new PasswordHashDefault(), new PasswordHashVersionMock() };
+            var expected = new IPasswordHash[]
+            {
+                new PasswordHashDefault(new Pbkdf2Hash()), new PasswordHashVersionMock()
+            };
+
             var hashManager = new PasswordHashManager
             {
                 { 0, expected[0] },
@@ -199,7 +204,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager
             {
-                { 0, new PasswordHashDefault() }
+                { 0, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             var result = hashManager.ContainsKey(0);
@@ -212,7 +217,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager
             {
-                { 1, new PasswordHashDefault() }
+                { 1, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             var result = hashManager.ContainsKey(0);
@@ -223,7 +228,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void TryGetValue_WhenContainsKeys_ReturnsTrueAndValue()
         {
-            var hasher = new PasswordHashDefault();
+            var hasher = new PasswordHashDefault(new Pbkdf2Hash());
             var hashManager = new PasswordHashManager
             {
                 { 0, hasher }
@@ -240,7 +245,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager
             {
-                { 1, new PasswordHashDefault() }
+                { 1, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             var result = hashManager.TryGetValue(0, out var value);
@@ -254,7 +259,8 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager();
 
-            var result = hashManager.Contains(new KeyValuePair<int, IPasswordHash>(0, new PasswordHashDefault()));
+            var result = hashManager.Contains(
+                new KeyValuePair<int, IPasswordHash>(0, new PasswordHashDefault(new Pbkdf2Hash())));
 
             Assert.IsFalse(result);
         }
@@ -262,7 +268,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void Contains_WhenContainsMatch_ReturnsTrue()
         {
-            var defaultHasher = new PasswordHashDefault();
+            var defaultHasher = new PasswordHashDefault(new Pbkdf2Hash());
             var hashManager = new PasswordHashManager
             {
                 { 0, defaultHasher }
@@ -279,7 +285,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager
             {
-                { 0, new PasswordHashDefault() }
+                { 0, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             var result = hashManager.Contains(new KeyValuePair<int, IPasswordHash>(0, null));
@@ -305,7 +311,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager
             {
-                { 0, new PasswordHashDefault() }
+                { 0, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             var result = new KeyValuePair<int, IPasswordHash>[0];
@@ -318,7 +324,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager
             {
-                { 0, new PasswordHashDefault() }
+                { 0, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             var result = new KeyValuePair<int, IPasswordHash>[0];
@@ -331,7 +337,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager
             {
-                { 0, new PasswordHashDefault() }
+                { 0, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             var result = new KeyValuePair<int, IPasswordHash>[0];
@@ -344,7 +350,8 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager();
 
-            var result = hashManager.Remove(new KeyValuePair<int, IPasswordHash>(0, new PasswordHashDefault()));
+            var result = hashManager.Remove(
+                new KeyValuePair<int, IPasswordHash>(0, new PasswordHashDefault(new Pbkdf2Hash())));
 
             Assert.IsFalse(result);
 
@@ -356,7 +363,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void Remove_WhenContainsMatch_ReturnsTrueAndRemoves()
         {
-            var defaultHasher = new PasswordHashDefault();
+            var defaultHasher = new PasswordHashDefault(new Pbkdf2Hash());
             var hashManager = new PasswordHashManager
             {
                 { 0, defaultHasher }
@@ -379,7 +386,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager
             {
-                { 0, new PasswordHashDefault() }
+                { 0, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             var result = hashManager.Remove(new KeyValuePair<int, IPasswordHash>(0, null));
@@ -403,7 +410,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager
             {
-                { 1, new PasswordHashDefault() }
+                { 1, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             hashManager.Clear();
@@ -416,7 +423,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var hashManager = new PasswordHashManager
             {
-                { 0, new PasswordHashDefault() },
+                { 0, new PasswordHashDefault(new Pbkdf2Hash()) },
                 { 1, new PasswordHashVersionMock() }
             };
 

@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Phnx.Security.Algorithms;
 using Phnx.Security.Passwords;
 using System;
 
@@ -9,7 +10,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void GenerateHash_WithNullPassword_ThrowsArgumentNullException()
         {
-            var hashGenerator = new PasswordHashDefault();
+            var hashGenerator = new PasswordHashDefault(new Pbkdf2Hash());
 
             Assert.Throws<ArgumentNullException>(() => hashGenerator.GenerateHash(null, new byte[0]));
         }
@@ -17,7 +18,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void GenerateHash_WithNullSalt_ThrowsArgumentNullException()
         {
-            var hashGenerator = new PasswordHashDefault();
+            var hashGenerator = new PasswordHashDefault(new Pbkdf2Hash());
 
             Assert.Throws<ArgumentNullException>(() => hashGenerator.GenerateHash(new byte[0], null));
         }
@@ -25,7 +26,7 @@ namespace Phnx.Security.Tests.Passwords
         [Test]
         public void GenerateSalt_MatchesSaltBytesLength()
         {
-            var hashGenerator = new PasswordHashDefault();
+            var hashGenerator = new PasswordHashDefault(new Pbkdf2Hash());
 
             var salt = hashGenerator.GenerateSalt();
 

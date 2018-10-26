@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace Phnx.Security
+namespace Phnx.Security.Algorithms
 {
     /// <summary>
-    /// A 4096 bit RSA asymmetric encryption algorithm
+    /// An RSA asymmetric encryption algorithm
     /// </summary>
     public class RsaEncryption : IAsymmetricEncryption
     {

@@ -1,9 +1,9 @@
-﻿namespace Phnx.Security
+﻿namespace Phnx.Security.Algorithms
 {
     /// <summary>
     /// One way hashing without a salt. Useful for generating checksums for data at a fixed length
     /// </summary>
-    public interface IHashWithoutSalt : IHash
+    public interface IHashWithoutSalt
     {
         /// <summary>
         /// Hash data

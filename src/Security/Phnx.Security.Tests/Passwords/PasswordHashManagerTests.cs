@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using Phnx.Security.Algorithms;
 using Phnx.Security.Passwords;
 using System;
 
@@ -11,7 +12,7 @@ namespace Phnx.Security.Tests.Passwords
         {
             var mgr = new PasswordHashManager
             {
-                { 0, new PasswordHashDefault() }
+                { 0, new PasswordHashDefault(new Pbkdf2Hash()) }
             };
 
             return mgr;

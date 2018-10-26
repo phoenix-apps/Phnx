@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Phnx.Security
+namespace Phnx.Security.Algorithms
 {
     /// <summary>
     /// Extension for <see cref="IEncryption"/>
