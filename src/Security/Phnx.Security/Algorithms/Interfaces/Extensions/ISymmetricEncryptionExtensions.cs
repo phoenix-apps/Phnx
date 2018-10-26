@@ -56,7 +56,11 @@ namespace Phnx.Security.Algorithms
                 throw new ArgumentNullException(nameof(data));
             }
 
-            return encryption.Encrypt(data, 0, data.Length, key, iv);
+            var input = new MemoryStream(data);
+            var output = new MemoryStream();
+            encryption.Encrypt(input, key, iv, output);
+
+            return output.ToArray();
         }
 
         /// <summary>
@@ -64,18 +68,23 @@ namespace Phnx.Security.Algorithms
         /// </summary>
         /// <param name="encryption">The encryption to extend</param>
         /// <param name="sourceBuffer">The data buffer which contains the data to encrypt</param>
-        /// <param name="sourceStartIndex">The index in <paramref name="sourceBuffer"/> at which the data to encrypt begins</param>
-        /// <param name="bytesToEncrypt">The length of the data in <paramref name="sourceBuffer"/> to encrypt</param>
+        /// <param name="index">The index in <paramref name="sourceBuffer"/> at which the data to encrypt begins</param>
+        /// <param name="count">The length of the data in <paramref name="sourceBuffer"/> to encrypt</param>
         /// <param name="key">The key to use when encrypting the data</param>
         /// <param name="iv">The initialisation vector to use when encrypting the data</param>
         /// <returns><paramref name="sourceBuffer"/> encrypted</returns>
         /// <exception cref="ArgumentNullException"><paramref name="sourceBuffer"/> or <paramref name="key"/> or <paramref name="iv"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="sourceStartIndex"/> or <paramref name="bytesToEncrypt"/> is less than zero</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The sum of <paramref name="bytesToEncrypt"/> and <paramref name="sourceStartIndex"/> is greater than the length of <paramref name="sourceBuffer"/></exception>
-        public static byte[] Encrypt(this ISymmetricEncryption encryption, byte[] sourceBuffer, int sourceStartIndex, int bytesToEncrypt, byte[] key, byte[] iv)
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="index"/> or <paramref name="count"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The sum of <paramref name="count"/> and <paramref name="index"/> is greater than the length of <paramref name="sourceBuffer"/></exception>
+        public static byte[] Encrypt(this ISymmetricEncryption encryption, byte[] sourceBuffer, int index, int count, byte[] key, byte[] iv)
         {
+            if (sourceBuffer is null)
+            {
+                throw new ArgumentNullException(nameof(sourceBuffer));
+            }
+
             var output = new MemoryStream();
-            var input = new MemoryStream(sourceBuffer, sourceStartIndex, bytesToEncrypt);
+            var input = new MemoryStream(sourceBuffer, index, count);
 
             encryption.Encrypt(input, key, iv, output);
 
@@ -98,7 +107,12 @@ namespace Phnx.Security.Algorithms
                 throw new ArgumentNullException(nameof(encryptedData));
             }
 
-            return encryption.Decrypt(encryptedData, 0, encryptedData.Length, key, iv);
+            var input = new MemoryStream(encryptedData);
+            var output = new MemoryStream();
+
+            encryption.Decrypt(input, key, iv, output);
+
+            return output.ToArray();
         }
 
         /// <summary>
@@ -106,17 +120,22 @@ namespace Phnx.Security.Algorithms
         /// </summary>
         /// <param name="encryption">The encryption to extend</param>
         /// <param name="encryptedDataBuffer">The data buffer which contains the data to decrypt</param>
-        /// <param name="dataStartIndex">The index in <paramref name="encryptedDataBuffer"/> at which the data to decrypt begins</param>
-        /// <param name="dataLength">The length of the data in <paramref name="encryptedDataBuffer"/> to decrypt</param>
+        /// <param name="index">The index in <paramref name="encryptedDataBuffer"/> at which the data to decrypt begins</param>
+        /// <param name="count">The length of the data in <paramref name="encryptedDataBuffer"/> to decrypt</param>
         /// <param name="key">The key to use when decrypting the data</param>
         /// <param name="iv">The initialisation vector to use when decrypting the data</param>
         /// <exception cref="ArgumentNullException"><paramref name="encryptedDataBuffer"/> or <paramref name="key"/> or <paramref name="iv"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="dataStartIndex"/> or <paramref name="dataLength"/> is less than zero</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The sum of <paramref name="dataLength"/> and <paramref name="dataStartIndex"/> is greater than the length of <paramref name="encryptedDataBuffer"/></exception>
-        public static byte[] Decrypt(this ISymmetricEncryption encryption, byte[] encryptedDataBuffer, int dataStartIndex, int dataLength, byte[] key, byte[] iv)
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="index"/> or <paramref name="count"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The sum of <paramref name="count"/> and <paramref name="index"/> is greater than the length of <paramref name="encryptedDataBuffer"/></exception>
+        public static byte[] Decrypt(this ISymmetricEncryption encryption, byte[] encryptedDataBuffer, int index, int count, byte[] key, byte[] iv)
         {
+            if (encryptedDataBuffer is null)
+            {
+                throw new ArgumentNullException(nameof(encryptedDataBuffer));
+            }
+
             var output = new MemoryStream();
-            var input = new MemoryStream(encryptedDataBuffer, dataStartIndex, dataLength);
+            var input = new MemoryStream(encryptedDataBuffer, index, count);
 
             encryption.Decrypt(input, key, iv, output);
 
