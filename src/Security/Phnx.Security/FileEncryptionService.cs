@@ -1,5 +1,4 @@
-﻿using Phnx.Collections;
-using Phnx.Security.Algorithms;
+﻿using Phnx.Security.Algorithms;
 using Phnx.Security.Passwords;
 using System;
 using System.IO;
@@ -61,17 +60,8 @@ namespace Phnx.Security
 
             var hash = PasswordHash.GenerateHash(Encoding.Unicode.GetBytes(password), salt);
 
-            // Save hash
-            output.Write(hash, 0, hash.Length);
-
             var iv = FileDataEncryptionAlgorithm.CreateRandomIv();
-
-            var ivLength = BitConverter.GetBytes(iv.Length);
-            // Save IV length
-            output.Write(ivLength, 0, ivLength.Length);
-
-            // Save IV
-            output.Write(iv, 0, iv.Length);
+            FileDataEncryptionAlgorithm.WriteIvHeader(iv, output);
 
             FileDataEncryptionAlgorithm.Encrypt(source, hash, iv, output);
         }
@@ -98,42 +88,18 @@ namespace Phnx.Security
                 throw new ArgumentNullException(nameof(output));
             }
 
-            if (!CheckPassword(source, password, out var hash))
-            {
-                return false;
-            }
-
-            // Load IV length
-            var ivLengthBytes = new byte[4];
-            source.Read(ivLengthBytes, 0, ivLengthBytes.Length);
-            var ivLength = BitConverter.ToInt32(ivLengthBytes, 0);
+            // Load hash
+            var salt = new byte[PasswordHash.SaltBytesLength];
+            source.Read(salt, 0, salt.Length);
+            var hash = PasswordHash.GenerateHash(Encoding.Unicode.GetBytes(password), salt);
 
             // Load IV
-            var iv = new byte[ivLength];
-            source.Read(iv, 0, iv.Length);
+            var iv = FileDataEncryptionAlgorithm.ReadIvHeader(source);
 
             // Decrypt
             FileDataEncryptionAlgorithm.Decrypt(source, hash, iv, output);
 
             return true;
-        }
-
-        private bool CheckPassword(Stream source, string password, out byte[] hash)
-        {
-            var salt = new byte[PasswordHash.SaltBytesLength];
-
-            // Load salt
-            source.Read(salt, 0, salt.Length);
-
-            hash = new byte[PasswordHash.HashBytesLength];
-
-            // Load saved hash
-            source.Read(hash, 0, hash.Length);
-
-            // Get hash for password
-            var newHash = PasswordHash.GenerateHash(Encoding.Unicode.GetBytes(password), salt);
-
-            return !newHash.EqualsRange(hash);
         }
     }
 }

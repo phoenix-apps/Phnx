@@ -25,7 +25,7 @@ namespace Phnx.Security.Algorithms
         /// <returns>A random secure key of length <see cref="KeyBits"/> / 8</returns>
         public override byte[] CreateRandomKey()
         {
-            return CreateRandomKey(KeyBits / 8);
+            return SecureRandomBytes.Generate(KeyBits / 8);
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Phnx.Security.Algorithms
         /// <returns>A random secury IV of length <see cref="IvBits"/> / 8</returns>
         public override byte[] CreateRandomIv()
         {
-            return CreateRandomIv(IvBits / 8);
+            return SecureRandomBytes.Generate(IvBits / 8);
         }
 
         /// <summary>

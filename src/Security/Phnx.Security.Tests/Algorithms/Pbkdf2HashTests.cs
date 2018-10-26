@@ -1,7 +1,8 @@
 ﻿using NUnit.Framework;
+using Phnx.Security.Algorithms;
 using System.Text;
 
-namespace Phnx.Security.Algorithms.Tests
+namespace Phnx.Security.Tests.Algorithms
 {
     public class Pbkdf2HashTests
     {
