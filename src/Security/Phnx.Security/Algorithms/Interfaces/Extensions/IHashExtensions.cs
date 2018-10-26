@@ -19,7 +19,7 @@ namespace Phnx.Security.Algorithms
         /// <returns><paramref name="data"/> hashed</returns>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> or <paramref name="salt"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentLessThanZeroException"><paramref name="numberOfIterations"/> is less than zero</exception>
-        public static byte[] Hash(this IHashWithSalt encryption, string data, byte[] salt, Encoding encoding, int numberOfIterations)
+        public static byte[] Hash(this IHashWithSalt encryption, string data, byte[] salt, Encoding encoding, int numberOfIterations = 1)
         {
             var bytes = encoding.GetBytes(data);
 

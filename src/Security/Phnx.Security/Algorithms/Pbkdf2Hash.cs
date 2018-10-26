@@ -44,7 +44,7 @@ namespace Phnx.Security.Algorithms
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> or <paramref name="salt"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentLessThanZeroException"><paramref name="numberOfIterations"/> is less than zero</exception>
-        public byte[] Hash(byte[] data, byte[] salt, int numberOfIterations)
+        public byte[] Hash(byte[] data, byte[] salt, int numberOfIterations = 1)
         {
             if (data is null)
             {

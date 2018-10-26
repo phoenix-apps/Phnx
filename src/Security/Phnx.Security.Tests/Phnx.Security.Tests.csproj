@@ -18,6 +18,9 @@
     <Reference Include="Phnx">
       <HintPath>..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
     </Reference>
+    <Reference Include="Phnx.IO">
+      <HintPath>..\..\IO\IO\Phnx.IO\bin\Debug\netstandard2.0\Phnx.IO.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

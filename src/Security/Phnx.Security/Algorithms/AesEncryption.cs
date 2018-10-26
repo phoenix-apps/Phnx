@@ -142,20 +142,21 @@ namespace Phnx.Security.Algorithms
             byte[] buffer = new byte[Math.Min(1024, source.Length + 1)];
             int bytesRead = buffer.Length;
 
-            using (var cryptoStream = new CryptoStream(output, crypto, CryptoStreamMode.Write))
-            {
-                // Not at end of stream yet
-                while (bytesRead == buffer.Length)
-                {
-                    bytesRead = source.Read(buffer, 0, buffer.Length);
+            var cryptoStream = new CryptoStream(output, crypto, CryptoStreamMode.Write);
 
-                    cryptoStream.Write(
-                        buffer,
-                        0,
-                        bytesRead
-                    );
-                }
+            // Not at end of stream yet
+            while (bytesRead == buffer.Length)
+            {
+                bytesRead = source.Read(buffer, 0, buffer.Length);
+
+                cryptoStream.Write(
+                    buffer,
+                    0,
+                    bytesRead
+                );
             }
+
+            cryptoStream.FlushFinalBlock();
         }
     }
 }
