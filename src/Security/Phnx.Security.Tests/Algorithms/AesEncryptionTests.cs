@@ -1,9 +1,8 @@
 ﻿using NUnit.Framework;
-using Phnx.Security.Algorithms;
 using System;
 using System.Text;
 
-namespace Phnx.Security.Tests
+namespace Phnx.Security.Algorithms.Tests
 {
     public class AesEncryptionTests
     {

@@ -1,8 +1,7 @@
 ﻿using NUnit.Framework;
-using Phnx.Security.Algorithms;
 using System.Text;
 
-namespace Phnx.Security.Tests
+namespace Phnx.Security.Algorithms.Tests
 {
     class RsaEncryptionTests
     {
