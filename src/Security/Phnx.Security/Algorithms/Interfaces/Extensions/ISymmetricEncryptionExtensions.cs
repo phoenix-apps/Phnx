@@ -16,6 +16,19 @@ namespace Phnx.Security.Algorithms
         /// <param name="output">The stream to save to</param>
         public static void WriteIvHeader(this ISymmetricEncryption encryption, byte[] iv, Stream output)
         {
+            if (encryption is null)
+            {
+                throw new ArgumentNullException(nameof(encryption));
+            }
+            if (iv is null)
+            {
+                throw new ArgumentNullException(nameof(iv));
+            }
+            if (output is null)
+            {
+                throw new ArgumentNullException(nameof(output));
+            }
+
             var ivLength = BitConverter.GetBytes(iv.Length);
             output.Write(ivLength, 0, ivLength.Length);
             output.Write(iv, 0, iv.Length);
@@ -29,6 +42,15 @@ namespace Phnx.Security.Algorithms
         /// <returns>The IV read from <paramref name="input"/></returns>
         public static byte[] ReadIvHeader(this ISymmetricEncryption encryption, Stream input)
         {
+            if (encryption is null)
+            {
+                throw new ArgumentNullException(nameof(encryption));
+            }
+            if (input is null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
             var ivLengthBytes = new byte[4];
             input.Read(ivLengthBytes, 0, ivLengthBytes.Length);
 
@@ -51,6 +73,10 @@ namespace Phnx.Security.Algorithms
         /// <exception cref="ArgumentNullException"><paramref name="data"/> or <paramref name="key"/> or <paramref name="iv"/> is <see langword="null"/></exception>
         public static byte[] Encrypt(this ISymmetricEncryption encryption, byte[] data, byte[] key, byte[] iv)
         {
+            if (encryption is null)
+            {
+                throw new ArgumentNullException(nameof(encryption));
+            }
             if (data is null)
             {
                 throw new ArgumentNullException(nameof(data));
@@ -73,14 +99,26 @@ namespace Phnx.Security.Algorithms
         /// <param name="key">The key to use when encrypting the data</param>
         /// <param name="iv">The initialisation vector to use when encrypting the data</param>
         /// <returns><paramref name="sourceBuffer"/> encrypted</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="sourceBuffer"/> or <paramref name="key"/> or <paramref name="iv"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="encryption"/> or <paramref name="sourceBuffer"/> or <paramref name="key"/> or <paramref name="iv"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentLessThanZeroException"><paramref name="index"/> or <paramref name="count"/> is less than zero</exception>
         /// <exception cref="ArgumentOutOfRangeException">The sum of <paramref name="count"/> and <paramref name="index"/> is greater than the length of <paramref name="sourceBuffer"/></exception>
         public static byte[] Encrypt(this ISymmetricEncryption encryption, byte[] sourceBuffer, int index, int count, byte[] key, byte[] iv)
         {
+            if (encryption is null)
+            {
+                throw new ArgumentNullException(nameof(encryption));
+            }
             if (sourceBuffer is null)
             {
                 throw new ArgumentNullException(nameof(sourceBuffer));
+            }
+            if (index < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(index));
+            }
+            if (count < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(count));
             }
 
             var output = new MemoryStream();
@@ -102,6 +140,10 @@ namespace Phnx.Security.Algorithms
         /// <exception cref="ArgumentNullException"><paramref name="encryptedData"/> or <paramref name="key"/> or <paramref name="iv"/> is <see langword="null"/></exception>
         public static byte[] Decrypt(this ISymmetricEncryption encryption, byte[] encryptedData, byte[] key, byte[] iv)
         {
+            if (encryption is null)
+            {
+                throw new ArgumentNullException(nameof(encryption));
+            }
             if (encryptedData is null)
             {
                 throw new ArgumentNullException(nameof(encryptedData));
@@ -129,9 +171,21 @@ namespace Phnx.Security.Algorithms
         /// <exception cref="ArgumentOutOfRangeException">The sum of <paramref name="count"/> and <paramref name="index"/> is greater than the length of <paramref name="encryptedDataBuffer"/></exception>
         public static byte[] Decrypt(this ISymmetricEncryption encryption, byte[] encryptedDataBuffer, int index, int count, byte[] key, byte[] iv)
         {
+            if (encryption is null)
+            {
+                throw new ArgumentNullException(nameof(encryption));
+            }
             if (encryptedDataBuffer is null)
             {
                 throw new ArgumentNullException(nameof(encryptedDataBuffer));
+            }
+            if (index < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(index));
+            }
+            if (count < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(count));
             }
 
             var output = new MemoryStream();

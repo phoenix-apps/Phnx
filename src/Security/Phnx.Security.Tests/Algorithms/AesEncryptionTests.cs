@@ -1,7 +1,6 @@
 ﻿using NUnit.Framework;
 using Phnx.IO;
 using Phnx.Security.Algorithms;
-using System.IO;
 
 namespace Phnx.Security.Tests.Algorithms
 {
@@ -35,18 +34,18 @@ namespace Phnx.Security.Tests.Algorithms
         {
             string plaintext = "Test text";
 
-            var input = new MemoryStream();
+            var input = new PipeStream();
             input.Write(plaintext);
 
-            var output = new MemoryStream();
+            var output = new PipeStream();
 
             var key = Aes.CreateRandomKey();
             var iv = Aes.CreateRandomIv();
             Aes.Encrypt(input, key, iv, output);
 
-            output.Position = 0;
             var results = output.ReadToEndAsString();
 
+            Assert.IsFalse(string.IsNullOrEmpty(results));
             Assert.AreNotEqual(plaintext, results);
         }
 
@@ -56,29 +55,18 @@ namespace Phnx.Security.Tests.Algorithms
             string plaintext = "This is some really long test text";
             var key = Aes.CreateRandomKey();
             var iv = Aes.CreateRandomIv();
-            byte[] encrypted;
 
-            {
-                var input = new MemoryStream();
-                input.Write(plaintext);
-                input.Position = 0;
+            var original = new PipeStream();
+            original.Write(plaintext);
 
-                var output = new MemoryStream();
+            var encrypted = new PipeStream();
 
-                Aes.Encrypt(input, key, iv, output);
-                encrypted = output.ToArray();
-            }
+            Aes.Encrypt(original, key, iv, encrypted);
 
-            string results;
-            {
-                var input = new MemoryStream(encrypted);
-                var output = new MemoryStream();
+            var output = new PipeStream();
+            Aes.Decrypt(encrypted, key, iv, output);
 
-                Aes.Decrypt(input, key, iv, output);
-
-                output.Position = 0;
-                results = output.ReadToEndAsString();
-            }
+            var results = output.ReadToEndAsString();
 
             Assert.AreEqual(plaintext, results);
         }

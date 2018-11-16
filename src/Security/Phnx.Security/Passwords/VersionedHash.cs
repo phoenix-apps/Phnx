@@ -46,13 +46,18 @@ namespace Phnx.Security.Passwords
 
         private void VerifyGenerator(IPasswordHash generator)
         {
+            if (Salt.Length != generator.SaltBytesLength)
+            {
+                string msg = ErrorMessage.Factory.InvalidSaltSize(generator.SaltBytesLength, Salt.Length);
+                throw new ArgumentException();
+            }
+
             var hashLength = BytesUsedByVersionTag + PasswordHash.Length + Salt.Length;
             var hashLengthShouldBe = BytesUsedByVersionTag + generator.HashBytesLength + generator.SaltBytesLength;
 
             if (hashLength != hashLengthShouldBe)
             {
                 string msg = ErrorMessage.Factory.InvalidHashConfiguration(hashLength, hashLengthShouldBe);
-
                 throw new ArgumentException(msg, nameof(generator));
             }
         }

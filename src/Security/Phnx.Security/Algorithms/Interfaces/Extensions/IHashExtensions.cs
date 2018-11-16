@@ -21,6 +21,19 @@ namespace Phnx.Security.Algorithms
         /// <exception cref="ArgumentLessThanZeroException"><paramref name="numberOfIterations"/> is less than zero</exception>
         public static byte[] Hash(this IHashWithSalt encryption, string data, byte[] salt, Encoding encoding, int numberOfIterations = 1)
         {
+            if (encryption is null)
+            {
+                throw new ArgumentNullException(nameof(encryption));
+            }
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+            if (encoding is null)
+            {
+                throw new ArgumentNullException(nameof(encoding));
+            }
+
             var bytes = encoding.GetBytes(data);
 
             return encryption.Hash(bytes, salt, numberOfIterations);
@@ -35,6 +48,19 @@ namespace Phnx.Security.Algorithms
         /// <returns><paramref name="data"/> hashed</returns>
         public static byte[] Hash(this IHashWithoutSalt encryption, string data, Encoding encoding)
         {
+            if (encryption is null)
+            {
+                throw new ArgumentNullException(nameof(encryption));
+            }
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+            if (encoding is null)
+            {
+                throw new ArgumentNullException(nameof(encoding));
+            }
+
             var bytes = encoding.GetBytes(data);
 
             return encryption.Hash(bytes);
