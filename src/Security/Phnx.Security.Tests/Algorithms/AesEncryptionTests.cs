@@ -1,6 +1,8 @@
 ﻿using NUnit.Framework;
 using Phnx.IO;
 using Phnx.Security.Algorithms;
+using Phnx.Security.Tests.TestHelpers;
+using System;
 
 namespace Phnx.Security.Tests.Algorithms
 {
@@ -14,7 +16,7 @@ namespace Phnx.Security.Tests.Algorithms
         public AesEncryption Aes { get; }
 
         [Test]
-        public void CreateRandomKey_GetsKeyOfSizeKeySizeDividedBy8()
+        public void CreateRandomKey_GetsKeyOfSizeKeyBitsDividedBy8()
         {
             var key = Aes.CreateRandomKey();
 
@@ -22,11 +24,135 @@ namespace Phnx.Security.Tests.Algorithms
         }
 
         [Test]
-        public void CreateRandomIv_GetsKeyOfSizeIVSizeDividedBy8()
+        public void CreateRandomIv_GetsKeyOfSizeIVBitsDividedBy8()
         {
             var key = Aes.CreateRandomIv();
 
             Assert.AreEqual(AesEncryption.IvBits / 8, key.Length);
+        }
+
+        [Test]
+        public void Encrypt_WithNullInput_ThrowsArgumentNullException()
+        {
+            var key = Aes.CreateRandomKey();
+            var iv = Aes.CreateRandomIv();
+            var output = new PipeStream();
+
+            Assert.Throws<ArgumentNullException>(() => Aes.Encrypt(null, key, iv, output));
+        }
+
+        [Test]
+        public void Encrypt_WithNullKey_ThrowsArgumentNullException()
+        {
+            var input = new PipeStream();
+            var iv = Aes.CreateRandomIv();
+            var output = new PipeStream();
+
+            Assert.Throws<ArgumentNullException>(() => Aes.Encrypt(input, null, iv, output));
+        }
+
+        [Test]
+        public void Encrypt_WithNullIv_ThrowsArgumentNullException()
+        {
+            var input = new PipeStream();
+            var key = Aes.CreateRandomKey();
+            var output = new PipeStream();
+
+            Assert.Throws<ArgumentNullException>(() => Aes.Encrypt(input, key, null, output));
+        }
+
+        [Test]
+        public void Encrypt_WithNullOutput_ThrowsArgumentNullException()
+        {
+            var input = new PipeStream();
+            var key = Aes.CreateRandomKey();
+            var iv = Aes.CreateRandomIv();
+
+            Assert.Throws<ArgumentNullException>(() => Aes.Encrypt(input, key, iv, null));
+        }
+
+        [Test]
+        public void Encrypt_WithUnreadableInput_ThrowsArgumentException()
+        {
+            var input = new OneWayStream(false);
+            var key = Aes.CreateRandomKey();
+            var iv = Aes.CreateRandomIv();
+            var output = new PipeStream();
+
+            Assert.Throws<ArgumentException>(() => Aes.Encrypt(input, key, iv, output));
+        }
+
+        [Test]
+        public void Encrypt_WithReadOnlyOutput_ThrowsArgumentException()
+        {
+            var input = new PipeStream();
+            var key = Aes.CreateRandomKey();
+            var iv = Aes.CreateRandomIv();
+            var output = new OneWayStream(true);
+
+            Assert.Throws<ArgumentException>(() => Aes.Encrypt(input, key, iv, output));
+        }
+
+        [Test]
+        public void Decrypt_WithNullInput_ThrowsArgumentNullException()
+        {
+            var key = Aes.CreateRandomKey();
+            var iv = Aes.CreateRandomIv();
+            var output = new PipeStream();
+
+            Assert.Throws<ArgumentNullException>(() => Aes.Decrypt(null, key, iv, output));
+        }
+
+        [Test]
+        public void Decrypt_WithNullKey_ThrowsArgumentNullException()
+        {
+            var input = new PipeStream();
+            var iv = Aes.CreateRandomIv();
+            var output = new PipeStream();
+
+            Assert.Throws<ArgumentNullException>(() => Aes.Decrypt(input, null, iv, output));
+        }
+
+        [Test]
+        public void Decrypt_WithNullIv_ThrowsArgumentNullException()
+        {
+            var input = new PipeStream();
+            var key = Aes.CreateRandomKey();
+            var output = new PipeStream();
+
+            Assert.Throws<ArgumentNullException>(() => Aes.Decrypt(input, key, null, output));
+        }
+
+        [Test]
+        public void Decrypt_WithNullOutput_ThrowsArgumentNullException()
+        {
+            var input = new PipeStream();
+            var key = Aes.CreateRandomKey();
+            var iv = Aes.CreateRandomIv();
+
+            Assert.Throws<ArgumentNullException>(() => Aes.Decrypt(input, key, iv, null));
+        }
+
+        [Test]
+        public void Decrypt_WithUnreadableInput_ThrowsArgumentException()
+        {
+            var input = new OneWayStream(false);
+            var key = Aes.CreateRandomKey();
+            var iv = Aes.CreateRandomIv();
+            var output = new PipeStream();
+
+            Assert.Throws<ArgumentException>(() => Aes.Decrypt(input, key, iv, output));
+        }
+
+        [Test]
+        public void Decrypt_WithReadOnlyOutput_ThrowsArgumentException()
+        {
+            var input = new PipeStream();
+            var key = Aes.CreateRandomKey();
+            var iv = Aes.CreateRandomIv();
+            var output = new OneWayStream(true);
+
+            Assert.Throws<ArgumentException>(() => Aes.Decrypt(input, key, iv, output));
         }
 
         [Test]

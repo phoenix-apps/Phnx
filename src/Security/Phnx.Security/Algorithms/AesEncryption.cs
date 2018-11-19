@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Security.Cryptography;
 
@@ -139,6 +140,10 @@ namespace Phnx.Security.Algorithms
 
         private void DumpCryptoStream(ICryptoTransform crypto, Stream source, Stream output)
         {
+            Debug.Assert(crypto != null, $"{nameof(crypto)} cannot be null");
+            Debug.Assert(source != null, $"{nameof(source)} cannot be null");
+            Debug.Assert(output != null, $"{nameof(output)} cannot be null");
+
             byte[] buffer = new byte[Math.Min(1024, source.Length + 1)];
             int bytesRead = buffer.Length;
 
