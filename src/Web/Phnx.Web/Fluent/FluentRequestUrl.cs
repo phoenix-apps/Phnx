@@ -16,6 +16,7 @@ namespace Phnx.Web.Fluent
         }
 
         private readonly FluentRequest request;
+
         private string baseUrl;
         private string queryUrl;
         private string pathUrl;

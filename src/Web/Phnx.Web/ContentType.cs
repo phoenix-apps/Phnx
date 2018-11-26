@@ -1,4 +1,4 @@
-﻿namespace Phnx.Web.Models
+﻿namespace Phnx.Web
 {
     /// <summary>
     /// MIME type helpers
@@ -11,7 +11,7 @@
         public static class Application
         {
             /// <summary>
-            /// Javascript content type (not JSON - for JSON see <see cref="Json"/>
+            /// Javascript content type (not JSON - for JSON see <see cref="Json"/>)
             /// </summary>
             public const string Javascript = "application/javascript";
 
