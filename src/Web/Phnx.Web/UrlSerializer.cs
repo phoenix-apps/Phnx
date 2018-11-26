@@ -77,6 +77,11 @@ namespace Phnx.Web
         /// <returns>The fully qualified URL with all the path segments escaped and appended</returns>
         public static string ToUrl(IEnumerable<string> pathSegments, bool sanitisePathSegments)
         {
+            if (pathSegments is null)
+            {
+                return string.Empty;
+            }
+
             IEnumerable<string> escapedPathSegments;
 
             if (sanitisePathSegments)
