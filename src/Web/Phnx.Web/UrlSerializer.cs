@@ -1,4 +1,5 @@
-﻿using Phnx.Reflection;
+﻿using Newtonsoft.Json;
+using Phnx.Reflection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -45,13 +46,25 @@ namespace Phnx.Web
             // Concat all key/value pairs into a string separated by ampersand
             string queryString = string.Join("&",
                 properties.Select(x =>
-                    string.Concat(
+                {
+                    string valueAsString;
+
+                    if (x.Value is null)
+                    {
+                        valueAsString = string.Empty;
+                    }
+                    else
+                    {
+                        valueAsString = JsonConvert.SerializeObject(x.Value).Trim('\"');
+                    }
+
+                    return string.Concat(
                         Uri.EscapeDataString(x.Key),
                         "=",
-                        Uri.EscapeDataString(x.Value?.ToString() ?? "")
-                        )
-                    )
-                );
+                        Uri.EscapeDataString(valueAsString)
+                        );
+                })
+            );
 
             return queryString;
         }

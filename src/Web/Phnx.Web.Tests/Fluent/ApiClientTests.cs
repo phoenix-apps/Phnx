@@ -59,7 +59,7 @@ namespace Phnx.Web.Tests.Fluent
 
             task.Wait();
 
-            Assert.AreEqual("http://www.google.com/?q=test&date=01%2F01%2F2001%2000%3A00%3A00", Mock.Request.RequestUri.AbsoluteUri);
+            Assert.AreEqual("http://www.google.com/?q=test&date=2001-01-01T00%3A00%3A00", Mock.Request.RequestUri.AbsoluteUri);
         }
 
         [Test]

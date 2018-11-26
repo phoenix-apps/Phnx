@@ -42,7 +42,7 @@ namespace Phnx.Web.Tests.Services
         [Test]
         public void RenderingAQueryString_WithNull_ReturnsEmptyString()
         {
-            string queryString = String.Empty;
+            string queryString = string.Empty;
 
             var formattedUrl = UrlSerializer.ToQueryString(null);
 
@@ -52,7 +52,7 @@ namespace Phnx.Web.Tests.Services
         [Test]
         public void RenderingAQueryString_WithSimpleObject_ReturnsQuery()
         {
-            string queryString = "name=John%20Smith&dob=01%2F01%2F2000%2000%3A00%3A00";
+            string queryString = "name=John%20Smith&dob=2000-01-01T00%3A00%3A00";
 
             var query = new
             {
@@ -68,7 +68,7 @@ namespace Phnx.Web.Tests.Services
         [Test]
         public void RenderingAQueryString_WithObjectContainingCollection_ReturnsQuery()
         {
-            string queryString = "names=John%20Smith%2CDavid%20Jones%2CSam%20Smith&dob=01%2F01%2F2000%2000%3A00%3A00";
+            string queryString = "names=John%20Smith%2CDavid%20Jones%2CSam%20Smith&dob=2000-01-01T00%3A00%3A00";
 
             var query = new
             {
