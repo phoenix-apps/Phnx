@@ -8,16 +8,16 @@ namespace Phnx.Web
     /// <summary>
     /// An exception that represents a bad status code response
     /// </summary>
-    public class ApiRequestException : HttpRequestException
+    public class ApiException : HttpRequestException
     {
         /// <summary>
-        /// Create a new <see cref="ApiRequestException"/>
+        /// Create a new <see cref="ApiException"/>
         /// </summary>
         /// <param name="apiUrl">The api URL that the error came from</param>
         /// <param name="statusCode">The HTTP status code that could not be handled</param>
         /// <param name="headers">The HTTP headers contained in the response</param>
         /// <param name="body">The body of the response</param>
-        public ApiRequestException(string apiUrl, HttpStatusCode statusCode, HttpResponseHeaders headers, string body) : base()
+        public ApiException(string apiUrl, HttpStatusCode statusCode, HttpResponseHeaders headers, string body) : base()
         {
             ApiUrl = apiUrl;
             StatusCode = statusCode;
@@ -52,7 +52,15 @@ namespace Phnx.Web
         public override string ToString()
         {
             StringBuilder errorMessage = new StringBuilder();
-            errorMessage.AppendLine($"Response error from {ApiUrl}");
+            if (!string.IsNullOrWhiteSpace(ApiUrl))
+            {
+                errorMessage.AppendLine($"Response error from {ApiUrl}");
+            }
+            else
+            {
+                errorMessage.AppendLine("Response error");
+            }
+
             errorMessage.Append($"{(int)StatusCode} ({StatusCode})");
 
             if (Headers != null)

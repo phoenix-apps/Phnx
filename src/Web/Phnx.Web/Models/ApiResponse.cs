@@ -102,7 +102,7 @@ namespace Phnx.Web.Models
         {
             GetBodyAsStringAsync().Wait();
 
-            return new ApiRequestException(
+            return new ApiException(
                 Message.RequestMessage.RequestUri.ToString(),
                 StatusCode,
                 Headers,
