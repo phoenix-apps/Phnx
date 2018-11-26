@@ -1,4 +1,4 @@
-﻿using Phnx.Reflection.Extensions;
+﻿using Phnx.Reflection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
