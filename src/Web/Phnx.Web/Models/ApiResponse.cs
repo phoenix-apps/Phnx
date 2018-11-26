@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Phnx.Web.Models
@@ -27,8 +26,8 @@ namespace Phnx.Web.Models
         /// </summary>
         public HttpResponseMessage Message { get; }
 
-        private string body;
-        private bool bodyHasBeenLoaded;
+        private string _bodyCache;
+        private bool _bodyHasBeenLoaded;
 
         /// <summary>
         /// The status code of the response message
@@ -50,17 +49,17 @@ namespace Phnx.Web.Models
         /// </summary>
         public async Task<string> GetBodyAsStringAsync()
         {
-            if (!bodyHasBeenLoaded)
+            if (!_bodyHasBeenLoaded)
             {
                 using (HttpContent content = Message.Content)
                 {
-                    body = await content.ReadAsStringAsync();
+                    _bodyCache = await content.ReadAsStringAsync();
                 }
 
-                bodyHasBeenLoaded = true;
+                _bodyHasBeenLoaded = true;
             }
 
-            return body;
+            return _bodyCache;
         }
 
         /// <summary>
@@ -92,25 +91,22 @@ namespace Phnx.Web.Models
         /// <param name="successCodes">The range of values to check</param>
         public void ThrowIfStatusCodeIsNot(params HttpStatusCode[] successCodes)
         {
-            if (!successCodes.Contains(StatusCode))
-            {
-                throw CreateError();
-            }
+            ThrowIfStatusCodeIsNot((IEnumerable<HttpStatusCode>)successCodes);
         }
 
+        /// <summary>
+        /// Throws a <see cref="HttpRequestException"/> with the request body and status code in the exception message
+        /// </summary>
+        /// <returns></returns>
         private HttpRequestException CreateError()
         {
-            StringBuilder errorMessage = new StringBuilder();
-            errorMessage.Append($"{(int)StatusCode} ({StatusCode}");
+            GetBodyAsStringAsync().Wait();
 
-            if (bodyHasBeenLoaded)
-            {
-                var body = GetBodyAsStringAsync().Result;
-
-                errorMessage.Append($", Body: {body}");
-            }
-
-            return new HttpRequestException(errorMessage.ToString());
+            return new ApiRequestException(
+                Message.RequestMessage.RequestUri.ToString(),
+                StatusCode,
+                Headers,
+                _bodyCache);
         }
     }
 }
