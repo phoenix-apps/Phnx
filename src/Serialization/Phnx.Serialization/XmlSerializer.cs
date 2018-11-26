@@ -1,8 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 
 namespace Phnx.Serialization
 {
+    using DotNetXmlSerializer = System.Xml.Serialization.XmlSerializer;
+
     /// <summary>
     /// XML (Extensible Markup Language) serialization for transferring a value and its members to and from a <see cref="string"/>
     /// </summary>
@@ -13,9 +16,9 @@ namespace Phnx.Serialization
         /// </summary>
         /// <typeparam name="T">The type of value to serialize</typeparam>
         /// <returns>An XML serializer</returns>
-        private System.Xml.Serialization.XmlSerializer CreateSerializer<T>()
+        protected DotNetXmlSerializer CreateSerializer<T>()
         {
-            return new System.Xml.Serialization.XmlSerializer(typeof(T));
+            return new DotNetXmlSerializer(typeof(T));
         }
 
         /// <summary>
@@ -26,6 +29,19 @@ namespace Phnx.Serialization
         /// <param name="outputStream">The stream to serialize the value to</param>
         public void Serialize<T>(T value, Stream outputStream)
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if (outputStream is null)
+            {
+                throw new ArgumentNullException(nameof(outputStream));
+            }
+            if (!outputStream.CanWrite)
+            {
+                throw new ArgumentException($"Cannot write to {outputStream}");
+            }
+
             var formatter = CreateSerializer<T>();
 
             formatter.Serialize(outputStream, value);
@@ -39,6 +55,11 @@ namespace Phnx.Serialization
         /// <returns><paramref name="value"/> serialized</returns>
         public string Serialize<T>(T value)
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             using (var stream = new MemoryStream())
             {
                 Serialize(value, stream);
@@ -56,6 +77,15 @@ namespace Phnx.Serialization
         /// <returns>The value that was deserialized</returns>
         public T Deserialize<T>(Stream inputStream)
         {
+            if (inputStream is null)
+            {
+                throw new ArgumentNullException(nameof(inputStream));
+            }
+            if (!inputStream.CanRead)
+            {
+                throw new ArgumentException($"Cannot read from {inputStream}");
+            }
+
             var formatter = CreateSerializer<T>();
 
             return (T)formatter.Deserialize(inputStream);
@@ -69,6 +99,11 @@ namespace Phnx.Serialization
         /// <returns>The value that was deserialized</returns>
         public T Deserialize<T>(string xml)
         {
+            if (xml is null)
+            {
+                throw new ArgumentNullException(nameof(xml));
+            }
+
             var xmlAsBytes = Encoding.UTF8.GetBytes(xml);
 
             using (var stream = new MemoryStream(xmlAsBytes))
