@@ -3,6 +3,7 @@ using Phnx.IO;
 using Phnx.Serialization.Tests.TestClasses;
 using System;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace Phnx.Serialization.Tests
 {
@@ -94,6 +95,12 @@ namespace Phnx.Serialization.Tests
             var clone = BinarySerializer.Deserialize<ComplexClass>(dataStream);
 
             Assert.AreEqual(objectToClone.ComplexProperty.MyValue, clone.ComplexProperty.MyValue);
+        }
+
+        [Test]
+        public void Serialize_NonSerializable_Throws()
+        {
+            Assert.Throws<SerializationException>(() => BinarySerializer.Serialize(new NonSerializableClass()));
         }
     }
 }
