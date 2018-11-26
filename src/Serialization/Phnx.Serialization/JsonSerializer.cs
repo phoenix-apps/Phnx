@@ -1,7 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Phnx.IO.Json;
+using System;
 using System.IO;
-using System.Text;
+using System.Runtime.Serialization;
 
 namespace Phnx.Serialization
 {
@@ -11,30 +12,41 @@ namespace Phnx.Serialization
     public class JsonSerializer : ISerializer
     {
         /// <summary>
-        /// Serializes an object to bytes by converting to JSON, then converting the JSON to UTF-8 bytes
+        /// Serializes an object to JSON
         /// </summary>
         /// <typeparam name="T">The type of object to serialize</typeparam>
         /// <param name="value">The object to serialize</param>
         /// <returns>The serialized value</returns>
-        public static byte[] Serialize<T>(T value)
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> is <see langword="null"/></exception>
+        public static string Serialize<T>(T value)
         {
-            string jsonObject = JsonConvert.SerializeObject(value);
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
 
-            return Encoding.UTF8.GetBytes(jsonObject);
+            string json = JsonConvert.SerializeObject(value);
+
+            return json;
         }
 
         /// <summary>
-        /// Deserializes an object from bytes by converting from UTF-8 bytes to a JSON string, then to <typeparamref name="T"/>
+        /// Deserializes an object from JSON to <typeparamref name="T"/>
         /// </summary>
         /// <typeparam name="T">The type of object to deserialized to</typeparam>
-        /// <param name="bytes">The bytes containing the serialized data</param>
+        /// <param name="json">The bytes containing the serialized data</param>
         /// <returns>The deserialized value</returns>
-        /// <exception cref="System.ArgumentException">Object is not of type <typeparamref name="T"/></exception>
-        public static T Deserialize<T>(byte[] bytes)
+        /// <exception cref="ArgumentNullException"><paramref name="json"/> is <see langword="null"/></exception>
+        /// <exception cref="InvalidCastException">Object is not of type <typeparamref name="T"/></exception>
+        /// <exception cref="SerializationException"><paramref name="json"/> is not a valid JSON object</exception>
+        public static T Deserialize<T>(string json)
         {
-            var jsonObject = Encoding.UTF8.GetString(bytes);
+            if (json is null)
+            {
+                throw new ArgumentNullException(nameof(json));
+            }
 
-            return JsonConvert.DeserializeObject<T>(jsonObject);
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
         /// <summary>
@@ -43,8 +55,23 @@ namespace Phnx.Serialization
         /// <typeparam name="T">The type of object to write</typeparam>
         /// <param name="value">The value to write</param>
         /// <param name="outputStream">The stream to output the serialized data to</param>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> or <paramref name="outputStream"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="outputStream"/> cannot be written to</exception>
         public void Serialize<T>(T value, Stream outputStream)
         {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            if (outputStream is null)
+            {
+                throw new ArgumentNullException(nameof(outputStream));
+            }
+            if (!outputStream.CanWrite)
+            {
+                throw new ArgumentException($"Cannot write to {outputStream}");
+            }
+
             using (var output = new JsonStreamWriter(new StreamWriter(outputStream), false))
             {
                 output.Write(value);
@@ -57,9 +84,21 @@ namespace Phnx.Serialization
         /// <typeparam name="T">The type of object to read</typeparam>
         /// <param name="inputStream">The stream to deserialize from</param>
         /// <returns>The deserialized value read from the stream</returns>
-        /// <exception cref="System.ArgumentException">Object is not of type <typeparamref name="T"/></exception>
+        /// <exception cref="ArgumentNullException"><paramref name="inputStream"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="inputStream"/> cannot be read from</exception>
+        /// <exception cref="InvalidCastException">Object is not of type <typeparamref name="T"/></exception>
+        /// <exception cref="SerializationException"><paramref name="inputStream"/> does not contain a valid JSON object</exception>
         public T Deserialize<T>(Stream inputStream)
         {
+            if (inputStream is null)
+            {
+                throw new ArgumentNullException(nameof(inputStream));
+            }
+            if (!inputStream.CanRead)
+            {
+                throw new ArgumentException($"Cannot read from {inputStream}");
+            }
+
             using (var input = new JsonStreamReader(new StreamReader(inputStream), false))
             {
                 return input.ReadObject<T>();
