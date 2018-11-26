@@ -1,5 +1,4 @@
 ﻿using Phnx.Web.Fluent;
-using Phnx.Web.Services.Interfaces;
 using System.Net.Http;
 using System.Threading.Tasks;
 
