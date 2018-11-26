@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Phnx.Serialization.Interfaces
+namespace Phnx.Serialization
 {
     /// <summary>
     /// Represents a serializer for objects, such as XML, Json and binary

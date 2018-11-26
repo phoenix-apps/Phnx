@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Phnx.IO.Json.Streams;
-using Phnx.Serialization.Interfaces;
+using Phnx.IO.Json;
 using System.IO;
 using System.Text;
 
@@ -46,9 +45,9 @@ namespace Phnx.Serialization
         /// <param name="outputStream">The stream to output the serialized data to</param>
         public void Serialize<T>(T value, Stream outputStream)
         {
-            using (var output = new JsonWriteStream(new StreamWriter(outputStream), false))
+            using (var output = new JsonStreamWriter(new StreamWriter(outputStream), false))
             {
-                output.WriteObject(value);
+                output.Write(value);
             }
         }
 
@@ -61,7 +60,7 @@ namespace Phnx.Serialization
         /// <exception cref="System.ArgumentException">Object is not of type <typeparamref name="T"/></exception>
         public T Deserialize<T>(Stream inputStream)
         {
-            using (var input = new JsonReadStream(new StreamReader(inputStream), false))
+            using (var input = new JsonStreamReader(new StreamReader(inputStream), false))
             {
                 return input.ReadObject<T>();
             }

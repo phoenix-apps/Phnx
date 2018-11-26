@@ -1,6 +1,5 @@
-using Phnx.Serialization.Extensions;
-using Phnx.Serialization.Tests.TestClasses;
 using NUnit.Framework;
+using Phnx.Serialization.Tests.TestClasses;
 
 namespace Phnx.Serialization.Tests
 {

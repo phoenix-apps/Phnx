@@ -1,5 +1,4 @@
-﻿using Phnx.Collections.Extensions;
-using Phnx.Serialization.Interfaces;
+﻿using Phnx.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 

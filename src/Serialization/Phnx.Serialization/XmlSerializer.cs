@@ -1,6 +1,4 @@
-﻿using Phnx.IO.Factories;
-using Phnx.Serialization.Interfaces;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
 namespace Phnx.Serialization
@@ -10,26 +8,11 @@ namespace Phnx.Serialization
     /// </summary>
     public class XmlSerializer : ISerializer
     {
-        private static readonly Encoding XmlDefaultEncoding = Encoding.UTF8;
-
-        /// <summary>
-        /// A factory used to create streams for serialization
-        /// </summary>
-        protected MemoryStreamFactory StreamFactory { get; }
-
-        /// <summary>
-        /// Create a new <see cref="XmlSerializer"/>
-        /// </summary>
-        public XmlSerializer()
-        {
-            StreamFactory = new MemoryStreamFactory(XmlDefaultEncoding);
-        }
-
         /// <summary>
         /// Create a new <see cref="System.Xml.Serialization.XmlSerializer"/> for a given type
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <typeparam name="T">The type of value to serialize</typeparam>
+        /// <returns>An XML serializer</returns>
         private System.Xml.Serialization.XmlSerializer CreateSerializer<T>()
         {
             return new System.Xml.Serialization.XmlSerializer(typeof(T));
@@ -56,12 +39,12 @@ namespace Phnx.Serialization
         /// <returns><paramref name="value"/> serialized</returns>
         public string Serialize<T>(T value)
         {
-            using (var stream = StreamFactory.Create())
+            using (var stream = new MemoryStream())
             {
                 Serialize(value, stream);
 
                 var bytes = stream.ToArray();
-                return XmlDefaultEncoding.GetString(bytes);
+                return Encoding.UTF8.GetString(bytes);
             }
         }
 
@@ -86,7 +69,9 @@ namespace Phnx.Serialization
         /// <returns>The value that was deserialized</returns>
         public T Deserialize<T>(string xml)
         {
-            using (var stream = StreamFactory.Create(xml))
+            var xmlAsBytes = Encoding.UTF8.GetBytes(xml);
+
+            using (var stream = new MemoryStream(xmlAsBytes))
             {
                 return Deserialize<T>(stream);
             }
