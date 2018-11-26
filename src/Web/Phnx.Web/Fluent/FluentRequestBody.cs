@@ -1,6 +1,6 @@
-﻿using Phnx.Web.Models;
-using Phnx.Web.Services;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
 
@@ -16,17 +16,9 @@ namespace Phnx.Web.Fluent
 
         internal FluentRequestBody(FluentRequest request)
         {
+            Debug.Assert(request != null);
+
             this.request = request;
-        }
-
-        private void ToContent(string data, string mediaType)
-        {
-            ToContent(data, mediaType, defaultEncoding);
-        }
-
-        private void ToContent(string data, string mediaType, Encoding encoding)
-        {
-            request.Request.Content = new StringContent(data, encoding, mediaType);
         }
 
         /// <summary>
@@ -49,7 +41,7 @@ namespace Phnx.Web.Fluent
         /// <returns>The source <see cref="FluentRequest"/></returns>
         public FluentRequest PlainText(string body)
         {
-            ToContent(body, ContentType.Text.Plain);
+            ToContent(body ?? string.Empty, ContentType.Text.Plain);
 
             return request;
         }
@@ -62,7 +54,7 @@ namespace Phnx.Web.Fluent
         /// <returns>The source <see cref="FluentRequest"/></returns>
         public FluentRequest PlainText(string body, Encoding encoding)
         {
-            ToContent(body, ContentType.Text.Plain, encoding);
+            ToContent(body ?? string.Empty, ContentType.Text.Plain, encoding);
 
             return request;
         }
@@ -101,6 +93,11 @@ namespace Phnx.Web.Fluent
         /// <returns>The source <see cref="FluentRequest"/></returns>
         public FluentRequest Custom(HttpContent body)
         {
+            if (body is null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
             request.Request.Content = body;
 
             return request;
@@ -114,6 +111,15 @@ namespace Phnx.Web.Fluent
         /// <returns>The source <see cref="FluentRequest"/></returns>
         public FluentRequest Custom(string contentType, string body)
         {
+            if (contentType is null)
+            {
+                throw new ArgumentNullException(nameof(contentType));
+            }
+            if (body is null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+
             ToContent(body, contentType);
 
             return request;
@@ -128,9 +134,36 @@ namespace Phnx.Web.Fluent
         /// <returns>The source <see cref="FluentRequest"/></returns>
         public FluentRequest Custom(string contentType, string body, Encoding encoding)
         {
+            if (contentType is null)
+            {
+                throw new ArgumentNullException(nameof(contentType));
+            }
+            if (body is null)
+            {
+                throw new ArgumentNullException(nameof(body));
+            }
+            if (encoding is null)
+            {
+                throw new ArgumentNullException(nameof(encoding));
+            }
+
             ToContent(body, contentType, encoding);
 
             return request;
+        }
+
+        private void ToContent(string data, string mediaType)
+        {
+            ToContent(data, mediaType, defaultEncoding);
+        }
+
+        private void ToContent(string data, string mediaType, Encoding encoding)
+        {
+            Debug.Assert(data != null);
+            Debug.Assert(mediaType != null);
+            Debug.Assert(encoding != null);
+
+            request.Request.Content = new StringContent(data, encoding, mediaType);
         }
     }
 }

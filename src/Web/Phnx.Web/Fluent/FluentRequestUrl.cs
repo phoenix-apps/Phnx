@@ -1,6 +1,5 @@
-﻿using Phnx.Web.Services;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Phnx.Web.Fluent
@@ -12,6 +11,8 @@ namespace Phnx.Web.Fluent
     {
         internal FluentRequestUrl(FluentRequest request)
         {
+            Debug.Assert(request != null);
+
             this.request = request;
         }
 
@@ -80,10 +81,10 @@ namespace Phnx.Web.Fluent
         }
 
         /// <summary>
-        /// Build the url together, and return to the <see cref="FluentRequest"/>
+        /// Build the url together
         /// </summary>
         /// <returns>The underlying <see cref="FluentRequest"/></returns>
-        internal void Build()
+        internal string Build()
         {
             StringBuilder url = new StringBuilder();
             if (!string.IsNullOrEmpty(baseUrl))
@@ -111,7 +112,7 @@ namespace Phnx.Web.Fluent
                 url.Append(queryUrl);
             }
 
-            request.Request.RequestUri = new Uri(url.ToString());
+            return url.ToString();
         }
     }
 }
