@@ -25,7 +25,7 @@ All `.NET Core`, `EntityFrameworkCore`, `AspNetCore` or `.NET Standard` librarie
 A wiki for this project is maintained on GitHub, in the Wiki tab. This can be found [here](https://github.com/org-phnx/Phnx/wiki). This wiki is updated with each release.
 
 ## Contributing
-We welcome contributions. Please submit a pull request with your changes, and follow the `Documentation Language Specification` when updating software documentation for your changes (where necessary). 
+We welcome contributions. Please submit a pull request with your changes, and follow the [Documentation Language Specification](https://github.com/org-phnx/Phnx/blob/master/Styles%20and%20Standards/Documentation%20Language%20Specification.md) when updating software documentation for your changes (where necessary). 
 
 Please do not submit a pull request without an issue attached. If there isn't an issue reported for the fix (or refactoring) you're trying to make, please create one. This makes it easier for us to understand the reasons behind your change(s). 
 
