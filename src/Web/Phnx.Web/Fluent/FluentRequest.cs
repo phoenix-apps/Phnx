@@ -71,7 +71,7 @@ namespace Phnx.Web.Fluent
         /// </summary>
         /// <param name="headers">The headers to append to the current headers in the request</param>
         /// <returns>This <see cref="FluentRequest"/></returns>
-        public FluentRequest AppendHeaders(HttpRequestHeaders headers)
+        public FluentRequest SetHeaders(HttpRequestHeaders headers)
         {
             Request.Headers.Clear();
 
@@ -88,7 +88,7 @@ namespace Phnx.Web.Fluent
         /// </summary>
         /// <param name="headers">The headers to append to the current headers in the request</param>
         /// <returns>This <see cref="FluentRequest"/></returns>
-        public FluentRequest AppendHeaders(IEnumerable<KeyValuePair<string, string>> headers)
+        public FluentRequest SetHeaders(IEnumerable<KeyValuePair<string, string>> headers)
         {
             foreach (var header in headers)
             {
