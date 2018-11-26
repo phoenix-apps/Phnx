@@ -1,10 +1,9 @@
-﻿using Phnx.Web.Services;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 
 namespace Phnx.Web.Tests.Services
 {
-    public class UrlBuilderTests
+    public class UrlSerializerTests
     {
         [Test]
         public void RenderingAnUrl_WithValidSegments_ReturnsUrl()

@@ -48,7 +48,7 @@ namespace Phnx.Web.Services
         /// </summary>
         /// <param name="request">The request to send</param>
         /// <returns>The response from the foreign URL</returns>
-        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
+        public virtual Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
             return HttpClient.SendAsync(request);
         }
@@ -59,7 +59,7 @@ namespace Phnx.Web.Services
         /// <param name="request">The request to send</param>
         /// <param name="httpClient">The HTTP Client to use for the request</param>
         /// <returns>The response from the foreign URL</returns>
-        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpClient httpClient)
+        public virtual Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpClient httpClient)
         {
             return httpClient.SendAsync(request);
         }
