@@ -6,18 +6,18 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Phnx.Web.Models.Response
+namespace Phnx.Web.Models
 {
     /// <summary>
     /// Represents an API response
     /// </summary>
-    public class ApiResponseMessage
+    public class ApiResponse
     {
         /// <summary>
-        /// Create a new <see cref="ApiResponseMessage"/> from a <see cref="HttpResponseMessage"/>, copying the relevant values
+        /// Create a new <see cref="ApiResponse"/> from a <see cref="HttpResponseMessage"/>, copying the relevant values
         /// </summary>
         /// <param name="message">The message to create the response from</param>
-        public ApiResponseMessage(HttpResponseMessage message)
+        public ApiResponse(HttpResponseMessage message)
         {
             Message = message;
         }

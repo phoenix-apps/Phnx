@@ -1,4 +1,4 @@
-﻿using Phnx.Web.Models.Response;
+﻿using Phnx.Web.Models;
 using Phnx.Web.Services;
 using System;
 using System.Collections.Generic;
@@ -116,13 +116,13 @@ namespace Phnx.Web.Fluent
         /// </summary>
         /// <param name="method">The HTTP method to use when sending the request</param>
         /// <returns>The response from the API in plaintext format</returns>
-        public async Task<ApiResponseMessage> Send(HttpMethod method)
+        public async Task<ApiResponse> Send(HttpMethod method)
         {
             Request.Method = method;
 
             var response = await _apiRequestService.SendAsync(Request);
 
-            return new ApiResponseMessage(response);
+            return new ApiResponse(response);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Phnx.Web.Fluent
         /// </summary>
         /// <param name="method">The HTTP method to use when sending the request</param>
         /// <returns>The response from the API in plaintext format</returns>
-        public Task<ApiResponseMessage> Send(string method)
+        public Task<ApiResponse> Send(string method)
         {
             return Send(new HttpMethod(method));
         }
@@ -141,13 +141,13 @@ namespace Phnx.Web.Fluent
         /// <typeparam name="TResponse">The format of the data to send</typeparam>
         /// <param name="method">The HTTP method to use when sending the request</param>
         /// <returns>The response from the API in a format ready for JSON deserialization</returns>
-        public async Task<ApiJsonResponseMessage<TResponse>> SendWithJsonResponse<TResponse>(HttpMethod method)
+        public async Task<ApiResponseJson<TResponse>> SendWithJsonResponse<TResponse>(HttpMethod method)
         {
             Request.Method = method;
 
             var response = await _apiRequestService.SendAsync(Request);
 
-            return new ApiJsonResponseMessage<TResponse>(response);
+            return new ApiResponseJson<TResponse>(response);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Phnx.Web.Fluent
         /// <typeparam name="TResponse">The format of the data to send</typeparam>
         /// <param name="method">The HTTP method to use when sending the request</param>
         /// <returns>The response from the API in a format ready for JSON deserialization</returns>
-        public Task<ApiJsonResponseMessage<TResponse>> SendWithJsonResponse<TResponse>(string method)
+        public Task<ApiResponseJson<TResponse>> SendWithJsonResponse<TResponse>(string method)
         {
             return SendWithJsonResponse<TResponse>(new HttpMethod(method));
         }
