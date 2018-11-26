@@ -1,15 +1,10 @@
-﻿namespace Phnx.Security.Passwords.Interface
+﻿namespace Phnx.Security.Passwords
 {
     /// <summary>
-    /// A Password Hash Version ready for use by the <see cref="PasswordHashManager"/>
+    /// A Password Hash ready for use by the <see cref="PasswordHashManager"/>
     /// </summary>
-    public interface IPasswordHashVersion
+    public interface IPasswordHash
     {
-        /// <summary>
-        /// The version of this hashing algorithm
-        /// </summary>
-        int Version { get; }
-
         /// <summary>
         /// The length of the hash produced by this algorithm
         /// </summary>

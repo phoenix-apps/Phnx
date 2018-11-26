@@ -166,6 +166,56 @@ namespace Phnx.Collections
         }
 
         /// <summary>
+        /// Joins arrays onto this one
+        /// </summary>
+        /// <typeparam name="T">The type of elements in the arrays</typeparam>
+        /// <param name="arr">The array to place at the beginning of the new array</param>
+        /// <param name="arraysToJoin">The arrays to append onto <paramref name="arr"/></param>
+        /// <returns>A single array containing all the elements of <paramref name="arr"/> and <paramref name="arraysToJoin"/> in order</returns>
+        public static T[] Join<T>(this T[] arr, params T[][] arraysToJoin)
+        {
+            if (arr is null)
+            {
+                throw new ArgumentNullException(nameof(arr));
+            }
+            if (arraysToJoin is null)
+            {
+                throw new ArgumentNullException(nameof(arraysToJoin));
+            }
+
+            long newSize = arr.Length;
+            for (int index = 0; index < arraysToJoin.Length; index++)
+            {
+                if (arraysToJoin[index] is null)
+                {
+                    // Skip
+                    continue;
+                }
+
+                newSize += arraysToJoin[index].Length;
+            }
+
+            T[] result = new T[newSize];
+
+            Array.Copy(arr, result, arr.Length);
+
+            long curIndex = arr.Length;
+            for (int index = 0; index < arraysToJoin.Length; index++)
+            {
+                if (arraysToJoin[index] is null)
+                {
+                    // Skip
+                    continue;
+                }
+
+                Array.Copy(arraysToJoin[index], 0, result, curIndex, arraysToJoin[index].Length);
+                curIndex += arraysToJoin[index].Length;
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Searches a range of elements in a sorted array for a value
         /// </summary>
         /// <param name="source">The array to search.</param>

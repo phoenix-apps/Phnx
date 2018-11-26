@@ -95,10 +95,19 @@ namespace Phnx.Tests
         [Test]
         public void GetErrorNotImplemented_WithTodo_GetsMessage()
         {
+            string todoNote = "TODO: Note";
+            var error = ErrorMessage.Factory.NotImplemented(todoNote);
+
+            Assert.AreEqual(todoNote, error);
+        }
+
+        [Test]
+        public void GetErrorNotImplemented_WithTodo_StartsWithTodo()
+        {
             string todoNote = "Note";
             var error = ErrorMessage.Factory.NotImplemented(todoNote);
 
-            Assert.IsTrue(error.Contains(todoNote));
+            Assert.AreEqual("TODO: " + todoNote, error);
         }
     }
 }

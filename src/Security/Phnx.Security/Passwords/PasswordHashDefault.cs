@@ -1,17 +1,13 @@
-﻿using Phnx.Security.Passwords.Interface;
+﻿using Phnx.Security.Algorithms;
+using System;
 
 namespace Phnx.Security.Passwords
 {
     /// <summary>
-    /// A hash generator with a version of zero
+    /// A hash generator with a version of zero. Uses <see cref="Pbkdf2Hash"/> with 1024 iterations
     /// </summary>
-    public sealed class PasswordHashVersionZero : IPasswordHashVersion
+    public sealed class PasswordHashDefault : IPasswordHash
     {
-        /// <summary>
-        /// The version of this hashing algorithm
-        /// </summary>
-        public int Version => 0;
-
         /// <summary>
         /// The length of the hash produced by this algorithm
         /// </summary>
@@ -22,19 +18,14 @@ namespace Phnx.Security.Passwords
         /// </summary>
         public int SaltBytesLength => 24;
 
-        /// <summary>
-        /// The number of times this hash is ran on any passwords
-        /// </summary>
-        public int IterationCount => HashGenerator.IterationCount;
-
-        private Pbkdf2Hash HashGenerator { get; }
+        private readonly Pbkdf2Hash _hashGenerator;
 
         /// <summary>
-        /// Create a new instance of <see cref="PasswordHashVersionZero"/>
+        /// Create a new instance of <see cref="PasswordHashDefault"/>
         /// </summary>
-        public PasswordHashVersionZero()
+        public PasswordHashDefault(Pbkdf2Hash hashGenerator)
         {
-            HashGenerator = new Pbkdf2Hash();
+            _hashGenerator = hashGenerator;
         }
 
         /// <summary>
@@ -45,7 +36,16 @@ namespace Phnx.Security.Passwords
         /// <returns></returns>
         public byte[] GenerateHash(byte[] password, byte[] salt)
         {
-            return HashGenerator.Hash(password, salt);
+            if (password is null)
+            {
+                throw new ArgumentNullException(nameof(password));
+            }
+            if (salt is null)
+            {
+                throw new ArgumentNullException(nameof(salt));
+            }
+
+            return _hashGenerator.Hash(password, salt, 1024);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Phnx.Security.Passwords
         /// <returns></returns>
         public byte[] GenerateSalt()
         {
-            return HashGenerator.GenerateSalt();
+            return _hashGenerator.GenerateSalt();
         }
     }
 }

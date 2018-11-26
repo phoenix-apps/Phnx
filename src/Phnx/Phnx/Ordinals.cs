@@ -14,7 +14,7 @@ namespace Phnx
         /// <returns>The ordinal representation of <paramref name="number"/></returns>
         public static string ToOrdinal(int number)
         {
-            if (number < 0)
+            if (number <= 0)
             {
                 // There is no ordinal version
                 return number.ToString();
@@ -64,6 +64,11 @@ namespace Phnx
 
             if (ordinal.Length < 2)
             {
+                if (ordinal == "0")
+                {
+                    return 0;
+                }
+
                 throw new FormatException(nameof(ordinal) + " is not a valid ordinal");
             }
 

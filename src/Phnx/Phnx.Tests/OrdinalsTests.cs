@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 
 namespace Phnx.Tests
 {
@@ -9,7 +10,7 @@ namespace Phnx.Tests
         {
             var result = Ordinals.ToOrdinal(0);
 
-            Assert.AreEqual("0th", result);
+            Assert.AreEqual("0", result);
         }
 
         [Test]
@@ -78,6 +79,36 @@ namespace Phnx.Tests
             var result = Ordinals.FromOrdinal("13th");
 
             Assert.AreEqual(13, result);
+        }
+
+        [Test]
+        public void ConvertingFromOrdinal_WithNull_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => Ordinals.FromOrdinal(null));
+        }
+
+        [Test]
+        public void ConvertingFromOrdinal_WithNegative_ReturnsOriginalNumber()
+        {
+            var expected = -12;
+            var result = Ordinals.FromOrdinal("-12");
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void ConvertingFromOrdinal_WhenZero_ReturnsZero()
+        {
+            var expected = 0;
+            var result = Ordinals.FromOrdinal("0");
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void ConvertingFromOrdinal_ThatsTooShort_ThrowsFormatException()
+        {
+            Assert.Throws<FormatException>(() => Ordinals.FromOrdinal("1"));
         }
     }
 }

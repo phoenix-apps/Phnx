@@ -1,5 +1,4 @@
-﻿using Phnx.Security.Passwords.Interface;
-using System;
+﻿using System;
 using System.Text;
 
 namespace Phnx.Security.Passwords
@@ -10,9 +9,9 @@ namespace Phnx.Security.Passwords
 
         public const int BytesUsedByVersionTag = 4;
 
-        public VersionedHash(string password, IPasswordHashVersion hashGenerator)
+        public VersionedHash(string password, int version, IPasswordHash hashGenerator)
         {
-            Version = hashGenerator.Version;
+            Version = version;
             Salt = hashGenerator.GenerateSalt();
 
             var passBytes = DefaultPasswordEncoding.GetBytes(password);
@@ -21,9 +20,9 @@ namespace Phnx.Security.Passwords
             VerifyGenerator(hashGenerator);
         }
 
-        public VersionedHash(string password, byte[] salt, IPasswordHashVersion hashGenerator)
+        public VersionedHash(string password, byte[] salt, int version, IPasswordHash hashGenerator)
         {
-            Version = hashGenerator.Version;
+            Version = version;
             Salt = salt;
 
             var passBytes = DefaultPasswordEncoding.GetBytes(password);
@@ -32,11 +31,11 @@ namespace Phnx.Security.Passwords
             VerifyGenerator(hashGenerator);
         }
 
-        public VersionedHash(byte[] bytes, IPasswordHashVersion hashGenerator)
+        public VersionedHash(byte[] bytes, IPasswordHash hashGenerator)
         {
             VerifyGenerator(bytes.Length, hashGenerator);
 
-            Version = BitConverter.ToInt32(bytes, 0);
+            Version = GetVersionFromBytes(bytes);
 
             PasswordHash = new byte[hashGenerator.HashBytesLength];
             Array.Copy(bytes, BytesUsedByVersionTag, PasswordHash, 0, PasswordHash.Length);
@@ -45,32 +44,46 @@ namespace Phnx.Security.Passwords
             Array.Copy(bytes, BytesUsedByVersionTag + PasswordHash.Length, Salt, 0, Salt.Length);
         }
 
-        private void VerifyGenerator(IPasswordHashVersion generator)
+        private void VerifyGenerator(IPasswordHash generator)
         {
+            if (Salt.Length != generator.SaltBytesLength)
+            {
+                string msg = ErrorMessage.Factory.InvalidSaltSize(generator.SaltBytesLength, Salt.Length);
+                throw new ArgumentException();
+            }
+
             var hashLength = BytesUsedByVersionTag + PasswordHash.Length + Salt.Length;
             var hashLengthShouldBe = BytesUsedByVersionTag + generator.HashBytesLength + generator.SaltBytesLength;
 
             if (hashLength != hashLengthShouldBe)
             {
-                string msg = ErrorMessage.Factory.InvalidHashConfiguration(hashLength, hashLengthShouldBe, generator.Version);
-
-                throw new TypeLoadException(msg);
+                string msg = ErrorMessage.Factory.InvalidHashConfiguration(hashLength, hashLengthShouldBe);
+                throw new ArgumentException(msg, nameof(generator));
             }
         }
 
-        private void VerifyGenerator(int hashLength, IPasswordHashVersion generator)
+        private void VerifyGenerator(int hashLength, IPasswordHash generator)
         {
             var hashLengthShouldBe = BytesUsedByVersionTag + generator.HashBytesLength + generator.SaltBytesLength;
             if (hashLength != hashLengthShouldBe)
             {
-                string msg = ErrorMessage.Factory.InvalidHashConfiguration(hashLength, hashLengthShouldBe, generator.Version);
+                string msg = ErrorMessage.Factory.InvalidHashConfiguration(hashLength, hashLengthShouldBe);
 
-                throw new TypeLoadException(msg);
+                throw new ArgumentException(msg, nameof(generator));
             }
         }
 
         public static int GetVersionFromBytes(byte[] bytes)
         {
+            if (bytes is null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+            if (bytes.Length < BytesUsedByVersionTag)
+            {
+                throw new ArgumentException($"{bytes} is an invalid versioned hash", nameof(bytes));
+            }
+
             return BitConverter.ToInt32(bytes, 0);
         }
 

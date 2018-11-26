@@ -7,7 +7,7 @@ namespace Phnx
     /// The exception that is thrown when the value of an argument is less than zero, which is outside the range of allowable values as defined by the invoked method
     /// </summary>
     [Serializable]
-    public class ArgumentLessThanZeroException : ArgumentException
+    public class ArgumentLessThanZeroException : ArgumentOutOfRangeException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ArgumentLessThanZeroException"/> class
