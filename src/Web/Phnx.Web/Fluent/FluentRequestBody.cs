@@ -28,7 +28,7 @@ namespace Phnx.Web.Fluent
         /// <returns>The source <see cref="FluentRequest"/></returns>
         public FluentRequest Json(object body)
         {
-            var bodyAsString = JsonConvert.SerializeObject(body);
+            var bodyAsString = body is null ? string.Empty : JsonConvert.SerializeObject(body);
             ToContent(bodyAsString, ContentType.Application.Json);
 
             return request;
@@ -109,6 +109,7 @@ namespace Phnx.Web.Fluent
         /// <param name="contentType">The MIME type of content to use. Use <see cref="ContentType"/> for a collection of helpers</param>
         /// <param name="body">The data to send as body content</param>
         /// <returns>The source <see cref="FluentRequest"/></returns>
+        /// <remarks>See <see cref="ContentType"/> for MIME content type helpers</remarks>
         public FluentRequest Custom(string contentType, string body)
         {
             if (contentType is null)
@@ -159,11 +160,10 @@ namespace Phnx.Web.Fluent
 
         private void ToContent(string data, string mediaType, Encoding encoding)
         {
-            Debug.Assert(data != null);
             Debug.Assert(mediaType != null);
             Debug.Assert(encoding != null);
 
-            request.Request.Content = new StringContent(data, encoding, mediaType);
+            request.Request.Content = new StringContent(data ?? string.Empty, encoding, mediaType);
         }
     }
 }
