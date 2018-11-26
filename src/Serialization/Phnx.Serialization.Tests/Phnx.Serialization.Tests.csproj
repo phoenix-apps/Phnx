@@ -17,4 +17,10 @@
     <ProjectReference Include="..\Phnx.Serialization\Phnx.Serialization.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Phnx.IO">
+      <HintPath>..\..\IO\IO\Phnx.IO\bin\Debug\netstandard2.0\Phnx.IO.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

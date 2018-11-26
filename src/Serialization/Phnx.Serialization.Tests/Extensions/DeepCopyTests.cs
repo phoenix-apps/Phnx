@@ -6,7 +6,17 @@ namespace Phnx.Serialization.Tests.Extensions
     public class DeepCopyTests
     {
         [Test]
-        public void GettingADeepCopy_DoesNotThrowError_WithEmptyClass()
+        public void DeepCopy_NullObject_ReturnsNull()
+        {
+            object testValue = null;
+
+            var copy = testValue.DeepCopy();
+
+            Assert.AreEqual(testValue, copy);
+        }
+
+        [Test]
+        public void DeepCopy_WithEmptyClass_DoesNotThrowError()
         {
             var emptyClass = new EmptyClass();
 
@@ -14,7 +24,7 @@ namespace Phnx.Serialization.Tests.Extensions
         }
 
         [Test]
-        public void GettingADeepCopy_CopiesPublicMembers_WithComplexClass()
+        public void DeepCopy_WithComplexClass_CopiesPublicMembers()
         {
             var objectToClone = new ComplexClass
             {
@@ -31,7 +41,7 @@ namespace Phnx.Serialization.Tests.Extensions
         }
 
         [Test]
-        public void GettingADeepCopy_CopiesInheritedMembers_WithComplexClass()
+        public void DeepCopy_WithComplexClass_CopiesInheritedMembers()
         {
             var objectToClone = new ComplexClass
             {
@@ -48,7 +58,7 @@ namespace Phnx.Serialization.Tests.Extensions
         }
 
         [Test]
-        public void GettingADeepCopy_CopiesComplexMembers_WithComplexClass()
+        public void DeepCopy_WithComplexClass_CopiesComplexMembers()
         {
             var objectToClone = new ComplexClass
             {

@@ -17,6 +17,11 @@ namespace Phnx.Serialization
         /// <remarks>This works by copying the entire object to JSON, and then copying it back from JSON to a new object</remarks>
         public static T DeepCopy<T>(this T valueToCopy)
         {
+            if (valueToCopy == null)
+            {
+                return (T)(object)null;
+            }
+
             string jsonObject = JsonConvert.SerializeObject(valueToCopy);
 
             return JsonConvert.DeserializeObject<T>(jsonObject);
@@ -30,6 +35,11 @@ namespace Phnx.Serialization
         /// <returns>A shallow copy of <paramref name="valueToCopy"/></returns>
         public static T ShallowCopy<T>(this T valueToCopy)
         {
+            if (valueToCopy == null)
+            {
+                return (T)(object)null;
+            }
+
             var cloneMethod = typeof(T).GetMethod("MemberwiseClone", BindingFlags.Instance | BindingFlags.NonPublic);
 
             var clone = (T)cloneMethod.Invoke(valueToCopy, new object[0]);
