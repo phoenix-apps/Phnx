@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Phnx.Web.Services
+namespace Phnx.Web
 {
     /// <summary>
     /// Helps to build URLs from query strings and URL path segments
