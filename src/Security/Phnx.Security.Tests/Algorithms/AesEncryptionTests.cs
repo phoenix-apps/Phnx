@@ -32,6 +32,18 @@ namespace Phnx.Security.Tests.Algorithms
         }
 
         [Test]
+        public void EncryptWithNullData_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => Aes.Encrypt(null, new byte[0]));
+        }
+
+        [Test]
+        public void EncryptWithNullKey_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => Aes.Encrypt(new byte[0], null));
+        }
+
+        [Test]
         public void Encrypt_WithNullInput_ThrowsArgumentNullException()
         {
             var key = Aes.CreateRandomKey();
@@ -91,6 +103,18 @@ namespace Phnx.Security.Tests.Algorithms
             var output = new OneWayStream(true);
 
             Assert.Throws<ArgumentException>(() => Aes.Encrypt(input, key, iv, output));
+        }
+
+        [Test]
+        public void DecryptWithNullData_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => Aes.Decrypt(null, new byte[0]));
+        }
+
+        [Test]
+        public void DecryptWithNullKey_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => Aes.Decrypt(new byte[0], null));
         }
 
         [Test]

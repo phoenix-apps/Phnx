@@ -14,53 +14,44 @@ namespace Phnx.Security.Algorithms
         public const int HashBytesLength = 32;
 
         /// <summary>
-        /// The number of times the algorithm is ran on data when using <see cref="Hash(byte[])"/>
-        /// </summary>
-        public int IterationCount { get; }
-
-        /// <summary>
         /// Create a new <see cref="Sha256Hash"/>
         /// </summary>
-        /// <param name="iterationCount">The number of times to run the algorithm when hashing data</param>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="iterationCount"/> is less than zero</exception>
-        public Sha256Hash(int iterationCount = 1)
+        public Sha256Hash()
         {
-            if (iterationCount < 0)
-            {
-                throw new ArgumentLessThanZeroException(nameof(iterationCount));
-            }
-
-            IterationCount = iterationCount;
         }
 
         /// <summary>
         /// Hash data
         /// </summary>
         /// <param name="data">The data to hash</param>
+        /// <param name="iterations">The number of times to run the algorithm</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
-        public byte[] Hash(byte[] data)
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="iterations"/> is less than zero</exception>
+        public byte[] Hash(byte[] data, int iterations = 1)
         {
             if (data is null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
+            if (iterations < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(iterations));
+            }
 
-            if (IterationCount == 0)
+            if (iterations == 0)
             {
                 return data;
             }
 
             SHA256Managed sha = new SHA256Managed();
 
-            var hashedData = sha.ComputeHash(data);
-
-            for (int iterationsSoFar = 1; iterationsSoFar < IterationCount; ++iterationsSoFar)
+            for (int iterationsSoFar = 0; iterationsSoFar < iterations; ++iterationsSoFar)
             {
-                hashedData = sha.ComputeHash(hashedData);
+                data = sha.ComputeHash(data);
             }
 
-            return hashedData;
+            return data;
         }
     }
 }
