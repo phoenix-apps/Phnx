@@ -6,7 +6,17 @@ namespace Phnx.Serialization.Tests
     public class ShallowCopyTests
     {
         [Test]
-        public void GettingAShallowCopy_DoesNotThrowError_WithEmptyClass()
+        public void ShallowCopy_WithNull_ReturnsNull()
+        {
+            object testObject = null;
+
+            var copy = testObject.ShallowCopy();
+
+            Assert.AreEqual(testObject, copy);
+        }
+
+        [Test]
+        public void ShallowCopy_WithEmptyClass_DoesNotThrow()
         {
             var emptyClass = new EmptyClass();
 
@@ -14,7 +24,7 @@ namespace Phnx.Serialization.Tests
         }
 
         [Test]
-        public void GettingAShallowCopy_CopiesPublicMembers_WithComplexClass()
+        public void ShallowCopy_WithComplexClass_CopiesPublicMembers()
         {
             var objectToClone = new ComplexClass
             {
@@ -31,7 +41,7 @@ namespace Phnx.Serialization.Tests
         }
 
         [Test]
-        public void GettingAShallowCopy_CopiesInheritedMembers_WithComplexClass()
+        public void ShallowCopy_WithComplexClass_CopiesInheritedMembers()
         {
             var objectToClone = new ComplexClass
             {
@@ -48,7 +58,7 @@ namespace Phnx.Serialization.Tests
         }
 
         [Test]
-        public void GettingAShallowCopy_DoesNotCopyComplexMembers_WithComplexClass()
+        public void ShallowCopy_WithComplexClass_DoesNotCopyComplexMembers()
         {
             var objectToClone = new ComplexClass
             {
