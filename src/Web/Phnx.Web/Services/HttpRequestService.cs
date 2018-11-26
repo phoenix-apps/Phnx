@@ -28,15 +28,6 @@ namespace Phnx.Web.Services
         }
 
         /// <summary>
-        /// Create a new <see cref="HttpRequestService"/> from given options
-        /// </summary>
-        /// <param name="options"></param>
-        public HttpRequestService(IHttpRequestServiceOptions options)
-        {
-            HttpClient = options.HttpClient;
-        }
-
-        /// <summary>
         /// The <see cref="System.Net.Http.HttpClient"/> responsible for sending requests
         /// </summary>
         /// <remarks>
