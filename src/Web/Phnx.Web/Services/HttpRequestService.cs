@@ -48,9 +48,10 @@ namespace Phnx.Web.Services
         /// </summary>
         /// <param name="request">The request to send</param>
         /// <returns>The response from the foreign URL</returns>
+        /// <remarks>This method will complete when only the response headers have been completely downloaded. Using Content.GetBodyAsStringAsync() will wait until the content body is completely loaded</remarks>
         public virtual Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
-            return HttpClient.SendAsync(request);
+            return HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
         }
 
         /// <summary>
@@ -59,9 +60,10 @@ namespace Phnx.Web.Services
         /// <param name="request">The request to send</param>
         /// <param name="httpClient">The HTTP Client to use for the request</param>
         /// <returns>The response from the foreign URL</returns>
+        /// <remarks>This method will complete when only the response headers have been completely downloaded. Using Content.GetBodyAsStringAsync() will wait until the content body is completely loaded</remarks>
         public virtual Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpClient httpClient)
         {
-            return httpClient.SendAsync(request);
+            return httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
         }
     }
 }
