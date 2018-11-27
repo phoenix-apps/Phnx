@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -21,9 +22,15 @@ namespace Phnx.Web.Models
         /// <summary>
         /// Load and deserialize the body to <typeparamref name="T"/>
         /// </summary>
+        /// <exception cref="InvalidOperationException">The API response or content is <see langword="null"/></exception>
         public async Task<T> GetBodyAsync()
         {
             var bodyString = await GetBodyAsStringAsync();
+
+            if (bodyString is null)
+            {
+                throw new InvalidOperationException($"Cannot load a null response as JSON");
+            }
 
             return JsonConvert.DeserializeObject<T>(bodyString);
         }
