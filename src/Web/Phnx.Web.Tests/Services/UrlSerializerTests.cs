@@ -6,7 +6,7 @@ namespace Phnx.Web.Tests.Services
     public class UrlSerializerTests
     {
         [Test]
-        public void RenderingAnUrl_WithValidSegments_ReturnsUrl()
+        public void ToUrl_WithValidSegments_ReturnsUrl()
         {
             var segments = new[]
             {
@@ -23,7 +23,7 @@ namespace Phnx.Web.Tests.Services
         }
 
         [Test]
-        public void RenderingAnUrl_WithInvalidSegments_ReturnsEscapedUrl()
+        public void ToUrl_WithInvalidSegments_ReturnsEscapedUrl()
         {
             var segments = new[]
             {
@@ -40,17 +40,17 @@ namespace Phnx.Web.Tests.Services
         }
 
         [Test]
-        public void RenderingAQueryString_WithNull_ReturnsEmptyString()
+        public void ToQueryString_WithNull_ReturnsEmptyString()
         {
-            string queryString = string.Empty;
+            string expected = string.Empty;
 
-            var formattedUrl = UrlSerializer.ToQueryString(null);
+            var result = UrlSerializer.ToQueryString(null);
 
-            Assert.AreEqual(queryString, formattedUrl);
+            Assert.AreEqual(expected, result);
         }
 
         [Test]
-        public void RenderingAQueryString_WithSimpleObject_ReturnsQuery()
+        public void ToQueryString_WithSimpleObject_ReturnsQuery()
         {
             string queryString = "name=John%20Smith&dob=2000-01-01T00%3A00%3A00";
 
@@ -66,9 +66,15 @@ namespace Phnx.Web.Tests.Services
         }
 
         [Test]
-        public void RenderingAQueryString_WithObjectContainingCollection_ReturnsQuery()
+        public void ToQueryString_WithObjectContainingCollection_ReturnsQuery()
         {
-            string queryString = "names=John%20Smith%2CDavid%20Jones%2CSam%20Smith&dob=2000-01-01T00%3A00%3A00";
+            string queryString = "names=" +
+                "%5B" +
+                    "%22John%20Smith%22%2C" +
+                    "%22David%20Jones%22%2C" +
+                    "%22Sam%20Smith%22" +
+                "%5D" +
+                "&dob=2000-01-01T00%3A00%3A00";
 
             var query = new
             {
@@ -84,6 +90,36 @@ namespace Phnx.Web.Tests.Services
             var formattedUrl = UrlSerializer.ToQueryString(query);
 
             Assert.AreEqual(queryString, formattedUrl);
+        }
+
+        [Test]
+        public void SerializeForUrl_WhenValueIsNull_ReturnsEmptyString()
+        {
+            var expected = string.Empty;
+
+            var result = UrlSerializer.SerializeForUrl(null);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void SerializeForUrl_WhenValueIsString_Serializes()
+        {
+            var expected = "test%20URL";
+
+            var result = UrlSerializer.SerializeForUrl("test URL");
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
+        public void SerializeForUrl_WhenValueIsDateTime_Serializes()
+        {
+            var expected = "2001-01-01T00%3A00%3A00";
+
+            var result = UrlSerializer.SerializeForUrl(new DateTime(2001, 1, 1, 0, 0, 0));
+
+            Assert.AreEqual(expected, result);
         }
     }
 }

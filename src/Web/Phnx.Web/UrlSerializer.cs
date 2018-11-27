@@ -35,14 +35,6 @@ namespace Phnx.Web
                 .Where(x => !(x.Value is string) && x.Value is IEnumerable)
                 .ToList();
 
-            // Concat all IEnumerable properties into a comma separated string
-            foreach (var key in collectionProperties)
-            {
-                var enumerable = (IEnumerable)key.Value;
-
-                properties[key.Key] = string.Join(",", (string[])enumerable);
-            }
-
             // Concat all key/value pairs into a string separated by ampersand
             string queryString = string.Join("&",
                 properties.Select(x =>
