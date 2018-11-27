@@ -273,7 +273,7 @@ namespace Phnx.Web.Fluent
                 description.Append("null");
             }
 
-            description.Append(", Content: ");
+            description.Append("; Content: ");
             if (Request.Content != null)
             {
                 var sc = Request.Content as StringContent;
@@ -292,7 +292,7 @@ namespace Phnx.Web.Fluent
                 description.Append("null");
             }
 
-            description.Append(", Custom Headers: {Count=");
+            description.Append("; Custom Headers: {Count=");
             if (Request.Headers != null)
             {
                 description.Append(Request.Headers.Count());
