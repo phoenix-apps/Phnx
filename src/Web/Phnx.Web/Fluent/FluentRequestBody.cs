@@ -126,6 +126,7 @@ namespace Phnx.Web.Fluent
         /// <param name="body">The data to send as body content</param>
         /// <returns>The source <see cref="FluentRequest"/></returns>
         /// <exception cref="ArgumentNullException"><paramref name="contentType"/> is <see langword="null"/></exception>
+        /// <exception cref="FormatException"><paramref name="contentType"/> is in an invalid format</exception>
         public FluentRequest Custom(string contentType, string body) => Custom(contentType, body, defaultEncoding);
 
         /// <summary>
@@ -136,6 +137,7 @@ namespace Phnx.Web.Fluent
         /// <param name="encoding">The text encoding to use</param>
         /// <returns>The source <see cref="FluentRequest"/></returns>
         /// <exception cref="ArgumentNullException"><paramref name="contentType"/> or <paramref name="encoding"/> is <see langword="null"/></exception>
+        /// <exception cref="FormatException"><paramref name="contentType"/> is in an invalid format</exception>
         public FluentRequest Custom(string contentType, string body, Encoding encoding)
         {
             if (contentType is null)
@@ -152,12 +154,13 @@ namespace Phnx.Web.Fluent
             return request;
         }
 
-        private void ToContent(string mediaType, string body, Encoding encoding)
+        /// <exception cref="FormatException"><paramref name="contentType"/> is in an invalid format</exception>
+        private void ToContent(string contentType, string body, Encoding encoding)
         {
-            Debug.Assert(mediaType != null);
+            Debug.Assert(contentType != null);
             Debug.Assert(encoding != null);
 
-            request.Request.Content = new StringContent(body ?? string.Empty, encoding, mediaType);
+            request.Request.Content = new StringContent(body ?? string.Empty, encoding, contentType);
         }
     }
 }
