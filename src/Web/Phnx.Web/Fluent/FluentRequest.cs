@@ -40,6 +40,7 @@ namespace Phnx.Web.Fluent
         /// <param name="builder">The method to use to build the url</param>
         /// <returns>A fluent request url builder</returns>
         /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <see langword="null"/></exception>
+        /// <exception cref="UriFormatException"><paramref name="builder"/> creates an invalid Uri</exception>
         public FluentRequest UseUrl(Action<FluentRequestUrl> builder)
         {
             if (builder is null)

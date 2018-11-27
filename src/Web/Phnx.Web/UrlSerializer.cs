@@ -19,7 +19,7 @@ namespace Phnx.Web
         /// <returns>A query string representation version of the properties of <paramref name="query"/></returns>
         public static string ToQueryString(object query)
         {
-            if (query == null)
+            if (query is null)
             {
                 return string.Empty;
             }
@@ -47,26 +47,52 @@ namespace Phnx.Web
             string queryString = string.Join("&",
                 properties.Select(x =>
                 {
-                    string valueAsString;
-
-                    if (x.Value is null)
-                    {
-                        valueAsString = string.Empty;
-                    }
-                    else
-                    {
-                        valueAsString = JsonConvert.SerializeObject(x.Value).Trim('\"');
-                    }
-
                     return string.Concat(
                         Uri.EscapeDataString(x.Key),
                         "=",
-                        Uri.EscapeDataString(valueAsString)
+                        SerializeForUrl(x.Value)
                         );
                 })
             );
 
             return queryString;
+        }
+
+        /// <summary>
+        /// Map an object <see cref="object"/> onto a path template
+        /// </summary>
+        /// <param name="pathTemplate">The path template to use (such as "api/people/{id}")</param>
+        /// <param name="parameters">The object to overlay onto the path template</param>
+        /// <returns>The fully qualified URL with all the path segments escaped and appended</returns>
+        public static string ToUrl(string pathTemplate, object parameters)
+        {
+            if (pathTemplate is null)
+            {
+                return string.Empty;
+            }
+            if (parameters is null)
+            {
+                return pathTemplate;
+            }
+
+            var properties = parameters.GetType()
+                .GetPropertyFieldInfos(getFields: false)
+                .Where(x => x.CanGet)
+                .ToDictionary(x => x.Name, x =>
+                {
+                    var value = x.GetValue(parameters);
+
+                    var serialized = SerializeForUrl(value);
+                    return serialized;
+                });
+
+            string url = pathTemplate;
+            foreach (var param in properties)
+            {
+                url = url.Replace("{" + param.Key + "}", param.Value);
+            }
+
+            return url;
         }
 
         /// <summary>
@@ -96,6 +122,25 @@ namespace Phnx.Web
             var url = string.Join("/", escapedPathSegments);
 
             return url;
+        }
+
+        /// <summary>
+        /// Serialize a value for use as a URL or query string parameter
+        /// </summary>
+        /// <param name="value">The value to serialize</param>
+        /// <returns><paramref name="value"/> serialized for use as a URL or query string parameter</returns>
+        public static string SerializeForUrl(object value)
+        {
+            if (value is null)
+            {
+                return string.Empty;
+            }
+            else
+            {
+                var serialized = JsonConvert.SerializeObject(value).Trim('\"');
+
+                return Uri.EscapeDataString(serialized);
+            }
         }
     }
 }
