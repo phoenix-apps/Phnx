@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
-using System.Net.Http;
+﻿using Newtonsoft.Json;
+using NUnit.Framework;
+using Phnx.Web.Fluent;
 
 namespace Phnx.Web.Tests.Fluent
 {
@@ -13,59 +13,67 @@ namespace Phnx.Web.Tests.Fluent
             Mock = new HttpRequestServiceMock();
         }
 
-        [Test]
-        public void SendingARequest_WithJsonContent_SendsRequest()
+        private string GetContentType(FluentRequest request)
         {
-            var request = Mock.CreateRequest();
+            return request.Request.Content.Headers.ContentType.MediaType;
+        }
 
-            var task = request.UseUrl("http://www.google.com/")
-                .WithBody()
-                .Json(new
-                {
-                    q = "test"
-                })
-                .Send(HttpMethod.Get);
-
-            task.Wait();
-
-            Assert.AreEqual("{\"q\":\"test\"}", Mock.Request.Content.ReadAsStringAsync().Result);
-            Assert.AreEqual("application/json", Mock.Request.Content.Headers.ContentType.MediaType);
+        private string GetBodyOfRequest(FluentRequest request)
+        {
+            return request.Request.Content.ReadAsStringAsync().Result;
         }
 
         [Test]
-        public void SendingARequest_WithPlaintextContent_SendsRequest()
+        public void Json_WithData_AddsHeaderAndContent()
         {
+            var body = new
+            {
+                q = "test"
+            };
+            var expected = JsonConvert.SerializeObject(body);
+
             var request = Mock.CreateRequest();
 
-            var task = request.UseUrl("http://www.google.com/")
+            request
                 .WithBody()
-                .PlainText("test")
-                .Send(HttpMethod.Get);
+                .Json(body);
 
-            task.Wait();
-
-            Assert.AreEqual("test", Mock.Request.Content.ReadAsStringAsync().Result);
-            Assert.AreEqual("text/plain", Mock.Request.Content.Headers.ContentType.MediaType);
+            Assert.AreEqual(expected, GetBodyOfRequest(request));
+            Assert.AreEqual("application/json", GetContentType(request));
         }
 
         [Test]
-        public void SendingARequest_WithFormContent_SendsRequest()
+        public void PlainText_WithData_AddsHeaderAndContent()
         {
+            var expected = "test";
+
             var request = Mock.CreateRequest();
 
-            var task = request.UseUrl("http://www.google.com/")
+            request
                 .WithBody()
-                .Form(new
-                {
-                    q = "test"
-                })
-                .SetHeaders(new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("a", null) })
-                .Send(HttpMethod.Get);
+                .PlainText(expected);
 
-            task.Wait();
+            Assert.AreEqual(expected, GetBodyOfRequest(request));
+            Assert.AreEqual("text/plain", GetContentType(request));
+        }
 
-            Assert.AreEqual("q=test", Mock.Request.Content.ReadAsStringAsync().Result);
-            Assert.AreEqual("application/x-www-form-urlencoded", Mock.Request.Content.Headers.ContentType.MediaType);
+        [Test]
+        public void Form_WithData_AddsHeaderAndContent()
+        {
+            var form = new
+            {
+                q = "test"
+            };
+            var expected = UrlSerializer.ToQueryString(form);
+
+            var request = Mock.CreateRequest();
+
+            request
+                .WithBody()
+                .Form(form);
+
+            Assert.AreEqual(expected, GetBodyOfRequest(request));
+            Assert.AreEqual("application/x-www-form-urlencoded", GetContentType(request));
         }
     }
 }
