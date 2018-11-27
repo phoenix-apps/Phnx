@@ -32,24 +32,25 @@ namespace Phnx.Web.Models
         /// <summary>
         /// The status code of the response message
         /// </summary>
-        public HttpStatusCode StatusCode => Message.StatusCode;
+        public HttpStatusCode StatusCode => Message?.StatusCode ?? default(HttpStatusCode);
 
         /// <summary>
         /// Whether the status code is a sucess status code (200-299)
         /// </summary>
-        public bool IsSuccessStatusCode => Message.IsSuccessStatusCode;
+        public bool IsSuccessStatusCode => Message != null && Message.IsSuccessStatusCode;
 
         /// <summary>
         /// The headers contained within the response
         /// </summary>
-        public HttpResponseHeaders Headers => Message.Headers;
+        public HttpResponseHeaders Headers => Message?.Headers;
 
         /// <summary>
-        /// Get the body of the response asyncronously
+        /// Get the body of the response asyncronously. Returns <see langword="null"/> if <see cref="Message"/> is <see langword="null"/>
         /// </summary>
+        /// <returns>The body of <see cref="Message"/> or <see langword="null"/> if <see cref="Message"/> is <see langword="null"/></returns>
         public async Task<string> GetBodyAsStringAsync()
         {
-            if (!_bodyHasBeenLoaded)
+            if (Message != null && !_bodyHasBeenLoaded && Message.Content != null)
             {
                 using (HttpContent content = Message.Content)
                 {
@@ -63,8 +64,9 @@ namespace Phnx.Web.Models
         }
 
         /// <summary>
-        /// Throw an exception if <see cref="IsSuccessStatusCode"/> is false
+        /// Throw an exception if <see cref="IsSuccessStatusCode"/> is <see langword="false"/>
         /// </summary>
+        /// <exception cref="ApiException"><see cref="IsSuccessStatusCode"/> is <see langword="false"/></exception>
         public void ThrowIfNotSuccessStatus()
         {
             if (!IsSuccessStatusCode)
@@ -77,6 +79,7 @@ namespace Phnx.Web.Models
         /// Throw an exception if the <see cref="StatusCode"/> is not one of a range of values
         /// </summary>
         /// <param name="successCodes">The range of values to check</param>
+        /// <exception cref="ApiException"><see cref="StatusCode"/> is not one of a range of values</exception>
         public void ThrowIfStatusCodeIsNot(IEnumerable<HttpStatusCode> successCodes)
         {
             if (!successCodes.Contains(StatusCode))
@@ -89,21 +92,20 @@ namespace Phnx.Web.Models
         /// Throw an exception if the <see cref="StatusCode"/> is not one of a range of values
         /// </summary>
         /// <param name="successCodes">The range of values to check</param>
-        public void ThrowIfStatusCodeIsNot(params HttpStatusCode[] successCodes)
-        {
+        /// <exception cref="ApiException"><see cref="StatusCode"/> is not one of a range of values</exception>
+        public void ThrowIfStatusCodeIsNot(params HttpStatusCode[] successCodes) =>
             ThrowIfStatusCodeIsNot((IEnumerable<HttpStatusCode>)successCodes);
-        }
 
         /// <summary>
-        /// Throws a <see cref="HttpRequestException"/> with the request body and status code in the exception message
+        /// Gets an <see cref="ApiException"/> with the request body and status code in the exception message
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="ApiException"/> with the request body and status code in the exception message</returns>
         private HttpRequestException CreateError()
         {
             GetBodyAsStringAsync().Wait();
 
             return new ApiException(
-                Message.RequestMessage.RequestUri.ToString(),
+                Message?.RequestMessage?.RequestUri?.ToString(),
                 StatusCode,
                 Headers,
                 _bodyCache);
