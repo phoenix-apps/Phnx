@@ -16,8 +16,7 @@ namespace Phnx.Web.Tests.Fluent
 
         public override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpClient httpClient)
         {
-            Request = request;
-            return Task.FromResult<HttpResponseMessage>(null);
+            return SendAsync(request);
         }
     }
 }

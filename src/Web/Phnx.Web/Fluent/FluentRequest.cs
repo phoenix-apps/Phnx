@@ -3,7 +3,9 @@ using Phnx.Web.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Phnx.Web.Fluent
@@ -252,6 +254,56 @@ namespace Phnx.Web.Fluent
             }
 
             return SendWithJsonResponse<TResponse>(new HttpMethod(method));
+        }
+
+        /// <summary>
+        /// Converts this request to a string representation of itself
+        /// </summary>
+        /// <returns>A string representation of the request</returns>
+        public override string ToString()
+        {
+            StringBuilder description = new StringBuilder();
+            description.Append("URL: ");
+            if (Request.RequestUri != null)
+            {
+                description.Append(Request.RequestUri.ToString());
+            }
+            else
+            {
+                description.Append("null");
+            }
+
+            description.Append(", Content: ");
+            if (Request.Content != null)
+            {
+                var sc = Request.Content as StringContent;
+
+                if (sc is null)
+                {
+                    description.Append("null");
+                }
+                else
+                {
+                    description.Append(sc.Headers.ContentType.MediaType);
+                }
+            }
+            else
+            {
+                description.Append("null");
+            }
+
+            description.Append(", Custom Headers: {Count=");
+            if (Request.Headers != null)
+            {
+                description.Append(Request.Headers.Count());
+            }
+            else
+            {
+                description.Append("0");
+            }
+            description.Append("}");
+
+            return description.ToString();
         }
     }
 }
