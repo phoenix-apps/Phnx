@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 namespace Phnx.Web.Tests.Fluent
 {
+    /// <remarks>Not thread-safe</remarks>
     public class HttpRequestServiceMock : HttpRequestService
     {
         public HttpRequestServiceMock() : this(null)
