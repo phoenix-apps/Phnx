@@ -63,6 +63,7 @@ namespace Phnx.Web.Fluent
         /// <param name="url">The url to send the request to</param>
         /// <returns>This <see cref="FluentRequest"/></returns>
         /// <exception cref="ArgumentNullException"><paramref name="url"/> is <see langword="null"/></exception>
+        /// <exception cref="UriFormatException"><paramref name="url"/> is an invalid Uri</exception>
         public FluentRequest UseUrl(string url)
         {
             if (url is null)
