@@ -150,12 +150,21 @@ namespace Phnx.Web.Fluent
         /// <param name="key">The key for the header to append to the current headers in the request</param>
         /// <param name="value">The value for the header to append to the current headers in the request</param>
         /// <returns>This <see cref="FluentRequest"/></returns>
-        /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or whitespace</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="key"/> or <paramref name="value"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="key"/> is empty or whitespace</exception>
         public FluentRequest AppendHeader(string key, IEnumerable<string> value)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
             if (string.IsNullOrWhiteSpace(key))
             {
                 throw new ArgumentException($"{key} cannot be null or whitespace", nameof(key));
+            }
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
             }
 
             Request.Headers.Add(key, value);
@@ -169,9 +178,14 @@ namespace Phnx.Web.Fluent
         /// <param name="key">The key for the header to append to the current headers in the request</param>
         /// <param name="value">The value for the header to append to the current headers in the request</param>
         /// <returns>This <see cref="FluentRequest"/></returns>
-        /// <exception cref="ArgumentException"><paramref name="key"/> is <see langword="null"/> or whitespace</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="key"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="key"/> is empty or whitespace</exception>
         public FluentRequest AppendHeader(string key, string value)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
             if (string.IsNullOrWhiteSpace(key))
             {
                 throw new ArgumentException($"{key} cannot be null or whitespace", nameof(key));
@@ -207,9 +221,14 @@ namespace Phnx.Web.Fluent
         /// </summary>
         /// <param name="method">The HTTP method to use when sending the request</param>
         /// <returns>The response from the API in plaintext format</returns>
-        /// <exception cref="ArgumentException"><paramref name="method"/> is <see langword="null"/> or whitespace</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="method"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="method"/> is empty or whitespace</exception>
         public Task<ApiResponse> Send(string method)
         {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
             if (string.IsNullOrWhiteSpace(method))
             {
                 throw new ArgumentException($"{method} cannot be null or whitespace", nameof(method));
@@ -245,9 +264,14 @@ namespace Phnx.Web.Fluent
         /// <typeparam name="TResponse">The format of the data to send</typeparam>
         /// <param name="method">The HTTP method to use when sending the request</param>
         /// <returns>The response from the API in a format ready for JSON deserialization</returns>
-        /// <exception cref="ArgumentException"><paramref name="method"/> is <see langword="null"/> or whitespace</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="method"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentException"><paramref name="method"/> is empty or whitespace</exception>
         public Task<ApiResponseJson<TResponse>> SendWithJsonResponse<TResponse>(string method)
         {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
             if (string.IsNullOrWhiteSpace(method))
             {
                 throw new ArgumentException($"{method} cannot be null or whitespace", nameof(method));
