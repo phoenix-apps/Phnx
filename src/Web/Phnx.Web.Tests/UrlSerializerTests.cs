@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System;
 
-namespace Phnx.Web.Tests.Services
+namespace Phnx.Web.Tests
 {
     public class UrlSerializerTests
     {

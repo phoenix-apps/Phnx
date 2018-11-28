@@ -56,6 +56,11 @@ namespace Phnx.Web.Services
         /// <remarks>This method will complete when only the response headers have been completely downloaded. Using <see cref="HttpContent.ReadAsStringAsync()"/> will wait until the content body is completely loaded</remarks>
         public virtual Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
             return HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
         }
 

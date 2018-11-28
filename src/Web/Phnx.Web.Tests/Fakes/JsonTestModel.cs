@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Phnx.Web.Tests.Models
+namespace Phnx.Web.Tests
 {
     public class JsonTestModel
     {
