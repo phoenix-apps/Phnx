@@ -1,10 +1,21 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace Phnx.Web.Tests
 {
     public class UrlSerializerTests
     {
+        [Test]
+        public void ToUrl_WithNullSegments_ReturnsEmptyString()
+        {
+            IEnumerable<string> segments = null;
+
+            var formattedUrl = UrlSerializer.ToUrl(segments, true);
+
+            Assert.AreEqual(string.Empty, formattedUrl);
+        }
+
         [Test]
         public void ToUrl_WithValidSegments_ReturnsUrl()
         {
@@ -37,6 +48,77 @@ namespace Phnx.Web.Tests
             var formattedUrl = UrlSerializer.ToUrl(segments, true);
 
             Assert.AreEqual(finalUrl, formattedUrl);
+        }
+
+        [Test]
+        public void ToUrl_WithNullTemplate_ReturnsEmptyString()
+        {
+            string template = null;
+
+            var formattedUrl = UrlSerializer.ToUrl(template, new object());
+
+            Assert.AreEqual(string.Empty, formattedUrl);
+        }
+
+        [Test]
+        public void ToUrl_WithNullParameters_ReturnsTemplate()
+        {
+            string template = "test/{test}";
+
+            var formattedUrl = UrlSerializer.ToUrl(template, null);
+
+            Assert.AreEqual(template, formattedUrl);
+        }
+
+        [Test]
+        public void ToUrl_WithParameters_Maps()
+        {
+            string template = "test/{test}";
+            string expected = "test/asdf";
+
+            var formattedUrl = UrlSerializer.ToUrl(template, new
+            {
+                test = "asdf"
+            });
+
+            Assert.AreEqual(expected, formattedUrl);
+        }
+
+        [Test]
+        public void ToUrl_WithParametersThatNeedSerializing_Serialize()
+        {
+            string template = "test/{test}";
+            string expected = "test/as%20df";
+
+            var formattedUrl = UrlSerializer.ToUrl(template, new
+            {
+                test = "as df"
+            });
+
+            Assert.AreEqual(expected, formattedUrl);
+        }
+
+        [Test]
+        public void ToUrl_WithParametersThatAreNotInTemplate_Skips()
+        {
+            string template = "test";
+
+            var formattedUrl = UrlSerializer.ToUrl(template, new
+            {
+                test = "as df"
+            });
+
+            Assert.AreEqual(template, formattedUrl);
+        }
+
+        [Test]
+        public void ToUrl_WithTemplateRequirementsThatAreNotInParameters_Ignores()
+        {
+            string template = "test/{test}";
+
+            var formattedUrl = UrlSerializer.ToUrl(template, new object());
+
+            Assert.AreEqual(template, formattedUrl);
         }
 
         [Test]
