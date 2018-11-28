@@ -17,8 +17,24 @@ namespace Phnx.Drawing
         /// <param name="height">The height to stretch to</param>
         /// <param name="highQuality">Whether to use higher quality scaling</param>
         /// <returns>The image stretched to a width and height</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="img"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="width"/> or <paramref name="height"/> is less than zero</exception>
+        /// <exception cref="Exception">Failed to load bitmap for drawing, or <paramref name="img"/> has an indexed pixel format or its format is undefined</exception>
         public static Image Scale(this Image img, int width, int height, bool highQuality = false)
         {
+            if (img is null)
+            {
+                throw new ArgumentNullException(nameof(img));
+            }
+            if (width < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(width));
+            }
+            if (height < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(height));
+            }
+
             var stretchedImage = new Bitmap(width, height);
 
             using (Graphics stretchedImageGraphics = Graphics.FromImage(stretchedImage))
@@ -45,8 +61,24 @@ namespace Phnx.Drawing
         /// <param name="background">The color to fill the empty space around the edge with</param>
         /// <param name="highQuality">Whether to use higher quality scaling</param>
         /// <returns>The image scaled to a width and height</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="img"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentLessThanZeroException"><paramref name="width"/> or <paramref name="height"/> is less than zero</exception>
+        /// <exception cref="Exception">Failed to load bitmap for drawing, or <paramref name="img"/> has an indexed pixel format or its format is undefined</exception>
         public static Image Scale(this Image img, int width, int height, Color background, bool highQuality = false)
         {
+            if (img is null)
+            {
+                throw new ArgumentNullException(nameof(img));
+            }
+            if (width < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(width));
+            }
+            if (height < 0)
+            {
+                throw new ArgumentLessThanZeroException(nameof(height));
+            }
+
             var scaledImage = new Bitmap(width, height);
 
             var backgroundBrush = new SolidBrush(background);
