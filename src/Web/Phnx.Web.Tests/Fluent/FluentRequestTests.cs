@@ -108,6 +108,24 @@ namespace Phnx.Web.Tests.Fluent
         }
 
         [Test]
+        public void SetHeadersIEnumerable_WithHeaders_SetsHeaders()
+        {
+            var request = Mock.CreateRequest();
+
+            request.AppendHeader("test", "test");
+
+            var headers = new Dictionary<string, string>
+            {
+                { "item1", "value1" },
+                { "item2", "value2" }
+            };
+
+            request.SetHeaders(headers);
+
+            Assert.AreEqual(2, request.Request.Headers.Count());
+        }
+
+        [Test]
         public void AppendHeadersIEnumerable_WithNullHeaders_DoesNothing()
         {
             var request = Mock.CreateRequest();
@@ -118,6 +136,24 @@ namespace Phnx.Web.Tests.Fluent
             request.AppendHeaders(headers);
 
             Assert.AreEqual(1, request.Request.Headers.Count());
+        }
+
+        [Test]
+        public void AppendHeadersIEnumerable_WithHeaders_AppendsHeaders()
+        {
+            var request = Mock.CreateRequest();
+
+            request.AppendHeader("test", "test");
+
+            var headers = new Dictionary<string, string>
+            {
+                { "item1", "value1" },
+                { "item2", "value2" }
+            };
+
+            request.AppendHeaders(headers);
+
+            Assert.AreEqual(3, request.Request.Headers.Count());
         }
 
         [Test]
