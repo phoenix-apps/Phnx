@@ -1,5 +1,5 @@
 ﻿using Phnx.Web.Fluent;
-using Phnx.Web.Services.Interfaces;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -21,19 +21,11 @@ namespace Phnx.Web.Services
         /// <summary>
         /// Create a new <see cref="HttpRequestService"/> with a given <see cref="System.Net.Http.HttpClient"/>
         /// </summary>
-        /// <param name="httpClient"></param>
+        /// <param name="httpClient">The HTTP Client to use</param>
+        /// <exception cref="ArgumentNullException"><paramref name="httpClient"/> is <see langword="null"/></exception>
         public HttpRequestService(HttpClient httpClient)
         {
-            HttpClient = httpClient;
-        }
-
-        /// <summary>
-        /// Create a new <see cref="HttpRequestService"/> from given options
-        /// </summary>
-        /// <param name="options"></param>
-        public HttpRequestService(IHttpRequestServiceOptions options)
-        {
-            HttpClient = options.HttpClient;
+            HttpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
         /// <summary>
@@ -58,9 +50,18 @@ namespace Phnx.Web.Services
         /// </summary>
         /// <param name="request">The request to send</param>
         /// <returns>The response from the foreign URL</returns>
-        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> is <see langword="null"/></exception>
+        /// <exception cref="InvalidOperationException"><paramref name="request"/> has already been sent</exception>
+        /// <exception cref="HttpRequestException">The request failed due to an underlying issue such as network connectivity, DNS failure, server certification validation or timeout</exception>
+        /// <remarks>This method will complete when only the response headers have been completely downloaded. Using <see cref="HttpContent.ReadAsStringAsync()"/> will wait until the content body is completely loaded</remarks>
+        public virtual Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
-            return HttpClient.SendAsync(request);
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            return HttpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
         }
 
         /// <summary>
@@ -69,9 +70,22 @@ namespace Phnx.Web.Services
         /// <param name="request">The request to send</param>
         /// <param name="httpClient">The HTTP Client to use for the request</param>
         /// <returns>The response from the foreign URL</returns>
-        public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpClient httpClient)
+        /// <exception cref="ArgumentNullException"><paramref name="request"/> or <paramref name="httpClient"/> is <see langword="null"/></exception>
+        /// <exception cref="InvalidOperationException"><paramref name="request"/> has already been sent</exception>
+        /// <exception cref="HttpRequestException">The request failed due to an underlying issue such as network connectivity, DNS failure, server certification validation or timeout</exception>
+        /// <remarks>This method will complete when only the response headers have been completely downloaded. Using <see cref="HttpContent.ReadAsStringAsync()"/> will wait until the content body is completely loaded</remarks>
+        public virtual Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpClient httpClient)
         {
-            return httpClient.SendAsync(request);
+            if (request is null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+            if (httpClient is null)
+            {
+                throw new ArgumentNullException(nameof(httpClient));
+            }
+
+            return httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead);
         }
     }
 }

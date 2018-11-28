@@ -2,7 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Phnx.Web.Services.Interfaces
+namespace Phnx.Web.Services
 {
     /// <summary>
     /// The core API request engine responsible for sending web requests
