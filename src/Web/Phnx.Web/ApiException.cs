@@ -46,42 +46,45 @@ namespace Phnx.Web
         public HttpResponseHeaders Headers { get; set; }
 
         /// <summary>
-        /// Convert this exception to a string that contains the status code and body of the error
+        /// Get a summary of the error as a string
         /// </summary>
-        /// <returns>A string that contains the status code and body of the error</returns>
-        public override string ToString()
+        /// <returns>A summary of the error as a string</returns>
+        public override string Message
         {
-            StringBuilder errorMessage = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(ApiUrl))
+            get
             {
-                errorMessage.AppendLine($"Response error from {ApiUrl}");
-            }
-            else
-            {
-                errorMessage.AppendLine("Response error");
-            }
-
-            errorMessage.Append($"{(int)StatusCode} ({StatusCode})");
-
-            if (Headers != null)
-            {
-                errorMessage.AppendLine();
-                errorMessage.AppendLine("Headers: {");
-                foreach (var header in Headers)
+                StringBuilder errorMessage = new StringBuilder();
+                if (!string.IsNullOrWhiteSpace(ApiUrl))
                 {
-                    errorMessage.AppendLine($"\t{header.Key}: \"{string.Join(", ", header.Value)}\"");
+                    errorMessage.AppendLine($"Response error from {ApiUrl}");
                 }
-                errorMessage.Append("}");
-            }
+                else
+                {
+                    errorMessage.AppendLine("Response error");
+                }
 
-            if (Body != null)
-            {
-                errorMessage.AppendLine();
-                errorMessage.AppendLine("Body: ");
-                errorMessage.Append(Body);
-            }
+                errorMessage.Append($"{(int)StatusCode} ({StatusCode})");
 
-            return errorMessage.ToString();
+                if (Headers != null)
+                {
+                    errorMessage.AppendLine();
+                    errorMessage.AppendLine("Headers: {");
+                    foreach (var header in Headers)
+                    {
+                        errorMessage.AppendLine($"\t{header.Key}: \"{string.Join(", ", header.Value)}\"");
+                    }
+                    errorMessage.Append("}");
+                }
+
+                if (Body != null)
+                {
+                    errorMessage.AppendLine();
+                    errorMessage.AppendLine("Body: ");
+                    errorMessage.Append(Body);
+                }
+
+                return errorMessage.ToString();
+            }
         }
     }
 }
