@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace Phnx.Windows.Extensions.Drawing
+namespace Phnx.Drawing
 {
     /// <summary>
     /// Extensions for <see cref="Image"/>
@@ -64,8 +64,8 @@ namespace Phnx.Windows.Extensions.Drawing
                 }
 
                 // Calculate the image's scaled width and height
-                var scaleWidth = (int) (img.Width * scale);
-                var scaleHeight = (int) (img.Height * scale);
+                var scaleWidth = (int)(img.Width * scale);
+                var scaleHeight = (int)(img.Height * scale);
 
                 // Fill with the background color
                 scaledImageGraphics.FillRectangle(backgroundBrush, new RectangleF(0, 0, width, height));

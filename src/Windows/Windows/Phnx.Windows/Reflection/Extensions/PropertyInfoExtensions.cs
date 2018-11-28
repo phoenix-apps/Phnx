@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Phnx.Windows.Extensions.Reflection
+namespace Phnx.Reflection
 {
     /// <summary>
     /// Extensions for <see cref="PropertyInfo"/>

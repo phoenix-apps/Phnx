@@ -1,4 +1,4 @@
-﻿namespace Phnx.Windows.Tests.Extensions.Reflection
+﻿namespace Phnx.Windows.Tests.Fakes
 {
     public class TestClass
     {

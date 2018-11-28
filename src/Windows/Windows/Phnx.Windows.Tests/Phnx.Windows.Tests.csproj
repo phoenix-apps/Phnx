@@ -48,8 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Reflection\PropertyFieldInfoExtensionsTests.cs" />
-    <Compile Include="Extensions\Reflection\PropertyInfoExtensionsTests.cs" />
+    <Compile Include="Reflection\Extensions\PropertyFieldInfoExtensionsTests.cs" />
+    <Compile Include="Reflection\Extensions\PropertyInfoExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -59,7 +59,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Reflection\TestClass.cs" />
+    <Compile Include="Fakes\TestClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

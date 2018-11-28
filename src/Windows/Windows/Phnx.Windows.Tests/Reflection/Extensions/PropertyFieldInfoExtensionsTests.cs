@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using Phnx.Reflection;
-using Phnx.Windows.Extensions.Reflection;
+using Phnx.Windows.Tests.Fakes;
 
 namespace Phnx.Windows.Tests.Extensions.Reflection
 {

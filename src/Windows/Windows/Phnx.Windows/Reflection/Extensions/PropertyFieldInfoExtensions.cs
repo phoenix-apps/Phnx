@@ -1,7 +1,6 @@
-﻿using Phnx.Reflection;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace Phnx.Windows.Extensions.Reflection
+namespace Phnx.Reflection
 {
     /// <summary>
     /// Extensions for <see cref="PropertyFieldInfo{T,U}"/>
@@ -20,7 +19,7 @@ namespace Phnx.Windows.Extensions.Reflection
                 return false;
             }
 
-            var property = propertyField.Member as PropertyInfo;
+            var property = (PropertyInfo)propertyField.Member;
 
             return property.IsAuto();
         }

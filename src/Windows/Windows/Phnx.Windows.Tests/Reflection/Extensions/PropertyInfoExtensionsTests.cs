@@ -1,7 +1,8 @@
-﻿using Phnx.Windows.Extensions.Reflection;
-using NUnit.Framework;
+﻿using NUnit.Framework;
+using Phnx.Reflection;
+using Phnx.Windows.Tests.Fakes;
 
-namespace Phnx.Windows.Tests.Extensions.Reflection
+namespace Phnx.Windows.Tests.Reflection.Extensions
 {
     public class PropertyInfoExtensionsTests
     {

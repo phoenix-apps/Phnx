@@ -56,11 +56,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extensions\Drawing\ByteArrayExtensions.cs" />
-    <Compile Include="Extensions\Drawing\ImageExtensions.cs" />
-    <Compile Include="Extensions\Reflection\PropertyFieldInfoExtensions.cs" />
+    <Compile Include="Drawing\Extensions\ImageExtensions.cs" />
+    <Compile Include="Reflection\Extensions\PropertyFieldInfoExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Extensions\Reflection\PropertyInfoExtensions.cs" />
+    <Compile Include="Reflection\Extensions\PropertyInfoExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
