@@ -29,8 +29,10 @@ namespace Phnx.AspNetCore.Rest.Services
         public const string IfMatchKey = "If-Match";
 
         private readonly IActionContextAccessor _actionContext;
-        private IHeaderDictionary RequestHeaders => _actionContext.ActionContext.HttpContext.Request.Headers;
-        private IHeaderDictionary ResponseHeaders => _actionContext.ActionContext.HttpContext.Response.Headers;
+
+        private IHeaderDictionary _requestHeaders => _actionContext.ActionContext.HttpContext.Request.Headers;
+
+        private IHeaderDictionary _responseHeaders => _actionContext.ActionContext.HttpContext.Response.Headers;
 
         /// <summary>
         /// Create a new <see cref="ETagService"/> using a given <see cref="IActionContextAccessor"/>
@@ -55,7 +57,7 @@ namespace Phnx.AspNetCore.Rest.Services
                 throw new ArgumentNullException(nameof(data));
             }
 
-            if (!RequestHeaders.TryGetValue(IfNoneMatchKey, out StringValues eTag) || eTag.Count == 0)
+            if (!_requestHeaders.TryGetValue(IfNoneMatchKey, out StringValues eTag) || eTag.Count == 0)
             {
                 return true;
             }
@@ -77,7 +79,7 @@ namespace Phnx.AspNetCore.Rest.Services
                 throw new ArgumentNullException(nameof(data));
             }
 
-            if (!RequestHeaders.TryGetValue(IfMatchKey, out StringValues eTag) || eTag.Count == 0)
+            if (!_requestHeaders.TryGetValue(IfMatchKey, out StringValues eTag) || eTag.Count == 0)
             {
                 return true;
             }
@@ -116,7 +118,7 @@ namespace Phnx.AspNetCore.Rest.Services
 
             var dataETag = data.ConcurrencyStamp;
 
-            ResponseHeaders.Add(ETagHeaderKey, dataETag);
+            _responseHeaders.Add(ETagHeaderKey, dataETag);
         }
     }
 }
