@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Phnx.Serialization;
+using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Phnx.AspNetCore.Modals
 {
@@ -13,7 +15,7 @@ namespace Phnx.AspNetCore.Modals
         /// <summary>
         /// The current <see cref="ISession"/> to store and load modals
         /// </summary>
-        public ISession Session { get; }
+        public ISession Session => ContextAccessor.HttpContext?.Session;
 
         /// <summary>
         /// The <see cref="IHttpContextAccessor"/> to load the current <see cref="Session"/> from
@@ -37,8 +39,16 @@ namespace Phnx.AspNetCore.Modals
         /// <summary>
         /// Get all the modals currently stored in this session
         /// </summary>
+        /// <exception cref="InvalidOperationException"><see cref="Session"/> is <see langword="null"/></exception>
+        /// <exception cref="InvalidCastException">Data stored in session with key <see cref="SessionModalsKey"/> is not of type <see cref="List{TModal}"/></exception>
+        /// <exception cref="SerializationException">Data stored in session with key <see cref="SessionModalsKey"/> is not a valid serialized data structure</exception>
         public List<TModal> Get()
         {
+            if (Session is null)
+            {
+                throw new InvalidOperationException("A HttpContext is required");
+            }
+
             if (!Session.TryGetValue(SessionModalsKey, out var valueBytes) || valueBytes is null)
             {
                 return new List<TModal>();
@@ -52,8 +62,14 @@ namespace Phnx.AspNetCore.Modals
         /// <summary>
         /// Set all the modals currently stored in this session
         /// </summary>
+        /// <exception cref="InvalidOperationException"><see cref="Session"/> is <see langword="null"/></exception>
         public void Set(List<TModal> modals)
         {
+            if (Session is null)
+            {
+                throw new InvalidOperationException("A HttpContext is required");
+            }
+
             if (modals is null || modals.Count == 0)
             {
                 Session.Remove(SessionModalsKey);
