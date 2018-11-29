@@ -1,6 +1,6 @@
-﻿using Phnx.AspNetCore.Rest.Models;
-using Phnx.AspNetCore.Rest.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Phnx.AspNet.Core.Rest.Models;
+using Phnx.AspNetCore.Rest.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -12,12 +12,9 @@ namespace Phnx.AspNetCore.Rest.Services
     /// </summary>
     /// <typeparam name="TDataModel">The type of data model</typeparam>
     /// <typeparam name="TDtoModel">The type of data transfer object</typeparam>
-    /// <typeparam name="TDtoLinksModel">The type of links contained within the data transfer object</typeparam>
     /// <typeparam name="TPatchDtoModel">The type of data transfer object used when patching</typeparam>
-    public class RestControllerHelperService<TDataModel, TDtoModel, TDtoLinksModel, TPatchDtoModel> : IRestControllerHelperService<TDataModel, TDtoModel, TDtoLinksModel, TPatchDtoModel>
+    public class RestControllerHelperService<TDataModel, TDtoModel, TPatchDtoModel> : IRestControllerHelperService<TDataModel, TDtoModel, TPatchDtoModel>
            where TDataModel : IResourceDataModel
-           where TDtoModel : IHateoasDtoModel<TDtoLinksModel>
-           where TDtoLinksModel : ILinksDtoModel
     {
         /// <summary>
         /// The helper for REST Requests
@@ -27,19 +24,19 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <summary>
         /// The helper for REST Responses
         /// </summary>
-        protected IRestResponseService<TDataModel, TDtoModel, TDtoLinksModel> RestResponseService { get; }
+        protected IRestResponseService<TDataModel, TDtoModel> RestResponseService { get; }
 
         /// <summary>
         /// Create a new
-        /// <see cref="RestControllerHelperService{TDataModel,TDtoModel,TDtoLinksModel,TPatchDtoModel}"/>
+        /// <see cref="RestControllerHelperService{TDataModel,TDtoModel,TPatchDtoModel}"/>
         /// </summary>
         /// <param name="mapper">The service to map between the data models and its various data transfer objects</param>
         /// <param name="restRequestService">The REST request service to handle incoming requests</param>
         /// <param name="restResponseService">The REST response service to handle outgoing responses</param>
         public RestControllerHelperService(
-            IResourceMapService<TDataModel, TDtoModel, TDtoLinksModel, TPatchDtoModel> mapper,
+            IResourceMapService<TDataModel, TDtoModel, TPatchDtoModel> mapper,
             IRestRequestService<TDataModel> restRequestService,
-            IRestResponseService<TDataModel, TDtoModel, TDtoLinksModel> restResponseService)
+            IRestResponseService<TDataModel, TDtoModel> restResponseService)
         {
             Mapper = mapper;
             RestRequestService = restRequestService;
@@ -49,7 +46,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <summary>
         /// The service to map between the data models and its various data transfer objects
         /// </summary>
-        public IResourceMapService<TDataModel, TDtoModel, TDtoLinksModel, TPatchDtoModel> Mapper { get; }
+        public IResourceMapService<TDataModel, TDtoModel, TPatchDtoModel> Mapper { get; }
 
         /// <summary>
         /// Create a REST NotFound response
@@ -103,15 +100,22 @@ namespace Phnx.AspNetCore.Rest.Services
         /// Create a new database entry from a data transfer object
         /// </summary>
         /// <param name="dto">The data transfer object representing the data to create</param>
-        /// <param name="createDbEntry">The function that inserts the data to the database</param>
+        /// <param name="createDbEntry">The function that inserts the data to the database. This should return the URL for accessing the created resource</param>
         /// <returns>A REST compliant status code for a successful object creation</returns>
-        public async Task<CreatedResult> CreateData(TDtoModel dto, Func<TDataModel, Task> createDbEntry)
+        public async Task<ObjectResult> CreateData(TDtoModel dto, Func<TDataModel, Task<ResourceCreatedResult>> createDbEntry)
         {
             var data = Mapper.MapToData(dto);
 
-            await createDbEntry(data);
+            var createdAt = await createDbEntry(data);
 
-            return RestResponseService.CreatedData(data);
+            if (createdAt.ByUrl)
+            {
+                return RestResponseService.CreatedData(data, createdAt.Url);
+            }
+            else
+            {
+                return RestResponseService.CreatedDataAtAction(data, createdAt.ControllerName, createdAt.ActionName, createdAt.RouteValues);
+            }
         }
 
         /// <summary>

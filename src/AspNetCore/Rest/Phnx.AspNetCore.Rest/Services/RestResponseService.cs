@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phnx.AspNetCore.Rest.Models;
-using Phnx.AspNetCore.Rest.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 
@@ -11,16 +10,13 @@ namespace Phnx.AspNetCore.Rest.Services
     /// </summary>
     /// <typeparam name="TDataModel">The data model type</typeparam>
     /// <typeparam name="TDtoModel">The data transfer object type</typeparam>
-    /// <typeparam name="TDtoLinksModel">The data transfer object type's HATEOAS links</typeparam>
-    public class RestResponseFactory<TDataModel, TDtoModel, TDtoLinksModel> : IRestResponseService<TDataModel, TDtoModel, TDtoLinksModel>
+    public class RestResponseFactory<TDataModel, TDtoModel> : IRestResponseService<TDataModel, TDtoModel>
         where TDataModel : IResourceDataModel
-        where TDtoModel : IHateoasDtoModel<TDtoLinksModel>
-        where TDtoLinksModel : ILinksDtoModel
     {
         /// <summary>
         /// The configured response mapper
         /// </summary>
-        public IReadonlyResourceMapService<TDataModel, TDtoModel, TDtoLinksModel> Mapper { get; }
+        public IReadonlyResourceMapService<TDataModel, TDtoModel> Mapper { get; }
 
         /// <summary>
         /// The ETag reader service
@@ -33,7 +29,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <param name="mapper">The response mapper to map from the <typeparamref name="TDataModel"/> to <typeparamref name="TDtoModel"/></param>
         /// <param name="eTagService">The E-Tag writer</param>
         /// <exception cref="ArgumentNullException"><paramref name="mapper"/> or <paramref name="eTagService"/> is <see langword="null"/></exception>
-        public RestResponseFactory(IReadonlyResourceMapService<TDataModel, TDtoModel, TDtoLinksModel> mapper, IETagService eTagService)
+        public RestResponseFactory(IReadonlyResourceMapService<TDataModel, TDtoModel> mapper, IETagService eTagService)
         {
             Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             ETagService = eTagService ?? throw new ArgumentNullException(nameof(eTagService));
@@ -108,14 +104,32 @@ namespace Phnx.AspNetCore.Rest.Services
         /// Create a response describing that the data was successfully created
         /// </summary>
         /// <param name="data">The data that was created</param>
+        /// <param name="actionName">The name of the action for accessing the resource</param>
+        /// <param name="controllerName">The name of the controller for accessing the resource</param>
+        /// <param name="routeValues">The route values needed to access the resource</param>
         /// <returns>A response describing that the data was successfully created</returns>
-        public CreatedResult CreatedData(TDataModel data)
+        public CreatedAtActionResult CreatedDataAtAction(TDataModel data, string controllerName, string actionName, object routeValues)
         {
             ETagService.AddETagToResponse(data);
 
             var createdModel = Mapper.MapToDto(data);
 
-            return new CreatedResult(createdModel.Links.Self, createdModel);
+            return new CreatedAtActionResult(actionName, controllerName, routeValues, createdModel);
+        }
+
+        /// <summary>
+        /// Create a response describing that the data was successfully created
+        /// </summary>
+        /// <param name="data">The data that was created</param>
+        /// <param name="url">The URL to the data that was created</param>
+        /// <returns>A response describing that the data was successfully created</returns>
+        public CreatedResult CreatedData(TDataModel data, string url)
+        {
+            ETagService.AddETagToResponse(data);
+
+            var createdModel = Mapper.MapToDto(data);
+
+            return new CreatedResult(url, createdModel);
         }
 
         /// <summary>

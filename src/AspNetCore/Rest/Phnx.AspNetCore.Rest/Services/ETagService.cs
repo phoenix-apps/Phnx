@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Primitives;
 using Phnx.AspNetCore.Rest.Models;
-using Phnx.AspNetCore.Rest.Services.Interfaces;
 using System;
 using System.Net;
 

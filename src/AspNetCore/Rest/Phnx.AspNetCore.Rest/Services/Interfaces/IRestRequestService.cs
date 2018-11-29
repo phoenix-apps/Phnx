@@ -1,6 +1,6 @@
 ﻿using Phnx.AspNetCore.Rest.Models;
 
-namespace Phnx.AspNetCore.Rest.Services.Interfaces
+namespace Phnx.AspNetCore.Rest.Services
 {
     /// <summary>
     /// Provides an interface for interpreting a REST request and taking according action

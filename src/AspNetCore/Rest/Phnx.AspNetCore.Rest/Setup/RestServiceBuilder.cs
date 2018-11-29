@@ -1,7 +1,6 @@
-﻿using Phnx.AspNetCore.Rest.Services;
-using Phnx.AspNetCore.Rest.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using Phnx.AspNetCore.Rest.Services;
 
 namespace Phnx.AspNetCore.Rest.Setup
 {
@@ -34,9 +33,9 @@ namespace Phnx.AspNetCore.Rest.Setup
         {
             services.AddScoped(typeof(IRestRequestService<>), typeof(RestRequestService<>));
 
-            services.AddScoped(typeof(IRestResponseService<,,>), typeof(RestResponseFactory<,,>));
+            services.AddScoped(typeof(IRestResponseService<,>), typeof(RestResponseFactory<,>));
 
-            services.AddScoped(typeof(IRestControllerHelperService<,,,>), typeof(RestControllerHelperService<,,,>));
+            services.AddScoped(typeof(IRestControllerHelperService<,,>), typeof(RestControllerHelperService<,,>));
         }
     }
 }

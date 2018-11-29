@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Phnx.AspNetCore.Rest.Setup;
 
-namespace Phnx.AspNetCore.Rest.Setup
+namespace Phnx.AspNetCore.Rest
 {
     /// <summary>
     /// Extentions for <see cref="IServiceCollection"/> related to <see cref="Rest"/>
@@ -11,7 +12,7 @@ namespace Phnx.AspNetCore.Rest.Setup
         /// Setup all necessary components for <see cref="Rest"/>
         /// </summary>
         /// <param name="services">The service injector</param>
-        public static void RegisterRest(this IServiceCollection services)
+        public static void AddRest(this IServiceCollection services)
         {
             var builder = new RestServiceBuilder(services);
 

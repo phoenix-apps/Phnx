@@ -1,26 +1,34 @@
-﻿using Phnx.AspNetCore.Rest.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Phnx.AspNetCore.Rest.Models;
 using System.Collections.Generic;
 
-namespace Phnx.AspNetCore.Rest.Services.Interfaces
+namespace Phnx.AspNetCore.Rest.Services
 {
     /// <summary>
     /// Provides methods for formulating various REST compliant responses
     /// </summary>
     /// <typeparam name="TDataModel">The data model type</typeparam>
     /// <typeparam name="TDtoModel">The data transfer object type</typeparam>
-    /// <typeparam name="TDtoLinksModel">The data transfer object type's HATEOAS links</typeparam>
-    public interface IRestResponseService<in TDataModel, out TDtoModel, TDtoLinksModel>
+    public interface IRestResponseService<in TDataModel, out TDtoModel>
         where TDataModel : IResourceDataModel
-        where TDtoModel : IHateoasDtoModel<TDtoLinksModel>
-        where TDtoLinksModel : ILinksDtoModel
     {
         /// <summary>
         /// Create a response describing that the data was successfully created
         /// </summary>
         /// <param name="data">The data that was created</param>
+        /// <param name="actionName">The name of the action for accessing the resource</param>
+        /// <param name="controllerName">The name of the controller for accessing the resource</param>
+        /// <param name="routeValues">The route values needed to access the resource</param>
         /// <returns>A response describing that the data was successfully created</returns>
-        CreatedResult CreatedData(TDataModel data);
+        CreatedAtActionResult CreatedDataAtAction(TDataModel data, string controllerName, string actionName, object routeValues);
+
+        /// <summary>
+        /// Create a response describing that the data was successfully created
+        /// </summary>
+        /// <param name="data">The data that was created</param>
+        /// <param name="url">The URL to the data that was created</param>
+        /// <returns>A response describing that the data was successfully created</returns>
+        CreatedResult CreatedData(TDataModel data, string url);
 
         /// <summary>
         /// Create a response describing that the data has been updated (ETag)

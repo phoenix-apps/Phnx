@@ -1,7 +1,7 @@
-﻿using Phnx.AspNetCore.Rest.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Phnx.AspNetCore.Rest.Models;
 
-namespace Phnx.AspNetCore.Rest.Services.Interfaces
+namespace Phnx.AspNetCore.Rest.Services
 {
     /// <summary>
     /// Provides an interface for managing E-Tags and caching

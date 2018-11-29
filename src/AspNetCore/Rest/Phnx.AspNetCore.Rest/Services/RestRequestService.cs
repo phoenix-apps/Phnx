@@ -1,5 +1,4 @@
 ﻿using Phnx.AspNetCore.Rest.Models;
-using Phnx.AspNetCore.Rest.Services.Interfaces;
 
 namespace Phnx.AspNetCore.Rest.Services
 {

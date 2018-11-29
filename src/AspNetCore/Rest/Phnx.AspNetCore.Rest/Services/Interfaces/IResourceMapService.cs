@@ -1,18 +1,13 @@
-﻿using Phnx.AspNetCore.Rest.Models;
-
-namespace Phnx.AspNetCore.Rest.Services.Interfaces
+﻿namespace Phnx.AspNetCore.Rest.Services
 {
     /// <summary>
     /// Provides an interface for mapping between a data model and a data transfer object
     /// </summary>
     /// <typeparam name="TDataModel">The type of data model</typeparam>
     /// <typeparam name="TDtoModel">The type of data transfer object</typeparam>
-    /// <typeparam name="TDtoLinksModel">The type of links contained within the data transfer object</typeparam>
     /// <typeparam name="TPatchDtoModel">The type of data transfer object used when patching</typeparam>
-    public interface IResourceMapService<TDataModel, TDtoModel, TDtoLinksModel, in TPatchDtoModel>
-        : IReadonlyResourceMapService<TDataModel, TDtoModel, TDtoLinksModel>
-        where TDtoModel : IHateoasDtoModel<TDtoLinksModel>
-        where TDtoLinksModel : ILinksDtoModel
+    public interface IResourceMapService<TDataModel, TDtoModel, in TPatchDtoModel>
+        : IReadonlyResourceMapService<TDataModel, TDtoModel>
     {
         /// <summary>
         /// Maps from the data transfer object to a data model

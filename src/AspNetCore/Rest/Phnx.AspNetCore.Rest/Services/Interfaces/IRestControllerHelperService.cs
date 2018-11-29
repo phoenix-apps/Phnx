@@ -1,27 +1,25 @@
-﻿using Phnx.AspNetCore.Rest.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Phnx.AspNet.Core.Rest.Models;
+using Phnx.AspNetCore.Rest.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Phnx.AspNetCore.Rest.Services.Interfaces
+namespace Phnx.AspNetCore.Rest.Services
 {
     /// <summary>
     /// Provides an interface for helping create a rest controller, centralising all the pieces for REST
     /// </summary>
     /// <typeparam name="TDataModel">The type of data model</typeparam>
     /// <typeparam name="TDtoModel">The type of data transfer object</typeparam>
-    /// <typeparam name="TDtoLinksModel">The type of links contained within the data transfer object</typeparam>
     /// <typeparam name="TPatchDtoModel">The type of data transfer object used when patching</typeparam>
-    public interface IRestControllerHelperService<TDataModel, TDtoModel, TDtoLinksModel, in TPatchDtoModel>
+    public interface IRestControllerHelperService<TDataModel, TDtoModel, in TPatchDtoModel>
         where TDataModel : IResourceDataModel
-        where TDtoModel : IHateoasDtoModel<TDtoLinksModel>
-        where TDtoLinksModel : ILinksDtoModel
     {
         /// <summary>
         /// The mapper used to map between data models and data transfer objects
         /// </summary>
-        IResourceMapService<TDataModel, TDtoModel, TDtoLinksModel, TPatchDtoModel> Mapper { get; }
+        IResourceMapService<TDataModel, TDtoModel, TPatchDtoModel> Mapper { get; }
 
         /// <summary>
         /// Create a REST NotFound response
@@ -35,9 +33,9 @@ namespace Phnx.AspNetCore.Rest.Services.Interfaces
         /// Create a new database entry from a data transfer object
         /// </summary>
         /// <param name="dto">The data transfer object representing the data to create</param>
-        /// <param name="createDbEntry">The function that inserts the data to the database</param>
+        /// <param name="createDbEntry">The function that inserts the data to the database. This should return the URL for accessing the created resource</param>
         /// <returns>A REST compliant status code for a successful object creation</returns>
-        Task<CreatedResult> CreateData(TDtoModel dto, Func<TDataModel, Task> createDbEntry);
+        Task<ObjectResult> CreateData(TDtoModel dto, Func<TDataModel, Task<ResourceCreatedResult>> createDbEntry);
 
         /// <summary>
         /// Delete a collection of data
