@@ -1,6 +1,7 @@
-﻿using Phnx.AspNet.Context.Interfaces;
-using Phnx.AspNet.Modals.Interfaces;
+﻿using System;
 using System.Collections.Generic;
+using System.Web;
+using System.Web.SessionState;
 
 namespace Phnx.AspNet.Modals
 {
@@ -10,29 +11,40 @@ namespace Phnx.AspNet.Modals
     /// <typeparam name="TModal">The type of modals that this manager hosts</typeparam>
     public class ModalManager<TModal> : IModalManager<TModal> where TModal : IModalViewModel
     {
-        private readonly ISessionService _session;
+        /// <summary>
+        /// The current <see cref="HttpContext.Session"/>
+        /// </summary>
+        public HttpSessionState Session => HttpContext.Current?.Session;
 
         /// <summary>
-        /// The key to the part of the session which contains all the modal data
+        /// The key to the part of <see cref="Session"/> which contains all the modal data
         /// </summary>
         public const string SessionMessageKey = "ModalMessage";
 
         /// <summary>
-        /// Create a new <see cref="ModalManager{TModal}"/> using a <see cref="ISessionService"/> to hold the modal data
-        /// </summary>
-        /// <param name="session">The session storage in which all modals are stored</param>
-        public ModalManager(ISessionService session)
-        {
-            _session = session;
-        }
-
-        /// <summary>
         /// Get or set all the modals currently stored in this session
         /// </summary>
+        /// <exception cref="InvalidOperationException">A <see cref="HttpContext"/> is required</exception>
         public List<TModal> Modals
         {
-            get => _session.Get<List<TModal>>(SessionMessageKey);
-            private set => _session.Set(SessionMessageKey, value);
+            get
+            {
+                if (Session is null)
+                {
+                    throw new InvalidOperationException($"{nameof(HttpContext)} is required");
+                }
+
+                return (List<TModal>)Session[SessionMessageKey];
+            }
+            set
+            {
+                if (Session is null)
+                {
+                    throw new InvalidOperationException($"{nameof(HttpContext)} is required");
+                }
+
+                Session[SessionMessageKey] = value;
+            }
         }
 
         /// <summary>

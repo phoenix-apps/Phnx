@@ -1,5 +1,4 @@
-﻿using Phnx.AspNet.Modals.Interfaces;
-using System;
+﻿using System;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
@@ -40,7 +39,7 @@ namespace Phnx.AspNet.Modals.Extensions
                 modalManager.Clear();
             }
 
-            return content.ToHtmlString();
+            return new HtmlString(content.ToString());
         }
     }
 }
