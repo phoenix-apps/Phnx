@@ -25,7 +25,7 @@ namespace Phnx.AspNetCore.Modals
         /// <summary>
         /// The key to the part of the session which contains all the modal data
         /// </summary>
-        public const string SessionModalsKey = "ModalMessage";
+        public const string SessionModalsKey = "Modals";
 
         /// <summary>
         /// Create a new <see cref="ModalManager{TModal}"/> using the <see cref="ISession"/> to hold the modal data
