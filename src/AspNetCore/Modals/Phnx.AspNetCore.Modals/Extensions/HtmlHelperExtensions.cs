@@ -28,7 +28,7 @@ namespace Phnx.AspNetCore.Modals
 
             IHtmlContentBuilder content = new HtmlContentBuilder();
 
-            foreach (var modal in modalManager.Modals)
+            foreach (var modal in modalManager.Get())
             {
                 content.AppendHtml(helper.Partial(partialViewName, modal));
             }
