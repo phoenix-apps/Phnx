@@ -84,6 +84,7 @@ namespace Phnx.AspNetCore.Modals
         /// <summary>
         /// Clear all the modals from the current session
         /// </summary>
+        /// <exception cref="InvalidOperationException"><see cref="Session"/> is <see langword="null"/></exception>
         public void Clear()
         {
             Set(null);
