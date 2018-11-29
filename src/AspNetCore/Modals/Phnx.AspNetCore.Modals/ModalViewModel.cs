@@ -30,15 +30,5 @@ namespace Phnx.AspNetCore.Modals
         /// The body content for the modal dialog
         /// </summary>
         public string Body { get; set; }
-
-        /// <summary>
-        /// The icon tag's class e.g "fa fa-user-o"
-        /// </summary>
-        public string IconClass { get; set; }
-
-        /// <summary>
-        /// The icon's color
-        /// </summary>
-        public string IconColor { get; set; }
     }
 }
