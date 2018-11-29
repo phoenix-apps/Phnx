@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
 
-namespace Phnx.Drawing
+namespace Phnx.Windows.Drawing
 {
     /// <summary>
     /// Extensions for <see cref="Image"/>

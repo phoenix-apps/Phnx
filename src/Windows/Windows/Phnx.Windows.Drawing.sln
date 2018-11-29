@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phnx.Windows", "Phnx.Windows\Phnx.Windows.csproj", "{89D91D7D-5FBE-419D-ADE1-D4501CAAF352}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phnx.Windows.Drawing", "Phnx.Windows\Phnx.Windows.Drawing.csproj", "{89D91D7D-5FBE-419D-ADE1-D4501CAAF352}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phnx.Windows.Tests", "Phnx.Windows.Tests\Phnx.Windows.Tests.csproj", "{430B367A-194E-41D5-A41B-DA29B2DA61A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phnx.Windows.Drawing.Tests", "Phnx.Windows.Tests\Phnx.Windows.Drawing.Tests.csproj", "{430B367A-194E-41D5-A41B-DA29B2DA61A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
