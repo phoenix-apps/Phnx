@@ -6,7 +6,7 @@
     /// <typeparam name="TDataModel">The type of data model</typeparam>
     /// <typeparam name="TDtoModel">The type of data transfer object</typeparam>
     /// <typeparam name="TPatchDtoModel">The type of data transfer object used when patching</typeparam>
-    public interface IResourceMapService<TDataModel, TDtoModel, in TPatchDtoModel>
+    public interface IResourceMap<TDataModel, TDtoModel, in TPatchDtoModel>
         : IReadonlyResourceMapService<TDataModel, TDtoModel>
     {
         /// <summary>

@@ -19,7 +19,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <summary>
         /// The mapper used to map between data models and data transfer objects
         /// </summary>
-        IResourceMapService<TDataModel, TDtoModel, TPatchDtoModel> Mapper { get; }
+        IResourceMap<TDataModel, TDtoModel, TPatchDtoModel> Mapper { get; }
 
         /// <summary>
         /// Create a REST NotFound response

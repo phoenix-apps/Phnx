@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Phnx.AspNetCore.Rest\Phnx.AspNet.Core.Rest.csproj" />
+    <ProjectReference Include="..\Phnx.AspNetCore.Rest\Phnx.AspNetCore.Rest.csproj" />
   </ItemGroup>
 
 </Project>

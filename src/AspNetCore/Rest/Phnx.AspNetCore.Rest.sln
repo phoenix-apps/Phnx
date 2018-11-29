@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phnx.AspNet.Core.Rest", "Phnx.AspNetCore.Rest\Phnx.AspNet.Core.Rest.csproj", "{33EF0E41-7360-4CBA-AC6F-09A0E845E837}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phnx.AspNetCore.Rest", "Phnx.AspNetCore.Rest\Phnx.AspNetCore.Rest.csproj", "{33EF0E41-7360-4CBA-AC6F-09A0E845E837}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phnx.AspNetCore.Rest.Tests", "Phnx.AspNetCore.Rest.Tests\Phnx.AspNetCore.Rest.Tests.csproj", "{14D96AA1-CBDD-4EF5-A766-ED6D51B746AB}"
 EndProject

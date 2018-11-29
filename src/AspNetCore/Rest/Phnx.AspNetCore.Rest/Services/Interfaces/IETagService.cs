@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phnx.AspNetCore.Rest.Models;
+using System;
 
 namespace Phnx.AspNetCore.Rest.Services
 {
@@ -12,6 +13,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// Append the relevant E-Tag for the data model to the response
         /// </summary>
         /// <param name="resource">The data model for which to generate the E-Tag</param>
+        /// <exception cref="ArgumentNullException"><paramref name="resource"/> is <see langword="null"/></exception>
         void AddETagToResponse(IResourceDataModel resource);
 
         /// <summary>
@@ -19,6 +21,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </summary>
         /// <param name="resource">The data model to compare the E-Tag against</param>
         /// <returns><see langword="true"/> if the resource is a match</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="resource"/> is <see langword="null"/></exception>
         bool CheckIfMatch(IResourceDataModel resource);
 
         /// <summary>
@@ -26,6 +29,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </summary>
         /// <param name="resource">The data model to compare the E-Tag against</param>
         /// <returns><see langword="true"/> if the resource is not a match</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="resource"/> is <see langword="null"/></exception>
         bool CheckIfNoneMatch(IResourceDataModel resource);
 
         /// <summary>

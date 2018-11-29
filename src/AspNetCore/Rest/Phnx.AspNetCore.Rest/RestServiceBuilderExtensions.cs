@@ -10,7 +10,7 @@ namespace Phnx.AspNetCore.Rest
     public static class RestServiceBuilderExtensions
     {
         /// <summary>
-        /// Setup all necessary components for <see cref="Rest"/>. To use <see cref="RestControllerHelperService{TDataModel, TDtoModel, TPatchDtoModel}"/>, you'll need to inject your own implementation of <see cref="IResourceMapService{TDataModel, TDtoModel, TPatchDtoModel}"/> for the same types
+        /// Setup all necessary components for <see cref="Rest"/>. To use <see cref="RestControllerHelperService{TDataModel, TDtoModel, TPatchDtoModel}"/>, you'll need to inject your own implementation of <see cref="IResourceMap{TDataModel, TDtoModel, TPatchDtoModel}"/> for the same types
         /// </summary>
         /// <param name="services">The service injector</param>
         public static IServiceCollection AddRest(this IServiceCollection services)

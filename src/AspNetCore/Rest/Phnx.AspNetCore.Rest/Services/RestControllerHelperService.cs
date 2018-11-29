@@ -19,12 +19,12 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <summary>
         /// The helper for REST Requests
         /// </summary>
-        protected IRestRequestService<TDataModel> RestRequestService { get; }
+        public IRestRequestService<TDataModel> RestRequestService { get; }
 
         /// <summary>
         /// The helper for REST Responses
         /// </summary>
-        protected IRestResponseService<TDataModel, TDtoModel> RestResponseService { get; }
+        public IRestResponseService<TDataModel, TDtoModel> RestResponseService { get; }
 
         /// <summary>
         /// Create a new
@@ -34,7 +34,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <param name="restRequestService">The REST request service to handle incoming requests</param>
         /// <param name="restResponseService">The REST response service to handle outgoing responses</param>
         public RestControllerHelperService(
-            IResourceMapService<TDataModel, TDtoModel, TPatchDtoModel> mapper,
+            IResourceMap<TDataModel, TDtoModel, TPatchDtoModel> mapper,
             IRestRequestService<TDataModel> restRequestService,
             IRestResponseService<TDataModel, TDtoModel> restResponseService)
         {
@@ -46,7 +46,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <summary>
         /// The service to map between the data models and its various data transfer objects
         /// </summary>
-        public IResourceMapService<TDataModel, TDtoModel, TPatchDtoModel> Mapper { get; }
+        public IResourceMap<TDataModel, TDtoModel, TPatchDtoModel> Mapper { get; }
 
         /// <summary>
         /// Create a REST NotFound response

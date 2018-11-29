@@ -1,4 +1,5 @@
 ﻿using Phnx.AspNetCore.Rest.Models;
+using System;
 
 namespace Phnx.AspNetCore.Rest.Services
 {
@@ -12,15 +13,16 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <summary>
         /// The service for reading the E-Tags in the headers of the request
         /// </summary>
-        private readonly IETagService eTagService;
+        public IETagService ETagService { get; }
 
         /// <summary>
         /// Create a new <see cref="RestRequestService{TDataModel}"/>
         /// </summary>
         /// <param name="eTagService">The E-Tag reader</param>
+        /// <exception cref="ArgumentNullException"><paramref name="eTagService"/> is <see langword="null"/></exception>
         public RestRequestService(IETagService eTagService)
         {
-            this.eTagService = eTagService;
+            this.ETagService = eTagService ?? throw new ArgumentNullException(nameof(eTagService));
         }
 
         /// <summary>
@@ -28,9 +30,10 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </summary>
         /// <param name="data">The data model to check</param>
         /// <returns>Whether the data model should be loaded</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
         public bool ShouldGetSingle(TDataModel data)
         {
-            return eTagService.CheckIfNoneMatch(data);
+            return ETagService.CheckIfNoneMatch(data);
         }
 
         /// <summary>
@@ -38,9 +41,10 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </summary>
         /// <param name="data">The data model to check</param>
         /// <returns>Whether the data model should be updated</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
         public bool ShouldUpdate(TDataModel data)
         {
-            return eTagService.CheckIfMatch(data);
+            return ETagService.CheckIfMatch(data);
         }
 
         /// <summary>
@@ -48,9 +52,10 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </summary>
         /// <param name="data">The data model to check</param>
         /// <returns>Whether the data model should be deleted</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
         public bool ShouldDelete(TDataModel data)
         {
-            return eTagService.CheckIfMatch(data);
+            return ETagService.CheckIfMatch(data);
         }
     }
 }

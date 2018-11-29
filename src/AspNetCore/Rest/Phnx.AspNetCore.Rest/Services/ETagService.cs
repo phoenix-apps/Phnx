@@ -119,6 +119,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// Append the relevant E-Tag for the data model to the response
         /// </summary>
         /// <param name="data">The data model for which to generate the E-Tag</param>
+        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
         public void AddETagToResponse(IResourceDataModel data)
         {
             if (data is null)
