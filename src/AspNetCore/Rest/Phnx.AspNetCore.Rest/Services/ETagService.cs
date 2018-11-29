@@ -28,19 +28,29 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </summary>
         public const string IfMatchKey = "If-Match";
 
-        private readonly IActionContextAccessor _actionContext;
+        /// <summary>
+        /// The action context accessor for accessing the current request and response headers
+        /// </summary>
+        public IActionContextAccessor ActionContext { get; }
 
-        private IHeaderDictionary _requestHeaders => _actionContext.ActionContext.HttpContext.Request.Headers;
+        /// <summary>
+        /// The headers in the request
+        /// </summary>
+        public IHeaderDictionary RequestHeaders => ActionContext.ActionContext.HttpContext.Request.Headers;
 
-        private IHeaderDictionary _responseHeaders => _actionContext.ActionContext.HttpContext.Response.Headers;
+        /// <summary>
+        /// The headers in the response
+        /// </summary>
+        public IHeaderDictionary ResponseHeaders => ActionContext.ActionContext.HttpContext.Response.Headers;
 
         /// <summary>
         /// Create a new <see cref="ETagService"/> using a given <see cref="IActionContextAccessor"/>
         /// </summary>
-        /// <param name="actionContext"></param>
+        /// <param name="actionContext">The action context accessor for reading and writing E-Tag headers</param>
+        /// <exception cref="ArgumentNullException"><paramref name="actionContext"/> is <see langword="null"/></exception>
         public ETagService(IActionContextAccessor actionContext)
         {
-            _actionContext = actionContext;
+            ActionContext = actionContext ?? throw new ArgumentNullException(nameof(actionContext));
         }
 
         /// <summary>
@@ -57,7 +67,7 @@ namespace Phnx.AspNetCore.Rest.Services
                 throw new ArgumentNullException(nameof(data));
             }
 
-            if (!_requestHeaders.TryGetValue(IfNoneMatchKey, out StringValues eTag) || eTag.Count == 0)
+            if (!RequestHeaders.TryGetValue(IfNoneMatchKey, out StringValues eTag) || eTag.Count == 0)
             {
                 return true;
             }
@@ -79,7 +89,7 @@ namespace Phnx.AspNetCore.Rest.Services
                 throw new ArgumentNullException(nameof(data));
             }
 
-            if (!_requestHeaders.TryGetValue(IfMatchKey, out StringValues eTag) || eTag.Count == 0)
+            if (!RequestHeaders.TryGetValue(IfMatchKey, out StringValues eTag) || eTag.Count == 0)
             {
                 return true;
             }
@@ -113,12 +123,12 @@ namespace Phnx.AspNetCore.Rest.Services
         {
             if (data is null)
             {
-                return;
+                throw new ArgumentNullException(nameof(data));
             }
 
             var dataETag = data.ConcurrencyStamp;
 
-            _responseHeaders.Add(ETagHeaderKey, dataETag);
+            ResponseHeaders.Add(ETagHeaderKey, dataETag);
         }
     }
 }
