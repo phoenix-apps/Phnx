@@ -1,9 +1,9 @@
-﻿using Phnx.AspNetCore.Rest.Models;
-using Phnx.AspNetCore.Rest.Services.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Primitives;
+using Phnx.AspNetCore.Rest.Models;
+using Phnx.AspNetCore.Rest.Services.Interfaces;
 using System;
 using System.Net;
 
@@ -42,25 +42,26 @@ namespace Phnx.AspNetCore.Rest.Services
             _actionContext = actionContext;
         }
 
-        private string GetETagFromData(byte[] rowVersion)
-        {
-            return Convert.ToBase64String(rowVersion);
-        }
-
         /// <summary>
         /// Check whether a sent E-Tag does not match a given data model using the If-None-Match header.
         /// Defaults to <see langword="true"/> if the header is not present
         /// </summary>
         /// <param name="data">The data model to compare the E-Tag against</param>
         /// <returns><see langword="true"/> if the resource is not a match</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
         public bool CheckIfNoneMatch(IResourceDataModel data)
         {
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
             if (!RequestHeaders.TryGetValue(IfNoneMatchKey, out StringValues eTag) || eTag.Count == 0)
             {
                 return true;
             }
 
-            return eTag[0] != GetETagFromData(data.RowVersion);
+            return eTag[0] != data.ConcurrencyStamp;
         }
 
         /// <summary>
@@ -69,14 +70,20 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </summary>
         /// <param name="data">The data model to compare the E-Tag against</param>
         /// <returns><see langword="true"/> if the resource is a match</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
         public bool CheckIfMatch(IResourceDataModel data)
         {
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
             if (!RequestHeaders.TryGetValue(IfMatchKey, out StringValues eTag) || eTag.Count == 0)
             {
                 return true;
             }
 
-            return eTag[0] == GetETagFromData(data.RowVersion);
+            return eTag[0] == data.ConcurrencyStamp;
         }
 
         /// <summary>
@@ -103,7 +110,12 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <param name="data">The data model for which to generate the E-Tag</param>
         public void AddETagToResponse(IResourceDataModel data)
         {
-            var dataETag = GetETagFromData(data.RowVersion);
+            if (data is null)
+            {
+                return;
+            }
+
+            var dataETag = data.ConcurrencyStamp;
 
             ResponseHeaders.Add(ETagHeaderKey, dataETag);
         }

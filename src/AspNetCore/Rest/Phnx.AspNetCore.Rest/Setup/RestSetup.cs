@@ -34,7 +34,7 @@ namespace Phnx.AspNetCore.Rest.Setup
         {
             services.AddScoped(typeof(IRestRequestService<>), typeof(RestRequestService<>));
 
-            services.AddScoped(typeof(IRestResponseService<,,>), typeof(RestResponseService<,,>));
+            services.AddScoped(typeof(IRestResponseService<,,>), typeof(RestResponseFactory<,,>));
 
             services.AddScoped(typeof(IRestControllerHelperService<,,,>), typeof(RestControllerHelperService<,,,>));
         }

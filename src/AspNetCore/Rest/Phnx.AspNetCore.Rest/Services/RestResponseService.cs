@@ -1,6 +1,7 @@
-﻿using Phnx.AspNetCore.Rest.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using Phnx.AspNetCore.Rest.Models;
 using Phnx.AspNetCore.Rest.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace Phnx.AspNetCore.Rest.Services
@@ -11,25 +12,31 @@ namespace Phnx.AspNetCore.Rest.Services
     /// <typeparam name="TDataModel">The data model type</typeparam>
     /// <typeparam name="TDtoModel">The data transfer object type</typeparam>
     /// <typeparam name="TDtoLinksModel">The data transfer object type's HATEOAS links</typeparam>
-    public class RestResponseService<TDataModel, TDtoModel, TDtoLinksModel> : IRestResponseService<TDataModel, TDtoModel, TDtoLinksModel>
+    public class RestResponseFactory<TDataModel, TDtoModel, TDtoLinksModel> : IRestResponseService<TDataModel, TDtoModel, TDtoLinksModel>
         where TDataModel : IResourceDataModel
         where TDtoModel : IHateoasDtoModel<TDtoLinksModel>
         where TDtoLinksModel : ILinksDtoModel
     {
-        private readonly IReadonlyResourceMapService<TDataModel, TDtoModel, TDtoLinksModel> mapper;
-
-        private readonly IETagService eTagService;
+        /// <summary>
+        /// The configured response mapper
+        /// </summary>
+        public IReadonlyResourceMapService<TDataModel, TDtoModel, TDtoLinksModel> Mapper { get; }
 
         /// <summary>
-        ///
+        /// The ETag reader service
         /// </summary>
-        /// <param name="mapper"></param>
-        /// <param name="eTagService">The E-Tag writer</param>
-        public RestResponseService(IReadonlyResourceMapService<TDataModel, TDtoModel, TDtoLinksModel> mapper, IETagService eTagService)
-        {
-            this.mapper = mapper;
+        public IETagService ETagService { get; }
 
-            this.eTagService = eTagService;
+        /// <summary>
+        /// Create a new REST response factory
+        /// </summary>
+        /// <param name="mapper">The response mapper to map from the <typeparamref name="TDataModel"/> to <typeparamref name="TDtoModel"/></param>
+        /// <param name="eTagService">The E-Tag writer</param>
+        /// <exception cref="ArgumentNullException"><paramref name="mapper"/> or <paramref name="eTagService"/> is <see langword="null"/></exception>
+        public RestResponseFactory(IReadonlyResourceMapService<TDataModel, TDtoModel, TDtoLinksModel> mapper, IETagService eTagService)
+        {
+            Mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            ETagService = eTagService ?? throw new ArgumentNullException(nameof(eTagService));
         }
 
         /// <summary>
@@ -40,7 +47,22 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <returns>A response describing that the data could not be found</returns>
         public NotFoundObjectResult NotFound(string resourceTypeFriendlyName, string resourceIdentifier)
         {
-            return new NotFoundObjectResult($"The {resourceTypeFriendlyName} \"{resourceIdentifier}\" does not exist");
+            if (string.IsNullOrWhiteSpace(resourceTypeFriendlyName))
+            {
+                resourceTypeFriendlyName = "resource";
+            }
+
+            string message;
+            if (string.IsNullOrWhiteSpace(resourceIdentifier))
+            {
+                message = $"The requested {resourceTypeFriendlyName} was not found";
+            }
+            else
+            {
+                message = $"The requested {resourceTypeFriendlyName} \"{resourceIdentifier}\" was not found";
+            }
+
+            return new NotFoundObjectResult(message);
         }
 
         /// <summary>
@@ -49,7 +71,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <returns>A response describing that the data has not been changed</returns>
         public StatusCodeResult DataHasNotChanged()
         {
-            return eTagService.CreateMatchResponse();
+            return ETagService.CreateMatchResponse();
         }
 
         /// <summary>
@@ -61,9 +83,9 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </returns>
         public OkObjectResult RetrievedData(TDataModel data)
         {
-            eTagService.AddETagToResponse(data);
+            ETagService.AddETagToResponse(data);
 
-            var model = mapper.MapToDto(data);
+            var model = Mapper.MapToDto(data);
 
             return new OkObjectResult(model);
         }
@@ -77,7 +99,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </returns>
         public OkObjectResult RetrievedData(IEnumerable<TDataModel> data)
         {
-            var model = mapper.MapToDto(data);
+            var model = Mapper.MapToDto(data);
 
             return new OkObjectResult(model);
         }
@@ -89,9 +111,9 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <returns>A response describing that the data was successfully created</returns>
         public CreatedResult CreatedData(TDataModel data)
         {
-            eTagService.AddETagToResponse(data);
+            ETagService.AddETagToResponse(data);
 
-            var createdModel = mapper.MapToDto(data);
+            var createdModel = Mapper.MapToDto(data);
 
             return new CreatedResult(createdModel.Links.Self, createdModel);
         }
@@ -102,7 +124,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <returns>A response describing that the data has been updated</returns>
         public StatusCodeResult DataHasChanged()
         {
-            return eTagService.CreateDoNotMatchResponse();
+            return ETagService.CreateDoNotMatchResponse();
         }
 
         /// <summary>
@@ -114,9 +136,9 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </returns>
         public OkObjectResult UpdatedData(TDataModel data)
         {
-            eTagService.AddETagToResponse(data);
+            ETagService.AddETagToResponse(data);
 
-            var editedModel = mapper.MapToDto(data);
+            var editedModel = Mapper.MapToDto(data);
 
             return new OkObjectResult(editedModel);
         }
