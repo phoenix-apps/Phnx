@@ -1,5 +1,4 @@
-﻿using Phnx.AspNetCore.Modals.Interfaces;
-using System;
+﻿using System;
 
 namespace Phnx.AspNetCore.Modals
 {

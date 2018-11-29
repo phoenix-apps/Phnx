@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Phnx.AspNetCore.Modals.Interfaces;
 using System;
 
 namespace Phnx.AspNetCore.Modals

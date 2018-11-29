@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Phnx.AspNetCore.Modals.Interfaces
+namespace Phnx.AspNetCore.Modals
 {
     /// <summary>
     /// A manager hosting and retrieving a list of all the modals to render
