@@ -14,6 +14,22 @@ namespace Phnx.Reflection
         public bool IsProperty => Property != null;
 
         /// <summary>
+        /// Whether this is an auto property ({ get; set; })
+        /// </summary>
+        public bool IsAutoProperty
+        {
+            get
+            {
+                if (!IsProperty)
+                {
+                    return false;
+                }
+
+                return Property.IsAuto();
+            }
+        }
+
+        /// <summary>
         /// The <see cref="PropertyInfo"/> that this represents. If this represents a <see cref="FieldInfo"/>, this is <see langword="null"/>
         /// </summary>
         protected PropertyInfo Property { get; set; }

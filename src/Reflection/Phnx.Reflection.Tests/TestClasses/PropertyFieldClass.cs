@@ -31,6 +31,12 @@ namespace Phnx.Reflection.Tests.TestClasses
 
         private int PrivateProperty { get; set; }
 
+        public string PublicNonAutoProperty
+        {
+            get => PublicProperty;
+            set => PublicProperty = value;
+        }
+
         private int _privateField;
 
         private int PrivateMethod()
