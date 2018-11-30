@@ -81,87 +81,54 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
         }
 
         [Test]
-        public void ShouldGetSingle_WhenETagNoneMatch_ReturnsTrue()
+        public void RetrievedData_WithNullData_DoesNotThrow()
         {
             var mockETagService = new Mock<IETagService>();
-            mockETagService
-                .Setup(m =>
-                    m.CheckIfNoneMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(true);
+            FakeResource fake = null;
 
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
+            var requestService = CreateFake(mockETagService);
 
-            Assert.IsTrue(requestService.ShouldGetSingle(new FakeResource("a")));
+            Assert.DoesNotThrow(() => requestService.RetrievedData(fake));
         }
 
         [Test]
-        public void ShouldGetSingle_WhenNotETagNoneMatch_ReturnsTrue()
+        public void RetrievedData_WithValidData_AddsStatusCodeOkay()
         {
+            var resource = new FakeResource(12);
+
             var mockETagService = new Mock<IETagService>();
             mockETagService
-                .Setup(m =>
-                    m.CheckIfNoneMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(false);
+                .Setup(e =>
+                    e.AddETagToResponse(It.IsAny<IResourceDataModel>()));
 
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
+            var requestService = CreateFake(mockETagService);
 
-            Assert.IsFalse(requestService.ShouldGetSingle(new FakeResource("a")));
+            var result = requestService.RetrievedData(resource);
+
+            Assert.AreEqual((int)HttpStatusCode.OK, result.StatusCode);
         }
 
         [Test]
-        public void ShouldUpdate_WhenETagMatch_ReturnsTrue()
+        public void RetrievedData_WithValidData_AddsETagAndMaps()
         {
+            var resource = new FakeResource(12);
+
             var mockETagService = new Mock<IETagService>();
             mockETagService
-                .Setup(m =>
-                    m.CheckIfMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(true);
+                .Setup(e =>
+                    e.AddETagToResponse(It.IsAny<IResourceDataModel>()));
 
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
+            var requestService = CreateFake(mockETagService);
 
-            Assert.IsTrue(requestService.ShouldUpdate(new FakeResource("a")));
-        }
+            var result = requestService.RetrievedData(resource);
 
-        [Test]
-        public void ShouldUpdate_WhenNotETagMatch_ReturnsTrue()
-        {
-            var mockETagService = new Mock<IETagService>();
+            var resultContent = (FakeDto)result.Value;
+
             mockETagService
-                .Setup(m =>
-                    m.CheckIfMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(false);
+                .Verify(e =>
+                    e.AddETagToResponse(It.IsAny<IResourceDataModel>()), Times.Once);
 
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
-
-            Assert.IsFalse(requestService.ShouldUpdate(new FakeResource("a")));
-        }
-
-        [Test]
-        public void ShouldDelete_WhenETagMatch_ReturnsTrue()
-        {
-            var mockETagService = new Mock<IETagService>();
-            mockETagService
-                .Setup(m =>
-                    m.CheckIfMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(true);
-
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
-
-            Assert.IsTrue(requestService.ShouldDelete(new FakeResource("a")));
-        }
-
-        [Test]
-        public void ShouldDelete_WhenNotETagMatch_ReturnsTrue()
-        {
-            var mockETagService = new Mock<IETagService>();
-            mockETagService
-                .Setup(m =>
-                    m.CheckIfMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(false);
-
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
-
-            Assert.IsFalse(requestService.ShouldDelete(new FakeResource("a")));
+            Assert.AreEqual(resource.Id, resultContent.Id);
         }
     }
 }
