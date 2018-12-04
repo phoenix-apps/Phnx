@@ -1,5 +1,4 @@
-﻿using Phnx.AspNetCore.ETags.Models;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Phnx.AspNetCore.ETags.Services

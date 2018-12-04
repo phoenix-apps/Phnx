@@ -1,4 +1,4 @@
-﻿namespace Phnx.AspNetCore.ETags.Models
+﻿namespace Phnx.AspNetCore.ETags
 {
     /// <summary>
     /// The result of an ETag's check for match

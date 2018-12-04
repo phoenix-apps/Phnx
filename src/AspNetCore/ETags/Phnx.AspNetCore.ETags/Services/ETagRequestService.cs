@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Phnx.AspNetCore.ETags.Models;
 using System;
 
 namespace Phnx.AspNetCore.ETags.Services

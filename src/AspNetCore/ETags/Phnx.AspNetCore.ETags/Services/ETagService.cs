@@ -1,5 +1,4 @@
-﻿using Phnx.AspNetCore.ETags.Models;
-using Phnx.Reflection;
+﻿using Phnx.Reflection;
 using Phnx.Serialization;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -51,7 +50,7 @@ namespace Phnx.AspNetCore.ETags.Services
             if (!TryGetStrongETagForModel(dataModel, out dataETag))
             {
                 // Strong ETags are not supported
-                return ETagMatchResult.ETagNotInRequest;
+                return ETagMatchResult.StrongDoNotMatch;
             }
 
             if (dataETag == requestETag)
@@ -113,9 +112,13 @@ namespace Phnx.AspNetCore.ETags.Services
         /// </summary>
         /// <param name="model">The object to generate a weak ETag for</param>
         /// <returns>A weak ETag for <paramref name="model"/></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="model"/> is <see langword="null"/></exception>
         public string GetWeakETagForModel(object model)
         {
-            if (model is null) return string.Empty;
+            if (model is null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
 
             var json = JsonSerializer.Serialize(model);
             var jsonBytes = Encoding.UTF8.GetBytes(json);
