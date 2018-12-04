@@ -1,0 +1,27 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using Phnx.AspNetCore.ETags.Services;
+using Phnx.AspNetCore.ETags.Setup;
+
+namespace Phnx.AspNetCore.ETags
+{
+    /// <summary>
+    /// Extentions for <see cref="IServiceCollection"/> related to <see cref="ETags"/>
+    /// </summary>
+    public static class RestServiceBuilderExtensions
+    {
+        /// <summary>
+        /// Setup all necessary components for <see cref="ETags"/>. To use <see cref="RestControllerHelperService{TDataModel, TDtoModel, TPatchDtoModel}"/>, you'll need to inject your own implementation of <see cref="IResourceMap{TDataModel, TDtoModel, TPatchDtoModel}"/> for the same types
+        /// </summary>
+        /// <param name="services">The service injector</param>
+        public static IServiceCollection AddRest(this IServiceCollection services)
+        {
+            var builder = new RestServiceBuilder(services);
+
+            builder.RegisterETags();
+            builder.RegisterContextHelpers();
+            builder.RegisterRestHelpers();
+
+            return services;
+        }
+    }
+}
