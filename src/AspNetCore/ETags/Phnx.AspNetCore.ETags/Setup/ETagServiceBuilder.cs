@@ -7,14 +7,14 @@ namespace Phnx.AspNetCore.ETags.Setup
     /// <summary>
     /// A service builder specifically for setting up <see cref="ETags"/> for injection
     /// </summary>
-    internal class RestServiceBuilder
+    internal class ETagServiceBuilder
     {
         /// <summary>
         /// The service collection for dependancy injection
         /// </summary>
         private readonly IServiceCollection services;
 
-        internal RestServiceBuilder(IServiceCollection services)
+        internal ETagServiceBuilder(IServiceCollection services)
         {
             this.services = services;
         }
@@ -29,13 +29,11 @@ namespace Phnx.AspNetCore.ETags.Setup
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         }
 
-        public void RegisterRestHelpers()
+        public void RegisterETagHelpers()
         {
-            services.AddScoped(typeof(IRestRequestService<>), typeof(RestRequestService<>));
+            services.AddScoped<IETagRequestService, ETagRequestService>();
 
-            services.AddScoped(typeof(IRestResponseService<,>), typeof(RestResponseFactory<,>));
-
-            services.AddScoped(typeof(IRestControllerHelperService<,,>), typeof(RestControllerHelperService<,,>));
+            services.AddScoped<IETagResponseService, ETagResponseService>();
         }
     }
 }

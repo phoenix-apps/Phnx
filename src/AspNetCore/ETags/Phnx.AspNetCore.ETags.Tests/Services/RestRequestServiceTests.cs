@@ -12,7 +12,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         [Test]
         public void New_WithNullETagService_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new RestRequestService<FakeResource>(null));
+            Assert.Throws<ArgumentNullException>(() => new ETagRequestService<FakeResource>(null));
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         {
             var mockETagService = new Mock<IETagService>();
 
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
+            var requestService = new ETagRequestService<FakeResource>(mockETagService.Object);
 
             Assert.AreEqual(mockETagService.Object, requestService.ETagService);
         }
@@ -34,7 +34,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
                     m.CheckIfNoneMatch(It.IsAny<object>()))
                 .Returns(ETagMatchResult.DoNotMatch);
 
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
+            var requestService = new ETagRequestService<FakeResource>(mockETagService.Object);
 
             Assert.IsTrue(requestService.ShouldGetSingle(new FakeResource("a")));
         }
@@ -48,7 +48,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
                     m.CheckIfNoneMatch(It.IsAny<object>()))
                 .Returns(ETagMatchResult.Match);
 
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
+            var requestService = new ETagRequestService<FakeResource>(mockETagService.Object);
 
             Assert.IsFalse(requestService.ShouldGetSingle(new FakeResource("a")));
         }
@@ -62,7 +62,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
                     m.CheckIfMatch(It.IsAny<object>()))
                 .Returns(ETagMatchResult.Match);
 
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
+            var requestService = new ETagRequestService<FakeResource>(mockETagService.Object);
 
             Assert.IsTrue(requestService.ShouldUpdate(new FakeResource("a")));
         }
@@ -76,7 +76,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
                     m.CheckIfMatch(It.IsAny<object>()))
                 .Returns(ETagMatchResult.DoNotMatch);
 
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
+            var requestService = new ETagRequestService<FakeResource>(mockETagService.Object);
 
             Assert.IsFalse(requestService.ShouldUpdate(new FakeResource("a")));
         }
@@ -90,7 +90,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
                     m.CheckIfMatch(It.IsAny<object>()))
                 .Returns(ETagMatchResult.Match);
 
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
+            var requestService = new ETagRequestService<FakeResource>(mockETagService.Object);
 
             Assert.IsTrue(requestService.ShouldDelete(new FakeResource("a")));
         }
@@ -104,7 +104,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
                     m.CheckIfMatch(It.IsAny<object>()))
                 .Returns(ETagMatchResult.DoNotMatch);
 
-            var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
+            var requestService = new ETagRequestService<FakeResource>(mockETagService.Object);
 
             Assert.IsFalse(requestService.ShouldDelete(new FakeResource("a")));
         }

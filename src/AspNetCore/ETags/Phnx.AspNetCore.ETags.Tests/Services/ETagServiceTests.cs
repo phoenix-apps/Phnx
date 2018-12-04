@@ -152,7 +152,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             var contextAccessor = new FakeActionContextAccessor();
             var eTagService = new ETagService(contextAccessor);
 
-            Assert.Throws<ArgumentNullException>(() => eTagService.AddETagToResponse(null));
+            Assert.Throws<ArgumentNullException>(() => eTagService.AddETagForModelToResponse(null));
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             var eTagService = new ETagService(contextAccessor);
             var resource = new FakeResource(eTag);
 
-            eTagService.AddETagToResponse(resource);
+            eTagService.AddETagForModelToResponse(resource);
 
             Assert.IsTrue(eTagService.ResponseHeaders.ContainsKey("ETag"));
             Assert.AreEqual("\"" + eTag + "\"", eTagService.ResponseHeaders["ETag"]);

@@ -125,7 +125,7 @@ namespace Phnx.AspNetCore.ETags.Services
         /// </summary>
         /// <param name="data">The data model for which to generate the E-Tag</param>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
-        public void AddETagToResponse(object data)
+        public void AddETagForModelToResponse(object data)
         {
             if (data is null)
             {
@@ -135,6 +135,21 @@ namespace Phnx.AspNetCore.ETags.Services
             if (!TryGetStrongETag(data, out string etag))
             {
                 etag = GetWeakETag(data);
+            }
+
+            ResponseHeaders.Add(ETagHeaderKey, etag);
+        }
+
+        /// <summary>
+        /// Append the e-tag to the response
+        /// </summary>
+        /// <param name="etag">The e-tag to add</param>
+        /// <exception cref="ArgumentNullException"><paramref name="etag"/> is <see langword="null"/></exception>
+        public void AddETagToResponse(string etag)
+        {
+            if (etag is null)
+            {
+                throw new ArgumentNullException(nameof(etag));
             }
 
             ResponseHeaders.Add(ETagHeaderKey, etag);
@@ -176,9 +191,11 @@ namespace Phnx.AspNetCore.ETags.Services
         }
 
         /// <summary>
-        /// Get whether a model supports strong ETags by checking if any members have a <see cref="ConcurrencyCheckAttribute"/>
+        /// Get the strong e-tag for <paramref name="data"/> by loading the value of the first member which has a <see cref="ConcurrencyCheckAttribute"/>
         /// </summary>
-        /// <returns><see langword="null"/> if no member is found, or the first <see cref="PropertyFieldInfo"/> which has a <see cref="ConcurrencyCheckAttribute"/></returns>
+        /// <param name="data">The data to load the strong e-tag for</param>
+        /// <param name="etag"><see langword="null"/> if a strong e-tag could not be loaded, otherwise, the strong e-tag that represents <paramref name="data"/></param>
+        /// <returns><see langword="true"/> if a concurrency check property or field is found, or <see langword="false"/> if one is not found</returns>
         public bool TryGetStrongETag(object data, out string etag)
         {
             var propertyFields = data.GetType().GetPropertyFieldInfos();
@@ -212,7 +229,7 @@ namespace Phnx.AspNetCore.ETags.Services
         }
 
         /// <summary>
-        /// Generates a weak ETag for <paramref name="o"/> by reflecting on its members and hashing its value
+        /// Generates a weak ETag for <paramref name="o"/> by reflecting on its members and hashing them
         /// </summary>
         /// <param name="o">The object to generate a weak ETag for</param>
         /// <returns>A weak ETag for <paramref name="o"/></returns>

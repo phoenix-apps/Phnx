@@ -11,7 +11,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
 {
     public class RestResponseServiceTests
     {
-        private RestResponseFactory<FakeResource, FakeDto> CreateFake(Mock<IETagService> eTagService = null)
+        private ETagResponseService<FakeResource, FakeDto> CreateFake(Mock<IETagService> eTagService = null)
         {
             var mapper = new FakeResourceMap();
             if (eTagService is null)
@@ -19,7 +19,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
                 eTagService = new Mock<IETagService>();
             }
 
-            return new RestResponseFactory<FakeResource, FakeDto>(mapper, eTagService.Object);
+            return new ETagResponseService<FakeResource, FakeDto>(mapper, eTagService.Object);
         }
 
         [Test]
@@ -27,7 +27,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         {
             var eTagService = new Mock<IETagService>();
 
-            Assert.Throws<ArgumentNullException>(() => new RestResponseFactory<FakeResource, object>(null, eTagService.Object));
+            Assert.Throws<ArgumentNullException>(() => new ETagResponseService<FakeResource, object>(null, eTagService.Object));
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         {
             var mapper = new FakeResourceMap();
 
-            Assert.Throws<ArgumentNullException>(() => new RestResponseFactory<FakeResource, object>(mapper, null));
+            Assert.Throws<ArgumentNullException>(() => new ETagResponseService<FakeResource, object>(mapper, null));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             var mapper = new FakeResourceMap();
             var eTagService = new Mock<IETagService>();
 
-            var responseService = new RestResponseFactory<FakeResource, object>(mapper, eTagService.Object);
+            var responseService = new ETagResponseService<FakeResource, object>(mapper, eTagService.Object);
 
             Assert.AreEqual(eTagService.Object, responseService.ETagService);
             Assert.AreEqual(mapper, responseService.Mapper);
@@ -75,7 +75,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
 
             var service = CreateFake(eTagService);
 
-            var result = service.DataHasNotChanged();
+            var result = service.CreateDataHasNotChangedResponse();
 
             Assert.AreEqual((int)HttpStatusCode.NotModified, result.StatusCode);
         }
@@ -99,7 +99,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             var mockETagService = new Mock<IETagService>();
             mockETagService
                 .Setup(e =>
-                    e.AddETagToResponse(It.IsAny<object>()));
+                    e.AddETagForModelToResponse(It.IsAny<object>()));
 
             var requestService = CreateFake(mockETagService);
 
@@ -116,7 +116,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             var mockETagService = new Mock<IETagService>();
             mockETagService
                 .Setup(e =>
-                    e.AddETagToResponse(It.IsAny<object>()));
+                    e.AddETagForModelToResponse(It.IsAny<object>()));
 
             var requestService = CreateFake(mockETagService);
 
@@ -126,7 +126,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
 
             mockETagService
                 .Verify(e =>
-                    e.AddETagToResponse(It.IsAny<object>()), Times.Once);
+                    e.AddETagForModelToResponse(It.IsAny<object>()), Times.Once);
 
             Assert.AreEqual(resource.Id, resultContent.Id);
         }
