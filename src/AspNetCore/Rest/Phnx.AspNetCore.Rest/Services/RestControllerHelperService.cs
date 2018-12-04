@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Phnx.AspNet.Core.Rest.Models;
-using Phnx.AspNetCore.Rest.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,7 +13,6 @@ namespace Phnx.AspNetCore.Rest.Services
     /// <typeparam name="TDtoModel">The type of data transfer object</typeparam>
     /// <typeparam name="TPatchDtoModel">The type of data transfer object used when patching</typeparam>
     public class RestControllerHelperService<TDataModel, TDtoModel, TPatchDtoModel> : IRestControllerHelperService<TDataModel, TDtoModel, TPatchDtoModel>
-           where TDataModel : IResourceDataModel
     {
         /// <summary>
         /// The helper for REST Requests

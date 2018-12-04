@@ -1,12 +1,10 @@
-﻿using Phnx.AspNetCore.Rest.Models;
-
-namespace Phnx.AspNetCore.Rest.Services
+﻿namespace Phnx.AspNetCore.Rest.Services
 {
     /// <summary>
     /// Provides an interface for interpreting a REST request and taking according action
     /// </summary>
     /// <typeparam name="TDataModel">The type of data subject to change</typeparam>
-    public interface IRestRequestService<in TDataModel> where TDataModel : IResourceDataModel
+    public interface IRestRequestService<in TDataModel>
     {
         /// <summary>
         /// Get whether a data model should be deleted

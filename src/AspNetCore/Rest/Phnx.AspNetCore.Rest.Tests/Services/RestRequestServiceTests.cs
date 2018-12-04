@@ -31,8 +31,8 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var mockETagService = new Mock<IETagService>();
             mockETagService
                 .Setup(m =>
-                    m.CheckIfNoneMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(true);
+                    m.CheckIfNoneMatch(It.IsAny<object>()))
+                .Returns(ETagMatchResult.DoNotMatch);
 
             var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
 
@@ -45,8 +45,8 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var mockETagService = new Mock<IETagService>();
             mockETagService
                 .Setup(m =>
-                    m.CheckIfNoneMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(false);
+                    m.CheckIfNoneMatch(It.IsAny<object>()))
+                .Returns(ETagMatchResult.Match);
 
             var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
 
@@ -59,8 +59,8 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var mockETagService = new Mock<IETagService>();
             mockETagService
                 .Setup(m =>
-                    m.CheckIfMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(true);
+                    m.CheckIfMatch(It.IsAny<object>()))
+                .Returns(ETagMatchResult.Match);
 
             var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
 
@@ -73,8 +73,8 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var mockETagService = new Mock<IETagService>();
             mockETagService
                 .Setup(m =>
-                    m.CheckIfMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(false);
+                    m.CheckIfMatch(It.IsAny<object>()))
+                .Returns(ETagMatchResult.DoNotMatch);
 
             var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
 
@@ -87,8 +87,8 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var mockETagService = new Mock<IETagService>();
             mockETagService
                 .Setup(m =>
-                    m.CheckIfMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(true);
+                    m.CheckIfMatch(It.IsAny<object>()))
+                .Returns(ETagMatchResult.Match);
 
             var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
 
@@ -101,8 +101,8 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var mockETagService = new Mock<IETagService>();
             mockETagService
                 .Setup(m =>
-                    m.CheckIfMatch(It.IsAny<IResourceDataModel>()))
-                .Returns(false);
+                    m.CheckIfMatch(It.IsAny<object>()))
+                .Returns(ETagMatchResult.DoNotMatch);
 
             var requestService = new RestRequestService<FakeResource>(mockETagService.Object);
 

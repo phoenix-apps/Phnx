@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Primitives;
 using NUnit.Framework;
+using Phnx.AspNetCore.Rest.Models;
 using Phnx.AspNetCore.Rest.Services;
 using Phnx.AspNetCore.Rest.Tests.Fakes;
 using Phnx.Serialization;
@@ -46,20 +47,20 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
 
             var eTagService = new ETagService(contextAccessor);
 
-            eTagService.RequestHeaders.Add("If-None-Match", new StringValues("b"));
+            eTagService.RequestHeaders.Add("If-None-Match", new StringValues("\"b\""));
 
-            Assert.IsTrue(eTagService.CheckIfNoneMatch(resource));
+            Assert.AreEqual(ETagMatchResult.StrongDoNotMatch, eTagService.CheckIfNoneMatch(resource));
         }
 
         [Test]
-        public void CheckIfNoneMatch_WithMissingETag_ReturnsTrue()
+        public void CheckIfNoneMatch_WithMissingETag_ReturnsETagNotInRequest()
         {
             var contextAccessor = new FakeActionContextAccessor();
             var resource = new FakeResource("a");
 
             var eTagService = new ETagService(contextAccessor);
 
-            Assert.IsTrue(eTagService.CheckIfNoneMatch(resource));
+            Assert.AreEqual(ETagMatchResult.ETagNotInRequest, eTagService.CheckIfNoneMatch(resource));
         }
 
         [Test]
@@ -70,9 +71,9 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var resource = new FakeResource(eTag);
 
             var eTagService = new ETagService(contextAccessor);
-            eTagService.RequestHeaders.Add("If-None-Match", new StringValues(eTag));
+            eTagService.RequestHeaders.Add("If-None-Match", new StringValues("\"" + eTag + "\""));
 
-            Assert.IsFalse(eTagService.CheckIfNoneMatch(resource));
+            Assert.AreEqual(ETagMatchResult.StrongMatch, eTagService.CheckIfNoneMatch(resource));
         }
 
         [Test]
@@ -93,13 +94,13 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
 
             var eTagService = new ETagService(contextAccessor);
 
-            eTagService.RequestHeaders.Add("If-Match", new StringValues("b"));
+            eTagService.RequestHeaders.Add("If-Match", new StringValues("\"b\""));
 
-            Assert.IsFalse(eTagService.CheckIfMatch(resource));
+            Assert.AreEqual(ETagMatchResult.StrongDoNotMatch, eTagService.CheckIfMatch(resource));
         }
 
         [Test]
-        public void CheckIfMatch_WithMissingETag_ReturnsTrue()
+        public void CheckIfMatch_WithMissingETag_ReturnsETagNotInRequest()
         {
             string eTag = Guid.NewGuid().ToString();
             var contextAccessor = new FakeActionContextAccessor();
@@ -107,7 +108,7 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
 
             var eTagService = new ETagService(contextAccessor);
 
-            Assert.IsTrue(eTagService.CheckIfMatch(resource));
+            Assert.AreEqual(ETagMatchResult.ETagNotInRequest, eTagService.CheckIfMatch(resource));
         }
 
         [Test]
@@ -118,9 +119,9 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var resource = new FakeResource(eTag);
 
             var eTagService = new ETagService(contextAccessor);
-            eTagService.RequestHeaders.Add("If-Match", new StringValues(eTag));
+            eTagService.RequestHeaders.Add("If-Match", new StringValues("\"" + eTag + "\""));
 
-            Assert.IsTrue(eTagService.CheckIfMatch(resource));
+            Assert.AreEqual(ETagMatchResult.StrongMatch, eTagService.CheckIfMatch(resource));
         }
 
         [Test]
@@ -166,7 +167,7 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             eTagService.AddETagToResponse(resource);
 
             Assert.IsTrue(eTagService.ResponseHeaders.ContainsKey("ETag"));
-            Assert.AreEqual(eTag, eTagService.ResponseHeaders["ETag"]);
+            Assert.AreEqual("\"" + eTag + "\"", eTagService.ResponseHeaders["ETag"]);
         }
 
         [Test]
@@ -183,7 +184,7 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
         }
 
         [Test]
-        public void TryGetStrongETagMember_WithGetterThatThrows_ReturnsFalse()
+        public void TryGetStrongETag_WithGetterThatThrows_ReturnsFalse()
         {
             var sampleModel = new BrokenFakeResource();
 
@@ -197,7 +198,7 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
         }
 
         [Test]
-        public void TryGetStrongETagMember_WithModelThatDoesSupportETags_ReturnsTrueAndMember()
+        public void TryGetStrongETag_WithModelThatDoesSupportETags_ReturnsTrueAndMember()
         {
             var eTag = Guid.NewGuid().ToString();
             var sampleModel = new FakeResource(eTag);
@@ -208,7 +209,7 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var result = eTagService.TryGetStrongETag(sampleModel, out var etagLoaded);
 
             Assert.IsTrue(result);
-            Assert.AreEqual(eTag, etagLoaded);
+            Assert.AreEqual("\"" + eTag + "\"", etagLoaded);
         }
 
         [Test]
@@ -217,9 +218,20 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var contextAccessor = new FakeActionContextAccessor();
             var eTagService = new ETagService(contextAccessor);
 
-            var result = eTagService.GenerateWeakETag(null);
+            var result = eTagService.GetWeakETag(null);
 
             Assert.AreEqual(string.Empty, result);
+        }
+
+        [Test]
+        public void GenerateWeakETag_ForObject_ReturnsWPrefixedETag()
+        {
+            var contextAccessor = new FakeActionContextAccessor();
+            var eTagService = new ETagService(contextAccessor);
+
+            var result = eTagService.GetWeakETag(new object());
+
+            Assert.IsTrue(result.StartsWith("W/"));
         }
 
         [Test]
@@ -235,8 +247,8 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var contextAccessor = new FakeActionContextAccessor();
             var eTagService = new ETagService(contextAccessor);
 
-            var tag = eTagService.GenerateWeakETag(testData);
-            var tagForCopy = eTagService.GenerateWeakETag(testDataCopy);
+            var tag = eTagService.GetWeakETag(testData);
+            var tagForCopy = eTagService.GetWeakETag(testDataCopy);
 
             Assert.AreEqual(tag, tagForCopy);
         }
@@ -256,8 +268,8 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var contextAccessor = new FakeActionContextAccessor();
             var eTagService = new ETagService(contextAccessor);
 
-            var tag = eTagService.GenerateWeakETag(testData);
-            var tagForCopy = eTagService.GenerateWeakETag(nonCopy);
+            var tag = eTagService.GetWeakETag(testData);
+            var tagForCopy = eTagService.GetWeakETag(nonCopy);
 
             Assert.AreNotEqual(tag, tagForCopy);
         }

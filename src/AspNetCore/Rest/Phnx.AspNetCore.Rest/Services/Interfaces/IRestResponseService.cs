@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Phnx.AspNetCore.Rest.Models;
 using System.Collections.Generic;
 
 namespace Phnx.AspNetCore.Rest.Services
@@ -10,7 +9,6 @@ namespace Phnx.AspNetCore.Rest.Services
     /// <typeparam name="TDataModel">The data model type</typeparam>
     /// <typeparam name="TDtoModel">The data transfer object type</typeparam>
     public interface IRestResponseService<in TDataModel, out TDtoModel>
-        where TDataModel : IResourceDataModel
     {
         /// <summary>
         /// Create a response describing that the data was successfully created

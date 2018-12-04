@@ -8,7 +8,6 @@ namespace Phnx.AspNetCore.Rest.Services
     /// </summary>
     /// <typeparam name="TDataModel">The type of data subject to change</typeparam>
     public class RestRequestService<TDataModel> : IRestRequestService<TDataModel>
-        where TDataModel : IResourceDataModel
     {
         /// <summary>
         /// The service for reading the E-Tags in the headers of the request
@@ -22,7 +21,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <exception cref="ArgumentNullException"><paramref name="eTagService"/> is <see langword="null"/></exception>
         public RestRequestService(IETagService eTagService)
         {
-            this.ETagService = eTagService ?? throw new ArgumentNullException(nameof(eTagService));
+            ETagService = eTagService ?? throw new ArgumentNullException(nameof(eTagService));
         }
 
         /// <summary>
@@ -33,7 +32,11 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
         public bool ShouldGetSingle(TDataModel data)
         {
-            return ETagService.CheckIfNoneMatch(data);
+            var result = ETagService.CheckIfNoneMatch(data);
+
+            return
+                result == ETagMatchResult.ETagNotInRequest ||
+                (result & ETagMatchResult.DoNotMatch) != 0;
         }
 
         /// <summary>
@@ -44,7 +47,11 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
         public bool ShouldUpdate(TDataModel data)
         {
-            return ETagService.CheckIfMatch(data);
+            var result = ETagService.CheckIfMatch(data);
+
+            return
+                result == ETagMatchResult.ETagNotInRequest ||
+                (result & ETagMatchResult.Match) != 0;
         }
 
         /// <summary>
@@ -55,7 +62,11 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
         public bool ShouldDelete(TDataModel data)
         {
-            return ETagService.CheckIfMatch(data);
+            var result = ETagService.CheckIfMatch(data);
+
+            return
+                result == ETagMatchResult.ETagNotInRequest ||
+                (result & ETagMatchResult.Match) != 0;
         }
     }
 }

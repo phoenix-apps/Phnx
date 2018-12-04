@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Phnx.AspNetCore.Rest.Models;
 using System;
 using System.Collections.Generic;
 
@@ -11,7 +10,6 @@ namespace Phnx.AspNetCore.Rest.Services
     /// <typeparam name="TDataModel">The data model type</typeparam>
     /// <typeparam name="TDtoModel">The data transfer object type</typeparam>
     public class RestResponseFactory<TDataModel, TDtoModel> : IRestResponseService<TDataModel, TDtoModel>
-        where TDataModel : IResourceDataModel
     {
         /// <summary>
         /// The configured response mapper

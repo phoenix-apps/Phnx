@@ -99,7 +99,7 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var mockETagService = new Mock<IETagService>();
             mockETagService
                 .Setup(e =>
-                    e.AddETagToResponse(It.IsAny<IResourceDataModel>()));
+                    e.AddETagToResponse(It.IsAny<object>()));
 
             var requestService = CreateFake(mockETagService);
 
@@ -116,7 +116,7 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
             var mockETagService = new Mock<IETagService>();
             mockETagService
                 .Setup(e =>
-                    e.AddETagToResponse(It.IsAny<IResourceDataModel>()));
+                    e.AddETagToResponse(It.IsAny<object>()));
 
             var requestService = CreateFake(mockETagService);
 
@@ -126,7 +126,7 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
 
             mockETagService
                 .Verify(e =>
-                    e.AddETagToResponse(It.IsAny<IResourceDataModel>()), Times.Once);
+                    e.AddETagToResponse(It.IsAny<object>()), Times.Once);
 
             Assert.AreEqual(resource.Id, resultContent.Id);
         }

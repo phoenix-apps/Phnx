@@ -14,7 +14,6 @@ namespace Phnx.AspNetCore.Rest.Services
     /// <typeparam name="TDtoModel">The type of data transfer object</typeparam>
     /// <typeparam name="TPatchDtoModel">The type of data transfer object used when patching</typeparam>
     public interface IRestControllerHelperService<TDataModel, TDtoModel, in TPatchDtoModel>
-        where TDataModel : IResourceDataModel
     {
         /// <summary>
         /// The mapper used to map between data models and data transfer objects

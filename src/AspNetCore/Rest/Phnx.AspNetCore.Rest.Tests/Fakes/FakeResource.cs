@@ -1,10 +1,9 @@
-﻿using Phnx.AspNetCore.Rest.Models;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Phnx.AspNetCore.Rest.Tests.Fakes
 {
-    public class FakeResource : IResourceDataModel
+    public class FakeResource
     {
         private static Random rnd = new Random();
 

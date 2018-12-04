@@ -65,7 +65,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <param name="data">The data model to compare the E-Tag against</param>
         /// <returns><see langword="true"/> if the resource is not a match</returns>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
-        public bool CheckIfNoneMatch(IResourceDataModel data)
+        public ETagMatchResult CheckIfNoneMatch(object data)
         {
             if (data is null)
             {
@@ -74,10 +74,10 @@ namespace Phnx.AspNetCore.Rest.Services
 
             if (!RequestHeaders.TryGetValue(IfNoneMatchKey, out StringValues eTag) || eTag.Count == 0)
             {
-                return true;
+                return ETagMatchResult.ETagNotInRequest;
             }
 
-            return eTag[0] != data.ConcurrencyStamp;
+            return GetETagMatchResult(eTag[0], data);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <param name="data">The data model to compare the E-Tag against</param>
         /// <returns><see langword="true"/> if the resource is a match</returns>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
-        public bool CheckIfMatch(IResourceDataModel data)
+        public ETagMatchResult CheckIfMatch(object data)
         {
             if (data is null)
             {
@@ -96,10 +96,10 @@ namespace Phnx.AspNetCore.Rest.Services
 
             if (!RequestHeaders.TryGetValue(IfMatchKey, out StringValues eTag) || eTag.Count == 0)
             {
-                return true;
+                return ETagMatchResult.ETagNotInRequest;
             }
 
-            return eTag[0] == data.ConcurrencyStamp;
+            return GetETagMatchResult(eTag[0], data);
         }
 
         /// <summary>
@@ -125,26 +125,63 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </summary>
         /// <param name="data">The data model for which to generate the E-Tag</param>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
-        public void AddETagToResponse(IResourceDataModel data)
+        public void AddETagToResponse(object data)
         {
             if (data is null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
 
-            var dataETag = data.ConcurrencyStamp;
+            if (!TryGetStrongETag(data, out string etag))
+            {
+                etag = GetWeakETag(data);
+            }
 
-            ResponseHeaders.Add(ETagHeaderKey, dataETag);
+            ResponseHeaders.Add(ETagHeaderKey, etag);
+        }
+
+        private ETagMatchResult GetETagMatchResult(string headerETag, object data)
+        {
+            string dataETag;
+
+            // Weak ETags
+            if (headerETag.ToUpperInvariant().StartsWith("W/"))
+            {
+                dataETag = GetWeakETag(data);
+                if (dataETag == headerETag)
+                {
+                    return ETagMatchResult.WeakMatch;
+                }
+                else
+                {
+                    return ETagMatchResult.WeakDoNotMatch;
+                }
+            }
+
+            // Strong ETags
+            if (!TryGetStrongETag(data, out dataETag))
+            {
+                // Strong ETags are not supported
+                return ETagMatchResult.ETagNotInRequest;
+            }
+
+            if (dataETag == headerETag)
+            {
+                return ETagMatchResult.StrongMatch;
+            }
+            else
+            {
+                return ETagMatchResult.StrongDoNotMatch;
+            }
         }
 
         /// <summary>
         /// Get whether a model supports strong ETags by checking if any members have a <see cref="ConcurrencyCheckAttribute"/>
         /// </summary>
-        /// <typeparam name="T">The type of the member to use</typeparam>
         /// <returns><see langword="null"/> if no member is found, or the first <see cref="PropertyFieldInfo"/> which has a <see cref="ConcurrencyCheckAttribute"/></returns>
-        public bool TryGetStrongETag<T>(T data, out string etag)
+        public bool TryGetStrongETag(object data, out string etag)
         {
-            var propertyFields = typeof(T).GetPropertyFieldInfos<T>();
+            var propertyFields = data.GetType().GetPropertyFieldInfos();
 
             foreach (var propertyField in propertyFields)
             {
@@ -166,7 +203,7 @@ namespace Phnx.AspNetCore.Rest.Services
                     return false;
                 }
 
-                etag = value.ToString();
+                etag = "\"" + value.ToString() + "\"";
                 return true;
             }
 
@@ -179,7 +216,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </summary>
         /// <param name="o">The object to generate a weak ETag for</param>
         /// <returns>A weak ETag for <paramref name="o"/></returns>
-        public string GenerateWeakETag(object o)
+        public string GetWeakETag(object o)
         {
             if (o is null) return string.Empty;
 
@@ -189,7 +226,7 @@ namespace Phnx.AspNetCore.Rest.Services
             var shaFactory = new SHA256Managed();
             var hashed = shaFactory.ComputeHash(jsonBytes);
 
-            return Encoding.UTF8.GetString(hashed);
+            return "W/\"" + Encoding.UTF8.GetString(hashed) + "\"";
         }
     }
 }

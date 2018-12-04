@@ -14,7 +14,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// </summary>
         /// <param name="resource">The data model for which to generate the E-Tag</param>
         /// <exception cref="ArgumentNullException"><paramref name="resource"/> is <see langword="null"/></exception>
-        void AddETagToResponse(IResourceDataModel resource);
+        void AddETagToResponse(object resource);
 
         /// <summary>
         /// Check whether a sent E-Tag matches a given data model using the If-Match header
@@ -22,7 +22,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <param name="resource">The data model to compare the E-Tag against</param>
         /// <returns><see langword="true"/> if the resource is a match</returns>
         /// <exception cref="ArgumentNullException"><paramref name="resource"/> is <see langword="null"/></exception>
-        bool CheckIfMatch(IResourceDataModel resource);
+        ETagMatchResult CheckIfMatch(object resource);
 
         /// <summary>
         /// Check whether a sent E-Tag does not match a given data model using the If-None-Match header
@@ -30,7 +30,7 @@ namespace Phnx.AspNetCore.Rest.Services
         /// <param name="resource">The data model to compare the E-Tag against</param>
         /// <returns><see langword="true"/> if the resource is not a match</returns>
         /// <exception cref="ArgumentNullException"><paramref name="resource"/> is <see langword="null"/></exception>
-        bool CheckIfNoneMatch(IResourceDataModel resource);
+        ETagMatchResult CheckIfNoneMatch(object resource);
 
         /// <summary>
         /// Create the E-Tag response for a match
