@@ -1,4 +1,6 @@
-﻿using Phnx.AspNetCore.ETags.Models;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Phnx.AspNetCore.ETags.Models;
 using System;
 
 namespace Phnx.AspNetCore.ETags.Services
@@ -9,9 +11,29 @@ namespace Phnx.AspNetCore.ETags.Services
     public class ETagRequestService : IETagRequestService
     {
         /// <summary>
+        /// The IfNoneMatch header's key
+        /// </summary>
+        public const string IfNoneMatchKey = "If-None-Match";
+
+        /// <summary>
+        /// The IfMatch header's key
+        /// </summary>
+        public const string IfMatchKey = "If-Match";
+
+        /// <summary>
         /// The service for reading the E-Tags in the headers of the request
         /// </summary>
         public IETagService ETagService { get; }
+
+        /// <summary>
+        /// The action context accessor for accessing the current request and response headers
+        /// </summary>
+        public IActionContextAccessor ActionContext { get; }
+
+        /// <summary>
+        /// The headers in the request
+        /// </summary>
+        public IHeaderDictionary RequestHeaders => ActionContext.ActionContext.HttpContext.Request.Headers;
 
         /// <summary>
         /// Create a new <see cref="ETagRequestService"/>
@@ -24,14 +46,20 @@ namespace Phnx.AspNetCore.ETags.Services
         }
 
         /// <summary>
-        /// Get whether a data model should be loaded
+        /// Get whether a saved data model should be returned, or if it should simply give the user 
         /// </summary>
-        /// <param name="data">The data model to check</param>
+        /// <param name="savedData">The data model to check</param>
         /// <returns>Whether the data model should be loaded</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
-        public bool ShouldGetSingle(object data)
+        /// <exception cref="ArgumentNullException"><paramref name="savedData"/> is <see langword="null"/></exception>
+        public bool ShouldGetSingle(object savedData)
         {
-            var result = ETagService.CheckIfNoneMatch(data);
+            if (!RequestHeaders.TryGetValue(IfNoneMatchKey, out var etags) || etags.Count == 0)
+            {
+                // ETags not in use
+                return true;
+            }
+
+            var result = ETagService.CheckETagsForModel(etags[0], savedData);
 
             return
                 result == ETagMatchResult.ETagNotInRequest ||
@@ -41,12 +69,18 @@ namespace Phnx.AspNetCore.ETags.Services
         /// <summary>
         /// Get whether a data model should be updated
         /// </summary>
-        /// <param name="data">The data model to check</param>
+        /// <param name="savedData">The data model to check</param>
         /// <returns>Whether the data model should be updated</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
-        public bool ShouldUpdate(object data)
+        /// <exception cref="ArgumentNullException"><paramref name="savedData"/> is <see langword="null"/></exception>
+        public bool ShouldUpdate(object savedData)
         {
-            var result = ETagService.CheckIfMatch(data);
+            if (!RequestHeaders.TryGetValue(IfMatchKey, out var etags) || etags.Count == 0)
+            {
+                // ETags not in use
+                return true;
+            }
+
+            var result = ETagService.CheckETagsForModel(etags[0], savedData);
 
             return
                 result == ETagMatchResult.ETagNotInRequest ||

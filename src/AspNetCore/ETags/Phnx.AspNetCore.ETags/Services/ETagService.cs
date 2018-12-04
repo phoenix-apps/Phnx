@@ -1,13 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.Extensions.Primitives;
-using Phnx.AspNetCore.ETags.Models;
+﻿using Phnx.AspNetCore.ETags.Models;
 using Phnx.Reflection;
 using Phnx.Serialization;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -19,151 +14,30 @@ namespace Phnx.AspNetCore.ETags.Services
     public class ETagService : IETagService
     {
         /// <summary>
-        /// The ETag header's key
+        /// Check whether an e-tag matches a given data model
         /// </summary>
-        public const string ETagHeaderKey = "ETag";
-
-        /// <summary>
-        /// The IfNoneMatch header's key
-        /// </summary>
-        public const string IfNoneMatchKey = "If-None-Match";
-
-        /// <summary>
-        /// The IfMatch header's key
-        /// </summary>
-        public const string IfMatchKey = "If-Match";
-
-        /// <summary>
-        /// The action context accessor for accessing the current request and response headers
-        /// </summary>
-        public IActionContextAccessor ActionContext { get; }
-
-        /// <summary>
-        /// The headers in the request
-        /// </summary>
-        public IHeaderDictionary RequestHeaders => ActionContext.ActionContext.HttpContext.Request.Headers;
-
-        /// <summary>
-        /// The headers in the response
-        /// </summary>
-        public IHeaderDictionary ResponseHeaders => ActionContext.ActionContext.HttpContext.Response.Headers;
-
-        /// <summary>
-        /// Create a new <see cref="ETagService"/> using a given <see cref="IActionContextAccessor"/>
-        /// </summary>
-        /// <param name="actionContext">The action context accessor for reading and writing E-Tag headers</param>
-        /// <exception cref="ArgumentNullException"><paramref name="actionContext"/> is <see langword="null"/></exception>
-        public ETagService(IActionContextAccessor actionContext)
-        {
-            ActionContext = actionContext ?? throw new ArgumentNullException(nameof(actionContext));
-        }
-
-        /// <summary>
-        /// Check whether a sent E-Tag does not match a given data model using the If-None-Match header.
-        /// Defaults to <see langword="true"/> if the header is not present
-        /// </summary>
-        /// <param name="data">The data model to compare the E-Tag against</param>
+        /// <param name="requestETag">The e-tags from the request</param>
+        /// <param name="dataModel">The database model to compare the request's e-tag to</param>
         /// <returns><see langword="true"/> if the resource is not a match</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
-        public ETagMatchResult CheckIfNoneMatch(object data)
+        /// <exception cref="ArgumentNullException"><paramref name="dataModel"/> is <see langword="null"/></exception>
+        public ETagMatchResult CheckETagsForModel(string requestETag, object dataModel)
         {
-            if (data is null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
-
-            if (!RequestHeaders.TryGetValue(IfNoneMatchKey, out StringValues eTag) || eTag.Count == 0)
+            if (string.IsNullOrWhiteSpace(requestETag))
             {
                 return ETagMatchResult.ETagNotInRequest;
             }
-
-            return GetETagMatchResult(eTag[0], data);
-        }
-
-        /// <summary>
-        /// Check whether a sent E-Tag matches a given data model using the If-Match header.
-        /// Defaults to <see langword="true"/> if the header is not present
-        /// </summary>
-        /// <param name="data">The data model to compare the E-Tag against</param>
-        /// <returns><see langword="true"/> if the resource is a match</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
-        public ETagMatchResult CheckIfMatch(object data)
-        {
-            if (data is null)
+            if (dataModel is null)
             {
-                throw new ArgumentNullException(nameof(data));
+                throw new ArgumentNullException(nameof(dataModel));
             }
 
-            if (!RequestHeaders.TryGetValue(IfMatchKey, out StringValues eTag) || eTag.Count == 0)
-            {
-                return ETagMatchResult.ETagNotInRequest;
-            }
-
-            return GetETagMatchResult(eTag[0], data);
-        }
-
-        /// <summary>
-        /// Create the E-Tag response for a match
-        /// </summary>
-        /// <returns>The E-Tag response for a match</returns>
-        public StatusCodeResult CreateMatchResponse()
-        {
-            return new StatusCodeResult((int)HttpStatusCode.NotModified);
-        }
-
-        /// <summary>
-        /// Create the E-Tag response for a do not match
-        /// </summary>
-        /// <returns>The E-Tag response for a do not match</returns>
-        public StatusCodeResult CreateDoNotMatchResponse()
-        {
-            return new StatusCodeResult((int)HttpStatusCode.PreconditionFailed);
-        }
-
-        /// <summary>
-        /// Append the relevant E-Tag for the data model to the response
-        /// </summary>
-        /// <param name="data">The data model for which to generate the E-Tag</param>
-        /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
-        public void AddETagForModelToResponse(object data)
-        {
-            if (data is null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
-
-            if (!TryGetStrongETag(data, out string etag))
-            {
-                etag = GetWeakETag(data);
-            }
-
-            ResponseHeaders.Add(ETagHeaderKey, etag);
-        }
-
-        /// <summary>
-        /// Append the e-tag to the response
-        /// </summary>
-        /// <param name="etag">The e-tag to add</param>
-        /// <exception cref="ArgumentNullException"><paramref name="etag"/> is <see langword="null"/></exception>
-        public void AddETagToResponse(string etag)
-        {
-            if (etag is null)
-            {
-                throw new ArgumentNullException(nameof(etag));
-            }
-
-            ResponseHeaders.Add(ETagHeaderKey, etag);
-        }
-
-        private ETagMatchResult GetETagMatchResult(string headerETag, object data)
-        {
             string dataETag;
 
             // Weak ETags
-            if (headerETag.ToUpperInvariant().StartsWith("W/"))
+            if (requestETag.ToUpperInvariant().StartsWith("W/"))
             {
-                dataETag = GetWeakETag(data);
-                if (dataETag == headerETag)
+                dataETag = GetWeakETagForModel(dataModel);
+                if (dataETag == requestETag)
                 {
                     return ETagMatchResult.WeakMatch;
                 }
@@ -174,13 +48,13 @@ namespace Phnx.AspNetCore.ETags.Services
             }
 
             // Strong ETags
-            if (!TryGetStrongETag(data, out dataETag))
+            if (!TryGetStrongETagForModel(dataModel, out dataETag))
             {
                 // Strong ETags are not supported
                 return ETagMatchResult.ETagNotInRequest;
             }
 
-            if (dataETag == headerETag)
+            if (dataETag == requestETag)
             {
                 return ETagMatchResult.StrongMatch;
             }
@@ -191,14 +65,20 @@ namespace Phnx.AspNetCore.ETags.Services
         }
 
         /// <summary>
-        /// Get the strong e-tag for <paramref name="data"/> by loading the value of the first member which has a <see cref="ConcurrencyCheckAttribute"/>
+        /// Get the strong e-tag for <paramref name="model"/> by loading the value of the first member which has a <see cref="ConcurrencyCheckAttribute"/>
         /// </summary>
-        /// <param name="data">The data to load the strong e-tag for</param>
-        /// <param name="etag"><see langword="null"/> if a strong e-tag could not be loaded, otherwise, the strong e-tag that represents <paramref name="data"/></param>
+        /// <param name="model">The data to load the strong e-tag for</param>
+        /// <param name="etag"><see langword="null"/> if a strong e-tag could not be loaded, otherwise, the strong e-tag that represents <paramref name="model"/></param>
         /// <returns><see langword="true"/> if a concurrency check property or field is found, or <see langword="false"/> if one is not found</returns>
-        public bool TryGetStrongETag(object data, out string etag)
+        /// <exception cref="ArgumentNullException"><paramref name="model"/> is <see langword="null"/></exception>
+        public bool TryGetStrongETagForModel(object model, out string etag)
         {
-            var propertyFields = data.GetType().GetPropertyFieldInfos();
+            if (model is null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var propertyFields = model.GetType().GetPropertyFieldInfos();
 
             foreach (var propertyField in propertyFields)
             {
@@ -212,7 +92,7 @@ namespace Phnx.AspNetCore.ETags.Services
                 object value;
                 try
                 {
-                    value = member.GetValue(data);
+                    value = member.GetValue(model);
                 }
                 catch
                 {
@@ -220,7 +100,7 @@ namespace Phnx.AspNetCore.ETags.Services
                     return false;
                 }
 
-                etag = "\"" + value.ToString() + "\"";
+                etag = $"\"{value}\"";
                 return true;
             }
 
@@ -229,21 +109,21 @@ namespace Phnx.AspNetCore.ETags.Services
         }
 
         /// <summary>
-        /// Generates a weak ETag for <paramref name="o"/> by reflecting on its members and hashing them
+        /// Generates a weak ETag for <paramref name="model"/> by reflecting on its members and hashing them
         /// </summary>
-        /// <param name="o">The object to generate a weak ETag for</param>
-        /// <returns>A weak ETag for <paramref name="o"/></returns>
-        public string GetWeakETag(object o)
+        /// <param name="model">The object to generate a weak ETag for</param>
+        /// <returns>A weak ETag for <paramref name="model"/></returns>
+        public string GetWeakETagForModel(object model)
         {
-            if (o is null) return string.Empty;
+            if (model is null) return string.Empty;
 
-            var json = JsonSerializer.Serialize(o);
+            var json = JsonSerializer.Serialize(model);
             var jsonBytes = Encoding.UTF8.GetBytes(json);
 
             var shaFactory = new SHA256Managed();
             var hashed = shaFactory.ComputeHash(jsonBytes);
 
-            return "W/\"" + Encoding.UTF8.GetString(hashed) + "\"";
+            return $"W/\"{Encoding.UTF8.GetString(hashed)}\"";
         }
     }
 }

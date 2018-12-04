@@ -2,10 +2,8 @@
 {
     public interface IETagRequestService
     {
-        IETagService ETagService { get; }
-
         bool ShouldDelete(object data);
-        bool ShouldGetSingle(object data);
-        bool ShouldUpdate(object data);
+        bool ShouldGetSingle(object savedData);
+        bool ShouldUpdate(object savedData);
     }
 }
