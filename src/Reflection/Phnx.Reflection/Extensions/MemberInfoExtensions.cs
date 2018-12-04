@@ -36,6 +36,11 @@ namespace Phnx.Reflection
         /// <returns>The display name for this member</returns>
         public static string GetDisplayName(this MemberInfo member)
         {
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
             var displayName = member.GetAttribute<DisplayNameAttribute>();
 
             if (displayName != null)
