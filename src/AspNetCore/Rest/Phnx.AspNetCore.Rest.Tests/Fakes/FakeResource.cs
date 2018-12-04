@@ -1,5 +1,6 @@
 ﻿using Phnx.AspNetCore.Rest.Models;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Phnx.AspNetCore.Rest.Tests.Fakes
 {
@@ -19,6 +20,7 @@ namespace Phnx.AspNetCore.Rest.Tests.Fakes
             Id = rnd.Next();
         }
 
+        [ConcurrencyCheck]
         public string ConcurrencyStamp { get; }
 
         public int Id { get; set; }

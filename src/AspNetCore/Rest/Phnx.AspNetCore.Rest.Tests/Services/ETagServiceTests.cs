@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Phnx.AspNetCore.Rest.Services;
 using Phnx.AspNetCore.Rest.Tests.Fakes;
+using Phnx.Serialization;
 using System;
 using System.Net;
 
@@ -166,6 +167,99 @@ namespace Phnx.AspNetCore.Rest.Tests.Services
 
             Assert.IsTrue(eTagService.ResponseHeaders.ContainsKey("ETag"));
             Assert.AreEqual(eTag, eTagService.ResponseHeaders["ETag"]);
+        }
+
+        [Test]
+        public void TryGetStrongETagMember_WithModelThatDoesNotSupportETags_ReturnsFalse()
+        {
+            var data = new FakeDto();
+            var contextAccessor = new FakeActionContextAccessor();
+            var eTagService = new ETagService(contextAccessor);
+
+            var result = eTagService.TryGetStrongETag(data, out var etag);
+
+            Assert.IsFalse(result);
+            Assert.IsNull(etag);
+        }
+
+        [Test]
+        public void TryGetStrongETagMember_WithGetterThatThrows_ReturnsFalse()
+        {
+            var sampleModel = new BrokenFakeResource();
+
+            var contextAccessor = new FakeActionContextAccessor();
+            var eTagService = new ETagService(contextAccessor);
+
+            var result = eTagService.TryGetStrongETag(sampleModel, out var etagLoaded);
+
+            Assert.IsFalse(result);
+            Assert.IsNull(etagLoaded);
+        }
+
+        [Test]
+        public void TryGetStrongETagMember_WithModelThatDoesSupportETags_ReturnsTrueAndMember()
+        {
+            var eTag = Guid.NewGuid().ToString();
+            var sampleModel = new FakeResource(eTag);
+
+            var contextAccessor = new FakeActionContextAccessor();
+            var eTagService = new ETagService(contextAccessor);
+
+            var result = eTagService.TryGetStrongETag(sampleModel, out var etagLoaded);
+
+            Assert.IsTrue(result);
+            Assert.AreEqual(eTag, etagLoaded);
+        }
+
+        [Test]
+        public void GenerateWeakETag_ForNullObject_ReturnsEmptyETag()
+        {
+            var contextAccessor = new FakeActionContextAccessor();
+            var eTagService = new ETagService(contextAccessor);
+
+            var result = eTagService.GenerateWeakETag(null);
+
+            Assert.AreEqual(string.Empty, result);
+        }
+
+        [Test]
+        public void GenerateWeakETag_ForMatchingObjects_ReturnsMatchingTags()
+        {
+            var testData = new FakeDto
+            {
+                Id = 17
+            };
+
+            var testDataCopy = testData.ShallowCopy();
+
+            var contextAccessor = new FakeActionContextAccessor();
+            var eTagService = new ETagService(contextAccessor);
+
+            var tag = eTagService.GenerateWeakETag(testData);
+            var tagForCopy = eTagService.GenerateWeakETag(testDataCopy);
+
+            Assert.AreEqual(tag, tagForCopy);
+        }
+
+        [Test]
+        public void GenerateWeakETag_ForDifferentObjects_RetursNonMatchingTags()
+        {
+            var testData = new FakeDto
+            {
+                Id = 17
+            };
+            var nonCopy = new FakeDto
+            {
+                Id = 16
+            };
+
+            var contextAccessor = new FakeActionContextAccessor();
+            var eTagService = new ETagService(contextAccessor);
+
+            var tag = eTagService.GenerateWeakETag(testData);
+            var tagForCopy = eTagService.GenerateWeakETag(nonCopy);
+
+            Assert.AreNotEqual(tag, tagForCopy);
         }
     }
 }

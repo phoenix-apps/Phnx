@@ -3,8 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Primitives;
 using Phnx.AspNetCore.Rest.Models;
+using Phnx.Reflection;
+using Phnx.Serialization;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Phnx.AspNetCore.Rest.Services
 {
@@ -130,6 +135,61 @@ namespace Phnx.AspNetCore.Rest.Services
             var dataETag = data.ConcurrencyStamp;
 
             ResponseHeaders.Add(ETagHeaderKey, dataETag);
+        }
+
+        /// <summary>
+        /// Get whether a model supports strong ETags by checking if any members have a <see cref="ConcurrencyCheckAttribute"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the member to use</typeparam>
+        /// <returns><see langword="null"/> if no member is found, or the first <see cref="PropertyFieldInfo"/> which has a <see cref="ConcurrencyCheckAttribute"/></returns>
+        public bool TryGetStrongETag<T>(T data, out string etag)
+        {
+            var propertyFields = typeof(T).GetPropertyFieldInfos<T>();
+
+            foreach (var propertyField in propertyFields)
+            {
+                var attr = propertyField.Member.GetAttribute<ConcurrencyCheckAttribute>();
+
+                if (attr is null) continue;
+
+                // Load member data
+                var member = propertyField;
+
+                object value;
+                try
+                {
+                    value = member.GetValue(data);
+                }
+                catch
+                {
+                    etag = null;
+                    return false;
+                }
+
+                etag = value.ToString();
+                return true;
+            }
+
+            etag = null;
+            return false;
+        }
+
+        /// <summary>
+        /// Generates a weak ETag for <paramref name="o"/> by reflecting on its members and hashing its value
+        /// </summary>
+        /// <param name="o">The object to generate a weak ETag for</param>
+        /// <returns>A weak ETag for <paramref name="o"/></returns>
+        public string GenerateWeakETag(object o)
+        {
+            if (o is null) return string.Empty;
+
+            var json = JsonSerializer.Serialize(o);
+            var jsonBytes = Encoding.UTF8.GetBytes(json);
+
+            var shaFactory = new SHA256Managed();
+            var hashed = shaFactory.ComputeHash(jsonBytes);
+
+            return Encoding.UTF8.GetString(hashed);
         }
     }
 }
