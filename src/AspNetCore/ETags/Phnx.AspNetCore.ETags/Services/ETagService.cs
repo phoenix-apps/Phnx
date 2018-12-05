@@ -8,15 +8,15 @@ using System.Text;
 namespace Phnx.AspNetCore.ETags.Services
 {
     /// <summary>
-    /// Manages E-Tags and caching
+    /// Manages ETags and caching
     /// </summary>
     public class ETagService : IETagService
     {
         /// <summary>
-        /// Check whether an e-tag matches a given data model
+        /// Check whether an ETag matches a given data model
         /// </summary>
-        /// <param name="requestETag">The e-tags from the request</param>
-        /// <param name="dataModel">The database model to compare the request's e-tag to</param>
+        /// <param name="requestETag">The ETags from the request</param>
+        /// <param name="dataModel">The database model to compare the request's ETag to</param>
         /// <returns><see langword="true"/> if the resource is not a match</returns>
         /// <exception cref="ArgumentNullException"><paramref name="dataModel"/> is <see langword="null"/></exception>
         public ETagMatchResult CheckETagsForModel(string requestETag, object dataModel)
@@ -64,17 +64,17 @@ namespace Phnx.AspNetCore.ETags.Services
         }
 
         /// <summary>
-        /// Get the strong e-tag for <paramref name="model"/> by loading the value of the first member which has a <see cref="ConcurrencyCheckAttribute"/>
+        /// Get the strong ETag for <paramref name="model"/> by loading the value of the first member which has a <see cref="ConcurrencyCheckAttribute"/>
         /// </summary>
-        /// <param name="model">The data to load the strong e-tag for</param>
-        /// <param name="etag"><see langword="null"/> if a strong e-tag could not be loaded, otherwise, the strong e-tag that represents <paramref name="model"/></param>
+        /// <param name="model">The data to load the strong ETag for</param>
+        /// <param name="eTag"><see langword="null"/> if a strong ETag could not be loaded, otherwise, the strong ETag that represents <paramref name="model"/></param>
         /// <returns><see langword="true"/> if a concurrency check property or field is found, or <see langword="false"/> if one is not found</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="model"/> is <see langword="null"/></exception>
-        public bool TryGetStrongETagForModel(object model, out string etag)
+        public bool TryGetStrongETagForModel(object model, out string eTag)
         {
             if (model is null)
             {
-                throw new ArgumentNullException(nameof(model));
+                eTag = null;
+                return false;
             }
 
             var propertyFields = model.GetType().GetPropertyFieldInfos();
@@ -95,15 +95,15 @@ namespace Phnx.AspNetCore.ETags.Services
                 }
                 catch
                 {
-                    etag = null;
+                    eTag = null;
                     return false;
                 }
 
-                etag = $"\"{value}\"";
+                eTag = $"\"{value}\"";
                 return true;
             }
 
-            etag = null;
+            eTag = null;
             return false;
         }
 

@@ -3,7 +3,7 @@
 namespace Phnx.AspNetCore.ETags.Services
 {
     /// <summary>
-    /// Interprets the e-tags in a request to check before performing various data operations
+    /// Interprets the ETags in a request to check before performing various data operations
     /// </summary>
     public interface IETagRequestService
     {

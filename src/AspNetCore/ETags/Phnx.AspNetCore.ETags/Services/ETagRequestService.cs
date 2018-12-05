@@ -5,7 +5,7 @@ using System;
 namespace Phnx.AspNetCore.ETags.Services
 {
     /// <summary>
-    /// Interprets the e-tags in a request to check before performing various data operations
+    /// Interprets the ETags in a request to check before performing various data operations
     /// </summary>
     public class ETagRequestService : IETagRequestService
     {
@@ -20,7 +20,7 @@ namespace Phnx.AspNetCore.ETags.Services
         public const string IfMatchKey = "If-Match";
 
         /// <summary>
-        /// The service for reading the E-Tags in the headers of the request
+        /// The service for reading the ETags in the headers of the request
         /// </summary>
         public IETagService ETagService { get; }
 
@@ -37,10 +37,12 @@ namespace Phnx.AspNetCore.ETags.Services
         /// <summary>
         /// Create a new <see cref="ETagRequestService"/>
         /// </summary>
-        /// <param name="eTagService">The E-Tag reader</param>
-        /// <exception cref="ArgumentNullException"><paramref name="eTagService"/> is <see langword="null"/></exception>
-        public ETagRequestService(IETagService eTagService)
+        /// <param name="actionContext">The action context for getting the request's headers</param>
+        /// <param name="eTagService">The ETag reader</param>
+        /// <exception cref="ArgumentNullException"><paramref name="actionContext"/> or <paramref name="eTagService"/> is <see langword="null"/></exception>
+        public ETagRequestService(IActionContextAccessor actionContext, IETagService eTagService)
         {
+            ActionContext = actionContext ?? throw new ArgumentNullException(nameof(actionContext));
             ETagService = eTagService ?? throw new ArgumentNullException(nameof(eTagService));
         }
 
@@ -52,13 +54,13 @@ namespace Phnx.AspNetCore.ETags.Services
         /// <exception cref="ArgumentNullException"><paramref name="savedData"/> is <see langword="null"/></exception>
         public bool ShouldGetSingle(object savedData)
         {
-            if (!RequestHeaders.TryGetValue(IfNoneMatchKey, out var etags) || etags.Count == 0)
+            if (!RequestHeaders.TryGetValue(IfNoneMatchKey, out Microsoft.Extensions.Primitives.StringValues eTags) || eTags.Count == 0)
             {
                 // ETags not in use
                 return true;
             }
 
-            var result = ETagService.CheckETagsForModel(etags[0], savedData);
+            ETagMatchResult result = ETagService.CheckETagsForModel(eTags[0], savedData);
 
             return
                 result == ETagMatchResult.ETagNotInRequest ||
@@ -73,13 +75,13 @@ namespace Phnx.AspNetCore.ETags.Services
         /// <exception cref="ArgumentNullException"><paramref name="savedData"/> is <see langword="null"/></exception>
         public bool ShouldUpdate(object savedData)
         {
-            if (!RequestHeaders.TryGetValue(IfMatchKey, out var etags) || etags.Count == 0)
+            if (!RequestHeaders.TryGetValue(IfMatchKey, out Microsoft.Extensions.Primitives.StringValues eTags) || eTags.Count == 0)
             {
                 // ETags not in use
                 return true;
             }
 
-            var result = ETagService.CheckETagsForModel(etags[0], savedData);
+            ETagMatchResult result = ETagService.CheckETagsForModel(eTags[0], savedData);
 
             return
                 result == ETagMatchResult.ETagNotInRequest ||

@@ -5,7 +5,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Fakes
 {
     public class FakeResource
     {
-        private static Random rnd = new Random();
+        private static readonly Random rnd = new Random();
 
         public FakeResource(int id)
         {

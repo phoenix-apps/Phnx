@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Net;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System;
-using System.Net;
 
 namespace Phnx.AspNetCore.ETags.Services
 {
     /// <summary>
-    /// Formulates various e-tag related responses
+    /// Formulates various ETag related responses
     /// </summary>
     public class ETagResponseService : IETagResponseService
     {
@@ -17,7 +17,7 @@ namespace Phnx.AspNetCore.ETags.Services
         public const string ETagHeaderKey = "ETag";
 
         /// <summary>
-        /// The e-tag service
+        /// The ETag service
         /// </summary>
         public IETagService ETagService { get; }
 
@@ -32,10 +32,10 @@ namespace Phnx.AspNetCore.ETags.Services
         public IHeaderDictionary ResponseHeaders => ActionContext.ActionContext.HttpContext.Response.Headers;
 
         /// <summary>
-        /// Create a new E-Tag response factory
+        /// Create a new ETag response factory
         /// </summary>
-        /// <param name="actionContext">The action context accessor for writing e-tag headers</param>
-        /// <param name="eTagService">The e-tag service</param>
+        /// <param name="actionContext">The action context accessor for writing ETag headers</param>
+        /// <param name="eTagService">The ETag service</param>
         /// <exception cref="ArgumentNullException"><paramref name="actionContext"/> or <paramref name="eTagService"/> is <see langword="null"/></exception>
         public ETagResponseService(IActionContextAccessor actionContext, IETagService eTagService)
         {
@@ -63,59 +63,70 @@ namespace Phnx.AspNetCore.ETags.Services
         }
 
         /// <summary>
-        /// Add a weak e-tag for <paramref name="savedData"/>
+        /// Add a weak ETag for <paramref name="savedData"/>
         /// </summary>
-        /// <param name="savedData">The data to add the e-tag for</param>
+        /// <param name="savedData">The data to add the ETag for</param>
         /// <exception cref="ArgumentNullException"><paramref name="savedData"/> is <see langword="null"/></exception>
-        public void AddWeakETagForModelToResponse(object savedData)
+        public void AddWeakETagForModel(object savedData)
         {
-            var etag = ETagService.GetWeakETagForModel(savedData);
+            if (savedData is null)
+            {
+                throw new ArgumentNullException(nameof(savedData));
+            }
 
-            AddETagToResponse(etag);
+            var eTag = ETagService.GetWeakETagForModel(savedData);
+
+            AddETag(eTag);
         }
 
         /// <summary>
-        /// Add a strong e-tag if <paramref name="savedData"/> supports it
+        /// Add a strong ETag if <paramref name="savedData"/> supports it
         /// </summary>
-        /// <param name="savedData">The data to add the e-tag for</param>
+        /// <param name="savedData">The data to add the ETag for</param>
         /// <exception cref="ArgumentNullException"><paramref name="savedData"/> is <see langword="null"/></exception>
-        public bool TryAddStrongETagForModelToResponse(object savedData)
+        public bool TryAddStrongETagForModel(object savedData)
         {
-            if (!ETagService.TryGetStrongETagForModel(savedData, out var etag))
+            if (!ETagService.TryGetStrongETagForModel(savedData, out var eTag))
             {
                 return false;
             }
 
-            AddETagToResponse(etag);
+            AddETag(eTag);
             return true;
         }
 
         /// <summary>
-        /// Add a strong e-tag if <paramref name="savedData"/> supports it, or a weak tag if it does not
+        /// Add a strong ETag if <paramref name="savedData"/> supports it, or a weak tag if it does not
         /// </summary>
-        /// <param name="savedData">The data to add the e-tag for</param>
+        /// <param name="savedData">The data to add the ETag for</param>
         /// <exception cref="ArgumentNullException"><paramref name="savedData"/> is <see langword="null"/></exception>
-        public void AddBestETagForModelToResponse(object savedData)
+        public void AddStrongestETagForModel(object savedData)
         {
-            if (!TryAddStrongETagForModelToResponse(savedData))
+            if (savedData is null)
             {
-                AddWeakETagForModelToResponse(savedData);
+                throw new ArgumentNullException(nameof(savedData));
+            }
+
+            if (!TryAddStrongETagForModel(savedData))
+            {
+                AddWeakETagForModel(savedData);
             }
         }
 
         /// <summary>
-        /// Append the e-tag to the response. Weak e-tags should be formatted as W/"etag", and strong e-tags should be formatted as "etag"
+        /// Append the ETag to the response. Weak ETags should be formatted as W/"eTag", and strong ETags should be formatted as "eTag"
         /// </summary>
-        /// <param name="etag">The e-tag to add</param>
-        /// <exception cref="ArgumentNullException"><paramref name="etag"/> is <see langword="null"/></exception>
-        public void AddETagToResponse(string etag)
+        /// <remarks>For more information on ETag formatting, see <see href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag"/></remarks>
+        /// <param name="eTag">The ETag to add</param>
+        /// <exception cref="ArgumentNullException"><paramref name="eTag"/> is <see langword="null"/></exception>
+        public void AddETag(string eTag)
         {
-            if (etag is null)
+            if (eTag is null)
             {
-                throw new ArgumentNullException(nameof(etag));
+                throw new ArgumentNullException(nameof(eTag));
             }
 
-            ResponseHeaders.Add(ETagHeaderKey, etag);
+            ResponseHeaders.Add(ETagHeaderKey, eTag);
         }
     }
 }

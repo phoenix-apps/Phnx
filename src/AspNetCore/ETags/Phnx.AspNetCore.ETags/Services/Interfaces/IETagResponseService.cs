@@ -4,21 +4,21 @@ using System;
 namespace Phnx.AspNetCore.ETags.Services
 {
     /// <summary>
-    /// Formulates various e-tag related responses
+    /// Formulates various ETag related responses
     /// </summary>
     public interface IETagResponseService
     {
         /// <summary>
-        /// Add a strong e-tag if <paramref name="savedData"/> supports it, or a weak tag if it does not
+        /// Add a strong ETag if <paramref name="savedData"/> supports it, or a weak tag if it does not
         /// </summary>
-        /// <param name="savedData">The data to add the e-tag for</param>
-        void AddBestETagForModelToResponse(object savedData);
+        /// <param name="savedData">The data to add the ETag for</param>
+        void AddStrongestETagForModel(object savedData);
 
         /// <summary>
-        /// Add a weak e-tag for <paramref name="savedData"/>
+        /// Add a weak ETag for <paramref name="savedData"/>
         /// </summary>
-        /// <param name="savedData">The data to add the e-tag for</param>
-        void AddWeakETagForModelToResponse(object savedData);
+        /// <param name="savedData">The data to add the ETag for</param>
+        void AddWeakETagForModel(object savedData);
 
         /// <summary>
         /// Create a response describing that the data has been changed
@@ -33,16 +33,16 @@ namespace Phnx.AspNetCore.ETags.Services
         StatusCodeResult CreateDataHasNotChangedResponse();
 
         /// <summary>
-        /// Add a strong e-tag if <paramref name="savedData"/> supports it
+        /// Add a strong ETag if <paramref name="savedData"/> supports it
         /// </summary>
-        /// <param name="savedData">The data to add the e-tag for</param>
-        bool TryAddStrongETagForModelToResponse(object savedData);
+        /// <param name="savedData">The data to add the ETag for</param>
+        bool TryAddStrongETagForModel(object savedData);
 
         /// <summary>
-        /// Append the e-tag to the response. Weak e-tags should be formatted as W/"etag", and strong e-tags should be formatted as "etag"
+        /// Append the ETag to the response. Weak ETags should be formatted as W/"eTag", and strong ETags should be formatted as "eTag"
         /// </summary>
-        /// <param name="etag">The e-tag to add</param>
-        /// <exception cref="ArgumentNullException"><paramref name="etag"/> is <see langword="null"/></exception>
-        void AddETagToResponse(string etag);
+        /// <param name="eTag">The ETag to add</param>
+        /// <exception cref="ArgumentNullException"><paramref name="eTag"/> is <see langword="null"/></exception>
+        void AddETag(string eTag);
     }
 }
