@@ -1,6 +1,5 @@
-﻿# Docs Generator
+﻿# Phnx Documentation
 
-Welcome to the documentation generator!
+Welcome to Phnx!
 
-This is a template using bootstrap 4.1, based on Microsoft's own documentation, but with features like comments removed.  
-Once executed, it produces static HTML, CSS and JS for use with lightweight static site servers (such as GitHub Pages)
+The Phnx framework is built to work alongside .NET to provide helpers for developers, including a wide range of operations such as ETag reading and management in ASP.NET Core applications, high-performance multi-threaded I/O operations, and progress bar renderers in a console application
