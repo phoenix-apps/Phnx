@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Phnx.AspNet.Modals
+namespace Phnx.AspNetCore.Modals
 {
     /// <summary>
     /// A view model describing a modal dialog

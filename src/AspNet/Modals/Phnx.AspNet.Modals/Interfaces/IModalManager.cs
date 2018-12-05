@@ -11,10 +11,15 @@ namespace Phnx.AspNet.Modals
         /// <summary>
         /// Get all the modals currently stored in this session
         /// </summary>
-        List<TModal> Modals { get; }
+        List<TModal> Get();
 
         /// <summary>
-        /// Clear all the modals from the current session
+        /// Set all the modals currently stored in this session
+        /// </summary>
+        void Set(List<TModal> modals);
+
+        /// <summary>
+        /// Clear all the modals
         /// </summary>
         void Clear();
     }

@@ -16,13 +16,13 @@ namespace Phnx.Reflection
         /// <param name="getProperties">Whether to get all the properties of the given type</param>
         /// <param name="getFields">Whether to get all the fields of the given type</param>
         /// <returns>All properties and fields for <typeparamref name="T"/></returns>
-        public static IEnumerable<PropertyFieldInfo> GetPropertyFieldInfos<T>(this Type tType, bool getProperties = true, bool getFields = true)
+        public static IEnumerable<PropertyFieldInfo<T, object>> GetPropertyFieldInfos<T>(this Type tType, bool getProperties = true, bool getFields = true)
         {
             if (getProperties)
             {
                 foreach (var property in tType.GetProperties())
                 {
-                    yield return new PropertyFieldInfo(property);
+                    yield return new PropertyFieldInfo<T, object>(property);
                 }
             }
 
@@ -30,7 +30,7 @@ namespace Phnx.Reflection
             {
                 foreach (var field in tType.GetFields())
                 {
-                    yield return new PropertyFieldInfo(field);
+                    yield return new PropertyFieldInfo<T, object>(field);
                 }
             }
         }

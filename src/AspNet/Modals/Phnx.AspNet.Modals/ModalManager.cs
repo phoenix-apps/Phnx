@@ -19,40 +19,43 @@ namespace Phnx.AspNet.Modals
         /// <summary>
         /// The key to the part of <see cref="Session"/> which contains all the modal data
         /// </summary>
-        public const string SessionMessageKey = "ModalMessage";
+        public const string SessionMessageKey = "Modals";
 
         /// <summary>
-        /// Get or set all the modals currently stored in this session
+        /// Get all the modals currently stored in this session
         /// </summary>
-        /// <exception cref="InvalidOperationException">A <see cref="HttpContext"/> is required</exception>
-        public List<TModal> Modals
+        /// <exception cref="InvalidOperationException"><see cref="Session"/> is <see langword="null"/></exception>
+        public List<TModal> Get()
         {
-            get
+            if (Session is null)
             {
-                if (Session is null)
-                {
-                    throw new InvalidOperationException($"{nameof(HttpContext)} is required");
-                }
-
-                return (List<TModal>)Session[SessionMessageKey];
+                throw new InvalidOperationException($"{nameof(HttpContext)} is required");
             }
-            set
+
+            return (List<TModal>)Session[SessionMessageKey];
+        }
+
+        /// <summary>
+        /// Set all the modals currently stored in this session
+        /// </summary>
+        /// <exception cref="InvalidOperationException"><see cref="Session"/> is <see langword="null"/></exception>
+        public void Set(List<TModal> modals)
+        {
+            if (Session is null)
             {
-                if (Session is null)
-                {
-                    throw new InvalidOperationException($"{nameof(HttpContext)} is required");
-                }
-
-                Session[SessionMessageKey] = value;
+                throw new InvalidOperationException($"{nameof(HttpContext)} is required");
             }
+
+            Session[SessionMessageKey] = modals;
         }
 
         /// <summary>
         /// Clear all the modals from the current session
         /// </summary>
+        /// <exception cref="InvalidOperationException"><see cref="Session"/> is <see langword="null"/></exception>
         public void Clear()
         {
-            Modals = null;
+            Set(null);
         }
     }
 }

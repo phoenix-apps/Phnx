@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Phnx.AspNetCore.Modals.Interfaces
+namespace Phnx.AspNetCore.Modals
 {
     /// <summary>
     /// A manager hosting and retrieving a list of all the modals to render
@@ -11,7 +11,12 @@ namespace Phnx.AspNetCore.Modals.Interfaces
         /// <summary>
         /// Get all the modals currently stored in this session
         /// </summary>
-        List<TModal> Modals { get; }
+        List<TModal> Get();
+
+        /// <summary>
+        /// Set all the modals currently stored in this session
+        /// </summary>
+        void Set(List<TModal> modals);
 
         /// <summary>
         /// Clear all the modals from the current session

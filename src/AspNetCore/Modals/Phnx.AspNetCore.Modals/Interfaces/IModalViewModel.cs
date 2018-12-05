@@ -1,4 +1,4 @@
-﻿namespace Phnx.AspNetCore.Modals.Interfaces
+﻿namespace Phnx.AspNetCore.Modals
 {
     /// <summary>
     /// A view model describing a modal dialog
