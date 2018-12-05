@@ -1,4 +1,3 @@
-# Welcome to SampleProject! 
+# Welcome to Phnx!
 
-## What this project is
-This project contains sample code and a demo for what DocGenerator can be used for
+The Phnx framework is built to work alongside .NET to provide helpers for developers, including a wide range of operations such as ETag reading and management in ASP.NET Core applications, high-performance multi-threaded I/O operations, and progress bar renderers in a console application.
