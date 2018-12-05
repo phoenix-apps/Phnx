@@ -6,7 +6,7 @@
           "files": [
             "**.csproj"
           ],
-          "src": "../../../Phnx"
+          "src": "../src"
         }
       ],
       "dest": "api"
@@ -36,9 +36,9 @@
         ]
       }
     ],
-    "dest": "../Phnx.Docs",
+    "dest": "../../phnx.github.io",
     "template": [
-      "../../Theme/Clean"
+      "../../PhnxDocs/Theme/Clean"
     ]
   }
 }
