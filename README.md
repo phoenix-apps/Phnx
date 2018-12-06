@@ -22,7 +22,7 @@ All `.NET Core`, `EntityFrameworkCore`, `AspNetCore` or `.NET Standard` librarie
 * All other projects use `.NET Standard`
 
 ## Help & Documentation
-A wiki for this project is maintained on GitHub, in the Wiki tab. This can be found [here](https://github.com/phoenix-apps/Phnx/wiki). This wiki is updated with each release.
+Documentation is available, hosted by GitHub Pages [here](https://phoenix-apps.github.io/phnx-wiki). This documentation is updated with each release.
 
 ## Contributing
 We welcome contributions. Please submit a pull request with your changes, and follow the [Documentation Language Specification](https://github.com/phoenix-apps/Phnx/blob/master/Styles%20and%20Standards/Documentation%20Language%20Specification.md) when updating software documentation for your changes (where necessary).
