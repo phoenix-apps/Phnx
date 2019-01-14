@@ -3,15 +3,15 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Provides helpers for writing and reading to/ from the console (and any text stream). This includes progress bars, font colors, asking questions, getting certain value types from input and more</Description>
-    <Copyright>org-phnx</Copyright>
-    <Company>org-phnx</Company>
-    <Authors>org-phnx</Authors>
+    <Copyright>Phoenix Apps Ltd</Copyright>
+    <Company>Phoenix Apps Ltd</Company>
+    <Authors>Phoenix Apps Ltd</Authors>
     <Product>Phnx</Product>
     <Version>1.0.0</Version>
-    <PackageLicenseUrl>https://github.com/org-phnx/Phnx/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/org-phnx/Phnx</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/org-phnx/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/org-phnx/Phnx</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/phoenix-apps/Phnx/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/phoenix-apps/Phnx</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/phoenix-apps/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/phoenix-apps/Phnx</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>

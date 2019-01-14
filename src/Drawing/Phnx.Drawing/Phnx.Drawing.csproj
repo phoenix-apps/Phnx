@@ -7,13 +7,13 @@
     <Version>1.0.0</Version>
     <Description>A series of helpers for drawing, including helpers for Hexidecimal types, and basic 2D shape geometry</Description>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Copyright>org-phnx</Copyright>
-    <Company>org-phnx</Company>
-    <Authors>org-phnx</Authors>
-    <PackageLicenseUrl>https://github.com/org-phnx/Phnx/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/org-phnx/Phnx</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/org-phnx/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/org-phnx/Phnx</RepositoryUrl>
+    <Copyright>Phoenix Apps Ltd</Copyright>
+    <Company>Phoenix Apps Ltd</Company>
+    <Authors>Phoenix Apps Ltd</Authors>
+    <PackageLicenseUrl>https://github.com/phoenix-apps/Phnx/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/phoenix-apps/Phnx</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/phoenix-apps/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/phoenix-apps/Phnx</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
   </PropertyGroup>
 
