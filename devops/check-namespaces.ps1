@@ -1,38 +1,30 @@
 $namespacePhnx = "namespace Phnx"
-$namespaceMarkSFrancis = "namespace MarkSFrancis"
+$namespaceUnknown = "namespace "
 
-$containsPhnxCount = 0
-$containsMarkSFrancisCount = 0
+$namespacePhnxCount = 0
+$namespaceUnknownCount = 0
 
 Get-ChildItem ..\src -Filter *.cs -Recurse | ForEach-Object {
     $file = Get-Content $_.FullName
-    $containsPhnx = $false
-    $containsMarkSFrancis = $false
+    $namespaceUnknown = $false
 
     ForEach ($line in $file) {
         If ($line -match $namespacePhnx) {
-            $containsPhnx = $true
             break
         }
-        ElseIf ($line -match $namespaceMarkSFrancis) {
-            $containsMarkSFrancis = $true
+        ElseIf ($line -match $namespaceUnknown) {
+            $namespaceUnknown = $true
             break
         }
     }
 
-    If ($containsPhnx) {
-        $containsPhnxCount++
-        Write-Host "Phnx File Found: "
-        Write-Host $_.FullName
-        Write-Host ""
-    }
-    ElseIf ($containsMarkSFrancis) {
-        $containsMarkSFrancisCount++
-        Write-Host "MarkSFrancis File Found: "
+    If ($namespaceUnknown) {
+        $namespaceUnknownCount++
+        Write-Host "Unknown Namespace File Found: "
         Write-Host $_.FullName
         Write-Host ""
     }
 }
 
-Write-Host "Phnx File Count:" $containsPhnxCount
-Write-Host "MarkSFrancis File Count:" $containsMarkSFrancisCount
+Write-Host "Phnx File Count:" $namespacePhnxCount
+Write-Host "Unknown File Count:" $namespaceUnknownCount
