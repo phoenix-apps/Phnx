@@ -2,13 +2,13 @@
 <package >
   <metadata>
     <id>Phnx.Windows</id>
-    <version>1.1.0-beta</version>
-    <authors>org-phnx</authors>
-    <owners>org-phnx</owners>
-    <copyright>org-phnx</copyright>
-    <licenseUrl>https://github.com/org-phnx/Phnx/blob/master/LICENSE</licenseUrl>
-    <projectUrl>https://github.com/org-phnx/Phnx</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/org-phnx/Phnx/master/qrcode-link-to-github.png</iconUrl>
+    <version>1.0.0</version>
+    <authors>Phoenix Apps Ltd</authors>
+    <owners>Phoenix Apps Ltd</owners>
+    <copyright>Phoenix Apps Ltd</copyright>
+    <licenseUrl>https://github.com/phoenix-apps/Phnx/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/phoenix-apps/Phnx</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/phoenix-apps/Phnx/master/qrcode-link-to-github.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Provides helpers for drawing and scaling images and windows-specific reflection (such as detecting whether a property is an auto-property)</description>
   </metadata>
