@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Description>A library for helping with common EntityFrameworkCore patterns, including repositories, CRUD and seeding</Description>
     <Copyright>Phoenix Apps Ltd</Copyright>
     <Company>Phoenix Apps Ltd</Company>
@@ -16,23 +16,12 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.1\Phnx.Data.EFCore.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netstandard2.0\Phnx.Data.EFCore.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Phnx">
-      <HintPath>..\..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
-    </Reference>
-    <Reference Include="Phnx.Collections">
-      <HintPath>..\..\..\Collections\Phnx.Collections\bin\Debug\netstandard2.0\Phnx.Collections.dll</HintPath>
-    </Reference>
-    <Reference Include="Phnx.Data">
-      <HintPath>..\..\Data\Phnx.Data\bin\Debug\netstandard2.0\Phnx.Data.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Phnx.Data" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
