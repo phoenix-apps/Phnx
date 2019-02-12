@@ -50,21 +50,6 @@ namespace Phnx.Data.LazyLoad
         private T _cachedValue;
 
         /// <summary>
-        /// Whether the value for this <see cref="LazyGetSet{T}"/> can be set
-        /// </summary>
-        public bool CanSet => _setToExternal != null;
-
-        /// <summary>
-        /// Whether the value of this has ever been set
-        /// </summary>
-        public bool ValueChangedInLife { get; private set; }
-
-        /// <summary>
-        /// Whether the value is currently cached
-        /// </summary>
-        public bool IsCached { get; private set; }
-
-        /// <summary>
         /// Create a new read-only <see cref="LazyGetSet{T}"/> using a function to load the data from an external source when requested
         /// </summary>
         /// <param name="get">The function to load the data from an external source</param>
@@ -84,6 +69,21 @@ namespace Phnx.Data.LazyLoad
             _setToExternal = set ?? throw new ArgumentNullException(nameof(set));
         }
 
+        /// <summary>
+        /// Whether the value for this <see cref="LazyGetSet{T}"/> can be set
+        /// </summary>
+        public bool CanSet => _setToExternal != null;
+
+        /// <summary>
+        /// Whether the value of this has ever been set
+        /// </summary>
+        public bool ValueChangedInLife { get; private set; }
+
+        /// <summary>
+        /// Whether the value is currently cached
+        /// </summary>
+        public bool IsCached { get; private set; }
+        
         /// <summary>
         /// The lazy-loaded value
         /// </summary>
@@ -133,6 +133,7 @@ namespace Phnx.Data.LazyLoad
         /// Get the value of <paramref name="lazy"/> implicitly
         /// </summary>
         /// <param name="lazy">The <see cref="LazyGetSet{T}"/> to get the value of</param>
+        /// <exception cref="ArgumentNullException"><paramref name="lazy"/> is <see langword="null"/></exception>
         public static implicit operator T(LazyGetSet<T> lazy)
         {
             if (lazy is null)

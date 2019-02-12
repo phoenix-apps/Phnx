@@ -21,26 +21,6 @@ namespace Phnx.Data.LazyLoad
         private bool _expirationTimerIsRunning;
 
         /// <summary>
-        /// The maximum lifetime for entries in the cache. This is <see langword="null"/> if there is no maximum lifetime
-        /// </summary>
-        public TimeSpan? ValuesMaximumLifetime { get; }
-
-        /// <summary>
-        /// Whether this <see cref="LazyDictionary{TKey, TValue}"/> has been set up with an auto-expiration for entries
-        /// </summary>
-        public bool ValuesHaveMaximumLifetime => ValuesMaximumLifetime.HasValue;
-
-        /// <summary>
-        /// The number of items cached. This includes expired records if a timeout has been set
-        /// </summary>
-        public int CachedCount => _cache.Count;
-
-        /// <summary>
-        /// Gets <see cref="DateTime.UtcNow"/> for use with managing lifetimes and expiration
-        /// </summary>
-        private DateTime Now => DateTime.UtcNow;
-
-        /// <summary>
         /// Create a new <see cref="LazyDictionary{TKey,TValue}"/>
         /// </summary>
         /// <param name="getFromExternalSource">The method to use when loading an item from an external source. This is called only once per value, when the value is first loaded</param>
@@ -70,6 +50,26 @@ namespace Phnx.Data.LazyLoad
             _expirationTimerIsRunning = false;
             _expirationTimer = new Timer(ItemExpirationHandler);
         }
+
+        /// <summary>
+        /// The maximum lifetime for entries in the cache. This is <see langword="null"/> if there is no maximum lifetime
+        /// </summary>
+        public TimeSpan? ValuesMaximumLifetime { get; }
+
+        /// <summary>
+        /// Whether this <see cref="LazyDictionary{TKey, TValue}"/> has been set up with an auto-expiration for entries
+        /// </summary>
+        public bool ValuesHaveMaximumLifetime => ValuesMaximumLifetime.HasValue;
+
+        /// <summary>
+        /// The number of items cached. This includes expired records if a timeout has been set
+        /// </summary>
+        public int CachedCount => _cache.Count;
+
+        /// <summary>
+        /// Gets <see cref="DateTime.UtcNow"/> for use with managing lifetimes and expiration
+        /// </summary>
+        private DateTime Now => DateTime.UtcNow;
 
         private void ItemExpirationHandler(object state)
         {
