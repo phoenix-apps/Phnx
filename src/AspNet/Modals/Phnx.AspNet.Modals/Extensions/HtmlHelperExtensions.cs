@@ -36,9 +36,9 @@ namespace Phnx.AspNet.Modals
                 throw new ArgumentNullException(nameof(partialViewName));
             }
 
-            StringBuilder content = new StringBuilder();
+            var content = new StringBuilder();
 
-            foreach (var modal in modalManager.Get())
+            foreach (TModal modal in modalManager.Get())
             {
                 content.Append(helper.Partial(partialViewName, modal));
             }
