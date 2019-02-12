@@ -4,13 +4,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Phnx.Windows")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Phnx.Windows.Drawing")]
+[assembly: AssemblyDescription("Provides helpers for drawing and scaling images")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Phoenix Apps Ltd")]
 [assembly: AssemblyProduct("Phnx.Windows")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("Phoenix Apps Ltd")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
