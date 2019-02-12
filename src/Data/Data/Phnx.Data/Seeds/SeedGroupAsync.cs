@@ -10,6 +10,8 @@ namespace Phnx.Data.Seeds
     /// </summary>
     public class SeedGroupAsync : ISeedAsync, ICollection<ISeedAsync>
     {
+        private readonly List<ISeedAsync> _seeds;
+
         /// <summary>
         /// Create a new seed group with an empty range of seeds
         /// </summary>
@@ -40,8 +42,6 @@ namespace Phnx.Data.Seeds
         {
             Add(seeds);
         }
-
-        private readonly List<ISeedAsync> _seeds;
 
         /// <summary>
         /// The number of entries in this group
