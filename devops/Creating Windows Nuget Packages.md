@@ -2,6 +2,8 @@
 
 This guide does not apply to NET Core or NET Standard packages
 
+You'll need the [Nuget CLI](https://www.nuget.org/downloads) installed on your computer
+
 # If a `nuspec` file doesn't exist for the project
 1. Navigate in a terminal to the folder containing the project you want to generate a nuspec file for
 
@@ -21,7 +23,7 @@ Example nuspec:
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Phnx.Windows</id>
+    <id>Phnx.Windows.Drawing</id>
     <version>1.0.0</version>
     <authors>Phoenix Apps Ltd</authors>
     <owners>Phoenix Apps Ltd</owners>
@@ -30,7 +32,7 @@ Example nuspec:
     <projectUrl>https://github.com/phoenix-apps/Phnx</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/phoenix-apps/Phnx/master/qrcode-link-to-github.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Provides helpers for drawing and scaling images and windows-specific reflection (such as detecting whether a property is an auto-property)</description>
+    <description>Provides helpers for drawing and scaling images</description>
   </metadata>
 </package>
 ```
@@ -41,7 +43,7 @@ Example nuspec:
 
 1. Navigate in a terminal to the folder containing the project you want to create a package for
 
-1. Run `nuget pack {project}.nuspec`. This will combine your `{project}.nuspec` with the `{project}.csproj` file in the same folder
+1. Run `nuget pack {project}.csproj`. This will combine your `{project}.nuspec` with the `{project}.csproj` file in the same folder
 
 1. This will generate the `{project}.{version}.nupkg` file for you. This is the file you'll upload
 
