@@ -12,7 +12,7 @@ namespace Phnx.Benchmark.Tests
             var actions = new Action<object>[0];
 
             var benchmark = new BenchmarkMethods<object>(actions);
-            var result = benchmark.Run(new object[0]);
+            TimeSpan[] result = benchmark.Run(new object[0]);
 
             Assert.IsEmpty(result);
         }
@@ -27,7 +27,7 @@ namespace Phnx.Benchmark.Tests
             };
 
             var benchmark = new BenchmarkMethods<object>(actions);
-            var result = benchmark.Run(new object[0]);
+            TimeSpan[] result = benchmark.Run(new object[0]);
 
             Assert.AreEqual(0, timesExecuted);
         }
@@ -48,7 +48,7 @@ namespace Phnx.Benchmark.Tests
 
             var benchmark = new BenchmarkMethods<object>(actions);
 
-            var result = benchmark.Run(new object[10]);
+            TimeSpan[] result = benchmark.Run(new object[10]);
 
             Assert.AreEqual(10, timesExecuted[0]);
             Assert.AreEqual(10, timesExecuted[1]);
@@ -71,7 +71,7 @@ namespace Phnx.Benchmark.Tests
 
             var benchmark = new BenchmarkMethods<object>(actions);
 
-            var result = benchmark.Run(new object[0]);
+            TimeSpan[] result = benchmark.Run(new object[0]);
 
             Assert.AreEqual(5, result.Length);
         }
@@ -79,7 +79,7 @@ namespace Phnx.Benchmark.Tests
         [Test]
         public void Run_With5Input_PassesInputsToItemsInOrder()
         {
-            List<int> items = new List<int>();
+            var items = new List<int>();
             var expectedItems = new List<int>(5) { 12, 74, 263, 17546, 1 };
 
             var actions = new Action<int>[]
@@ -89,7 +89,7 @@ namespace Phnx.Benchmark.Tests
 
             var benchmark = new BenchmarkMethods<int>(actions);
 
-            var result = benchmark.Run(expectedItems.ToArray() /*Pass copy*/);
+            TimeSpan[] result = benchmark.Run(expectedItems.ToArray() /*Pass copy*/);
 
             Assert.AreEqual(expectedItems, items);
         }

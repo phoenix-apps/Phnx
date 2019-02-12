@@ -37,7 +37,7 @@ namespace Phnx.Collections.Tests.Tree
             var tree = new Tree<object>();
 
             // Act
-            var topNode = tree.AddTopNode(new object());
+            TreeNode<object> topNode = tree.AddTopNode(new object());
             topNode.AddChild(new object());
 
             // Assert
@@ -52,23 +52,23 @@ namespace Phnx.Collections.Tests.Tree
             var tree = new Tree<object>();
 
             // Act
-            var top1 = tree.AddTopNode(new object());
+            TreeNode<object> top1 = tree.AddTopNode(new object());
 
-            var top1mid1 = top1.AddChild(new object());
+            TreeNode<object> top1mid1 = top1.AddChild(new object());
 
-            var top1mid1bot1 = top1mid1.AddChild(new object());
-            var top1mid1bot2 = top1mid1.AddChild(new object());
-            var top1mid1bot3 = top1mid1.AddChild(new object());
+            TreeNode<object> top1mid1bot1 = top1mid1.AddChild(new object());
+            TreeNode<object> top1mid1bot2 = top1mid1.AddChild(new object());
+            TreeNode<object> top1mid1bot3 = top1mid1.AddChild(new object());
 
             top1.AddChild(top1mid1);
             top1.AddChild(top1mid1);
 
-            var top2 = tree.AddTopNode(new object());
+            TreeNode<object> top2 = tree.AddTopNode(new object());
             top2.AddChild(top1mid1);
             top2.AddChild(top1mid1);
             top2.AddChild(top1mid1);
 
-            var top3 = tree.AddTopNode(new object());
+            TreeNode<object> top3 = tree.AddTopNode(new object());
             top3.AddChild(top1mid1);
             top3.AddChild(top1mid1);
             top3.AddChild(top1mid1);
@@ -85,7 +85,7 @@ namespace Phnx.Collections.Tests.Tree
             var tree = new Tree<object>();
 
             // Act
-            var top1 = tree.AddTopNode(new object());
+            TreeNode<object> top1 = tree.AddTopNode(new object());
 
             top1.AddChild(top1);
 
@@ -101,12 +101,12 @@ namespace Phnx.Collections.Tests.Tree
             var tree = new Tree<object>();
 
             // Act
-            var top1 = tree.AddTopNode(new object());
+            TreeNode<object> top1 = tree.AddTopNode(new object());
 
-            var child = top1.AddChild(new object());
+            TreeNode<object> child = top1.AddChild(new object());
             child.AddChild(top1);
 
-            var subChild = child.AddChild(new object());
+            TreeNode<object> subChild = child.AddChild(new object());
 
             subChild.AddChild(top1);
             subChild.AddChild(top1);
