@@ -21,7 +21,17 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.0" />
-    <PackageReference Include="Phnx.Data" Version="1.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Phnx">
+      <HintPath>..\..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
+    </Reference>
+    <Reference Include="Phnx.Collections">
+      <HintPath>..\..\..\Collections\Phnx.Collections\bin\Debug\netstandard2.0\Phnx.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Phnx.Data">
+      <HintPath>..\..\Data\Phnx.Data\bin\Debug\netstandard2.0\Phnx.Data.dll</HintPath>
+    </Reference>
 
 </Project>
