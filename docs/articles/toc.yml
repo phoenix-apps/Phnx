@@ -1,2 +1,6 @@
 ﻿- name: Introduction
   href: intro.md
+- name: Phnx
+  href: Phnx.md
+- name: Phnx.Benchmarks
+  href: Phnx.Benchmarks.md
