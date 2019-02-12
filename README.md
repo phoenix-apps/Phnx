@@ -25,6 +25,6 @@ All `.NET Core`, `EntityFrameworkCore`, `AspNetCore` or `.NET Standard` librarie
 Documentation is available, hosted by GitHub Pages [here](https://phoenix-apps.github.io/Phnx-Wiki). This documentation is updated with each release.
 
 ## Contributing
-We welcome contributions. Please submit a pull request with your changes, and follow the [Phoenix Standards](https://github.com/phoenix-apps/Standards) when updating software documentation for your changes (where necessary).
+We welcome contributions. Please follow the [Phoenix Standards](https://github.com/phoenix-apps/Standards) when developing on any of our projects.
 
 Before getting started, run the `build_all_core.cmd` (for Windows) or `build_all_core.sh` (for Linux/Mac OS) to build all standard and core projects. Rerunning this after you're finished is a good idea to crudely check for breaking changes, but it's not necessary.
