@@ -1,4 +1,4 @@
-﻿namespace Phnx.Configuration
+﻿namespace Phnx.Core.Configuration
 {
     /// <summary>
     /// Provides methods for loading from the application configuration, including default values and converting the configuration to the needed types

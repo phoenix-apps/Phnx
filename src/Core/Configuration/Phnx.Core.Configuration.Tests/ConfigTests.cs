@@ -2,7 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace Phnx.Configuration.Tests
+namespace Phnx.Core.Configuration.Tests
 {
     public class ConfigTests
     {
