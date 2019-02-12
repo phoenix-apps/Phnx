@@ -4,7 +4,7 @@ using System;
 namespace Phnx.Configuration
 {
     /// <summary>
-    /// Loads the application configuration, including default values and converting the configuration to the needed types
+    /// Loads the application configuration, including default values and converting the configuration to the needed types where necessary
     /// </summary>
     public class Config : IConfig
     {
