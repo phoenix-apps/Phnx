@@ -33,5 +33,6 @@
     <Reference Include="Phnx.Data">
       <HintPath>..\..\Data\Phnx.Data\bin\Debug\netstandard2.0\Phnx.Data.dll</HintPath>
     </Reference>
+  </ItemGroup>
 
 </Project>
