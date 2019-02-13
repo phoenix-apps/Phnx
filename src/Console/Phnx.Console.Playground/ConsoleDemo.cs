@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace Phnx.Console.Playground
@@ -10,14 +9,6 @@ namespace Phnx.Console.Playground
 
         public static void Run()
         {
-            var options = new List<string>
-            {
-                "First option",
-                "Second option",
-                "Third option"
-            };
-
-            var selected = Console.GetSelection(options, "Select an option");
             Intro();
             TestUndoAndClear();
             if (!DoMath())
