@@ -1,4 +1,4 @@
-# Phnx.Benchmark
+# Phnx.Collections
 
 This library contains tools to help you manage collections, including extensions for Linq, and new Tree types to help with more complex collection data structures
 
