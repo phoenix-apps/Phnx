@@ -27,8 +27,6 @@ namespace Phnx.IO.Json
             {
                 CloseOutput = closeStreamWhenDisposed
             };
-
-            CloseStreamWhenDisposed = closeStreamWhenDisposed;
         }
 
         /// <summary>
