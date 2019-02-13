@@ -18,3 +18,5 @@
   href: Phnx.IO.Json.md
 - name: IO.Threaded
   href: Phnx.IO.Threaded.md
+- name: Reflection
+  href: Phnx.Reflection.md
