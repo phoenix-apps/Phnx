@@ -8,7 +8,7 @@ There are two options for benchmarking your code.
 
 1. Allows you to quickly run a small benchmark for a particular section of code.
 
-## Quick Examples
+# Quick Examples
 
 For a full list of all things possible with Phnx.Benchmark, please check the [API reference guide](https://phoenix-apps.github.io/Phnx-Wiki/api/Phnx.Benchmark.html)
 

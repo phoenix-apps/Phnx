@@ -2,7 +2,7 @@
 
 This library contains tools to help reflecting on types, with easy access to public fields and properties
 
-## Quick Examples
+# Quick Examples
 
 For a full list of all things possible with Phnx.Reflection, please check the [API reference guide](https://phoenix-apps.github.io/Phnx-Wiki/api/Phnx.Reflection.html)
 
