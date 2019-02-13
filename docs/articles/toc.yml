@@ -22,3 +22,7 @@
   href: Phnx.Reflection.md
 - name: Security
   href: Phnx.Security.md
+- name: Serialization
+  href: Phnx.Serialization.md
+- name: Web
+  href: Phnx.Web.md
