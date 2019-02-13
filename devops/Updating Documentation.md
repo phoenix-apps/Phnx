@@ -12,7 +12,9 @@ That's it - you should be good to go!
 
 ## Clone Phnx-Wiki
 
-Clone 
+1. Clone Phnx-Wiki onto your local machine
+
+1. Empty the folder (apart from .git if you can see it)
 
 ## Running `docfx`
 
