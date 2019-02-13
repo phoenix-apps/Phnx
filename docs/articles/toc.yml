@@ -2,5 +2,19 @@
   href: intro.md
 - name: Phnx
   href: Phnx.md
-- name: Phnx.Benchmarks
+- name: Benchmarks
   href: Phnx.Benchmarks.md
+- name: Collections
+  href: Phnx.Collections.md
+- name: Console
+  href: Phnx.Console.md
+- name: Data
+  href: Phnx.Data.md
+- name: Drawing
+  href: Phnx.Drawing.md
+- name: IO
+  href: Phnx.IO.md
+- name: IO.Json
+  href: Phnx.IO.Json.md
+- name: IO.Threaded
+  href: Phnx.IO.Threaded.md
