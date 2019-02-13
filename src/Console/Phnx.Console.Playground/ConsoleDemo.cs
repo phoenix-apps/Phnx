@@ -1,17 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace Phnx.Console.Playground
 {
     public static class ConsoleDemo
     {
-        private static ConsoleHelper Console = new ConsoleHelper();
+        private static readonly ConsoleHelper Console = new ConsoleHelper();
 
         public static void Run()
         {
+            var options = new List<string>
+            {
+                "First option",
+                "Second option",
+                "Third option"
+            };
+
+            var selected = Console.GetSelection(options, "Select an option");
             Intro();
             TestUndoAndClear();
-            if (!DoMath()) return;
+            if (!DoMath())
+            {
+                return;
+            }
         }
 
         private static void Intro()
@@ -52,19 +64,22 @@ namespace Phnx.Console.Playground
         {
             var result = Console.GetInt("Please enter an integer to square:");
 
-            using (var progress = Console.ProgressBar(100, d => "Powering up math cells...", true))
+            using (Progress.ConsoleProgress progress = Console.ProgressBar(100, d => "Powering up math cells...", true))
             {
                 // Simulate faulting at 73%
-                for (int timer = 1; timer < 74; ++timer)
+                while (progress.Progress < 73)
                 {
-                    progress.Progress = timer;
+                    progress.Progress++;
                     Thread.Sleep(25);
                 }
             }
 
             Console.WriteError("Critical failure with math cells: Temperature above safe levels, emergency abort");
 
-            if (!Console.YesNo("Continue?")) return false;
+            if (!Console.YesNo("Continue?"))
+            {
+                return false;
+            }
 
             Console.WriteWarning("Falling back to legacy algorithmic modelling");
             SlowlyWriteText("..........");

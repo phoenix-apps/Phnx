@@ -298,7 +298,7 @@ namespace Phnx.Console
                 return valueInt;
             }
 
-            return Get(converter);
+            return Get(converter, questionWithRangeAsString);
         }
 
         /// <summary>
