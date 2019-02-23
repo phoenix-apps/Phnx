@@ -17,27 +17,27 @@ namespace Phnx.Data.EFCore.Tests.Repositories
         [Test]
         public void New_WithNullDbSetAccessor_ThrowsArgumentNullException()
         {
-            var dbContext = FakeGenerator.DbContext();
+            FakeDbContext dbContext = FakeGenerator.DbContext();
             Assert.Throws<ArgumentNullException>(() => new CrudDbSet<FakeDbContext, DataModel, int>(dbContext, null, false));
         }
 
         [Test]
         public void New_WithDbSetAccessorThatReturnsNull_ThrowsArgumentException()
         {
-            var dbContext = FakeGenerator.DbContext();
+            FakeDbContext dbContext = FakeGenerator.DbContext();
             Assert.Throws<ArgumentException>(() => new CrudDbSet<FakeDbContext, DataModel, int>(dbContext, db => null, false));
         }
 
         [Test]
         public void Add_WithAutosaveEnabled_Autosaves()
         {
-            var dbContext = FakeGenerator.DbContext();
+            FakeDbContext dbContext = FakeGenerator.DbContext();
             var repo = new CrudDbSet<FakeDbContext, DataModel, int>(dbContext, db => db.Fakes, true);
 
-            var dataToSave = FakeGenerator.Data(1);
+            DataModel dataToSave = FakeGenerator.Data(1);
             repo.Create(dataToSave);
 
-            var savedData = repo.GetSingle(1);
+            DataModel savedData = repo.GetSingle(1);
 
             Assert.AreEqual(dataToSave.FullName, savedData.FullName);
         }
@@ -45,13 +45,13 @@ namespace Phnx.Data.EFCore.Tests.Repositories
         [Test]
         public void Add_WithAutosaveDisabled_DoesNotSave()
         {
-            var dbContext = FakeGenerator.DbContext();
+            FakeDbContext dbContext = FakeGenerator.DbContext();
             var repo = new CrudDbSet<FakeDbContext, DataModel, int>(dbContext, db => db.Fakes, false);
 
-            var dataToSave = FakeGenerator.Data(1);
+            DataModel dataToSave = FakeGenerator.Data(1);
             repo.Create(dataToSave);
 
-            var savedData = repo.GetSingle(1);
+            DataModel savedData = repo.GetSingle(1);
 
             Assert.IsNull(savedData);
         }
@@ -59,7 +59,7 @@ namespace Phnx.Data.EFCore.Tests.Repositories
         [Test]
         public void Add_AddsModel()
         {
-            var repo = FakeGenerator.Repo();
+            FakeRepo repo = FakeGenerator.Repo();
 
             repo.Create(FakeGenerator.Data());
 
@@ -69,16 +69,16 @@ namespace Phnx.Data.EFCore.Tests.Repositories
         [Test]
         public void Update_WithAutosaveEnabled_Autosaves()
         {
-            var dbContext = FakeGenerator.DbContext();
+            FakeDbContext dbContext = FakeGenerator.DbContext();
             var repo = new CrudDbSet<FakeDbContext, DataModel, int>(dbContext, db => db.Fakes, true);
 
-            var dataToSave = FakeGenerator.Data(1);
+            DataModel dataToSave = FakeGenerator.Data(1);
             repo.Create(dataToSave);
             dataToSave.FullName = FakeGenerator.FullName(false);
 
             repo.Update(dataToSave);
 
-            var savedData = repo.GetSingle(1);
+            DataModel savedData = repo.GetSingle(1);
             Assert.AreEqual(dataToSave.FullName, savedData.FullName);
         }
 
@@ -88,11 +88,11 @@ namespace Phnx.Data.EFCore.Tests.Repositories
             // This test, and the Delete without autosave test requires change tracking to be disabled.
             // Change tracking being disabled helps to ensure that the Get method returns the in-memory database, not what EF has tracked
 
-            var dbContext = FakeGenerator.DbContext();
+            FakeDbContext dbContext = FakeGenerator.DbContext();
             var repo = new CrudDbSet<FakeDbContext, DataModel, int>(dbContext, db => db.Fakes, true);
 
-            var dataToSave = FakeGenerator.Data(1);
-            string originalName = dataToSave.FullName;
+            DataModel dataToSave = FakeGenerator.Data(1);
+            var originalName = dataToSave.FullName;
             repo.Create(dataToSave);
 
             dataToSave.FullName = FakeGenerator.FullName(false);
@@ -100,7 +100,7 @@ namespace Phnx.Data.EFCore.Tests.Repositories
 
             repo.Update(dataToSave);
 
-            var savedData = repo.GetSingle(1);
+            DataModel savedData = repo.GetSingle(1);
 
             Assert.AreEqual(originalName, savedData.FullName);
         }
@@ -108,9 +108,9 @@ namespace Phnx.Data.EFCore.Tests.Repositories
         [Test]
         public void Update_UpdatesModel()
         {
-            var repo = FakeGenerator.Repo();
+            FakeRepo repo = FakeGenerator.Repo();
 
-            var data = FakeGenerator.Data();
+            DataModel data = FakeGenerator.Data();
             data.FullName = "test1";
             repo.Create(data);
 
@@ -119,7 +119,7 @@ namespace Phnx.Data.EFCore.Tests.Repositories
 
             repo.Update(data);
 
-            var savedData = repo.GetSingle(data.Id);
+            DataModel savedData = repo.GetSingle(data.Id);
 
             Assert.IsNotNull(savedData);
 
@@ -130,7 +130,7 @@ namespace Phnx.Data.EFCore.Tests.Repositories
         [Test]
         public void Get_GetsAllInDb()
         {
-            var repo = FakeGenerator.Repo();
+            FakeRepo repo = FakeGenerator.Repo();
 
             repo.Create(FakeGenerator.Data());
             repo.Create(FakeGenerator.Data());
@@ -141,16 +141,16 @@ namespace Phnx.Data.EFCore.Tests.Repositories
         [Test]
         public void GetSingle_GetsMatchingId()
         {
-            var repo = FakeGenerator.Repo();
+            FakeRepo repo = FakeGenerator.Repo();
 
             repo.Create(FakeGenerator.Data());
             repo.Create(FakeGenerator.Data());
-            var fake = FakeGenerator.Data();
+            DataModel fake = FakeGenerator.Data();
             repo.Create(fake);
             repo.Create(FakeGenerator.Data());
             repo.Create(FakeGenerator.Data());
 
-            var found = repo.GetSingle(fake.Id);
+            DataModel found = repo.GetSingle(fake.Id);
 
             Assert.IsNotNull(found);
             Assert.AreEqual(fake.Id, found.Id);
@@ -160,15 +160,15 @@ namespace Phnx.Data.EFCore.Tests.Repositories
         [Test]
         public void Delete_WithAutosaveEnabled_Autosaves()
         {
-            var dbContext = FakeGenerator.DbContext();
+            FakeDbContext dbContext = FakeGenerator.DbContext();
             var repo = new CrudDbSet<FakeDbContext, DataModel, int>(dbContext, db => db.Fakes, true);
 
-            var dataToSave = FakeGenerator.Data(1);
+            DataModel dataToSave = FakeGenerator.Data(1);
             repo.Create(dataToSave);
 
             repo.Delete(dataToSave);
 
-            var savedData = repo.GetSingle(1);
+            DataModel savedData = repo.GetSingle(1);
             Assert.IsNull(savedData);
         }
 
@@ -178,17 +178,17 @@ namespace Phnx.Data.EFCore.Tests.Repositories
             // This test, and the Update without autosave test requires change tracking to be disabled.
             // Change tracking being disabled helps to ensure that the Get method returns the in-memory database, not what EF has tracked
 
-            var dbContext = FakeGenerator.DbContext();
+            FakeDbContext dbContext = FakeGenerator.DbContext();
             var repo = new CrudDbSet<FakeDbContext, DataModel, int>(dbContext, db => db.Fakes, true);
 
-            var dataToSave = FakeGenerator.Data(1);
+            DataModel dataToSave = FakeGenerator.Data(1);
             repo.Create(dataToSave);
 
             repo.AutoSave = false;
 
             repo.Delete(dataToSave);
 
-            var savedData = repo.GetSingle(1);
+            DataModel savedData = repo.GetSingle(1);
             Assert.NotNull(savedData);
         }
     }

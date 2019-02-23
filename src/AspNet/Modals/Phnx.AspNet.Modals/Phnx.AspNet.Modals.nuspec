@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Phnx.AspNet.Modals</id>
+    <version>1.0.0</version>
+    <authors>Phoenix Apps Ltd</authors>
+    <owners>Phoenix Apps Ltd</owners>
+    <copyright>Phoenix Apps Ltd</copyright>
+    <licenseUrl>https://github.com/phoenix-apps/Phnx/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/phoenix-apps/Phnx</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/phoenix-apps/Phnx/master/qrcode-link-to-github.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Provides helpers for managing, creating and presenting modal dialogs and messages for ASP.NET applications</description>
+  </metadata>
+</package>

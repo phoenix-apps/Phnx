@@ -8,7 +8,7 @@ namespace Phnx.Data.Seeds
     /// </summary>
     public class SeedAsync : ISeedAsync
     {
-        private readonly Action seedAsync;
+        private readonly Action _seedAsync;
 
         /// <summary>
         /// Create a new seed with a method to call to seed
@@ -17,7 +17,7 @@ namespace Phnx.Data.Seeds
         /// <exception cref="ArgumentNullException"><paramref name="seedAsync"/> is <see langword="null"/></exception>
         public SeedAsync(Action seedAsync)
         {
-            this.seedAsync = seedAsync ?? throw new ArgumentNullException(nameof(seedAsync));
+            _seedAsync = seedAsync ?? throw new ArgumentNullException(nameof(seedAsync));
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Phnx.Data.Seeds
                 return null;
             }
 
-            return seed.seedAsync;
+            return seed._seedAsync;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Phnx.Data.Seeds
         /// </summary>
         public Task RunAsync()
         {
-            return Task.Run(seedAsync);
+            return Task.Run(_seedAsync);
         }
     }
 }

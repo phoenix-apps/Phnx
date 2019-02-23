@@ -51,7 +51,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Phnx.Windows\Phnx.Windows.Drawing.csproj">
+    <ProjectReference Include="..\Phnx.Windows.Drawing\Phnx.Windows.Drawing.csproj">
       <Project>{89d91d7d-5fbe-419d-ade1-d4501caaf352}</Project>
       <Name>Phnx.Windows.Drawing</Name>
     </ProjectReference>

@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28531.58
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phnx.Core.Configuration", "Phnx.Core.Configuration\Phnx.Core.Configuration.csproj", "{AA8F5037-8AA9-4321-A36C-8EBF8FEFFDE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phnx.Configuration.Core", "Phnx.Core.Configuration\Phnx.Configuration.Core.csproj", "{AA8F5037-8AA9-4321-A36C-8EBF8FEFFDE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Phnx.Core.Configuration.Tests", "Phnx.Core.Configuration.Tests\Phnx.Core.Configuration.Tests.csproj", "{A817468C-FD6B-4C38-9F22-EA046E0CA68B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phnx.Core.Configuration.Tests", "Phnx.Core.Configuration.Tests\Phnx.Core.Configuration.Tests.csproj", "{A817468C-FD6B-4C38-9F22-EA046E0CA68B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

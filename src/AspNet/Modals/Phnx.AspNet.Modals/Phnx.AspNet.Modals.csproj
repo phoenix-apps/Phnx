@@ -7,8 +7,8 @@
     <ProjectGuid>{9A59E360-31F3-40C3-93C0-497A5A5D99ED}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Phnx.AspNet.Windows.Modals</RootNamespace>
-    <AssemblyName>Phnx.AspNet.Windows.Modals</AssemblyName>
+    <RootNamespace>Phnx.AspNet.Modals</RootNamespace>
+    <AssemblyName>Phnx.AspNet.Modals</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Phnx.AspNet.Windows.Modals.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Phnx.AspNet.Modals.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,15 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
-    <Reference Include="Phnx">
-      <HintPath>..\..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
-    </Reference>
-    <Reference Include="Phnx.AspNet.Windows">
-      <HintPath>..\..\AspNet\Phnx.AspNet\bin\Debug\Phnx.AspNet.Windows.dll</HintPath>
-    </Reference>
-    <Reference Include="Phnx.Collections">
-      <HintPath>..\..\..\Collections\Phnx.Collections\bin\Debug\netstandard2.0\Phnx.Collections.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />

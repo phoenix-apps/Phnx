@@ -1,4 +1,3 @@
-using Phnx.Configuration;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -27,8 +26,8 @@ namespace Phnx.Core.Configuration.Tests
         [Test]
         public void GetInt_WhenValueIsInt_GetsValue()
         {
-            string key = "asdfhnf:asdfh";
-            int expected = 1202;
+            var key = "asdfhnf:asdfh";
+            var expected = 1202;
 
             var fake = FakeConfigurationFactory.Create(new Dictionary<string, string>
             {
@@ -45,7 +44,7 @@ namespace Phnx.Core.Configuration.Tests
         [Test]
         public void GetComplexType_WithoutConverter_ThrowsInvalidCastException()
         {
-            string key = "_";
+            var key = "_";
 
             var fake = FakeConfigurationFactory.Create(new Dictionary<string, string>
             {

@@ -14,6 +14,10 @@ namespace Phnx.IO
         /// </summary>
         /// <param name="stream">The stream to write to</param>
         /// <param name="textToWrite">The text to write to the stream</param>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/></exception>
+        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="NotSupportedException"><paramref name="stream"/> does not support writing</exception>
+        /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
         public static void Write(this Stream stream, string textToWrite)
         {
             if (stream is null)
@@ -39,6 +43,10 @@ namespace Phnx.IO
         /// <param name="stream">The stream to write to</param>
         /// <param name="textToWrite">The text to write to the stream</param>
         /// <param name="encoding">The encoding to use when converting <paramref name="textToWrite"/> to bytes</param>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/></exception>
+        /// <exception cref="IOException">An I/O error occurs</exception>
+        /// <exception cref="NotSupportedException"><paramref name="stream"/> does not support writing</exception>
+        /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
         public static void Write(this Stream stream, string textToWrite, Encoding encoding)
         {
             if (stream is null)
@@ -67,7 +75,7 @@ namespace Phnx.IO
         /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/></exception>
         /// <exception cref="IOException">An I/O error occurs</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the returned string</exception>
-        /// <exception cref="ObjectDisposedException">Methods were called after the stream was closed</exception>
+        /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
         public static string ReadToEndAsString(this Stream stream)
         {
             if (stream is null)
@@ -88,7 +96,7 @@ namespace Phnx.IO
         /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/></exception>
         /// <exception cref="IOException">An I/O error occurs</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the returned string</exception>
-        /// <exception cref="ObjectDisposedException">Methods were called after the stream was closed</exception>
+        /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
         public static string ReadToEndAsString(this Stream stream, Encoding encoding)
         {
             if (stream is null)
@@ -104,8 +112,11 @@ namespace Phnx.IO
         /// </summary>
         /// <param name="stream">The stream to read all data from</param>
         /// <returns>A <see cref="T:byte"/> containing all the data read from the <paramref name="stream"/></returns>
+        /// <exception cref="ArgumentException">The sum of offset and count is larger than the buffer length</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/></exception>
         /// <exception cref="IOException">An I/O error occurs</exception>
-        /// <exception cref="ObjectDisposedException">Methods were called after the stream was closed</exception>
+        /// <exception cref="NotSupportedException"><paramref name="stream"/> does not support reading</exception>
+        /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
         public static byte[] ReadToEnd(this Stream stream)
         {
             if (stream is null)
@@ -125,8 +136,10 @@ namespace Phnx.IO
         /// </summary>
         /// <param name="stream">The stream to check</param>
         /// <returns>Whether this stream has been read to the end</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/></exception>
         /// <exception cref="IOException">An I/O error occurs</exception>
-        /// <exception cref="ObjectDisposedException">Methods were called after the stream was closed</exception>
+        /// <exception cref="NotSupportedException">Cannot get the current position within <paramref name="stream"/></exception>
+        /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
         public static bool ReachedEnd(this Stream stream)
         {
             if (stream is null)
@@ -142,8 +155,9 @@ namespace Phnx.IO
         /// </summary>
         /// <param name="reader">The reader to check</param>
         /// <returns>Whether this reader has been read to the end</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="reader"/> is <see langword="null"/></exception>
         /// <exception cref="IOException">An I/O error occurs</exception>
-        /// <exception cref="ObjectDisposedException"><paramref name="reader"/> is closed</exception>
+        /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="reader"/> was closed</exception>
         public static bool ReachedEnd(this TextReader reader)
         {
             if (reader is null)

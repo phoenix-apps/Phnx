@@ -133,9 +133,9 @@ namespace Phnx.IO.Threaded
         /// <exception cref="IOException">A writing error occured with one of the queued items</exception>
         public void Dispose(bool finishWriting)
         {
-            if (finishWriting)
+            if (finishWriting && !_safeExit)
             {
-                _sync.WaitUntil(() => _writeQueue.Count == 0 || _error != null, 1);
+                _sync.WaitUntil(() => _writeQueue.Count == 0 || _error != null || _safeExit, 1);
             }
 
             _safeExit = true;

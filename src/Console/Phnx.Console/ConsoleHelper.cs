@@ -184,8 +184,16 @@ namespace Phnx.Console
 
             if (question != null)
             {
-                question = question.Trim() + " ";
-                Write(question);
+                if (!question.EndsWith(Environment.NewLine))
+                {
+                    question = question.Trim() + " ";
+                    Write(question);
+                }
+                else
+                {
+                    question = question.Trim();
+                    WriteLine(question);
+                }
             }
 
             string errorWritten = null;

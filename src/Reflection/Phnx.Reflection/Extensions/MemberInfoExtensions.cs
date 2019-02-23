@@ -27,8 +27,7 @@ namespace Phnx.Reflection
 
             return member.GetCustomAttribute<T>();
         }
-
-
+        
         /// <summary>
         /// Gets the display name for this member by looking for its <see cref="DisplayNameAttribute"/> and <see cref="DisplayAttribute"/>
         /// </summary>

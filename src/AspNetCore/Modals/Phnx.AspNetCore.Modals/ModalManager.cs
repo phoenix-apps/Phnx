@@ -3,6 +3,7 @@ using Phnx.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace Phnx.AspNetCore.Modals
 {
@@ -54,7 +55,9 @@ namespace Phnx.AspNetCore.Modals
                 return new List<TModal>();
             }
 
-            var value = JsonSerializer.Deserialize<List<TModal>>(valueBytes);
+            var valueString = Encoding.UTF8.GetString(valueBytes);
+
+            var value = JsonSerializer.Deserialize<List<TModal>>(valueString);
 
             return value;
         }
@@ -76,7 +79,9 @@ namespace Phnx.AspNetCore.Modals
                 return;
             }
 
-            var valueBytes = JsonSerializer.Serialize(modals);
+            var valueString = JsonSerializer.Serialize(modals);
+
+            var valueBytes = Encoding.UTF8.GetBytes(valueString);
 
             Session.Set(SessionModalsKey, valueBytes);
         }

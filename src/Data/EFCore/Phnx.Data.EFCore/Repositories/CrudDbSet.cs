@@ -6,7 +6,7 @@ using System.Linq;
 namespace Phnx.Data.EFCore.Repositories
 {
     /// <summary>
-    /// Provides Create, Read, Update and Delete operations on data, via <see cref="Microsoft.EntityFrameworkCore"/>. This does not save changes, so you'll need to use <see cref="DbContext.SaveChanges()"/> whenever changing data
+    /// Provides Create, Read, Update and Delete operations on data, via <see cref="Microsoft.EntityFrameworkCore"/>
     /// </summary>
     /// <typeparam name="TDbContext">The <see cref="DbContext"/> that <typeparamref name="TEntity"/> is stored in</typeparam>
     /// <typeparam name="TEntity">The model this CRUD repository controls</typeparam>
@@ -79,7 +79,7 @@ namespace Phnx.Data.EFCore.Repositories
         /// <returns>The first matching item</returns>
         public virtual TEntity GetSingle(TKey id)
         {
-            return Table.AsNoTracking().FirstOrDefault(item => item.Id.Equals(id));
+            return Table.SingleOrDefault(item => item.Id.Equals(id));
         }
 
         /// <summary>

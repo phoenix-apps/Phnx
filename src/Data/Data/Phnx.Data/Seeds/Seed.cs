@@ -7,7 +7,7 @@ namespace Phnx.Data.Seeds
     /// </summary>
     public class Seed : ISeed
     {
-        private readonly Action seed;
+        private readonly Action _seed;
 
         /// <summary>
         /// Create a new seed with a method to call to seed
@@ -16,14 +16,13 @@ namespace Phnx.Data.Seeds
         /// <exception cref="ArgumentNullException"><paramref name="seed"/> is <see langword="null"/></exception>
         public Seed(Action seed)
         {
-            this.seed = seed ?? throw new ArgumentNullException(nameof(seed));
+            _seed = seed ?? throw new ArgumentNullException(nameof(seed));
         }
 
         /// <summary>
         /// Convert a <see cref="Seed"/> to an <see cref="Action"/>
         /// </summary>
         /// <param name="seed">The seed to convert</param>
-        /// <exception cref="ArgumentNullException"><paramref name="seed"/> is <see langword="null"/></exception>
         public static implicit operator Action(Seed seed)
         {
             if (seed is null)
@@ -31,14 +30,13 @@ namespace Phnx.Data.Seeds
                 return null;
             }
 
-            return seed.seed;
+            return seed._seed;
         }
 
         /// <summary>
         /// Convert an <see cref="Action"/> to a <see cref="Seed"/>
         /// </summary>
         /// <param name="seed">The action to convert</param>
-        /// <exception cref="ArgumentNullException"><paramref name="seed"/> is <see langword="null"/></exception>
         public static implicit operator Seed(Action seed)
         {
             if (seed is null)
@@ -54,7 +52,7 @@ namespace Phnx.Data.Seeds
         /// </summary>
         public void Run()
         {
-            seed();
+            _seed();
         }
     }
 }

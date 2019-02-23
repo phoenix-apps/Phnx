@@ -22,13 +22,9 @@ All `.NET Core`, `EntityFrameworkCore`, `AspNetCore` or `.NET Standard` librarie
 * All other projects use `.NET Standard`
 
 ## Help & Documentation
-Documentation is available, hosted by GitHub Pages [here](https://phoenix-apps.github.io/phnx-wiki). This documentation is updated with each release.
+Documentation is available, hosted by GitHub Pages [here](https://phoenix-apps.github.io/Phnx-Wiki). This documentation is updated with each release.
 
 ## Contributing
-We welcome contributions. Please submit a pull request with your changes, and follow the [Documentation Language Specification](https://github.com/phoenix-apps/Phnx/blob/master/Styles%20and%20Standards/Documentation%20Language%20Specification.md) when updating software documentation for your changes (where necessary).
+We welcome contributions. Please follow the [Phoenix Standards](https://github.com/phoenix-apps/Standards) when developing on any of our projects.
 
-Please do not submit a pull request without an issue attached. If there isn't an issue reported for the fix (or refactoring) you're trying to make, please create one. This makes it easier for us to understand the reasons behind your change(s).
-
-Before getting started, run the `build_all_core.cmd` (for Windows) or `build_all_core.sh` (for Linux/Mac OS) to build all standard and core projects. Rerunning this after you're finished is a good idea, but not necessary as long as the projects you've changed build.
-
-Any additional logic or changes you make should have automated tests that validate their logic. Avoid writing tests that test _how_ your code works (such as calling other methods), but assert that the code produces the result (or exception) you expect.
+Before getting started, run the `build_all_core.cmd` (for Windows) or `build_all_core.sh` (for Linux/Mac OS) to build all standard and core projects. Rerunning this after you're finished is a good idea to crudely check for breaking changes, but it's not necessary.
