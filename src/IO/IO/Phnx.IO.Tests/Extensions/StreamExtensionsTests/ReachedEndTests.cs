@@ -16,7 +16,7 @@ namespace Phnx.IO.Tests.Extensions.StreamExtensionsTests
         [Test]
         public void ReachedEnd_WhenStreamAtStartWithData_ReturnsFalse()
         {
-            PipeStream pipe = new PipeStream(new byte[2]);
+            var pipe = new PipeStream(new byte[2]);
 
             var result = pipe.ReachedEnd();
 
@@ -26,7 +26,7 @@ namespace Phnx.IO.Tests.Extensions.StreamExtensionsTests
         [Test]
         public void ReachedEnd_WhenStreamInMiddleWithData_ReturnsFalse()
         {
-            PipeStream pipe = new PipeStream(new byte[2]);
+            var pipe = new PipeStream(new byte[2]);
             pipe.ReadByte();
 
             var result = pipe.ReachedEnd();
@@ -37,7 +37,7 @@ namespace Phnx.IO.Tests.Extensions.StreamExtensionsTests
         [Test]
         public void ReachedEnd_WhenStreamAtEndWithData_ReturnsTrue()
         {
-            PipeStream pipe = new PipeStream(new byte[2]);
+            var pipe = new PipeStream(new byte[2]);
             pipe.ReadByte();
             pipe.ReadByte();
 
@@ -49,7 +49,7 @@ namespace Phnx.IO.Tests.Extensions.StreamExtensionsTests
         [Test]
         public void ReachedEnd_WhenStreamEmpty_ReturnsTrue()
         {
-            PipeStream pipe = new PipeStream();
+            var pipe = new PipeStream();
 
             var result = pipe.ReachedEnd();
 
@@ -66,7 +66,7 @@ namespace Phnx.IO.Tests.Extensions.StreamExtensionsTests
         [Test]
         public void ReachedEndTextReader_WhenAtStartWithData_ReturnsFalse()
         {
-            PipeStream pipe = new PipeStream(new byte[2]);
+            var pipe = new PipeStream(new byte[2]);
 
             var result = pipe.Out.ReachedEnd();
 
@@ -76,7 +76,7 @@ namespace Phnx.IO.Tests.Extensions.StreamExtensionsTests
         [Test]
         public void ReachedEndTextReader_WhenInMiddleWithData_ReturnsFalse()
         {
-            PipeStream pipe = new PipeStream(new byte[2]);
+            var pipe = new PipeStream(new byte[2]);
             pipe.ReadByte();
 
             var result = pipe.Out.ReachedEnd();
@@ -87,7 +87,7 @@ namespace Phnx.IO.Tests.Extensions.StreamExtensionsTests
         [Test]
         public void ReachedEndTextReader_WhenAtEndWithData_ReturnsTrue()
         {
-            PipeStream pipe = new PipeStream(new byte[2]);
+            var pipe = new PipeStream(new byte[2]);
             pipe.ReadByte();
             pipe.ReadByte();
 
@@ -99,7 +99,7 @@ namespace Phnx.IO.Tests.Extensions.StreamExtensionsTests
         [Test]
         public void ReachedEndTextReader_WhenEmpty_ReturnsTrue()
         {
-            PipeStream pipe = new PipeStream();
+            var pipe = new PipeStream();
 
             var result = pipe.Out.ReachedEnd();
 

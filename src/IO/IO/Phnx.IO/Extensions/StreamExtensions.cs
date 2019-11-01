@@ -165,7 +165,7 @@ namespace Phnx.IO
                 throw new ArgumentNullException(nameof(reader));
             }
 
-            return reader.Peek() > -1;
+            return reader.Peek() == -1;
         }
     }
 }
