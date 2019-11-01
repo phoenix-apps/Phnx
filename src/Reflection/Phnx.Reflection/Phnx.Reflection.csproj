@@ -12,12 +12,16 @@
     <RepositoryUrl>https://github.com/phoenix-apps/Phnx</RepositoryUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/phoenix-apps/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
     <RepositoryType>Git</RepositoryType>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netstandard2.0\Phnx.Reflection.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
