@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Phnx.Core.Configuration\Phnx.Configuration.Core.csproj" />
+    <ProjectReference Include="..\Phnx.Configuration\Phnx.Configuration.csproj" />
   </ItemGroup>
 
 </Project>

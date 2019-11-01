@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <Reference Include="Phnx">
-      <HintPath>..\..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
+      <HintPath>..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
     </Reference>
   </ItemGroup>
 

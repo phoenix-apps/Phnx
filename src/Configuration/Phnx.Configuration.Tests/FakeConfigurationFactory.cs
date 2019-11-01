@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 
-namespace Phnx.Core.Configuration.Tests
+namespace Phnx.Configuration.Tests
 {
     public static class FakeConfigurationFactory
     {

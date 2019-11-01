@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 
-namespace Phnx.Core.Configuration
+namespace Phnx.Configuration
 {
     /// <summary>
     /// Loads the application configuration, including default values and converting the configuration to the needed types where necessary
