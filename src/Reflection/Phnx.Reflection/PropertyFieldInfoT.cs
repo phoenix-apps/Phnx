@@ -61,7 +61,15 @@ namespace Phnx.Reflection
         protected void LoadExpression<TObject, TMember>(Expression<Func<TObject, TMember>> expression)
         {
             MemberInfo member;
-            if (expression.Body is MemberExpression memberExpression)
+            Expression body = expression.Body;
+
+            if (body is UnaryExpression convertExpression)
+            {
+                // Trim converter
+                body = convertExpression.Operand;
+            }
+
+            if (body is MemberExpression memberExpression)
             {
                 member = memberExpression.Member;
             }

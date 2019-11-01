@@ -50,5 +50,14 @@ namespace Phnx.Reflection.Tests.PropertyFieldInfo
             Assert.DoesNotThrow(() =>
             _ = new PropertyFieldInfo<PropertyFieldClass, string>(member));
         }
+
+        [Test]
+        public void New_WithImplicitCastRequired_CreatesPropertyFieldInfo()
+        {
+            Expression<Func<PropertyFieldClass, object>> expression = item => item.PublicField;
+
+            Assert.DoesNotThrow(() =>
+            _ = new PropertyFieldInfo<PropertyFieldClass, object>(expression));
+        }
     }
 }

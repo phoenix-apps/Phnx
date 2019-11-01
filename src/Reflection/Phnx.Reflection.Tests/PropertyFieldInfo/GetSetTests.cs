@@ -75,7 +75,7 @@ namespace Phnx.Reflection.Tests.PropertyFieldInfo
 
             var prop = new PropertyFieldInfo<PropertyFieldClass, DateTime>(p => p.PublicFieldReadOnly);
 
-            var result = prop.GetValue(instance);
+            DateTime result = prop.GetValue(instance);
 
             Assert.AreEqual(expected, result);
         }
@@ -91,6 +91,20 @@ namespace Phnx.Reflection.Tests.PropertyFieldInfo
             field.SetValue(instance, expected);
 
             Assert.AreEqual(expected, instance.PublicField);
+        }
+
+        [Test]
+        public void GetSetValue_ForValueWithImplicitCast_GetsAndSets()
+        {
+            object value = new DateTime(2000, 1, 1);
+            var instance = new PropertyFieldClass();
+
+            var field = new PropertyFieldInfo<PropertyFieldClass, object>(p => p.PublicField);
+
+            field.SetValue(instance, value);
+
+            Assert.AreEqual(value, instance.PublicField);
+            Assert.AreEqual(value, field.GetValue(instance));
         }
     }
 }
