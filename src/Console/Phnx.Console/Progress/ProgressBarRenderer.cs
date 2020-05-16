@@ -12,9 +12,9 @@ namespace Phnx.Console.Progress
         /// </summary>
         public decimal MaxValue { get; }
 
-        private const int BlockCount = 10;
+        private const int _blockCount = 10;
 
-        private static readonly char[] Frames = {
+        private static readonly char[] _frames = {
 
             '|',
             '/',
@@ -26,12 +26,12 @@ namespace Phnx.Console.Progress
         /// Create a new <see cref="ProgressBarRenderer"/>
         /// </summary>
         /// <param name="maxValue">The maximum value, representing the progress bar at its completed state</param>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="maxValue"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="maxValue"/> is less than zero</exception>
         public ProgressBarRenderer(decimal maxValue)
         {
             if (maxValue < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(maxValue));
+                throw new ArgumentOutOfRangeException(nameof(maxValue));
             }
 
             MaxValue = maxValue;
@@ -45,8 +45,7 @@ namespace Phnx.Console.Progress
         /// <summary>
         /// Get or set the current progress
         /// </summary>
-        /// <exception cref="ArgumentLessThanZeroException">The value was set to a value less than zero</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The value was set to a value greater than <see cref="MaxValue"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The value was set to a value less than zero or greater than <see cref="MaxValue"/></exception>
         public decimal Progress
         {
             get => _progress;
@@ -54,7 +53,7 @@ namespace Phnx.Console.Progress
             {
                 if (value < 0)
                 {
-                    throw new ArgumentLessThanZeroException(nameof(value));
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 }
 
                 if (value > MaxValue)
@@ -78,7 +77,7 @@ namespace Phnx.Console.Progress
 
         private void UpdateAnimationChar()
         {
-            if (++_currentAnimationFrame >= Frames.Length)
+            if (++_currentAnimationFrame >= _frames.Length)
             {
                 _currentAnimationFrame = 0;
             }
@@ -88,9 +87,9 @@ namespace Phnx.Console.Progress
         /// Return this <see cref="ProgressBarRenderer"/> formatted as a progress bar, with the spinner
         /// </summary>
         /// <returns>This <see cref="ProgressBarRenderer"/> formatted as a progress bar</returns>
-        public override string ToString()
+        public string RenderWithoutSpinner()
         {
-            return ToString(false, false);
+            return Render(false, false);
         }
 
         /// <summary>
@@ -98,12 +97,12 @@ namespace Phnx.Console.Progress
         /// </summary>
         /// <param name="moveSpinnerToNextPosition">Whether to rotate the spinner by 1 position</param>
         /// <returns>This <see cref="ProgressBarRenderer"/> formatted as a progress bar</returns>
-        public string ToStringWithSpinner(bool moveSpinnerToNextPosition)
+        public string RenderWithSpinner(bool moveSpinnerToNextPosition)
         {
-            return ToString(true, moveSpinnerToNextPosition);
+            return Render(true, moveSpinnerToNextPosition);
         }
 
-        private string ToString(bool showSpinner, bool moveSpinnerToNextPosition)
+        private string Render(bool showSpinner, bool moveSpinnerToNextPosition)
         {
             if (moveSpinnerToNextPosition)
             {
@@ -111,16 +110,16 @@ namespace Phnx.Console.Progress
             }
 
             var percProgress = (Progress / MaxValue) * 100;
-            var blocksToPrint = (int)Math.Truncate(percProgress / BlockCount);
+            var blocksToPrint = (int)Math.Truncate(percProgress / _blockCount);
 
             var progressDoneIndicator = new string('#', blocksToPrint);
-            var progressToGoIndicator = new string('-', BlockCount - blocksToPrint);
+            var progressToGoIndicator = new string('-', _blockCount - blocksToPrint);
 
-            string renderedBar = $"[{progressDoneIndicator}{progressToGoIndicator}] {percProgress.ToString("0.##")}%";
+            string renderedBar = $"[{progressDoneIndicator}{progressToGoIndicator}] {percProgress:0.##}%";
 
             if (showSpinner)
             {
-                var frame = Frames[_currentAnimationFrame];
+                var frame = _frames[_currentAnimationFrame];
                 renderedBar += $" {frame}";
             }
 

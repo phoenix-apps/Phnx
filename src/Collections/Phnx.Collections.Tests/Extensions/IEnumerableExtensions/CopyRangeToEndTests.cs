@@ -67,7 +67,7 @@ namespace Phnx.Collections.Tests.Extensions.IEnumerableExtensions
         }
 
         [Test]
-        public void CopyRange_StartingLessThanZero_ThrowsArgumentLessThanZeroException()
+        public void CopyRange_StartingLessThanZero_ThrowsArgumentOutOfRangeException()
         {
             var items = new List<string>
             {
@@ -76,7 +76,7 @@ namespace Phnx.Collections.Tests.Extensions.IEnumerableExtensions
                 "item3"
             };
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => items.CopyRange(-1).ToList());
+            Assert.Throws<ArgumentOutOfRangeException>(() => items.CopyRange(-1).ToList());
         }
 
         [Test]

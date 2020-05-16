@@ -56,9 +56,9 @@ namespace Phnx.Collections.Tests.Tree
 
             TreeNode<object> top1mid1 = top1.AddChild(new object());
 
-            TreeNode<object> top1mid1bot1 = top1mid1.AddChild(new object());
-            TreeNode<object> top1mid1bot2 = top1mid1.AddChild(new object());
-            TreeNode<object> top1mid1bot3 = top1mid1.AddChild(new object());
+            top1mid1.AddChild(new object());
+            top1mid1.AddChild(new object());
+            top1mid1.AddChild(new object());
 
             top1.AddChild(top1mid1);
             top1.AddChild(top1mid1);

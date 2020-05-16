@@ -23,6 +23,7 @@ namespace Phnx.Drawing.Shapes
         /// <param name="x">The x coordinate of the center of the circle</param>
         /// <param name="y">The y coordinate of the center of the circle</param>
         /// <param name="radius">The radius of the circle</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="radius"/> is less than zero</exception>
         public Circle(double x, double y, double radius)
         {
             X = x;
@@ -30,7 +31,7 @@ namespace Phnx.Drawing.Shapes
 
             if (radius < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(radius));
+                throw new ArgumentOutOfRangeException(nameof(radius));
             }
 
             Radius = radius;

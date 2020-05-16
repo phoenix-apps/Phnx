@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 
 namespace Phnx.Security.Tests
 {
@@ -23,7 +24,7 @@ namespace Phnx.Security.Tests
         [Test]
         public void SecureRandomBytes_Minus1Bytes_ThrowsArgumentLessThanZero()
         {
-            Assert.Throws<ArgumentLessThanZeroException>(() => SecureRandomBytes.Generate(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => SecureRandomBytes.Generate(-1));
         }
     }
 }

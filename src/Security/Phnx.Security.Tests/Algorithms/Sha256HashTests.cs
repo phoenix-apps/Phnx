@@ -21,11 +21,11 @@ namespace Phnx.Security.Tests.Algorithms
         }
 
         [Test]
-        public void Hash_WithNegativeIterations_ThrowsArgumentLessThanZeroException()
+        public void Hash_WithNegativeIterations_ThrowsArgumentOutOfRangeException()
         {
             var data = Encoding.UTF8.GetBytes("asdf");
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => Sha256Hash.Hash(data, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Sha256Hash.Hash(data, -1));
         }
 
         [Test]

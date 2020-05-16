@@ -55,19 +55,19 @@ namespace Phnx.IO.Threaded.Tests
         }
 
         [Test]
-        public void WaitUntil_WithNegativeReevaluateTime_ThrowsArgumentLessThanZeroException()
+        public void WaitUntil_WithNegativeReevaluateTime_ThrowsArgumentOutOfRangeException()
         {
             var sync = new FuncSyncEvent();
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => sync.WaitUntil(() => true, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => sync.WaitUntil(() => true, -1));
         }
 
         [Test]
-        public void WaitUntilWithTimeout_WithNegativeReevaluateTime_ThrowsArgumentLessThanZeroException()
+        public void WaitUntilWithTimeout_WithNegativeReevaluateTime_ThrowsArgumentOutOfRangeException()
         {
             var sync = new FuncSyncEvent();
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => sync.WaitUntil(() => true, -1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => sync.WaitUntil(() => true, -1, 0));
         }
 
         [Test]

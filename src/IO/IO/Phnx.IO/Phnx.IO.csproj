@@ -13,10 +13,7 @@
     <RepositoryType>Git</RepositoryType>
     <Description>Provides helpers for reading from and writing to data streams</Description>
     <PackageIconUrl>https://raw.githubusercontent.com/phoenix-apps/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\Phnx.IO.xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

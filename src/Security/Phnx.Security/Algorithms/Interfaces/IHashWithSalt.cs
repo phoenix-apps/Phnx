@@ -26,7 +26,7 @@ namespace Phnx.Security.Algorithms
         /// <param name="numberOfIterations">The number of times the algorithm is ran on <paramref name="data"/></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> or <paramref name="salt"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="numberOfIterations"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="numberOfIterations"/> is less than zero</exception>
         byte[] Hash(byte[] data, byte[] salt, int numberOfIterations = 1);
     }
 }

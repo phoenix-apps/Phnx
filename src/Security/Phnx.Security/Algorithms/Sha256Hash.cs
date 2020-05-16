@@ -27,7 +27,7 @@ namespace Phnx.Security.Algorithms
         /// <param name="iterations">The number of times to run the algorithm</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="iterations"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="iterations"/> is less than zero</exception>
         public byte[] Hash(byte[] data, int iterations = 1)
         {
             if (data is null)
@@ -36,7 +36,7 @@ namespace Phnx.Security.Algorithms
             }
             if (iterations < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(iterations));
+                throw new ArgumentOutOfRangeException(nameof(iterations));
             }
 
             if (iterations == 0)

@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Phnx.Drawing.Shapes;
+using System;
 using System.Drawing;
 using System.Linq;
 
@@ -16,9 +17,9 @@ namespace Phnx.Drawing.Tests.Shapes
         }
 
         [Test]
-        public void NewCircle_WithNegativeRadius_ThrowsArgumentLessThanZeroException()
+        public void NewCircle_WithNegativeRadius_ThrowsArgumentOutOfRangeException()
         {
-            Assert.Throws<ArgumentLessThanZeroException>(() => new Circle(new Point(0, 0), -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Circle(new Point(0, 0), -1));
         }
 
         [Test]

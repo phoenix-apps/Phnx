@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 namespace Phnx.Security
 {
     /// <summary>
-    /// Provides a way to generate secure random bytes
+    /// Provides a way to generate secure random bytes, using <see cref="RandomNumberGenerator"/>
     /// </summary>
     public static class SecureRandomBytes
     {
@@ -15,12 +15,12 @@ namespace Phnx.Security
         /// </summary>
         /// <param name="numberOfBytesToGenerate">The number of bytes to generate</param>
         /// <returns></returns>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="numberOfBytesToGenerate"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="numberOfBytesToGenerate"/> is less than zero</exception>
         public static byte[] Generate(int numberOfBytesToGenerate)
         {
             if (numberOfBytesToGenerate < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(numberOfBytesToGenerate));
+                throw new ArgumentOutOfRangeException(nameof(numberOfBytesToGenerate));
             }
 
             byte[] rndBytes = new byte[numberOfBytesToGenerate];

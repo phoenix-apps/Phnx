@@ -16,8 +16,7 @@ namespace Phnx.Collections
         /// <param name="startIndex">The index at which inserting into <paramref name="source"/> begins</param>
         /// <param name="valuesToInsert">The values to insert into the collection</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="valuesToInsert"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="startIndex"/> is less than zero</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is greater than or equal to the size of <paramref name="source"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero or greater than or equal to the size of <paramref name="source"/></exception>
         public static void InsertList<T>(this List<T> source, int startIndex, IList<T> valuesToInsert)
         {
             if (source == null)
@@ -30,7 +29,7 @@ namespace Phnx.Collections
             }
             if (startIndex < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(startIndex));
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
             if (startIndex > source.Count)
             {

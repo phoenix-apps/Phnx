@@ -18,7 +18,7 @@ namespace Phnx.Security.Algorithms
         /// <param name="numberOfIterations">The number of times the algorithm is ran on <paramref name="data"/></param>
         /// <returns><paramref name="data"/> hashed</returns>
         /// <exception cref="ArgumentNullException"><paramref name="data"/> or <paramref name="salt"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="numberOfIterations"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="numberOfIterations"/> is less than zero</exception>
         public static byte[] Hash(this IHashWithSalt encryption, string data, byte[] salt, Encoding encoding, int numberOfIterations = 1)
         {
             if (encryption is null)

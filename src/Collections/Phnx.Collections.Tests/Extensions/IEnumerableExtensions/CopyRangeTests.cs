@@ -109,7 +109,7 @@ namespace Phnx.Collections.Tests.Extensions.IEnumerableExtensions
         }
 
         [Test]
-        public void CopyRange_StartingLessThanZero_ThrowsArgumentLessThanZeroException()
+        public void CopyRange_StartingLessThanZero_ThrowsArgumentOutOfRangeException()
         {
             var items = new List<string>
             {
@@ -118,7 +118,7 @@ namespace Phnx.Collections.Tests.Extensions.IEnumerableExtensions
                 "item3"
             };
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => items.CopyRange(-1, 0).ToList());
+            Assert.Throws<ArgumentOutOfRangeException>(() => items.CopyRange(-1, 0).ToList());
         }
 
         [Test]
@@ -148,7 +148,7 @@ namespace Phnx.Collections.Tests.Extensions.IEnumerableExtensions
         }
 
         [Test]
-        public void CopyRange_WithCountLessThanZero_ThrowsArgumentLessThanZeroException()
+        public void CopyRange_WithCountLessThanZero_ThrowsArgumentOutOfRangeException()
         {
             var items = new List<string>
             {
@@ -157,7 +157,7 @@ namespace Phnx.Collections.Tests.Extensions.IEnumerableExtensions
                 "item3"
             };
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => items.CopyRange(2, -1).ToList());
+            Assert.Throws<ArgumentOutOfRangeException>(() => items.CopyRange(2, -1).ToList());
         }
     }
 }

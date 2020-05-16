@@ -51,19 +51,19 @@ namespace Phnx.IO.Tests.PipeStreamTests
         }
 
         [Test]
-        public void NewPipe_WithOffsetLessThanZero_ThrowsArgumentLessThanZeroException()
+        public void NewPipe_WithOffsetLessThanZero_ThrowsArgumentOutOfRangeException()
         {
             var expected = new byte[] { 123, 1, 36, 35, 1 };
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => new PipeStream(expected, -1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new PipeStream(expected, -1, 0));
         }
 
         [Test]
-        public void NewPipe_WithCountLessThanZero_ThrowsArgumentLessThanZeroException()
+        public void NewPipe_WithCountLessThanZero_ThrowsArgumentOutOfRangeException()
         {
             var expected = new byte[] { 123, 1, 36, 35, 1 };
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => new PipeStream(expected, 0, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new PipeStream(expected, 0, -1));
         }
 
         [Test]

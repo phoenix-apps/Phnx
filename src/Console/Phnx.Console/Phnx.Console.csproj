@@ -14,19 +14,6 @@
     <RepositoryUrl>https://github.com/phoenix-apps/Phnx</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\Phnx.Console.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Reference Include="Phnx">
-      <HintPath>..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
-    </Reference>
-    <Reference Include="Phnx.Collections">
-      <HintPath>..\..\Collections\Phnx.Collections\bin\Debug\netstandard2.0\Phnx.Collections.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

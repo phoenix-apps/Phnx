@@ -206,7 +206,7 @@ namespace Phnx.Console
         /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
         /// <exception cref="ObjectDisposedException"><see cref="Input"/> is closed</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is greater than <see cref="int.MaxValue"/></exception>
         public string GetString()
         {
             return Input.ReadLine();
@@ -220,7 +220,7 @@ namespace Phnx.Console
         /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is greater than <see cref="int.MaxValue"/></exception>
         public string GetString(string question)
         {
             Write(question);
@@ -235,7 +235,7 @@ namespace Phnx.Console
         /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is greater than <see cref="int.MaxValue"/></exception>
         /// <exception cref="EndOfStreamException">Reached the end of <see cref="Input"/></exception>
         /// <exception cref="InvalidCastException">An error occurred converting the input to a <see cref="int"/></exception>
         public int GetInt(string question = null)
@@ -254,7 +254,7 @@ namespace Phnx.Console
         /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is greater than <see cref="int.MaxValue"/></exception>
         /// <exception cref="EndOfStreamException">Reached the end of <see cref="Input"/></exception>
         /// <exception cref="InvalidCastException">An error occurred converting the input to a <see cref="int"/></exception>
         public int GetSelection(IEnumerable<string> options, string question = null)
@@ -309,7 +309,7 @@ namespace Phnx.Console
         /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is greater than <see cref="int.MaxValue"/></exception>
         /// <exception cref="EndOfStreamException">Reached the end of <see cref="Input"/></exception>
         /// <exception cref="InvalidCastException">An error occurred converting the input to a <see cref="long"/></exception>
         public long GetLong(string question = null)
@@ -325,7 +325,7 @@ namespace Phnx.Console
         /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is greater than <see cref="int.MaxValue"/></exception>
         /// <exception cref="EndOfStreamException">Reached the end of <see cref="Input"/></exception>
         /// <exception cref="InvalidCastException">An error occurred converting the input to a <see cref="decimal"/></exception>
         public decimal GetDecimal(string question = null)
@@ -341,7 +341,7 @@ namespace Phnx.Console
         /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is greater than <see cref="int.MaxValue"/></exception>
         /// <exception cref="EndOfStreamException">Reached the end of <see cref="Input"/></exception>
         /// <exception cref="InvalidCastException">An error occurred converting the input to a <see cref="DateTime"/></exception>
         public DateTime GetDateTime(string question = null)
@@ -359,7 +359,7 @@ namespace Phnx.Console
         /// <exception cref="IOException">An I/O error occured</exception>
         /// <exception cref="ObjectDisposedException"><see cref="Output"/> or <see cref="Input"/> is closed</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="Input"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is greater than <see cref="int.MaxValue"/></exception>
         /// <exception cref="EndOfStreamException">Reached the end of <see cref="Input"/></exception>
         /// <exception cref="InvalidCastException">An error occurred in <paramref name="converter"/>. The exception from <paramref name="converter"/> is captured in the inner exception</exception>
         public virtual T Get<T>(Func<string, T> converter, string question = null)

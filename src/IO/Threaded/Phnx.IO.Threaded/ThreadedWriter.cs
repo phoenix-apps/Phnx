@@ -20,7 +20,7 @@ namespace Phnx.IO.Threaded
         /// </summary>
         private volatile bool _safeExit;
 
-        private ManualResetEventSlim _workerExited;
+        private readonly ManualResetEventSlim _workerExited;
 
         /// <summary>
         /// The number of <see cref="Write(T)"/> requests currently queued
@@ -51,7 +51,7 @@ namespace Phnx.IO.Threaded
         /// <param name="writeFunc">The function to use when writing data. This is ran from a different thread to the one that called <see cref="Write(T)"/> requests</param>
         /// <param name="maximumQueueCount">The maximum size of the write queue. If this is exceeded, write will be paused whilst waiting for space in the queue to add the new entry. Set this to 0 to have no limit</param>
         /// <exception cref="ArgumentNullException"><paramref name="writeFunc"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="maximumQueueCount"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="maximumQueueCount"/> is less than zero</exception>
         public ThreadedWriter(Action<T> writeFunc, int maximumQueueCount)
         {
             _sync = new FuncSyncEvent();
@@ -62,7 +62,7 @@ namespace Phnx.IO.Threaded
 
             if (maximumQueueCount < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(maximumQueueCount));
+                throw new ArgumentOutOfRangeException(nameof(maximumQueueCount));
             }
             MaximumQueueCount = maximumQueueCount;
 
@@ -99,7 +99,7 @@ namespace Phnx.IO.Threaded
             {
                 while (true)
                 {
-                    T objectToWrite = default(T);
+                    T objectToWrite = default;
                     bool itemFound = false;
 
                     _sync.WaitUntil(() => (itemFound = _writeQueue.TryDequeue(out objectToWrite)) || _safeExit, 1);

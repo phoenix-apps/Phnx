@@ -1,9 +1,9 @@
 ﻿using Phnx.Reflection;
-using Phnx.Serialization;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace Phnx.AspNetCore.ETags.Services
 {

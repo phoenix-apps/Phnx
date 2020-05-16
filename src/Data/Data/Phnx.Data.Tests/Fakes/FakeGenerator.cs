@@ -1,14 +1,13 @@
-﻿using Phnx.Data.LazyLoad;
-using Phnx.Data.Repositories;
+﻿using Phnx.Data.Lazy;
 using System;
 
 namespace Phnx.Data.Tests.Fakes
 {
     public static class FakeGenerator
     {
-        private static Random rnd = new Random();
+        private static readonly Random _rnd = new Random();
 
-        private static string[] FirstNames = new string[]
+        private static readonly string[] _firstNames = new string[]
         {
             "Oliver",
             "George",
@@ -23,7 +22,7 @@ namespace Phnx.Data.Tests.Fakes
             "Ava"
         };
 
-        private static string[] Surnames = new string[]
+        private static readonly string[] _surnames = new string[]
         {
             "Smith",
             "Johnson",
@@ -44,9 +43,9 @@ namespace Phnx.Data.Tests.Fakes
                 return Guid.NewGuid().ToString();
             }
 
-            var firstName = FirstNames[rnd.Next(0, FirstNames.Length)];
+            var firstName = _firstNames[_rnd.Next(0, _firstNames.Length)];
 
-            var surname = Surnames[rnd.Next(0, Surnames.Length)];
+            var surname = _surnames[_rnd.Next(0, _surnames.Length)];
 
             return firstName + " " + surname;
         }
@@ -63,19 +62,6 @@ namespace Phnx.Data.Tests.Fakes
         public static LazyDatabase Cache()
         {
             return new LazyDatabase();
-        }
-
-        public static DictionaryCrud<int, DataModel> DictionaryCrud()
-        {
-            return new DictionaryCrud<int, DataModel>();
-        }
-
-        public static CachedCrud<int, DataModel> CachedCrud(out LazyDatabase database, out FakeCrud repo)
-        {
-            repo = new FakeCrud();
-            database = Cache();
-
-            return new CachedCrud<int, DataModel>(database, repo);
         }
     }
 }

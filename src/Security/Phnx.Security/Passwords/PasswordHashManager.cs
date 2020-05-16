@@ -225,7 +225,7 @@ namespace Phnx.Security.Passwords
         /// <param name="array">The destination array to copy to</param>
         /// <param name="arrayIndex">The destination array's index at which copying should begin</param>
         /// <exception cref="ArgumentNullException"><paramref name="array"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="arrayIndex"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than zero</exception>
         /// <exception cref="ArgumentException">The number of known password hashes is greater than the available space from <paramref name="arrayIndex"/> to the end of the <paramref name="array"/></exception>
         public void CopyTo(KeyValuePair<int, IPasswordHash>[] array, int arrayIndex)
         {
@@ -235,7 +235,7 @@ namespace Phnx.Security.Passwords
             }
             if (arrayIndex < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(arrayIndex));
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
             }
             if (array.Length - arrayIndex < Generators.Count)
             {

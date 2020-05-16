@@ -4,7 +4,7 @@
     {
         public static ConsoleHelper Console = new ConsoleHelper();
 
-        static void Main(string[] args)
+        public static void Main()
         {
             ConsoleDemo.Run();
 

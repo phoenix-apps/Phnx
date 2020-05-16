@@ -5,57 +5,63 @@ namespace Phnx.Console.Playground
 {
     public static class ConsoleDemo
     {
-        private static readonly ConsoleHelper Console = new ConsoleHelper();
+        private static readonly ConsoleHelper _console = new ConsoleHelper();
 
         public static void Run()
         {
-            Intro();
-            TestUndoAndClear();
-            if (!DoMath())
+            if (!Intro())
             {
                 return;
             }
+
+            TestUndoAndClear();
+            DoMath();
         }
 
-        private static void Intro()
+        private static bool Intro()
         {
-            Console.WriteInfo("Welcome to the playground application for the Phnx.Console library");
+            _console.WriteLineInColor("Playground", ConsoleColor.Gray);
+            _console.WriteLineInColor(new string('_', System.Console.WindowWidth), ConsoleColor.Gray);
 
-            if (Console.YesNo("Clear the intro message?"))
-            {
-                Console.UndoWriteLine(2);
-            }
-            else
-            {
-                Console.UndoWriteLine();
-            }
+            return _console.YesNo("Start demo?");
         }
 
         private static void TestUndoAndClear()
         {
             var infoMessage = "Testing undo writeline, please wait...";
-            Console.WriteLine(infoMessage);
+            _console.WriteLine(infoMessage);
 
-            var fullLine = new string('_', System.Console.BufferWidth);
-            Console.WriteLine(fullLine);
+            var fullLine = new string('_', System.Console.WindowWidth);
+            _console.WriteLineInColor(fullLine, ConsoleColor.Yellow);
 
             Wait(500);
-            Console.UndoWriteLine(infoMessage, fullLine);
+            _console.UndoWriteLine(fullLine);
+            _console.UndoWriteLine(infoMessage);
 
             infoMessage = "Testing clear current line, please wait...";
-            Console.WriteLine(infoMessage);
+            _console.WriteLine(infoMessage);
 
-            Console.Write(fullLine);
+            _console.WriteInColor(fullLine, ConsoleColor.Yellow);
             Wait(500);
-            Console.ClearCurrentLine(fullLine);
-            Console.UndoWriteLine();
+            _console.UndoWrite(fullLine);
+            _console.UndoWriteLine(infoMessage);
         }
 
-        private static bool DoMath()
+        private static void DoMath()
         {
-            var result = Console.GetInt("Please enter an integer to square:");
+            var result = _console.GetInt("Please enter an integer:");
+            _console.NewLine();
 
-            using (Progress.ConsoleProgress progress = Console.ProgressBar(100, d => "Powering up math cells...", true))
+            _console.WriteLine($"{result}² = {Math.Pow(result, 2)}");
+            _console.NewLine();
+            _console.NewLine();
+
+            if (!_console.YesNo("Run progress bar?"))
+            {
+                return;
+            }
+
+            using (var progress = _console.ProgressBar(100, d => "Testing progress bar..."))
             {
                 // Simulate faulting at 73%
                 while (progress.Progress < 73)
@@ -65,31 +71,7 @@ namespace Phnx.Console.Playground
                 }
             }
 
-            Console.WriteError("Critical failure with math cells: Temperature above safe levels, emergency abort");
-
-            if (!Console.YesNo("Continue?"))
-            {
-                return false;
-            }
-
-            Console.WriteWarning("Falling back to legacy algorithmic modelling");
-            SlowlyWriteText("..........");
-
-            Console.NewLine(2);
-
-            Console.WriteLine($"{result}² = {Math.Pow(result, 2)}");
-            Console.NewLine();
-
-            return true;
-        }
-
-        private static void SlowlyWriteText(string text)
-        {
-            foreach (var letter in text)
-            {
-                Console.Write(letter);
-                Wait(250);
-            }
+            _console.WriteError("Testing progress bar error state is complete");
         }
 
         private static void Wait(int milliseconds)

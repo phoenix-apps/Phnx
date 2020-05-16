@@ -31,12 +31,12 @@ namespace Phnx.Security.Tests.Algorithms
         }
 
         [Test]
-        public void Hash_WithNegativeIterations_ThrowsArgumentLessThanZeroException()
+        public void Hash_WithNegativeIterations_ThrowsArgumentOutOfRangeException()
         {
             var data = Encoding.UTF8.GetBytes("asdf");
             var salt = Pbkdf2Hash.GenerateSalt();
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => Pbkdf2Hash.Hash(data, salt, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => Pbkdf2Hash.Hash(data, salt, -1));
         }
 
         [Test]

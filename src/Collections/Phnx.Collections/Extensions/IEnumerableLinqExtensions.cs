@@ -62,8 +62,8 @@ namespace Phnx.Collections
                 throw new ArgumentNullException(nameof(keySelector));
             }
 
-            T curMax = default(T);
-            TKey curMaxValue = default(TKey);
+            T curMax = default;
+            TKey curMaxValue = default;
             bool firstRun = true;
 
             foreach (var value in source)
@@ -114,8 +114,8 @@ namespace Phnx.Collections
                 throw new ArgumentNullException(nameof(keySelector));
             }
 
-            T curMin = default(T);
-            TKey curMinValue = default(TKey);
+            T curMin = default;
+            TKey curMinValue = default;
             bool firstRun = true;
 
             foreach (var value in source)
@@ -143,47 +143,6 @@ namespace Phnx.Collections
             }
 
             return curMin;
-        }
-
-        /// <summary>
-        /// Gets whether two collections contain the same data using <see cref="EqualityComparer{T}.Default"/>
-        /// </summary>
-        /// <typeparam name="T">The type of values to compare</typeparam>
-        /// <param name="source">The first collection to compare</param>
-        /// <param name="rangeToCompare">The collection to compare with</param>
-        /// <returns>Whether the two collections contain the same data. Returns <see langword="false"/> if either collection is <see langword="null"/></returns>
-        public static bool EqualsRange<T>(this IEnumerable<T> source, IEnumerable<T> rangeToCompare)
-        {
-            if (source == null || rangeToCompare == null)
-            {
-                return false;
-            }
-
-            var comparer = ComparerHelpers.DefaultEqualityComparer<T>();
-
-            using (var sourceEnumerator = source.GetEnumerator())
-            {
-                using (var rangeToCompareEnumerator = rangeToCompare.GetEnumerator())
-                {
-                    do
-                    {
-                        if (!sourceEnumerator.MoveNext())
-                        {
-                            // Reached the end of collection 1
-                            // If we're not at the end of collection 2, they don't match as collection 2 must be longer
-                            // If we are, they match
-                            return !rangeToCompareEnumerator.MoveNext();
-                        }
-
-                        if (!rangeToCompareEnumerator.MoveNext())
-                        {
-                            return false;
-                        }
-                    } while (comparer.Equals(sourceEnumerator.Current, rangeToCompareEnumerator.Current));
-                }
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -348,78 +307,6 @@ namespace Phnx.Collections
                     queue.Enqueue(child);
                 }
             }
-        }
-
-        /// <summary>
-        /// Get the index of an item that matches a criteria
-        /// </summary>
-        /// <typeparam name="T">The type of values in the collection</typeparam>
-        /// <param name="source">The collection to search</param>
-        /// <param name="isMatch">The criteria that the value must pass in order to be a match</param>
-        /// <returns>The index of the first occurance of an item within <paramref name="source"/> that passes <paramref name="isMatch"/>. If the item is not found, this returns -1</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="isMatch"/> is <see langword="null"/></exception>
-        /// <exception cref="OverflowException"><paramref name="source"/> is longer than <see cref="int.MaxValue"/>, which meant the index overflowed</exception>
-        public static int IndexOf<T>(this IEnumerable<T> source, Func<T, bool> isMatch)
-        {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (isMatch == null)
-            {
-                throw new ArgumentNullException(nameof(isMatch));
-            }
-
-            int index = 0;
-            foreach (var item in source)
-            {
-                if (isMatch(item))
-                {
-                    return index;
-                }
-
-                index = checked(index + 1);
-            }
-
-            // Not found
-            return -1;
-        }
-
-        /// <summary>
-        /// Get the index of an item that matches a criteria
-        /// </summary>
-        /// <typeparam name="T">The type of values in the collection</typeparam>
-        /// <param name="source">The collection to search</param>
-        /// <param name="isMatch">The criteria that the value must pass in order to be a match</param>
-        /// <returns>The index of the first occurance of an item within <paramref name="source"/> that passes <paramref name="isMatch"/>. If the item is not found, this returns -1</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="isMatch"/> is <see langword="null"/></exception>
-        /// <exception cref="OverflowException"><paramref name="source"/> is longer than <see cref="long.MaxValue"/>, which meant the index overflowed</exception>
-        public static long IndexOfLong<T>(this IEnumerable<T> source, Func<T, bool> isMatch)
-        {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (isMatch == null)
-            {
-                throw new ArgumentNullException(nameof(isMatch));
-            }
-
-            long index = 0;
-            foreach (var item in source)
-            {
-                if (isMatch(item))
-                {
-                    return index;
-                }
-
-                index = checked(index + 1);
-            }
-
-            // Not found
-            return -1L;
         }
     }
 }

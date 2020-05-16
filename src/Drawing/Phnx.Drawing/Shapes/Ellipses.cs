@@ -27,6 +27,8 @@ namespace Phnx.Drawing.Shapes
         /// <param name="minorRadiusSize">The smallest radius within the ellipse</param>
         /// <param name="majorRadiusSize">The largest radius within the ellipse</param>
         /// <param name="minorRadiusAngle">The angle at which the smallest radius occurs in degrees</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="minorRadiusAngle"/> or <paramref name="majorRadiusSize"/> is less than zero</exception>
+        /// <exception cref="ArgumentException"><paramref name="majorRadiusSize"/> is less than <paramref name="minorRadiusSize"/></exception>
         public Ellipse(double x, double y, double minorRadiusSize, double majorRadiusSize, double minorRadiusAngle)
         {
             X = x;
@@ -34,14 +36,14 @@ namespace Phnx.Drawing.Shapes
 
             if (minorRadiusSize < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(minorRadiusSize));
+                throw new ArgumentOutOfRangeException(nameof(minorRadiusSize));
             }
 
             MinorRadiusSize = minorRadiusSize;
 
             if (majorRadiusSize < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(majorRadiusSize));
+                throw new ArgumentOutOfRangeException(nameof(majorRadiusSize));
             }
 
             if (majorRadiusSize < minorRadiusSize)

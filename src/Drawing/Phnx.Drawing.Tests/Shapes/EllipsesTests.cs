@@ -17,15 +17,15 @@ namespace Phnx.Drawing.Tests.Shapes
         }
 
         [Test]
-        public void NewEllipse_WithNegativeMinorRadius_ThrowsArgumentLessThanZeroException()
+        public void NewEllipse_WithNegativeMinorRadius_ThrowsArgumentOutOfRangeException()
         {
-            Assert.Throws<ArgumentLessThanZeroException>(() => new Ellipse(new Point(0, 0), -1, 0, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Ellipse(new Point(0, 0), -1, 0, 0));
         }
 
         [Test]
-        public void NewEllipse_WithNegativeMajorRadius_ThrowsArgumentLessThanZeroException()
+        public void NewEllipse_WithNegativeMajorRadius_ThrowsArgumentOutOfRangeException()
         {
-            Assert.Throws<ArgumentLessThanZeroException>(() => new Ellipse(0, 0, 0, -1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new Ellipse(0, 0, 0, -1, 0));
         }
 
         [Test]

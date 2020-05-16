@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Phnx.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Text.Json;
 
 namespace Phnx.AspNetCore.Modals
 {

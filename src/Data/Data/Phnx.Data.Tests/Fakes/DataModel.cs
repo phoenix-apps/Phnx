@@ -1,6 +1,6 @@
 ﻿namespace Phnx.Data.Tests.Fakes
 {
-    public class DataModel : IIdDataModel<int>
+    public class DataModel
     {
         public int Id { get; set; }
 

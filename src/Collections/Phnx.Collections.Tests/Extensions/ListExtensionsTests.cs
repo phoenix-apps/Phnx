@@ -25,12 +25,12 @@ namespace Phnx.Collections.Tests.Extensions
         }
 
         [Test]
-        public void InsertList_WhenStartIndexLessThan0_ThrowsArgumentLessThanZeroException()
+        public void InsertList_WhenStartIndexLessThan0_ThrowsArgumentOutOfRangeException()
         {
             var items = new List<int> { 1, 2, 3 };
             var itemsToAdd = new List<int> { 4, 5, 6 };
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => items.InsertList(-1, itemsToAdd));
+            Assert.Throws<ArgumentOutOfRangeException>(() => items.InsertList(-1, itemsToAdd));
         }
 
         [Test]

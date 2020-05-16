@@ -13,10 +13,7 @@
     <PackageIconUrl>https://raw.githubusercontent.com/phoenix-apps/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/phoenix-apps/Phnx</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\Phnx.Web.xml</DocumentationFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,9 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Phnx.Reflection">
-      <HintPath>..\..\Reflection\Phnx.Reflection\bin\Debug\netstandard2.0\Phnx.Reflection.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\Reflection\Phnx.Reflection\Phnx.Reflection.csproj" />
   </ItemGroup>
 
 </Project>

@@ -177,7 +177,7 @@ namespace Phnx.Drawing
         {
             if (!IsColor)
             {
-                color = default(Color);
+                color = default;
                 return false;
             }
 

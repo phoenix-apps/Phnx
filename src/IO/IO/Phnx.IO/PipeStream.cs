@@ -13,7 +13,7 @@ namespace Phnx.IO
         /// <summary>
         /// The backing data store for the stream
         /// </summary>
-        private Queue<byte> data;
+        private readonly Queue<byte> _data;
 
         /// <summary>
         /// Whether this stream can be read (always <see langword="true"/>)
@@ -48,9 +48,9 @@ namespace Phnx.IO
         {
             get
             {
-                lock (data)
+                lock (_data)
                 {
-                    return data.Count;
+                    return _data.Count;
                 }
             }
         }
@@ -79,7 +79,7 @@ namespace Phnx.IO
         /// </summary>
         public PipeStream()
         {
-            data = new Queue<byte>();
+            _data = new Queue<byte>();
 
             In = new StreamWriter(this)
             {
@@ -135,7 +135,7 @@ namespace Phnx.IO
         /// <param name="encoding">The text encoding to use</param>
         public PipeStream(Encoding encoding)
         {
-            data = new Queue<byte>();
+            _data = new Queue<byte>();
 
             In = new StreamWriter(this, encoding)
             {
@@ -174,11 +174,11 @@ namespace Phnx.IO
         {
             int readCount = 0;
 
-            lock (data)
+            lock (_data)
             {
-                for (; readCount < count && data.Count > 0; ++readCount)
+                for (; readCount < count && _data.Count > 0; ++readCount)
                 {
-                    var dataEntry = data.Dequeue();
+                    var dataEntry = _data.Dequeue();
 
                     buffer[offset + readCount] = dataEntry;
                 }
@@ -213,7 +213,7 @@ namespace Phnx.IO
         /// <param name="count">The number of bytes to be written to the current stream</param>
         /// <exception cref="ArgumentException">The sum of offset and count is greater than the buffer length</exception>
         /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="count"/> or <paramref name="offset"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> or <paramref name="offset"/> is less than zero</exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
             if (buffer == null)
@@ -222,24 +222,24 @@ namespace Phnx.IO
             }
             if (offset < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(offset));
+                throw new ArgumentOutOfRangeException(nameof(offset));
             }
             if (count < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count));
             }
             if (offset + count > buffer.Length)
             {
                 throw new ArgumentException($"{nameof(offset)} and {nameof(count)} combined were greater than the number of elements in {nameof(buffer)}");
             }
 
-            lock (data)
+            lock (_data)
             {
                 for (int writeCount = 0; writeCount < count && offset + writeCount < buffer.Length; ++writeCount)
                 {
                     var valueToWrite = buffer[offset + writeCount];
 
-                    data.Enqueue(valueToWrite);
+                    _data.Enqueue(valueToWrite);
                 }
             }
 

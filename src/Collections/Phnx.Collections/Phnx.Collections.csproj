@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>1.0.0</Version>
     <Description>A collection of extensions and classes for making managing collections of data easier</Description>
@@ -13,16 +13,11 @@
     <RepositoryUrl>https://github.com/phoenix-apps/Phnx</RepositoryUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/phoenix-apps/phnx/master/qrcode-link-to-github.png</PackageIconUrl>
     <RepositoryType>Git</RepositoryType>
+   <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netstandard2.0\Phnx.Collections.xml</DocumentationFile>
-  </PropertyGroup>
-
+  
   <ItemGroup>
-    <Reference Include="Phnx">
-      <HintPath>..\..\Phnx\Phnx\bin\Debug\netstandard2.0\Phnx.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\Phnx\Phnx\Phnx.csproj" />
   </ItemGroup>
 
 </Project>

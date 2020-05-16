@@ -17,7 +17,7 @@ namespace Phnx.IO.Threaded.Tests
         [Test]
         public void New_WithNegativeMaximumQueue_ThrowsArgumentLessThanZero()
         {
-            Assert.Throws<ArgumentLessThanZeroException>(() => new ThreadedWriter<object>(o => { }, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new ThreadedWriter<object>(o => { }, -1));
         }
 
         [Test]

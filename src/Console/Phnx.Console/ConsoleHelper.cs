@@ -1,5 +1,6 @@
 ﻿using Phnx.Console.Progress;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Security;
 using _Console = System.Console;
@@ -54,6 +55,11 @@ namespace Phnx.Console
             get => _Console.Title;
             set => _Console.Title = value;
         }
+
+        /// <summary>
+        /// Gets a value that indicates whether output has been redirected from the standard output stream
+        /// </summary>
+        public bool IsOutputRedirected => _Console.IsOutputRedirected;
 
         /// <summary>
         /// Resets the console text and background color to their default values
@@ -130,40 +136,37 @@ namespace Phnx.Console
         }
 
         /// <summary>
-        /// Writes a line of text in a specified font and/or background color
+        /// Writes text in a specified font color
         /// </summary>
         /// <param name="text">The text to write</param>
         /// <param name="fontColor">The font color to use</param>
-        /// <param name="backgroundColor">The background color to use</param>
         /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
         /// <exception cref="IOException">An I/O error occurred</exception>
-        public void WriteLineInColor(string text, ConsoleColor? fontColor = null, ConsoleColor? backgroundColor = null)
+        public void WriteInColor(string text, ConsoleColor fontColor)
         {
-            ConsoleColor? startFontColor = null, startBackgroundColor = null;
+            ConsoleColor startFontColor = FontColor;
+            FontColor = fontColor;
 
-            if (fontColor != null)
-            {
-                startFontColor = FontColor;
-                FontColor = fontColor.Value;
-            }
+            Write(text);
 
-            if (backgroundColor != null)
-            {
-                startBackgroundColor = BackgroundColor;
-                BackgroundColor = backgroundColor.Value;
-            }
+            FontColor = startFontColor;
+        }
+
+        /// <summary>
+        /// Writes a line of text in a specified font color
+        /// </summary>
+        /// <param name="text">The text to write</param>
+        /// <param name="fontColor">The font color to use</param>
+        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
+        /// <exception cref="IOException">An I/O error occurred</exception>
+        public void WriteLineInColor(string text, ConsoleColor fontColor)
+        {
+            ConsoleColor startFontColor = FontColor;
+            FontColor = fontColor;
 
             WriteLine(text);
 
-            if (fontColor != null)
-            {
-                FontColor = startFontColor.Value;
-            }
-
-            if (backgroundColor != null)
-            {
-                BackgroundColor = startBackgroundColor.Value;
-            }
+            FontColor = startFontColor;
         }
 
         /// <summary>
@@ -211,7 +214,8 @@ namespace Phnx.Console
 
                     if (errorWritten != null)
                     {
-                        UndoWriteLine(errorWritten, question + valueEntered);
+                        UndoWriteLine(question + valueEntered);
+                        UndoWriteLine(errorWritten);
                         Write(question);
 
                         FontColor = ConsoleColor.Cyan;
@@ -225,7 +229,8 @@ namespace Phnx.Console
                 {
                     if (errorWritten != null)
                     {
-                        UndoWriteLine(errorWritten, question + valueEntered);
+                        UndoWriteLine(question + valueEntered);
+                        UndoWriteLine(errorWritten);
                     }
                     else
                     {
@@ -299,6 +304,15 @@ namespace Phnx.Console
         }
 
         /// <summary>
+        /// Reads the next line of characters from the standard input stream
+        /// </summary>
+        /// <returns>The next line of characters from the input stream, or <see langword="null"/> if no more lines are available</returns>
+        /// <exception cref="IOException">An I/O error occured</exception>
+        /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the returned string</exception>
+        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is greater than <see cref="int.MaxValue"/></exception>
+        public string ReadLine() => GetString();
+
+        /// <summary>
         /// Waits for a key press from the console, and return the key that is pressed
         /// </summary>
         /// <param name="showPressedKeyInConsole">Determines whether to display the pressed key in the console window</param>
@@ -310,103 +324,55 @@ namespace Phnx.Console
         }
 
         /// <summary>
-        /// Clears the previous line from the console
+        /// Clears previously written lines from the console
         /// </summary>
+        /// <param name="lineWritten">The lines that were written to the console, which now need to be cleared</param>
         /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
         /// <exception cref="IOException">An I/O error occurred</exception>
-        public void UndoWriteLine() => UndoWriteLine(1);
-
-        /// <summary>
-        /// Clears previous lines from the console. This is faster than <see cref="UndoWriteLine(int)"/>, but requires you to know what text was written
-        /// </summary>
-        /// <param name="linesWritten">The lines that were written to the console to be cleared</param>
-        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
-        /// <exception cref="IOException">An I/O error occurred</exception>
-        public void UndoWriteLine(params string[] linesWritten)
+        public void UndoWriteLine(string lineWritten)
         {
-            var width = _Console.BufferWidth;
-
-            int totalLinesToErase = 0;
-            int totalLinesInLastLineWritten = 0;
-
-            for (int index = 0; index < linesWritten.Length; ++index)
+            if (IsOutputRedirected)
             {
-                var charactersToErase = linesWritten[index].Length;
-
-                int linesWrittenByThisWriteLine = (int)Math.Truncate((decimal)charactersToErase / width) + 1;
-
-                totalLinesToErase += linesWrittenByThisWriteLine;
-                totalLinesInLastLineWritten = linesWrittenByThisWriteLine;
+                return;
             }
 
-            _Console.SetCursorPosition(0, _Console.CursorTop - totalLinesToErase);
+            int linesToEraseCount = GetLinesCoveredByText(lineWritten) + 1;
 
-            for (int index = 0; index < linesWritten.Length; ++index)
-            {
-                _Console.WriteLine(new string(' ', linesWritten[index].Length));
-            }
+            _Console.SetCursorPosition(0, _Console.CursorTop - linesToEraseCount);
+            _Console.WriteLine(new string(' ', lineWritten.Length));
 
-            _Console.SetCursorPosition(0, _Console.CursorTop - totalLinesToErase);
-        }
-
-        /// <summary>
-        /// Clears previous lines from the console
-        /// </summary>
-        /// <param name="linesToClear">The number of lines to clear</param>
-        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
-        /// <exception cref="IOException">An I/O error occurred</exception>
-        public void UndoWriteLine(int linesToClear)
-        {
-            int width = _Console.BufferWidth;
-
-            _Console.SetCursorPosition(0, _Console.CursorTop - linesToClear);
-
-            for (int linesCleared = 0; linesCleared < linesToClear; ++linesCleared)
-            {
-                _Console.Write(new string(' ', width));
-            }
-
-            _Console.SetCursorPosition(0, _Console.CursorTop - linesToClear);
-        }
-
-        /// <summary>
-        /// Clears the current line from the console. This is faster than <see cref="ClearCurrentLine()"/>, but requires you to know what text was written
-        /// </summary>
-        /// <param name="textWritten">The text that was written to the console</param>
-        /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
-        /// <exception cref="IOException">An I/O error occurred</exception>
-        public void ClearCurrentLine(string textWritten)
-        {
-            var width = _Console.BufferWidth;
-
-            int charactersToErase = textWritten.Length;
-
-            int numberOfLinesToErase = (int)Math.Truncate((decimal)charactersToErase / width) + 1;
-
-            _Console.SetCursorPosition(0, _Console.CursorTop - (numberOfLinesToErase - 1));
-            for (int linesErased = 0; linesErased < numberOfLinesToErase - 1; ++linesErased)
-            {
-                Write(new string(' ', width));
-            }
-
-            Write(new string(' ', charactersToErase % width));
-            _Console.SetCursorPosition(0, _Console.CursorTop - (numberOfLinesToErase - 1));
+            _Console.SetCursorPosition(0, _Console.CursorTop - linesToEraseCount);
         }
 
         /// <summary>
         /// Clears the current line from the console
         /// </summary>
+        /// <param name="textWritten">The text that was written to the console</param>
         /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
         /// <exception cref="IOException">An I/O error occurred</exception>
-        public void ClearCurrentLine()
+        public void UndoWrite(string textWritten)
         {
-            var width = _Console.BufferWidth;
+            if (IsOutputRedirected)
+            {
+                return;
+            }
 
-            _Console.SetCursorPosition(0, _Console.CursorTop);
+            int linesToEraseCount = GetLinesCoveredByText(textWritten);
 
-            _Console.Write(new string(' ', width));
+            _Console.SetCursorPosition(0, _Console.CursorTop - linesToEraseCount);
+            _Console.Write(new string(' ', textWritten.Length));
 
-            _Console.SetCursorPosition(0, _Console.CursorTop - 1);
+            _Console.SetCursorPosition(0, _Console.CursorTop - linesToEraseCount);
+        }
+
+        private int GetLinesCoveredByText(string text)
+        {
+            Debug.Assert(!IsOutputRedirected);
+
+            var width = _Console.WindowWidth;
+            var eraseCount = text.Length;
+
+            return (int)Math.Truncate((decimal)eraseCount / width);
         }
     }
 }

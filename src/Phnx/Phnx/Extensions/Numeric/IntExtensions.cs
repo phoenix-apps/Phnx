@@ -28,15 +28,5 @@ namespace Phnx
         {
             return (int)(Math.Round((decimal)valueToRound / toNearest, MidpointRounding.AwayFromZero) * toNearest);
         }
-
-        /// <summary>
-        /// Convert the <paramref name="number"/> to its ordinal representation (e.g from 1 to 1st)
-        /// </summary>
-        /// <param name="number">The number to convert</param>
-        /// <returns>The ordinal representation of <paramref name="number"/></returns>
-        public static string ToOrdinal(this int number)
-        {
-            return Ordinals.ToOrdinal(number);
-        }
     }
 }

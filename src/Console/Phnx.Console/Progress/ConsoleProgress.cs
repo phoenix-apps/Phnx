@@ -119,7 +119,7 @@ namespace Phnx.Console.Progress
             {
                 lock (_bar)
                 {
-                    newWrite = _bar.ToStringWithSpinner(rendersSinceLastUpdate % 20 == 0);
+                    newWrite = _bar.RenderWithSpinner(rendersSinceLastUpdate % 20 == 0);
                 }
 
                 lastWrite = OverwriteLastWrite(lastWrite, newWrite);
@@ -131,7 +131,7 @@ namespace Phnx.Console.Progress
             // Write finished line
             lock (_bar)
             {
-                newWrite = _bar.ToString();
+                newWrite = _bar.RenderWithoutSpinner();
             }
 
             if (IsComplete)

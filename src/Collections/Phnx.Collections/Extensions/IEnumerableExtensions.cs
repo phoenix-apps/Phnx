@@ -17,7 +17,7 @@ namespace Phnx.Collections
         /// <param name="startIndex">The index at which to start copying</param>
         /// <param name="count">The number of values to copy</param>
         /// <returns>The values from the collection within the range specified</returns>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="startIndex"/> is less than zero or <paramref name="count"/> is less than zero</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero or <paramref name="count"/> is less than zero</exception>
         /// <exception cref="IndexOutOfRangeException"><paramref name="startIndex"/> references an index greater than the number of items in the collection minus <paramref name="count"/></exception>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
         public static IEnumerable<T> CopyRange<T>(this IEnumerable<T> source, int startIndex, int count)
@@ -29,12 +29,12 @@ namespace Phnx.Collections
 
             if (startIndex < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(startIndex));
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
             if (count < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count));
             }
 
             IEnumerator<T> enumerator = source.GetEnumerator();
@@ -80,7 +80,7 @@ namespace Phnx.Collections
 
             if (startIndex < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(startIndex));
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
             IEnumerator<T> enumerator = source.GetEnumerator();
@@ -103,25 +103,20 @@ namespace Phnx.Collections
         }
 
         /// <summary>
-        /// Creates a new <see cref="IEnumerable{T}"/> of the same size of <paramref name="source"/>, filling it with <paramref name="fillWith"/>
+        /// Concatenates a range of the members of a constructed <see cref="IEnumerable{T}"></see> collection, using the specified separator between each member
         /// </summary>
-        /// <param name="source">The enumerable to fill</param>
-        /// <param name="fillWith">The value to fill the enumerable with</param>
-        /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/></exception>
-        public static IEnumerable<T> Fill<T>(this IEnumerable<T> source, T fillWith)
+        /// <param name="source">A collection that contains the values to concatenate</param>
+        /// <param name="separator">The string to use as a separator. The separator is included in the returned string only if values has more than one element</param>
+        /// <returns>A string that consists of the members of <paramref name="source"/> delimited by the <paramref name="separator"/> string. If <paramref name="source"/> has no members, the method returns <see cref="string.Empty"></see></returns>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
+        public static string ToString<T>(this IEnumerable<T> source, string separator)
         {
-            if (source == null)
+            if (separator == null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(separator));
             }
 
-            using (var enumerator = source.GetEnumerator())
-            {
-                while (enumerator.MoveNext())
-                {
-                    yield return fillWith;
-                }
-            }
+            return string.Join(separator, source);
         }
 
         /// <summary>
@@ -141,12 +136,10 @@ namespace Phnx.Collections
 
             if (toString == null)
             {
-                return string.Join(separator, source);
+                throw new ArgumentNullException(nameof(separator));
             }
-            else
-            {
-                return string.Join(separator, source.Select(toString));
-            }
+
+            return string.Join(separator, source.Select(toString));
         }
     }
 }

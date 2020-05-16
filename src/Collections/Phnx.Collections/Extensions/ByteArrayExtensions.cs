@@ -38,7 +38,7 @@ namespace Phnx.Collections
 
             if (startIndex < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(startIndex));
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
             if (source.Length < 8)
@@ -73,17 +73,21 @@ namespace Phnx.Collections
 
             if (startIndex < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(startIndex));
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
             if (source.Length < 4)
             {
-                throw new ArgumentException("Array is too short to convert to int32", nameof(source));
+                throw new ArgumentException($"{nameof(source)} is too short to convert to an integer. 4 bytes are required, but {nameof(source)} is only {source.Length} long", nameof(source));
+            }
+            if (startIndex >= source.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
             if (startIndex > source.Length - 4)
             {
-                throw new ArgumentOutOfRangeException(nameof(startIndex));
+                throw new ArgumentOutOfRangeException(nameof(startIndex), $"{nameof(startIndex)} is too close to the end of {nameof(source)} to convert to an integer. 4 bytes are required to convert to an integer, but there's only {source.Length - startIndex} available");
             }
 
             return BitConverter.ToInt32(source, startIndex);
@@ -98,8 +102,7 @@ namespace Phnx.Collections
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="startIndex"/> is greater than or equal to the length of <paramref name="source"/> minus 1</exception>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="startIndex"/> is less than zero</exception>
-        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is greater than the length of <paramref name="source"/> minus 1</exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero or greater than the length of <paramref name="source"/> minus 1</exception>
         public static short ToShort(this byte[] source, int startIndex = 0)
         {
             if (source == null)
@@ -109,7 +112,7 @@ namespace Phnx.Collections
 
             if (startIndex < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(startIndex));
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
             if (source.Length < 2)

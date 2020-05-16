@@ -30,11 +30,11 @@ namespace Phnx.Collections.Tests.Extensions.ByteArrayExtensions
         }
 
         [Test]
-        public void ToShort_WithStartIndexLessThanZero_ThrowsArgumentLessThanZeroException()
+        public void ToShort_WithStartIndexLessThanZero_ThrowsArgumentOutOfRangeException()
         {
             var bytes = new byte[] { 1, 62 };
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => bytes.ToShort(-1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => bytes.ToShort(-1));
         }
 
         [Test]

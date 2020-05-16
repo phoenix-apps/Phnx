@@ -320,7 +320,7 @@ namespace Phnx.Security.Tests.Passwords
         }
 
         [Test]
-        public void CopyTo_WhenStartIndexIsLessThanZero_ThrowsArgumentLessThanZeroException()
+        public void CopyTo_WhenStartIndexIsLessThanZero_ThrowsArgumentOutOfRangeException()
         {
             var hashManager = new PasswordHashManager
             {
@@ -329,7 +329,7 @@ namespace Phnx.Security.Tests.Passwords
 
             var result = new KeyValuePair<int, IPasswordHash>[0];
 
-            Assert.Throws<ArgumentLessThanZeroException>(() => hashManager.CopyTo(result, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => hashManager.CopyTo(result, -1));
         }
 
         [Test]

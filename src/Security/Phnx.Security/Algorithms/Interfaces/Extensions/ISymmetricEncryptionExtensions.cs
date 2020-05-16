@@ -100,8 +100,7 @@ namespace Phnx.Security.Algorithms
         /// <param name="iv">The initialisation vector to use when encrypting the data</param>
         /// <returns><paramref name="sourceBuffer"/> encrypted</returns>
         /// <exception cref="ArgumentNullException"><paramref name="encryption"/> or <paramref name="sourceBuffer"/> or <paramref name="key"/> or <paramref name="iv"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="index"/> or <paramref name="count"/> is less than zero</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The sum of <paramref name="count"/> and <paramref name="index"/> is greater than the length of <paramref name="sourceBuffer"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> or <paramref name="count"/> is less than zero, or the sum of <paramref name="count"/> and <paramref name="index"/> is greater than the length of <paramref name="sourceBuffer"/></exception>
         public static byte[] Encrypt(this ISymmetricEncryption encryption, byte[] sourceBuffer, int index, int count, byte[] key, byte[] iv)
         {
             if (encryption is null)
@@ -114,11 +113,11 @@ namespace Phnx.Security.Algorithms
             }
             if (index < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
             if (count < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count));
             }
 
             var output = new MemoryStream();
@@ -167,8 +166,7 @@ namespace Phnx.Security.Algorithms
         /// <param name="key">The key to use when decrypting the data</param>
         /// <param name="iv">The initialisation vector to use when decrypting the data</param>
         /// <exception cref="ArgumentNullException"><paramref name="encryptedDataBuffer"/> or <paramref name="key"/> or <paramref name="iv"/> is <see langword="null"/></exception>
-        /// <exception cref="ArgumentLessThanZeroException"><paramref name="index"/> or <paramref name="count"/> is less than zero</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The sum of <paramref name="count"/> and <paramref name="index"/> is greater than the length of <paramref name="encryptedDataBuffer"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="index"/> or <paramref name="count"/> is less than zero, or the sum of <paramref name="count"/> and <paramref name="index"/> is greater than the length of <paramref name="encryptedDataBuffer"/></exception>
         public static byte[] Decrypt(this ISymmetricEncryption encryption, byte[] encryptedDataBuffer, int index, int count, byte[] key, byte[] iv)
         {
             if (encryption is null)
@@ -181,11 +179,11 @@ namespace Phnx.Security.Algorithms
             }
             if (index < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
             if (count < 0)
             {
-                throw new ArgumentLessThanZeroException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count));
             }
 
             var output = new MemoryStream();
