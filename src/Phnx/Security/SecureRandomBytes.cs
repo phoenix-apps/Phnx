@@ -14,7 +14,7 @@ namespace Phnx.Security
         /// Generate a number of secure random bytes
         /// </summary>
         /// <param name="numberOfBytesToGenerate">The number of bytes to generate</param>
-        /// <returns></returns>
+        /// 
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="numberOfBytesToGenerate"/> is less than zero</exception>
         public static byte[] Generate(int numberOfBytesToGenerate)
         {

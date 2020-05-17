@@ -112,17 +112,31 @@ namespace Phnx.Console.Progress
             string lastWrite = string.Empty;
             string newWrite;
 
-            _console.FontColor = ConsoleColor.Yellow;
             int rendersSinceLastUpdate = 0;
 
             while (!_safeExit && !IsComplete && !IsFaulted)
             {
+                StringBuilder progressBarBuilder = new StringBuilder();
                 lock (_bar)
                 {
-                    newWrite = _bar.RenderWithSpinner(rendersSinceLastUpdate % 20 == 0);
+                    if (_writeProgressMessage != null && _writeMessageToLeftOfBar)
+                    {
+                        progressBarBuilder.Append(_writeProgressMessage(Progress));
+                        progressBarBuilder.Append(' ');
+                    }
+
+                    progressBarBuilder.Append(_bar.RenderWithSpinner(rendersSinceLastUpdate % 20 == 0));
+
+                    if (_writeProgressMessage != null && !_writeMessageToLeftOfBar)
+                    {
+                        progressBarBuilder.Append(' ');
+                        progressBarBuilder.Append(_writeProgressMessage(Progress));
+                    }
                 }
 
-                lastWrite = OverwriteLastWrite(lastWrite, newWrite);
+                newWrite = progressBarBuilder.ToString();
+                OverwriteLastWrite(lastWrite, newWrite, true);
+                lastWrite = newWrite;
 
                 Thread.Sleep(25);
                 ++rendersSinceLastUpdate;
@@ -143,61 +157,42 @@ namespace Phnx.Console.Progress
                 _console.FontColor = ConsoleColor.Red;
             }
 
-            StringBuilder output = new StringBuilder();
-            output.Append('\b', lastWrite.Length);
-            output.Append(newWrite);
-
-            if (lastWrite.Length > newWrite.Length)
-            {
-                output.Append(' ', lastWrite.Length - newWrite.Length);
-            }
-
-            _console.WriteLine(output);
+            OverwriteLastWrite(lastWrite, newWrite, false);
+            _console.NewLine();
             _console.ResetColor();
         }
 
-        private string OverwriteLastWrite(string lastWrite, string newWrite)
+        private void OverwriteLastWrite(string lastWrite, string newWrite, bool onlyOverwriteDifferentChars)
         {
             StringBuilder outputBuilder = new StringBuilder();
 
-            if (_writeProgressMessage != null && _writeMessageToLeftOfBar)
-            {
-                outputBuilder.Append(_writeProgressMessage(Progress));
-                outputBuilder.Append(' ');
-            }
-
             outputBuilder.Append(newWrite);
-
-            if (_writeProgressMessage != null && !_writeMessageToLeftOfBar)
-            {
-                outputBuilder.Append(' ');
-                outputBuilder.Append(_writeProgressMessage(Progress));
-            }
 
             int commonStartLength = 0;
 
-            for (; commonStartLength < lastWrite.Length && commonStartLength < outputBuilder.Length; ++commonStartLength)
+            if (onlyOverwriteDifferentChars)
             {
-                if (lastWrite[commonStartLength] != outputBuilder[commonStartLength])
+                for (; commonStartLength < lastWrite.Length && commonStartLength < outputBuilder.Length; ++commonStartLength)
                 {
-                    break;
+                    if (lastWrite[commonStartLength] != outputBuilder[commonStartLength])
+                    {
+                        break;
+                    }
                 }
             }
 
-            StringBuilder cleanup = new StringBuilder();
-
-            // Remove differing characters
-            cleanup.Append('\b', lastWrite.Length - commonStartLength);
-
-            if (outputBuilder.Length < lastWrite.Length)
+            if (newWrite.Length < lastWrite.Length)
             {
-                outputBuilder.Append(' ', lastWrite.Length - outputBuilder.Length);
+                outputBuilder.Append(' ', lastWrite.Length - newWrite.Length);
             }
 
-            string output = outputBuilder.ToString();
-            _console.Write(cleanup.Append(output.Substring(commonStartLength)));
+            // Remove differing characters
+            StringBuilder cleanup = new StringBuilder();
+            cleanup
+                .Append('\b', lastWrite.Length - commonStartLength)
+                .Append(outputBuilder.Remove(0, commonStartLength));
 
-            return output;
+            _console.Write(cleanup.ToString());
         }
 
         /// <summary>

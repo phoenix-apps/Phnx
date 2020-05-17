@@ -25,7 +25,6 @@ namespace Phnx
         /// Get if this string is <see langword="null"/>, <see cref="string.Empty"/>, or whitespace
         /// </summary>
         /// <param name="stringToTest">The string to check</param>
-        /// <returns></returns>
         public static bool IsNullOrEmptyOrWhitespace(this string stringToTest)
         {
             return string.IsNullOrWhiteSpace(stringToTest);
@@ -35,7 +34,7 @@ namespace Phnx
         /// Get if this string is <see langword="null"/> or <see cref="string.Empty"/>
         /// </summary>
         /// <param name="stringToTest">The string to check</param>
-        /// <returns></returns>
+        /// 
         public static bool IsNullOrEmpty(this string stringToTest)
         {
             return string.IsNullOrEmpty(stringToTest);
@@ -46,7 +45,7 @@ namespace Phnx
         /// </summary>
         /// <param name="stringToRemoveFrom">The string to remove the characters from</param>
         /// <param name="charsToRemove">The characters to remove</param>
-        /// <returns></returns>
+        /// 
         public static string Remove(this string stringToRemoveFrom, params char[] charsToRemove)
         {
             return Remove(stringToRemoveFrom, (IEnumerable<char>)charsToRemove);
@@ -57,15 +56,15 @@ namespace Phnx
         /// </summary>
         /// <param name="stringToRemoveFrom">The string to remove the characters from</param>
         /// <param name="charsToRemove">The characters to remove</param>
-        /// <returns></returns>
+        /// 
         public static string Remove(this string stringToRemoveFrom, IEnumerable<char> charsToRemove)
         {
-            if (stringToRemoveFrom == null)
+            if (stringToRemoveFrom is null)
             {
                 throw new ArgumentNullException(nameof(stringToRemoveFrom));
             }
 
-            if (charsToRemove == null)
+            if (charsToRemove is null)
             {
                 throw new ArgumentNullException(nameof(charsToRemove));
             }
@@ -90,12 +89,12 @@ namespace Phnx
         /// </summary>
         /// <param name="stringToRemoveFrom">The string to remove from</param>
         /// <param name="textToRemove">The string to remove</param>
-        /// <returns></returns>
+        /// 
         /// <exception cref="ArgumentNullException"><paramref name="stringToRemoveFrom"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentException"><paramref name="stringToRemoveFrom"/> is <see cref="string.Empty"/></exception>
         public static string Remove(this string stringToRemoveFrom, string textToRemove)
         {
-            if (stringToRemoveFrom == null)
+            if (stringToRemoveFrom is null)
             {
                 throw new ArgumentNullException(nameof(stringToRemoveFrom));
             }
@@ -116,7 +115,7 @@ namespace Phnx
         /// </summary>
         /// <param name="stringToRemoveFrom">The string to remove the strings from</param>
         /// <param name="textToRemove">The strings to remove</param>
-        /// <returns></returns>
+        /// 
         public static string Remove(this string stringToRemoveFrom, params string[] textToRemove)
         {
             return Remove(stringToRemoveFrom, (IEnumerable<string>)textToRemove);
@@ -127,15 +126,15 @@ namespace Phnx
         /// </summary>
         /// <param name="stringToRemoveFrom">The string to remove the strings from</param>
         /// <param name="textToRemove">The strings to remove</param>
-        /// <returns></returns>
+        /// 
         public static string Remove(this string stringToRemoveFrom, IEnumerable<string> textToRemove)
         {
-            if (stringToRemoveFrom == null)
+            if (stringToRemoveFrom is null)
             {
                 throw new ArgumentNullException(nameof(stringToRemoveFrom));
             }
 
-            if (textToRemove == null)
+            if (textToRemove is null)
             {
                 throw new ArgumentNullException(nameof(textToRemove));
             }
@@ -156,10 +155,10 @@ namespace Phnx
         /// </summary>
         /// <param name="stringToConvert">The string to convert</param>
         /// <param name="firstCharIsUpper">Whether the first character should be upper case. Setting this to true is the same as <see cref="ToPascalCase"/></param>
-        /// <returns></returns>
+        /// 
         public static string ToCamelCase(this string stringToConvert, bool firstCharIsUpper)
         {
-            if (stringToConvert == null)
+            if (stringToConvert is null)
             {
                 throw new ArgumentNullException(nameof(stringToConvert));
             }
@@ -168,7 +167,7 @@ namespace Phnx
 
             var words = stringToConvert.Split(wordDelimiters, StringSplitOptions.None);
 
-            string MakeWordCamelCase(string word)
+            static string MakeWordCamelCase(string word)
             {
                 if (word.Length == 0)
                 {
@@ -194,7 +193,7 @@ namespace Phnx
         /// Converts a string to camel case
         /// </summary>
         /// <param name="stringToConvert">The string to convert</param>
-        /// <returns></returns>
+        /// 
         public static string ToPascalCase(this string stringToConvert)
         {
             return ToCamelCase(stringToConvert, true);
@@ -205,10 +204,10 @@ namespace Phnx
         /// </summary>
         /// <param name="stringToConvert">The string to convert</param>
         /// <param name="startEachWordWithCapital">Whether to start each word with a capital letter, such as in a title</param>
-        /// <returns></returns>
+        /// 
         public static string FromCamelAndPascalCase(this string stringToConvert, bool startEachWordWithCapital = false)
         {
-            if (stringToConvert == null)
+            if (stringToConvert is null)
             {
                 throw new ArgumentNullException(nameof(stringToConvert));
             }
@@ -230,7 +229,7 @@ namespace Phnx
                     return;
                 }
 
-                var newWordChar = acronymBuilder[acronymBuilder.Length - 1];
+                var newWordChar = acronymBuilder[^1];
                 if (startEachWordWithCapital)
                 {
                     newWordChar = char.ToUpperInvariant(newWordChar);

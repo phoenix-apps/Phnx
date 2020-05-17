@@ -12,7 +12,7 @@ namespace Phnx
         /// </summary>
         /// <param name="valueToRound">The value to be rounded</param>
         /// <param name="toNearest">The value to round to</param>
-        /// <returns></returns>
+        /// 
         public static byte RoundToNearest(this byte valueToRound, byte toNearest)
         {
             return (byte)(Math.Round((decimal)valueToRound / toNearest, MidpointRounding.AwayFromZero) * toNearest);
@@ -35,7 +35,7 @@ namespace Phnx
         /// <returns>The equivalent hex code</returns>
         public static string ToHex(this byte[] b)
         {
-            if (b == null)
+            if (b is null)
             {
                 throw new ArgumentNullException(nameof(b));
             }

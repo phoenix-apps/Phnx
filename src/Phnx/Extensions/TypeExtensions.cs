@@ -27,7 +27,7 @@ namespace Phnx
         /// <exception cref="TypeLoadException"><paramref name="type"/> is not a valid type.</exception>
         public static object CreateInstance(this Type type, params object[] args)
         {
-            if (type == null)
+            if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }

@@ -11,13 +11,13 @@ namespace Phnx.Security.Algorithms
         /// <summary>
         /// Create a random secure initialisation vector to use for encryption
         /// </summary>
-        /// <returns></returns>
+        /// 
         byte[] CreateRandomIv();
 
         /// <summary>
         /// Create a random secure key that can be used for this algorithm
         /// </summary>
-        /// <returns></returns>
+        /// 
         byte[] CreateRandomKey();
 
         /// <summary>

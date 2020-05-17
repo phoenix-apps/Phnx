@@ -34,7 +34,7 @@ namespace Phnx.Security.Algorithms
         /// </summary>
         /// <param name="data">The data to encrypt</param>
         /// <param name="publicKey">The public key to use when encrypting the data</param>
-        /// <returns></returns>
+        /// 
         /// <exception cref="ArgumentNullException"><paramref name="data"/> or <paramref name="publicKey"/> is <see langword="null"/></exception>
         public byte[] Encrypt(byte[] data, byte[] publicKey)
         {
@@ -58,7 +58,7 @@ namespace Phnx.Security.Algorithms
         /// </summary>
         /// <param name="encryptedData">The data to decrypt</param>
         /// <param name="privateKey">The private key to use when decrypting the data</param>
-        /// <returns></returns>
+        /// 
         /// <exception cref="ArgumentNullException"><paramref name="encryptedData"/> or <paramref name="privateKey"/> is <see langword="null"/></exception>
         public byte[] Decrypt(byte[] encryptedData, byte[] privateKey)
         {

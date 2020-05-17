@@ -33,7 +33,7 @@ namespace Phnx.Security.Passwords
         /// </summary>
         /// <param name="password">The password to hash</param>
         /// <param name="salt">The salt to use</param>
-        /// <returns></returns>
+        /// 
         public byte[] GenerateHash(byte[] password, byte[] salt)
         {
             if (password is null)
@@ -51,7 +51,7 @@ namespace Phnx.Security.Passwords
         /// <summary>
         /// Generate a random salt
         /// </summary>
-        /// <returns></returns>
+        /// 
         public byte[] GenerateSalt()
         {
             return _hashGenerator.GenerateSalt();

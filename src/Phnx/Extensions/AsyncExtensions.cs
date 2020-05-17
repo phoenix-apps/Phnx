@@ -14,7 +14,7 @@ namespace Phnx
         /// </summary>
         /// <param name="action">The method to invoke</param>
         /// <param name="withContext">Whether to preserve the <see cref="SynchronizationContext.Current"/>. This should generally be set to <see langword="false"/> if you're writing a library</param>
-        /// <returns></returns>
+        /// 
         public static Task InvokeAsync(this Action action, bool withContext = false)
         {
             var task = Task.Factory.StartNew(action);
@@ -29,7 +29,7 @@ namespace Phnx
         /// </summary>
         /// <param name="func">The method to invoke</param>
         /// <param name="withContext">Whether to preserve the <see cref="SynchronizationContext.Current"/>. This should generally be set to <see langword="true"/> if you're writing a library</param>
-        /// <returns></returns>
+        /// 
         public static Task<T> InvokeAsync<T>(this Func<T> func, bool withContext = true)
         {
             var task = Task.Factory.StartNew(func);

@@ -13,7 +13,7 @@ namespace Phnx
         /// <param name="factory">The factory to extend</param>
         /// <param name="saltLengthShouldBe">The length that the salt should've been</param>
         /// <param name="saltLengthWas">The length that the salt actually was</param>
-        /// <returns></returns>
+        /// 
         public static string InvalidSaltSize(this ErrorMessage factory, int saltLengthShouldBe,
             int saltLengthWas)
         {

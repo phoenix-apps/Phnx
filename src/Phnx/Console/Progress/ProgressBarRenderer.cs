@@ -15,7 +15,6 @@ namespace Phnx.Console.Progress
         private const int _blockCount = 10;
 
         private static readonly char[] _frames = {
-
             '|',
             '/',
             '-',

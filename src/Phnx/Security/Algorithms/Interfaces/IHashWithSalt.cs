@@ -15,7 +15,7 @@ namespace Phnx.Security.Algorithms
         /// <summary>
         /// Generate a random salt with a length appropriate for this hashing algorithm
         /// </summary>
-        /// <returns></returns>
+        /// 
         byte[] GenerateSalt();
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace Phnx.Security.Algorithms
         /// <param name="data">The data to hash</param>
         /// <param name="salt">The salt to use. This must have the same length as <see cref="SaltBytesLength"/></param>
         /// <param name="numberOfIterations">The number of times the algorithm is ran on <paramref name="data"/></param>
-        /// <returns></returns>
+        /// 
         /// <exception cref="ArgumentNullException"><paramref name="data"/> or <paramref name="salt"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="numberOfIterations"/> is less than zero</exception>
         byte[] Hash(byte[] data, byte[] salt, int numberOfIterations = 1);

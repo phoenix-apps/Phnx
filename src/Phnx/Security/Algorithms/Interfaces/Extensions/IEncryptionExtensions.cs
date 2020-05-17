@@ -15,7 +15,7 @@ namespace Phnx.Security.Algorithms
         /// <param name="data">The data to encrypt</param>
         /// <param name="key">The encryption key</param>
         /// <param name="encoding">The encoding to convert the text to bytes with</param>
-        /// <returns></returns>
+        /// 
         public static byte[] Encrypt(this IEncryption encryption, string data, byte[] key, Encoding encoding)
         {
             if (encryption is null)
@@ -43,7 +43,7 @@ namespace Phnx.Security.Algorithms
         /// <param name="data">The data to decrypt</param>
         /// <param name="key">The encryption key</param>
         /// <param name="encoding">The encoding to convert the bytes to text with</param>
-        /// <returns></returns>
+        /// 
         public static string Decrypt(this IEncryption encryption, byte[] data, byte[] key, Encoding encoding)
         {
             if (encryption is null)

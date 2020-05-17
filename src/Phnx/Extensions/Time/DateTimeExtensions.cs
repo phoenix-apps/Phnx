@@ -18,7 +18,7 @@ namespace Phnx
         /// </summary>
         /// <param name="dob">The person's date of birth</param>
         /// <param name="now">The current <see cref="DateTime"/></param>
-        /// <returns></returns>
+        /// 
         public static int Age(this DateTime dob, DateTime now)
         {
             int age;
@@ -40,7 +40,7 @@ namespace Phnx
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to convert</param>
         /// <param name="shortDate">Whether to show the date in a short format (e.g 1/1/2001) or a long format (e.g 1st January 2001)</param>
-        /// <returns></returns>
+        /// 
         public static string AsDateString(this DateTime dt, bool shortDate = true)
         {
             return shortDate ? dt.ToString("d") : dt.ToString("D");
@@ -52,10 +52,10 @@ namespace Phnx
         /// <param name="dt">The <see cref="DateTime"/> to convert</param>
         /// <param name="formatProvider">The format provider to define how the date will be formatted</param>
         /// <param name="shortFormat">Whether to show the date in a short format (e.g 1/1/2001) or a long format (e.g 1st January 2001)</param>
-        /// <returns></returns>
+        /// 
         public static string AsDateString(this DateTime dt, IFormatProvider formatProvider, bool shortFormat = true)
         {
-            if (formatProvider == null)
+            if (formatProvider is null)
             {
                 throw new ArgumentNullException(nameof(formatProvider));
             }
@@ -68,7 +68,7 @@ namespace Phnx
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to convert</param>
         /// <param name="shortFormat">Whether to show the time in a short format (e.g 00:00 vs 00:00:00)</param>
-        /// <returns></returns>
+        /// 
         public static string AsTimeString(this DateTime dt, bool shortFormat = true)
         {
             return shortFormat ? dt.ToString("t") : dt.ToString("T");
@@ -80,10 +80,10 @@ namespace Phnx
         /// <param name="dt">The <see cref="DateTime"/> to convert</param>
         /// <param name="formatProvider">The format provider to define how the date will be formatted</param>
         /// <param name="shortFormat">Whether to show the time in a short format (e.g 00:00 vs 00:00:00)</param>
-        /// <returns></returns>
+        /// 
         public static string AsTimeString(this DateTime dt, IFormatProvider formatProvider, bool shortFormat = true)
         {
-            if (formatProvider == null)
+            if (formatProvider is null)
             {
                 throw new ArgumentNullException(nameof(formatProvider));
             }
@@ -95,7 +95,7 @@ namespace Phnx
         /// Gets a <see cref="DateTime"/> representing the time of the very end of the day that <paramref name="dt"/> is within
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to get the end of the day of</param>
-        /// <returns></returns>
+        /// 
         public static DateTime EndOfDay(this DateTime dt)
         {
             return new DateTime(dt.Year, dt.Month, dt.Day).AddDays(1).AddTicks(-1);
@@ -105,7 +105,7 @@ namespace Phnx
         /// Gets a <see cref="DateTime"/> representing the time of the very end of the month that <paramref name="dt"/> is within
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to get the end of the month of</param>
-        /// <returns></returns>
+        /// 
         public static DateTime EndOfMonth(this DateTime dt)
         {
             return new DateTime(dt.Year, dt.Month, 1).AddMonths(1).AddTicks(-1);
@@ -115,7 +115,7 @@ namespace Phnx
         /// Gets a <see cref="DateTime"/> representing the time of the very end of the year that <paramref name="dt"/> is within
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to get the end of the year of</param>
-        /// <returns></returns>
+        /// 
         public static DateTime EndOfYear(this DateTime dt)
         {
             return new DateTime(dt.Year + 1, 1, 1).AddTicks(-1);
@@ -126,7 +126,7 @@ namespace Phnx
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to get the start of the week of</param>
         /// <param name="weekStartMonday">Whether the week starts on a Monday (<see langword="true"/>) or Sunday (<see langword="false"/>)</param>
-        /// <returns></returns>
+        /// 
         public static DateTime StartOfWeek(this DateTime dt, bool weekStartMonday = true)
         {
             int daysToSubtract = (int)dt.DayOfWeek;
@@ -148,7 +148,7 @@ namespace Phnx
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to get the end of the week of</param>
         /// <param name="weekStartMonday">Whether the week starts on a Monday (<see langword="true"/>) or Sunday (<see langword="false"/>)</param>
-        /// <returns></returns>
+        /// 
         public static DateTime EndOfWeek(this DateTime dt, bool weekStartMonday = true)
         {
             int daysToAdd = 6 - (int)dt.DayOfWeek;
@@ -169,7 +169,7 @@ namespace Phnx
         /// Gets whether <paramref name="dt"/> is in the afternoon
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to check</param>
-        /// <returns></returns>
+        /// 
         public static bool IsAfternoon(this DateTime dt)
         {
             return dt.TimeOfDay >= new TimeSpan(12, 0, 0);
@@ -179,7 +179,7 @@ namespace Phnx
         /// Gets whether <paramref name="dt"/> is in the morning
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to check</param>
-        /// <returns></returns>
+        /// 
         public static bool IsMorning(this DateTime dt)
         {
             return !IsAfternoon(dt);
@@ -190,7 +190,7 @@ namespace Phnx
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to check</param>
         /// <param name="sameDayAs">The <see cref="DateTime"/> to check whether <paramref name="dt"/> is on the same day as</param>
-        /// <returns></returns>
+        /// 
         public static bool IsSameDay(this DateTime dt, DateTime sameDayAs)
         {
             return dt.Date == sameDayAs.Date;
@@ -200,7 +200,7 @@ namespace Phnx
         /// Gets whether <paramref name="dt"/> is within a weekend
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to check</param>
-        /// <returns></returns>
+        /// 
         public static bool IsWeekend(this DateTime dt)
         {
             var dayOfWeek = dt.DayOfWeek;
@@ -215,7 +215,7 @@ namespace Phnx
         /// <param name="minute">The minute to assign</param>
         /// <param name="second">The second to assign</param>
         /// <param name="millisecond">The millisecond to assign</param>
-        /// <returns></returns>
+        /// 
         public static DateTime SetTime(this DateTime dt, int? hour = null, int? minute = null, int? second = null,
             int? millisecond = null)
         {
@@ -234,7 +234,7 @@ namespace Phnx
         /// Converts <paramref name="dt"/> to a <see cref="TimeSpan"/> after <see cref="Epoch"/>
         /// </summary>
         /// <param name="dt">The <see cref="DateTime"/> to convert</param>
-        /// <returns></returns>
+        /// 
         public static TimeSpan GetTimeSinceEpoch(this DateTime dt)
         {
             return dt - Epoch;

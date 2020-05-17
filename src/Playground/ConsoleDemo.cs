@@ -21,8 +21,8 @@ namespace Playground
 
         private static bool Intro()
         {
-            Console.WriteLineInColor("Playground", ConsoleColor.Gray);
-            Console.WriteLineInColor(new string('_', System.Console.WindowWidth), ConsoleColor.Gray);
+            Console.WriteLine("Playground", ConsoleColor.Gray);
+            Console.WriteLine(new string('_', System.Console.WindowWidth), ConsoleColor.Gray);
 
             return Console.YesNo("Start demo?");
         }
@@ -33,7 +33,7 @@ namespace Playground
             Console.WriteLine(infoMessage);
 
             var fullLine = new string('_', System.Console.WindowWidth);
-            Console.WriteLineInColor(fullLine, ConsoleColor.Yellow);
+            Console.WriteLine(fullLine, ConsoleColor.Yellow);
 
             Wait(500);
             Console.UndoWriteLine(fullLine);
@@ -42,7 +42,7 @@ namespace Playground
             infoMessage = "Testing clear current line, please wait...";
             Console.WriteLine(infoMessage);
 
-            Console.WriteInColor(fullLine, ConsoleColor.Yellow);
+            Console.Write(fullLine, ConsoleColor.Yellow);
             Wait(500);
             Console.UndoWrite(fullLine);
             Console.UndoWriteLine(infoMessage);
@@ -50,7 +50,8 @@ namespace Playground
 
         private static void DoMath()
         {
-            var result = Console.GetInt("Please enter an integer:");
+            Console.Write("Please enter an integer: ");
+            var result = Console.GetInt();
             Console.NewLine();
 
             Console.WriteLine($"{result}² = {Math.Pow(result, 2)}");

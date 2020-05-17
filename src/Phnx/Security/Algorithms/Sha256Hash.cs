@@ -25,7 +25,7 @@ namespace Phnx.Security.Algorithms
         /// </summary>
         /// <param name="data">The data to hash</param>
         /// <param name="iterations">The number of times to run the algorithm</param>
-        /// <returns></returns>
+        /// 
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="iterations"/> is less than zero</exception>
         public byte[] Hash(byte[] data, int iterations = 1)

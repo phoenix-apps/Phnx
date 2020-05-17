@@ -12,7 +12,7 @@ namespace Phnx.Collections.Tests.Extensions
             List<int> items = null;
             var itemsToAdd = new List<int> { 1, 2, 3 };
 
-            Assert.Throws<ArgumentNullException>(() => items.InsertList(1, items));
+            Assert.Throws<ArgumentNullException>(() => ListExtensions.InsertRange(items, 1, items));
         }
 
         [Test]
@@ -21,7 +21,7 @@ namespace Phnx.Collections.Tests.Extensions
             var items = new List<int> { 1, 2, 3 };
             List<int> itemsToAdd = null;
 
-            Assert.Throws<ArgumentNullException>(() => items.InsertList(1, itemsToAdd));
+            Assert.Throws<ArgumentNullException>(() => ListExtensions.InsertRange(items, 1, itemsToAdd));
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace Phnx.Collections.Tests.Extensions
             var items = new List<int> { 1, 2, 3 };
             var itemsToAdd = new List<int> { 4, 5, 6 };
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => items.InsertList(-1, itemsToAdd));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ListExtensions.InsertRange(items, -1, itemsToAdd));
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace Phnx.Collections.Tests.Extensions
             var items = new List<int> { 1, 2, 3 };
             var itemsToAdd = new List<int> { 4, 5, 6 };
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => items.InsertList(4, itemsToAdd));
+            Assert.Throws<ArgumentOutOfRangeException>(() => ListExtensions.InsertRange(items, 4, itemsToAdd));
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace Phnx.Collections.Tests.Extensions
             var items = new List<int> { 1, 2, 3 };
             var itemsToAdd = new List<int> { 4, 5, 6 };
 
-            items.InsertList(items.Count, itemsToAdd);
+            ListExtensions.InsertRange(items, items.Count, itemsToAdd);
 
             CollectionAssert.AreEqual(expected, items);
         }
@@ -63,7 +63,7 @@ namespace Phnx.Collections.Tests.Extensions
             var items = new List<int> { 1, 2, 3 };
             var itemsToAdd = new List<int> { 4, 5, 6 };
 
-            items.InsertList(0, itemsToAdd);
+            ListExtensions.InsertRange(items, 0, itemsToAdd);
 
             CollectionAssert.AreEqual(expected, items);
         }
@@ -76,7 +76,7 @@ namespace Phnx.Collections.Tests.Extensions
             var items = new List<int> { 1, 2, 3 };
             var itemsToAdd = new List<int> { 4, 5, 6 };
 
-            items.InsertList(2, itemsToAdd);
+            ListExtensions.InsertRange(items, 2, itemsToAdd);
 
             CollectionAssert.AreEqual(expected, items);
         }
@@ -89,7 +89,7 @@ namespace Phnx.Collections.Tests.Extensions
             var items = new List<int> { 1, 2, 3, 4, 5 };
             var itemsToAdd = new List<int> { 6 };
 
-            items.InsertList(2, itemsToAdd);
+            ListExtensions.InsertRange(items, 2, itemsToAdd);
 
             CollectionAssert.AreEqual(expected, items);
         }

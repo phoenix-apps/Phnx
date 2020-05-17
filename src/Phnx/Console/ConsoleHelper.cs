@@ -1,8 +1,11 @@
 ﻿using Phnx.Console.Progress;
+using Phnx.Try;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Security;
+using System.Text;
 using _Console = System.Console;
 
 namespace Phnx.Console
@@ -99,7 +102,7 @@ namespace Phnx.Console
         /// <exception cref="IOException">An I/O error occurred</exception>
         public void WriteInfo(string info)
         {
-            WriteLineInColor(info, ConsoleColor.Cyan);
+            WriteLine(info, ConsoleColor.Cyan);
         }
 
         /// <summary>
@@ -110,7 +113,7 @@ namespace Phnx.Console
         /// <exception cref="IOException">An I/O error occurred</exception>
         public void WriteWarning(string warning)
         {
-            WriteLineInColor(warning, ConsoleColor.Yellow);
+            WriteLine(warning, ConsoleColor.Yellow);
         }
 
         /// <summary>
@@ -121,7 +124,7 @@ namespace Phnx.Console
         /// <exception cref="IOException">An I/O error occurred</exception>
         public void WriteError(string error)
         {
-            WriteLineInColor(error, ConsoleColor.Red);
+            WriteLine(error, ConsoleColor.Red);
         }
 
         /// <summary>
@@ -142,7 +145,7 @@ namespace Phnx.Console
         /// <param name="fontColor">The font color to use</param>
         /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
         /// <exception cref="IOException">An I/O error occurred</exception>
-        public void WriteInColor(string text, ConsoleColor fontColor)
+        public void Write(string text, ConsoleColor fontColor)
         {
             ConsoleColor startFontColor = FontColor;
             FontColor = fontColor;
@@ -159,7 +162,7 @@ namespace Phnx.Console
         /// <param name="fontColor">The font color to use</param>
         /// <exception cref="SecurityException">The user does not have permission to perform this action</exception>
         /// <exception cref="IOException">An I/O error occurred</exception>
-        public void WriteLineInColor(string text, ConsoleColor fontColor)
+        public void WriteLine(string text, ConsoleColor fontColor)
         {
             ConsoleColor startFontColor = FontColor;
             FontColor = fontColor;
@@ -167,85 +170,6 @@ namespace Phnx.Console
             WriteLine(text);
 
             FontColor = startFontColor;
-        }
-
-        /// <summary>
-        /// Writes the <paramref name="question"/> to the console, and then read a line from the console, and convert it using the <paramref name="converter"/>. If the received input is invalid, <see cref="Clear"/> is called, and the process repeats
-        /// </summary>
-        /// <param name="converter">The method to use when converting from the text to the desired type</param>
-        /// <param name="question">The question to write. If this is <see langword="null"/>, the console is not cleared</param>
-        /// <returns>The <typeparamref name="T"/> entered by the user</returns>
-        /// <exception cref="IOException">An I/O exception occured</exception>
-        /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the line read from <see cref="TextIoHelper.Input"/></exception>
-        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is larger than <see cref="int.MaxValue"/></exception>
-        public override T Get<T>(Func<string, T> converter, string question = null)
-        {
-            if (converter == null)
-            {
-                throw new ArgumentNullException(nameof(converter));
-            }
-
-            if (question != null)
-            {
-                if (!question.EndsWith(Environment.NewLine))
-                {
-                    question = question.Trim() + " ";
-                    Write(question);
-                }
-                else
-                {
-                    question = question.Trim();
-                    WriteLine(question);
-                }
-            }
-
-            string errorWritten = null;
-
-            do
-            {
-                var startColor = FontColor;
-                FontColor = ConsoleColor.Cyan;
-                var valueEntered = GetString();
-                FontColor = startColor;
-
-                try
-                {
-                    var converted = converter(valueEntered);
-
-                    if (errorWritten != null)
-                    {
-                        UndoWriteLine(question + valueEntered);
-                        UndoWriteLine(errorWritten);
-                        Write(question);
-
-                        FontColor = ConsoleColor.Cyan;
-                        WriteLine(valueEntered);
-                        FontColor = startColor;
-                    }
-
-                    return converted;
-                }
-                catch (Exception ex)
-                {
-                    if (errorWritten != null)
-                    {
-                        UndoWriteLine(question + valueEntered);
-                        UndoWriteLine(errorWritten);
-                    }
-                    else
-                    {
-                        UndoWriteLine(question + valueEntered);
-                    }
-
-                    WriteError(ex.Message);
-                    errorWritten = ex.Message;
-
-                    if (question != null)
-                    {
-                        Write(question);
-                    }
-                }
-            } while (true);
         }
 
         /// <summary>
@@ -302,15 +226,6 @@ namespace Phnx.Console
 
             return keyInfo.Key == ConsoleKey.Y;
         }
-
-        /// <summary>
-        /// Reads the next line of characters from the standard input stream
-        /// </summary>
-        /// <returns>The next line of characters from the input stream, or <see langword="null"/> if no more lines are available</returns>
-        /// <exception cref="IOException">An I/O error occured</exception>
-        /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the returned string</exception>
-        /// <exception cref="ArgumentOutOfRangeException">The number of characters in the next line is greater than <see cref="int.MaxValue"/></exception>
-        public string ReadLine() => GetString();
 
         /// <summary>
         /// Waits for a key press from the console, and return the key that is pressed

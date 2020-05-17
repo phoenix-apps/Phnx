@@ -17,11 +17,11 @@ namespace Phnx.Collections
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="keySelector"/> is null</exception>
         public static IEnumerable<TSource> DistinctBy<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            else if (keySelector == null)
+            else if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
@@ -53,11 +53,11 @@ namespace Phnx.Collections
         /// <exception cref="InvalidOperationException"><paramref name="source"/> was empty</exception>
         public static T MaxBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> keySelector) where TKey : IComparable<TKey>
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            else if (keySelector == null)
+            else if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
@@ -105,11 +105,11 @@ namespace Phnx.Collections
         /// <exception cref="InvalidOperationException"><paramref name="source"/> was empty</exception>
         public static T MinBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> keySelector) where TKey : IComparable<TKey>
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            else if (keySelector == null)
+            else if (keySelector is null)
             {
                 throw new ArgumentNullException(nameof(keySelector));
             }
@@ -183,11 +183,11 @@ namespace Phnx.Collections
         /// <returns>A collection containing all given collection's values</returns>
         public static IEnumerable<T> Append<T>(this IEnumerable<T> source, IEnumerable<IEnumerable<T>> collections)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            if (collections == null)
+            if (collections is null)
             {
                 throw new ArgumentNullException(nameof(collections));
             }
@@ -218,7 +218,7 @@ namespace Phnx.Collections
 
             foreach (var subCollection in source)
             {
-                if (subCollection == null)
+                if (subCollection is null)
                 {
                     // Skip
                     continue;

@@ -92,7 +92,7 @@ namespace Phnx.Console.Tests.TestHelpers
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (buffer == null)
+            if (buffer is null)
             {
                 throw new ArgumentNullException(nameof(buffer));
             }

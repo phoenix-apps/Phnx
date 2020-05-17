@@ -10,7 +10,7 @@
         /// </summary>
         /// <param name="data">The data to encrypt</param>
         /// <param name="key">The key to use</param>
-        /// <returns></returns>
+        /// 
         byte[] Encrypt(byte[] data, byte[] key);
 
         /// <summary>
@@ -18,7 +18,7 @@
         /// </summary>
         /// <param name="encryptedData">The data to decrypt</param>
         /// <param name="key">The key to use</param>
-        /// <returns></returns>
+        /// 
         byte[] Decrypt(byte[] encryptedData, byte[] key);
     }
 }

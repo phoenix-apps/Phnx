@@ -9,7 +9,7 @@ namespace Phnx.Collections
     public static class ListExtensions
     {
         /// <summary>
-        /// Insert a range of values into a collection
+        /// Insert a range of values
         /// </summary>
         /// <typeparam name="T">The type of values in the collection</typeparam>
         /// <param name="source">The values in the original collection</param>
@@ -17,13 +17,33 @@ namespace Phnx.Collections
         /// <param name="valuesToInsert">The values to insert into the collection</param>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="valuesToInsert"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero or greater than or equal to the size of <paramref name="source"/></exception>
-        public static void InsertList<T>(this List<T> source, int startIndex, IList<T> valuesToInsert)
+        public static void InsertRange<T>(this List<T> source, int startIndex, IReadOnlyList<T> valuesToInsert)
         {
-            if (source == null)
+            if (valuesToInsert is null)
+            {
+                throw new ArgumentNullException(nameof(valuesToInsert));
+            }
+
+            InsertRange(source, startIndex, valuesToInsert, valuesToInsert.Count);
+        }
+
+        /// <summary>
+        /// Insert a range of values
+        /// </summary>
+        /// <typeparam name="T">The type of values in the collection</typeparam>
+        /// <param name="source">The values in the original collection</param>
+        /// <param name="startIndex">The index at which inserting into <paramref name="source"/> begins</param>
+        /// <param name="valuesToInsert">The values to insert into the collection</param>
+        /// <param name="count">The number of records from <paramref name="valuesToInsert"/> to insert</param>
+        /// <exception cref="ArgumentNullException"><paramref name="source"/> or <paramref name="valuesToInsert"/> is <see langword="null"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="startIndex"/> is less than zero or greater than or equal to the size of <paramref name="source"/></exception>
+        public static void InsertRange<T>(this List<T> source, int startIndex, IReadOnlyList<T> valuesToInsert, int count)
+        {
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            if (valuesToInsert == null)
+            if (valuesToInsert is null)
             {
                 throw new ArgumentNullException(nameof(valuesToInsert));
             }
@@ -36,11 +56,11 @@ namespace Phnx.Collections
                 throw new ArgumentOutOfRangeException(nameof(startIndex), $"{nameof(startIndex)} cannot be greater than or equal to the size of {nameof(source)}. {nameof(source)} has a size of {source.Count}");
             }
 
-            if (source.Capacity < valuesToInsert.Count + source.Count)
+            if (source.Capacity < count + source.Count)
             {
                 // source needs to grow
                 int newCapacity;
-                int newCapacityMinimum = valuesToInsert.Count + source.Count;
+                int newCapacityMinimum = count + source.Count;
 
                 do
                 {
@@ -52,7 +72,7 @@ namespace Phnx.Collections
 
             var replacedValues = new Queue<T>();
 
-            for (int valuesToInsertIndex = 0; valuesToInsertIndex < valuesToInsert.Count; ++valuesToInsertIndex)
+            for (int valuesToInsertIndex = 0; valuesToInsertIndex < count; ++valuesToInsertIndex)
             {
                 var insertToIndex = startIndex + valuesToInsertIndex;
 
@@ -67,7 +87,7 @@ namespace Phnx.Collections
                 }
             }
 
-            for (var index = startIndex + valuesToInsert.Count; index < source.Count; ++index)
+            for (var index = startIndex + count; index < source.Count; ++index)
             {
                 // Restore replaced values at the end of the inserted values
                 replacedValues.Enqueue(source[index]);

@@ -135,7 +135,7 @@ namespace Phnx.Security.Algorithms
         /// <param name="encryptedData">The encrypted data to decrypt</param>
         /// <param name="key">The key to decrypt with</param>
         /// <param name="iv">The initialisation vector to decrypt with</param>
-        /// <returns></returns>
+        /// 
         /// <exception cref="ArgumentNullException"><paramref name="encryptedData"/> or <paramref name="key"/> or <paramref name="iv"/> is <see langword="null"/></exception>
         public static byte[] Decrypt(this ISymmetricEncryption encryption, byte[] encryptedData, byte[] key, byte[] iv)
         {

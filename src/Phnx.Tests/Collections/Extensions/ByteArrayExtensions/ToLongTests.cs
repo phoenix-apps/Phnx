@@ -18,7 +18,7 @@ namespace Phnx.Collections.Tests.Extensions.ByteArrayExtensions
         {
             var bytes = new byte[] { 1, 6, 4, 2 };
 
-            Assert.Throws<ArgumentException>(() => bytes.ToLong());
+            Assert.Throws<ArgumentOutOfRangeException>(() => bytes.ToLong());
         }
 
         [Test]

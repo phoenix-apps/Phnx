@@ -1,6 +1,7 @@
 ﻿using Phnx.Collections;
 using System;
 using System.Drawing;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Phnx.Drawing
@@ -149,7 +150,14 @@ namespace Phnx.Drawing
         /// <returns>A <see cref="T:byte[]"/> representation of the hex code</returns>
         public byte[] ToBytes()
         {
-            return HexCode?.ShallowCopy();
+            if (HexCode is null)
+            {
+                return null;
+            }
+
+            var destArray = new byte[HexCode.Length];
+            Array.Copy(HexCode, destArray, destArray.Length);
+            return destArray;
         }
 
         /// <summary>

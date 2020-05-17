@@ -53,7 +53,7 @@ namespace Phnx.Data.Lazy
         /// <returns>Whether the table was added to the cache database</returns>
         public bool TryAddTable<TKey, TValue>(Func<TKey, TValue> getFromExternalSource)
         {
-            if (getFromExternalSource == null)
+            if (getFromExternalSource is null)
             {
                 throw new ArgumentNullException(nameof(getFromExternalSource));
             }
@@ -172,7 +172,7 @@ namespace Phnx.Data.Lazy
         /// <exception cref="ArgumentNullException"><paramref name="getFromExternalSource"/> is <see langword="null"/></exception>
         public void AddOrUpdate<TKey, TEntry>(TKey id, TEntry value, Func<TKey, TEntry> getFromExternalSource)
         {
-            if (getFromExternalSource == null)
+            if (getFromExternalSource is null)
             {
                 throw new ArgumentNullException(nameof(getFromExternalSource));
             }

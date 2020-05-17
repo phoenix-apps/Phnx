@@ -43,17 +43,15 @@ namespace Phnx.IO.Threaded.Tests
         {
             var exToThrow = new NullReferenceException();
 
-            using (var reader = new ThreadedReader<string>(() => throw exToThrow))
+            using var reader = new ThreadedReader<string>(() => throw exToThrow);
+            try
             {
-                try
-                {
-                    reader.Read();
-                }
-                catch (Exception ex)
-                {
-                    Assert.IsInstanceOf<IOException>(ex);
-                    Assert.IsInstanceOf<NullReferenceException>(ex.InnerException);
-                }
+                reader.Read();
+            }
+            catch (Exception ex)
+            {
+                Assert.IsInstanceOf<IOException>(ex);
+                Assert.IsInstanceOf<NullReferenceException>(ex.InnerException);
             }
         }
 
@@ -63,11 +61,9 @@ namespace Phnx.IO.Threaded.Tests
             string[] values = new string[] { "test1", "test2", "test3" };
 
             int index = 0;
-            using (var reader = new ThreadedReader<string>(() => values[index++], 2))
-            {
-                Thread.Sleep(2);
-                Assert.AreEqual(2, reader.CachedCount);
-            }
+            using var reader = new ThreadedReader<string>(() => values[index++], 2);
+            Thread.Sleep(2);
+            Assert.AreEqual(2, reader.CachedCount);
         }
 
         [Test]

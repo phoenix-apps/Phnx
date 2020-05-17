@@ -27,7 +27,7 @@ namespace Phnx
         /// Create a new <see cref="DateTime"/> from a <see cref="TimeSpan"/> after <see cref="DateTimeExtensions.Epoch"/>
         /// </summary>
         /// <param name="span">The time difference between now an <see cref="DateTimeExtensions.Epoch"/></param>
-        /// <returns></returns>
+        /// 
         public static DateTime TimeSinceEpochToDateTime(this TimeSpan span)
         {
             return DateTimeExtensions.Epoch + span;
@@ -48,7 +48,7 @@ namespace Phnx
         /// Hours, Milliseconds
         /// Minutes, Milliseconds
         /// </exception>
-        /// <returns></returns>
+        /// 
         public static string ToString(this TimeSpan ts,
             TimeComponents timeComponents =
                 TimeComponents.Hours |

@@ -12,7 +12,7 @@ namespace Phnx
         /// </summary>
         /// <param name="number">The number to convert to a <see cref="string"/></param>
         /// <param name="minimumNumberOfDigitsToShow"></param>
-        /// <returns></returns>
+        /// 
         public static string ToString(this int number, int minimumNumberOfDigitsToShow)
         {
             return number.ToString("d" + minimumNumberOfDigitsToShow);
@@ -23,7 +23,7 @@ namespace Phnx
         /// </summary>
         /// <param name="valueToRound">The value to be rounded</param>
         /// <param name="toNearest">The value to round to</param>
-        /// <returns></returns>
+        /// 
         public static int RoundToNearest(this int valueToRound, int toNearest)
         {
             return (int)(Math.Round((decimal)valueToRound / toNearest, MidpointRounding.AwayFromZero) * toNearest);

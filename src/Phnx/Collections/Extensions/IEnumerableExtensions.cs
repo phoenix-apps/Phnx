@@ -22,7 +22,7 @@ namespace Phnx.Collections
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
         public static IEnumerable<T> CopyRange<T>(this IEnumerable<T> source, int startIndex, int count)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -73,7 +73,7 @@ namespace Phnx.Collections
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
         public static IEnumerable<T> CopyRange<T>(this IEnumerable<T> source, int startIndex)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
@@ -111,7 +111,7 @@ namespace Phnx.Collections
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
         public static string ToString<T>(this IEnumerable<T> source, string separator)
         {
-            if (separator == null)
+            if (separator is null)
             {
                 throw new ArgumentNullException(nameof(separator));
             }
@@ -129,12 +129,12 @@ namespace Phnx.Collections
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
         public static string ToString<T>(this IEnumerable<T> source, string separator, Func<T, string> toString = null)
         {
-            if (separator == null)
+            if (separator is null)
             {
                 throw new ArgumentNullException(nameof(separator));
             }
 
-            if (toString == null)
+            if (toString is null)
             {
                 throw new ArgumentNullException(nameof(separator));
             }

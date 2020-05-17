@@ -17,7 +17,7 @@ namespace Phnx.Collections
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is <see langword="null"/></exception>
         public static List<T> ToList<T>(this IReadOnlyCollection<T> source)
         {
-            if (source == null)
+            if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }

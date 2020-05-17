@@ -20,13 +20,13 @@
         /// </summary>
         /// <param name="password">The password to hash</param>
         /// <param name="salt">The salt to use</param>
-        /// <returns></returns>
+        /// 
         byte[] GenerateHash(byte[] password, byte[] salt);
 
         /// <summary>
         /// Generate a salt for use with this algorithm
         /// </summary>
-        /// <returns></returns>
+        /// 
         byte[] GenerateSalt();
     }
 }

@@ -19,11 +19,11 @@ namespace Phnx.Data
         /// <exception cref="ArgumentNullException"><paramref name="textToEscape"/> or <paramref name="escapeTheseChars"/> is <see langword="null"/></exception>
         public static string Escape(string textToEscape, char escapeChar, params char[] escapeTheseChars)
         {
-            if (textToEscape == null)
+            if (textToEscape is null)
             {
                 throw new ArgumentNullException(nameof(textToEscape));
             }
-            if (escapeTheseChars == null)
+            if (escapeTheseChars is null)
             {
                 throw new ArgumentNullException(nameof(escapeTheseChars));
             }
@@ -53,11 +53,11 @@ namespace Phnx.Data
         /// <exception cref="ArgumentNullException"><paramref name="escapedText"/> or <paramref name="escapedTheseChars"/> is <see langword="null"/></exception>
         public static string Unescape(string escapedText, char escapeChar, params char[] escapedTheseChars)
         {
-            if (escapedText == null)
+            if (escapedText is null)
             {
                 throw new ArgumentNullException(nameof(escapedText));
             }
-            if (escapedTheseChars == null)
+            if (escapedTheseChars is null)
             {
                 throw new ArgumentNullException(nameof(escapedTheseChars));
             }

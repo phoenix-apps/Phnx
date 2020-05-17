@@ -2,6 +2,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Phnx.Security.Passwords
 {
@@ -102,7 +104,7 @@ namespace Phnx.Security.Passwords
         /// </summary>
         /// <param name="password"></param>
         /// <param name="hash"></param>
-        /// <returns></returns>
+        /// 
         public bool PasswordMatchesHash(string password, byte[] hash)
         {
             if (password is null)
@@ -167,14 +169,14 @@ namespace Phnx.Security.Passwords
         /// <returns><see langword="true"/> if <paramref name="hash1"/> is the same as <paramref name="hash2"/>, otherwise <see langword="false"/></returns>
         private bool HashesMatch(byte[] hash1, byte[] hash2)
         {
-            return hash1.EqualsRange(hash2);
+            return hash1.SequenceEqual(hash2);
         }
 
         /// <summary>
         /// Get whether a version is known
         /// </summary>
         /// <param name="key">The version to check for</param>
-        /// <returns></returns>
+        /// 
         public bool ContainsKey(int key)
         {
             return Generators.ContainsKey(key);
