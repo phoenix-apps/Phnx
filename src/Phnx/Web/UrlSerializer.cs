@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using Phnx.Reflection;
+﻿using Phnx.Reflection;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 
 namespace Phnx.Web
 {
@@ -121,7 +121,7 @@ namespace Phnx.Web
         /// </summary>
         /// <param name="value">The value to serialize</param>
         /// <returns><paramref name="value"/> serialized for use as a URL or query string parameter</returns>
-        public static string SerializeForUrl(object value)
+        public static string SerializeForUrl<T>(T value)
         {
             if (value is null)
             {
@@ -129,7 +129,7 @@ namespace Phnx.Web
             }
             else
             {
-                var serialized = JsonConvert.SerializeObject(value).Trim('\"');
+                var serialized = JsonSerializer.Serialize(value).Trim('\"');
 
                 return Uri.EscapeDataString(serialized);
             }

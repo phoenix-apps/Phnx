@@ -20,7 +20,7 @@ namespace Phnx.IO.Threaded
         /// </summary>
         private volatile bool _safeExit;
 
-        private ManualResetEventSlim _workerExited;
+        private readonly ManualResetEventSlim _workerExited;
 
         /// <summary>
         /// The number of items currently cached

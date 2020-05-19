@@ -302,15 +302,13 @@ namespace Phnx.Web.Fluent
             description.Append("; Content: ");
             if (Request.Content != null)
             {
-                var sc = Request.Content as StringContent;
-
-                if (sc is null)
+                if (Request.Content is StringContent sc)
                 {
-                    description.Append("null");
+                    description.Append(sc.Headers.ContentType.MediaType);
                 }
                 else
                 {
-                    description.Append(sc.Headers.ContentType.MediaType);
+                    description.Append("Unknown Type");
                 }
             }
             else

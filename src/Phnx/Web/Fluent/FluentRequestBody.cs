@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 
 namespace Phnx.Web.Fluent
 {
@@ -11,14 +11,14 @@ namespace Phnx.Web.Fluent
     /// </summary>
     public class FluentRequestBody
     {
-        private readonly FluentRequest request;
-        private static readonly Encoding defaultEncoding = Encoding.UTF8;
+        private readonly FluentRequest _request;
+        private static readonly Encoding _defaultEncoding = Encoding.UTF8;
 
         internal FluentRequestBody(FluentRequest request)
         {
             Debug.Assert(request != null);
 
-            this.request = request;
+            _request = request;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Phnx.Web.Fluent
         /// </summary>
         /// <param name="body">The data to send as body content</param>
         /// <returns>The source <see cref="FluentRequest"/></returns>
-        public FluentRequest Json(object body) => Json(body, defaultEncoding);
+        public FluentRequest Json<T>(T body) => Json(body, _defaultEncoding);
 
         /// <summary>
         /// Use a JSON format body content, with a specified body
@@ -35,17 +35,17 @@ namespace Phnx.Web.Fluent
         /// <param name="encoding">The text encoding to use</param>
         /// <returns>The source <see cref="FluentRequest"/></returns>
         /// <exception cref="ArgumentNullException"><paramref name="encoding"/> is <see langword="null"/></exception>
-        public FluentRequest Json(object body, Encoding encoding)
+        public FluentRequest Json<T>(T body, Encoding encoding)
         {
             if (encoding is null)
             {
                 throw new ArgumentNullException(nameof(encoding));
             }
 
-            var bodyAsString = body is null ? string.Empty : JsonConvert.SerializeObject(body);
+            var bodyAsString = body is null ? string.Empty : JsonSerializer.Serialize(body);
             ToContent(ContentType.Application.Json, bodyAsString, encoding);
 
-            return request;
+            return _request;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Phnx.Web.Fluent
         /// </summary>
         /// <param name="body">The data to send as body content</param>
         /// <returns>The source <see cref="FluentRequest"/></returns>
-        public FluentRequest PlainText(string body) => PlainText(body, defaultEncoding);
+        public FluentRequest PlainText(string body) => PlainText(body, _defaultEncoding);
 
         /// <summary>
         /// Use a plaintext format body content, with a specified body
@@ -71,7 +71,7 @@ namespace Phnx.Web.Fluent
 
             ToContent(ContentType.Text.Plain, body ?? string.Empty, encoding);
 
-            return request;
+            return _request;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Phnx.Web.Fluent
         /// </summary>
         /// <param name="body">The data to send as body content</param>
         /// <returns>The source <see cref="FluentRequest"/></returns>
-        public FluentRequest Form(object body) => Form(body, defaultEncoding);
+        public FluentRequest Form(object body) => Form(body, _defaultEncoding);
 
         /// <summary>
         /// Use an url-encoded form format body content, with a specified body
@@ -98,7 +98,7 @@ namespace Phnx.Web.Fluent
             var bodyAsQueryString = UrlSerializer.ToQueryString(body);
             ToContent(ContentType.Application.Form, bodyAsQueryString, encoding);
 
-            return request;
+            return _request;
         }
 
         /// <summary>
@@ -114,9 +114,9 @@ namespace Phnx.Web.Fluent
                 throw new ArgumentNullException(nameof(content));
             }
 
-            request.Request.Content = content;
+            _request.Request.Content = content;
 
-            return request;
+            return _request;
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Phnx.Web.Fluent
         /// <returns>The source <see cref="FluentRequest"/></returns>
         /// <exception cref="ArgumentNullException"><paramref name="contentType"/> is <see langword="null"/></exception>
         /// <exception cref="FormatException"><paramref name="contentType"/> is in an invalid format</exception>
-        public FluentRequest Custom(string contentType, string body) => Custom(contentType, body, defaultEncoding);
+        public FluentRequest Custom(string contentType, string body) => Custom(contentType, body, _defaultEncoding);
 
         /// <summary>
         /// Use a specified content type, with a specified body
@@ -151,7 +151,7 @@ namespace Phnx.Web.Fluent
 
             ToContent(contentType, body, encoding);
 
-            return request;
+            return _request;
         }
 
         /// <exception cref="FormatException"><paramref name="contentType"/> is in an invalid format</exception>
@@ -160,7 +160,7 @@ namespace Phnx.Web.Fluent
             Debug.Assert(contentType != null);
             Debug.Assert(encoding != null);
 
-            request.Request.Content = new StringContent(body ?? string.Empty, encoding, contentType);
+            _request.Request.Content = new StringContent(body ?? string.Empty, encoding, contentType);
         }
     }
 }

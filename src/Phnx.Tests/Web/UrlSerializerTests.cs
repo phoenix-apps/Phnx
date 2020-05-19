@@ -179,7 +179,7 @@ namespace Phnx.Web.Tests
         {
             var expected = string.Empty;
 
-            var result = UrlSerializer.SerializeForUrl(null);
+            var result = UrlSerializer.SerializeForUrl<object>(null);
 
             Assert.AreEqual(expected, result);
         }
