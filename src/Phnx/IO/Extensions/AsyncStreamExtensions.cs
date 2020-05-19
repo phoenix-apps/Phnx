@@ -1,13 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Phnx.IO
 {
     /// <summary>
     /// Extensions for <see cref="Stream"/> and <see cref="TextReader"/>
     /// </summary>
-    public static class StreamExtensions
+    public static class AsyncStreamExtensions
     {
         /// <summary>
         /// Writes <paramref name="textToWrite"/> to the <paramref name="stream"/>
@@ -18,21 +19,15 @@ namespace Phnx.IO
         /// <exception cref="IOException">An I/O error occurs</exception>
         /// <exception cref="NotSupportedException"><paramref name="stream"/> does not support writing</exception>
         /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
-        public static void Write(this Stream stream, string textToWrite)
+        public static async Task WriteAsync(this Stream stream, string textToWrite)
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            using var writer = new StreamWriter(stream);
-
-            if (textToWrite is null)
-            {
-                return;
-            }
-
-            writer.Write(textToWrite);
+            await using var writer = new StreamWriter(stream);
+            await writer.WriteAsync(textToWrite);
         }
 
         /// <summary>
@@ -45,21 +40,15 @@ namespace Phnx.IO
         /// <exception cref="IOException">An I/O error occurs</exception>
         /// <exception cref="NotSupportedException"><paramref name="stream"/> does not support writing</exception>
         /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
-        public static void Write(this Stream stream, string textToWrite, Encoding encoding)
+        public static async Task WriteAsync(this Stream stream, string textToWrite, Encoding encoding)
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            using var writer = new StreamWriter(stream, encoding);
-
-            if (textToWrite is null)
-            {
-                return;
-            }
-
-            writer.Write(textToWrite);
+            await using var writer = new StreamWriter(stream, encoding);
+            await writer.WriteAsync(textToWrite);
         }
 
         /// <summary>
@@ -72,16 +61,14 @@ namespace Phnx.IO
         /// <exception cref="IOException">An I/O error occurs</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the returned string</exception>
         /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
-        public static string ReadToEndAsString(this Stream stream)
+        public static Task<string> ReadToEndAsStringAsync(this Stream stream)
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            using var reader = new StreamReader(stream);
-            var contents = reader.ReadToEnd();
-            return contents;
+            return new StreamReader(stream).ReadToEndAsync();
         }
 
         /// <summary>
@@ -95,16 +82,14 @@ namespace Phnx.IO
         /// <exception cref="IOException">An I/O error occurs</exception>
         /// <exception cref="OutOfMemoryException">There is insufficient memory to allocate a buffer for the returned string</exception>
         /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
-        public static string ReadToEndAsString(this Stream stream, Encoding encoding)
+        public static Task<string> ReadToEndAsStringAsync(this Stream stream, Encoding encoding)
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            using var reader = new StreamReader(stream, encoding);
-            var contents = reader.ReadToEnd();
-            return contents;
+            return new StreamReader(stream, encoding).ReadToEndAsync();
         }
 
         /// <summary>
@@ -117,7 +102,7 @@ namespace Phnx.IO
         /// <exception cref="IOException">An I/O error occurs</exception>
         /// <exception cref="NotSupportedException"><paramref name="stream"/> does not support reading</exception>
         /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
-        public static byte[] ReadToEnd(this Stream stream)
+        public static async Task<byte[]> ReadToEndAsync(this Stream stream)
         {
             if (stream is null)
             {
@@ -126,46 +111,9 @@ namespace Phnx.IO
 
             byte[] data = new byte[stream.Length - stream.Position];
 
-            stream.Read(data, 0, data.Length);
+            await stream.ReadAsync(data, 0, data.Length);
 
             return data;
-        }
-
-        /// <summary>
-        /// Get whether this stream has been read to the end
-        /// </summary>
-        /// <param name="stream">The stream to check</param>
-        /// <returns>Whether this stream has been read to the end</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <see langword="null"/></exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
-        /// <exception cref="NotSupportedException">Cannot get the current position within <paramref name="stream"/></exception>
-        /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="stream"/> was closed</exception>
-        public static bool ReachedEnd(this Stream stream)
-        {
-            if (stream is null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
-            return stream.Position == stream.Length;
-        }
-
-        /// <summary>
-        /// Get whether this text reader has been read to the end
-        /// </summary>
-        /// <param name="reader">The reader to check</param>
-        /// <returns>Whether this reader has been read to the end</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="reader"/> is <see langword="null"/></exception>
-        /// <exception cref="IOException">An I/O error occurs</exception>
-        /// <exception cref="ObjectDisposedException">Methods were called after <paramref name="reader"/> was closed</exception>
-        public static bool ReachedEnd(this TextReader reader)
-        {
-            if (reader is null)
-            {
-                throw new ArgumentNullException(nameof(reader));
-            }
-
-            return reader.Peek() == -1;
         }
     }
 }

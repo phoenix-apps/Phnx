@@ -93,8 +93,7 @@ namespace Phnx.IO
         /// Create a new <see cref="PipeStream"/> with some initial data
         /// </summary>
         /// <param name="initialData">The data to initialise the <see cref="PipeStream"/> with</param>
-        public PipeStream(string initialData) :
-            this()
+        public PipeStream(string initialData) : this()
         {
             In.Write(initialData);
         }
@@ -104,8 +103,7 @@ namespace Phnx.IO
         /// </summary>
         /// <param name="initialData">The data to initialise the <see cref="PipeStream"/> with</param>
         /// <exception cref="ArgumentNullException"><paramref name="initialData"/> is <see langword="null"/></exception>
-        public PipeStream(byte[] initialData) :
-            this()
+        public PipeStream(byte[] initialData) : this()
         {
             if (initialData is null)
             {
@@ -123,8 +121,7 @@ namespace Phnx.IO
         /// <param name="count">The number of bytes to be written to the current stream</param>
         /// <exception cref="ArgumentNullException"><paramref name="buffer"/> is <see langword="null"/></exception>
         /// <exception cref="ArgumentOutOfRangeException"><paramref name="count"/> or <paramref name="offset"/> is less than zero</exception>
-        public PipeStream(byte[] buffer, int offset, int count) :
-            this()
+        public PipeStream(byte[] buffer, int offset, int count) : this()
         {
             Write(buffer, offset, count);
         }
@@ -150,8 +147,7 @@ namespace Phnx.IO
         /// </summary>
         /// <param name="initialData">The data to initialise the <see cref="PipeStream"/> with</param>
         /// <param name="encoding">The text encoding to use</param>
-        public PipeStream(string initialData, Encoding encoding) :
-            this(encoding)
+        public PipeStream(string initialData, Encoding encoding) : this(encoding)
         {
             In.Write(initialData);
         }
@@ -241,9 +237,9 @@ namespace Phnx.IO
 
                     _data.Enqueue(valueToWrite);
                 }
-            }
 
-            DataWritten?.Invoke(this);
+                DataWritten?.Invoke(this);
+            }
         }
     }
 }
