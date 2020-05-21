@@ -14,10 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
-      env:
-        SONAR_LOGIN:  ${{ secrets.sonar_login }}
-        SONAR_ORGANIZATION:  ${{ secrets.sonar_organization }}
-        SONAR_PROJECT_KEY:  ${{ secrets.sonar_project_key }}
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
@@ -26,8 +22,12 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
+      env:
+        SONAR_LOGIN:  ${{ secrets.sonar_login }}
+        SONAR_ORGANIZATION:  ${{ secrets.sonar_organization }}
+        SONAR_PROJECT_KEY:  ${{ secrets.sonar_project_key }}
       run: |
-        dotnet sonarscanner begin /k:"$SONAR_PROJECT_KEY" /o:"$SONAR_ORGANIZATION" /d:sonar.login="$SONAR_LOGIN"
+        dotnet sonarscanner begin /k:$SONAR_PROJECT_KEY /o:$SONAR_ORGANIZATION /d:sonar.login=$SONAR_LOGIN
         dotnet build --configuration Release --no-restore
         dotnet sonarscanner end /d:sonar.login=$SONAR_LOGIN
     - name: Test
