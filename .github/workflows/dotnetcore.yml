@@ -24,7 +24,9 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Test
-      run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+      run: |
+        dotnet test src/Phnx.Tests/Phnx.Tests.csproj --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="../../"
+        dotnet test src/AspNetCore.Tests/Phnx.AspNetCore.Tests.csproj --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:MergeWith="../../coverlet.opencover.xml"
     - name: Scan Quality
       env:
         SONAR_LOGIN:  ${{ secrets.sonar_login }}
@@ -32,6 +34,6 @@ jobs:
         SONAR_PROJECT_KEY:  ${{ secrets.sonar_project_key }}
         GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
       run: |
-        dotnet sonarscanner begin /k:$SONAR_PROJECT_KEY /o:$SONAR_ORGANIZATION /d:sonar.login=$SONAR_LOGIN /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/TestResults/*"
+        dotnet sonarscanner begin /k:$SONAR_PROJECT_KEY /o:$SONAR_ORGANIZATION /d:sonar.login=$SONAR_LOGIN /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="./coverlet.opencover.xml"
         dotnet build --configuration Release --no-restore
         dotnet sonarscanner end /d:sonar.login=$SONAR_LOGIN
