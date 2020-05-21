@@ -6,7 +6,7 @@ using System.Text;
 namespace Phnx.IO
 {
     /// <summary>
-    /// Provides a piped stream with both input and output, where the output is "pulled" when the reader is ready
+    /// Provides an in-memory piped stream with both input and output, where the output is "pulled" when the reader is ready
     /// </summary>
     public class PipeStream : Stream
     {

@@ -185,7 +185,7 @@ namespace Phnx.Security.Tests.Algorithms
             string plaintext = "Test text";
 
             var input = new PipeStream();
-            input.Write(plaintext);
+            input.In.Write(plaintext);
 
             var output = new PipeStream();
 
@@ -193,7 +193,7 @@ namespace Phnx.Security.Tests.Algorithms
             var iv = Aes.CreateRandomIv();
             Aes.Encrypt(input, key, iv, output);
 
-            var results = output.ReadToEndAsString();
+            var results = output.Out.ReadToEnd();
 
             Assert.IsFalse(string.IsNullOrEmpty(results));
             Assert.AreNotEqual(plaintext, results);
@@ -207,7 +207,7 @@ namespace Phnx.Security.Tests.Algorithms
             var iv = Aes.CreateRandomIv();
 
             var original = new PipeStream();
-            original.Write(plaintext);
+            original.In.Write(plaintext);
 
             var encrypted = new PipeStream();
 
@@ -216,7 +216,7 @@ namespace Phnx.Security.Tests.Algorithms
             var output = new PipeStream();
             Aes.Decrypt(encrypted, key, iv, output);
 
-            var results = output.ReadToEndAsString();
+            var results = output.Out.ReadToEnd();
 
             Assert.AreEqual(plaintext, results);
         }

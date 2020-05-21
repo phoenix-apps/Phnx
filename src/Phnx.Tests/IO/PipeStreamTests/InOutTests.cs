@@ -26,9 +26,9 @@ namespace Phnx.IO.Tests.PipeStreamTests
             var expected = new byte[] { 1, 26, 212, 61, 2 };
             var pipe = new PipeStream();
 
-            pipe.In.BaseStream.Write(expected);
+            pipe.In.Write(expected);
 
-            Assert.AreEqual(expected, pipe.ReadToEnd());
+            Assert.AreEqual(expected, pipe.Out.ReadToEnd());
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace Phnx.IO.Tests.PipeStreamTests
 
             pipe.Out.BaseStream.Write(expected);
 
-            Assert.AreEqual(expected, pipe.ReadToEnd());
+            Assert.AreEqual(expected, pipe.Out.ReadToEnd());
         }
     }
 }

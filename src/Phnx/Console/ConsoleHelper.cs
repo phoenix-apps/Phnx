@@ -1,11 +1,8 @@
 ﻿using Phnx.Console.Progress;
-using Phnx.Try;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Security;
-using System.Text;
 using _Console = System.Console;
 
 namespace Phnx.Console

@@ -39,7 +39,7 @@ namespace Phnx.IO.Tests.PipeStreamTests
             var pipe = new PipeStream(expected);
 
             Assert.AreEqual(expected.Length, pipe.Length);
-            Assert.AreEqual(expected, pipe.ReadToEnd());
+            Assert.AreEqual(expected, pipe.Out.ReadToEnd());
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace Phnx.IO.Tests.PipeStreamTests
             var pipe = new PipeStream(range, 1, 2);
 
             Assert.AreEqual(expected.Length, pipe.Length);
-            Assert.AreEqual(expected, pipe.ReadToEnd());
+            Assert.AreEqual(expected, pipe.Out.ReadToEnd());
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace Phnx.IO.Tests.PipeStreamTests
 
             var pipe = new PipeStream(encoding);
 
-            Assert.AreEqual(expected, pipe.ReadToEnd());
+            Assert.AreEqual(expected, pipe.Out.ReadToEnd());
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace Phnx.IO.Tests.PipeStreamTests
 
             var pipe = new PipeStream(testText, encoding);
 
-            Assert.AreEqual(expected, pipe.ReadToEnd());
+            Assert.AreEqual(expected, pipe.Out.ReadToEnd());
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace Phnx.IO.Tests.PipeStreamTests
 
             var pipe = new PipeStream(testText, encoding);
 
-            Assert.AreEqual(expected, pipe.ReadToEnd());
+            Assert.AreEqual(expected, pipe.Out.ReadToEnd());
         }
     }
 }
