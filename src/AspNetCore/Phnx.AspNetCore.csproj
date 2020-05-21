@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>Helpers for advanced scenarios in aspnetcore, such as managing modals, or e-tags</Description>
     <Version>1.0.0</Version>
     <Copyright>Phoenix Apps Ltd</Copyright>

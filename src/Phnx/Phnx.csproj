@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Description>The Phnx framework - services and classes to extend dotnet, and make it easier to use</Description>
     <Version>1.0.0</Version>
     <Copyright>Phoenix Apps Ltd</Copyright>
