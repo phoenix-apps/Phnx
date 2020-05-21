@@ -27,8 +27,8 @@ jobs:
       run: dotnet restore
     - name: Build
       run: |
-        dotnet sonarscanner begin -k:$SONAR_PROJECT_KEY -o:$SONAR_ORGANIZATION -d:sonar.login=$SONAR_LOGIN
+        dotnet sonarscanner begin /k:$SONAR_PROJECT_KEY /o:$SONAR_ORGANIZATION /d:sonar.login=$SONAR_LOGIN
         dotnet build --configuration Release --no-restore
-        dotnet sonarscanner end -d:sonar.login=$SONAR_LOGIN
+        dotnet sonarscanner end /d:sonar.login=$SONAR_LOGIN
     - name: Test
       run: dotnet test --no-restore --verbosity normal
