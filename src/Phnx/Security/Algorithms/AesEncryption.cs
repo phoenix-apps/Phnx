@@ -6,8 +6,10 @@ using System.Security.Cryptography;
 namespace Phnx.Security.Algorithms
 {
     /// <summary>
-    /// An AES symmetric encryption algorithm. Suitable for password protecting documents, but not suited for storing passwords or sending data to 3rd parties. Consider using <see cref="Pbkdf2Hash"/> for storing passwords, or <see cref="RsaEncryption"/> for sending data to 3rd parties. If you're using AES with user entered passwords, you'll need to hash the passwords to a valid key length (see <see cref="KeyBits"/>). Consider using an algorithm <see cref="Pbkdf2Hash"/> for getting the password to a key of a valid size. An easy way to do this is with <see cref="PasswordProtectedEncryptionService"/>
+    /// An AES symmetric encryption algorithm. Suitable for 2-way encryption, such as protecting documents, but it is not suited for storing passwords or sending data to 3rd parties. Consider using <see cref="Pbkdf2Hash"/> for storing passwords, or <see cref="RsaEncryption"/> for sending data to 3rd parties
     /// </summary>
+    /// <remarks>
+    /// If you're using AES with user entered passwords, you'll need to hash the passwords to a valid key length (see <see cref="KeyBits"/>). Use a password hashing library, such as aspnetcore's PasswordHasher https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.passwordhasher-1 </remarks>
     public class AesEncryption : SymmetricEncryption
     {
         /// <summary>
