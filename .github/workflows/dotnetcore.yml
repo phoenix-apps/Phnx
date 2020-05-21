@@ -17,19 +17,21 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - name: Install SonarScanner
-      run: dotnet tool install --global dotnet-sonarscanner
+    - name: Install global tools
+      run: |
+        dotnet tool install --global dotnet-sonarscanner
+        dotnet tool install --global coverlet.console
     - name: Install dependencies
       run: dotnet restore
-    - name: Build
+    - name: Test
+      run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+    - name: Scan Quality
       env:
         SONAR_LOGIN:  ${{ secrets.sonar_login }}
         SONAR_ORGANIZATION:  ${{ secrets.sonar_organization }}
         SONAR_PROJECT_KEY:  ${{ secrets.sonar_project_key }}
         GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
       run: |
-        dotnet sonarscanner begin /k:$SONAR_PROJECT_KEY /o:$SONAR_ORGANIZATION /d:sonar.login=$SONAR_LOGIN /d:sonar.host.url="https://sonarcloud.io"
+        dotnet sonarscanner begin /k:$SONAR_PROJECT_KEY /o:$SONAR_ORGANIZATION /d:sonar.login=$SONAR_LOGIN /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/TestResults/*"
         dotnet build --configuration Release --no-restore
         dotnet sonarscanner end /d:sonar.login=$SONAR_LOGIN
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
