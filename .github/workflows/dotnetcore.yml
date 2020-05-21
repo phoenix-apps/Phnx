@@ -27,7 +27,7 @@ jobs:
         SONAR_ORGANIZATION:  ${{ secrets.sonar_organization }}
         SONAR_PROJECT_KEY:  ${{ secrets.sonar_project_key }}
       run: |
-        dotnet sonarscanner begin /k:$SONAR_PROJECT_KEY /o:$SONAR_ORGANIZATION /d:sonar.login=$SONAR_LOGIN
+        dotnet sonarscanner begin /k:$SONAR_PROJECT_KEY /o:$SONAR_ORGANIZATION /d:sonar.login=$SONAR_LOGIN /d:sonar.host.url="https://sonarcloud.io"
         dotnet build --configuration Release --no-restore
         dotnet sonarscanner end /d:sonar.login=$SONAR_LOGIN
     - name: Test
