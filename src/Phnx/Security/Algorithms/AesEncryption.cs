@@ -77,13 +77,10 @@ namespace Phnx.Security.Algorithms
                 throw new ArgumentException($"{nameof(output)} stream does not support write", nameof(output));
             }
 
-            using (var aes = CreateAes())
-            {
-                using (var encrypter = aes.CreateEncryptor(key, iv))
-                {
-                    DumpCryptoStream(encrypter, input, output);
-                }
-            }
+            using var aes = CreateAes();
+            using var encrypter = aes.CreateEncryptor(key, iv);
+
+            DumpCryptoStream(encrypter, input, output);
         }
 
         /// <summary>
@@ -122,13 +119,10 @@ namespace Phnx.Security.Algorithms
                 throw new ArgumentException($"{nameof(output)} stream does not support write", nameof(output));
             }
 
-            using (var aes = CreateAes())
-            {
-                using (var decrypter = aes.CreateDecryptor(key, iv))
-                {
-                    DumpCryptoStream(decrypter, input, output);
-                }
-            }
+            using var aes = CreateAes();
+            using var decrypter = aes.CreateDecryptor(key, iv);
+
+            DumpCryptoStream(decrypter, input, output);
         }
 
         private AesManaged CreateAes()

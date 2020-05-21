@@ -64,10 +64,9 @@ namespace Phnx.Security.Algorithms
                 return data;
             }
 
-            using (var pbkdf2 = new Rfc2898DeriveBytes(data, salt, numberOfIterations))
-            {
-                return pbkdf2.GetBytes(HashBytesLength);
-            }
+            using var pbkdf2 = new Rfc2898DeriveBytes(data, salt, numberOfIterations);
+
+            return pbkdf2.GetBytes(HashBytesLength);
         }
     }
 }

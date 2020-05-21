@@ -47,7 +47,7 @@ namespace Phnx.Security.Algorithms
                 throw new ArgumentNullException(nameof(publicKey));
             }
 
-            var rsaServiceProvider = new RSACryptoServiceProvider();
+            using var rsaServiceProvider = new RSACryptoServiceProvider();
             rsaServiceProvider.ImportCspBlob(publicKey);
 
             return rsaServiceProvider.Encrypt(data, true);
@@ -71,7 +71,7 @@ namespace Phnx.Security.Algorithms
                 throw new ArgumentNullException(nameof(privateKey));
             }
 
-            var rsaServiceProvider = new RSACryptoServiceProvider();
+            using var rsaServiceProvider = new RSACryptoServiceProvider();
             rsaServiceProvider.ImportCspBlob(privateKey);
 
             return rsaServiceProvider.Decrypt(encryptedData, true);

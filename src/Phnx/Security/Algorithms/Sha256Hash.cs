@@ -44,7 +44,7 @@ namespace Phnx.Security.Algorithms
                 return data;
             }
 
-            SHA256Managed sha = new SHA256Managed();
+            using SHA256Managed sha = new SHA256Managed();
 
             for (int iterationsSoFar = 0; iterationsSoFar < iterations; ++iterationsSoFar)
             {
