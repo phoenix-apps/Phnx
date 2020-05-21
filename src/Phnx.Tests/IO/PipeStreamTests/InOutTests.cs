@@ -21,24 +21,14 @@ namespace Phnx.IO.Tests.PipeStreamTests
         }
 
         [Test]
-        public void WriteToIn_WritesToPipe()
+        public void ReadAndWriteWithInOut_ReadsAndWritesToPipe()
         {
-            var expected = new byte[] { 1, 26, 212, 61, 2 };
+            var expected = "abc";
             var pipe = new PipeStream();
 
             pipe.In.Write(expected);
 
-            Assert.AreEqual(expected, pipe.Out.ReadToEnd());
-        }
-
-        [Test]
-        public void ReadFromOut_ReadsFromPipe()
-        {
-            var expected = new byte[] { 1, 26, 212, 61, 2 };
-            var pipe = new PipeStream();
-
-            pipe.Out.BaseStream.Write(expected);
-
+            Assert.IsTrue(pipe.Length != 0);
             Assert.AreEqual(expected, pipe.Out.ReadToEnd());
         }
     }

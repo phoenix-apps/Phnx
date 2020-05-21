@@ -104,7 +104,7 @@ namespace Phnx.IO.Tests.PipeStreamTests
 
             var pipe = new PipeStream(encoding);
 
-            Assert.AreEqual(expected, pipe.Out.ReadToEnd());
+            Assert.AreEqual(expected, pipe.ReadAllBuffered());
         }
 
         [Test]
@@ -116,7 +116,7 @@ namespace Phnx.IO.Tests.PipeStreamTests
 
             var pipe = new PipeStream(testText, encoding);
 
-            Assert.AreEqual(expected, pipe.Out.ReadToEnd());
+            Assert.AreEqual(expected, pipe.ReadAllBuffered());
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace Phnx.IO.Tests.PipeStreamTests
 
             var pipe = new PipeStream(testText, encoding);
 
-            Assert.AreEqual(expected, pipe.Out.ReadToEnd());
+            Assert.AreEqual(expected, pipe.ReadAllBuffered());
         }
     }
 }

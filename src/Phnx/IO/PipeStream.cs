@@ -184,6 +184,18 @@ namespace Phnx.IO
         }
 
         /// <summary>
+        /// Reads all currently buffered bytes
+        /// </summary>
+        public byte[] ReadAllBuffered()
+        {
+            var contents = new byte[Length];
+
+            Read(contents);
+
+            return contents;
+        }
+
+        /// <summary>
         /// Seeking is not supported in a <see cref="PipeStream"/>
         /// </summary>
         /// <exception cref="NotSupportedException">Cannot seek in a <see cref="PipeStream"/></exception>
