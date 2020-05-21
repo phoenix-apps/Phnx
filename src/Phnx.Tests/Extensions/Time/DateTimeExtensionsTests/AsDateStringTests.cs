@@ -9,7 +9,6 @@ namespace Phnx.Tests.Extensions.Time.DateTimeExtensionsTests
         [Test]
         public void AsDateString_WithoutFormatProviderAndShortFormat_FormatsAsShortLocalDate()
         {
-            var formatProvider = CultureInfo.CurrentCulture.DateTimeFormat;
             DateTime sampleNow = new DateTime(2012, 9, 4, 12, 15, 36);
 
             var shortDate = sampleNow.AsDateString();
@@ -21,7 +20,6 @@ namespace Phnx.Tests.Extensions.Time.DateTimeExtensionsTests
         [Test]
         public void AsDateString_WithoutFormatProviderAndLongFormat_FormatsAsLongLocalDate()
         {
-            var formatProvider = CultureInfo.CurrentCulture.DateTimeFormat;
             DateTime sampleNow = new DateTime(2012, 9, 4, 12, 15, 36);
 
             var shortDate = sampleNow.AsDateString(false);
@@ -37,7 +35,7 @@ namespace Phnx.Tests.Extensions.Time.DateTimeExtensionsTests
             DateTime sampleNow = new DateTime(2012, 9, 4, 12, 15, 36);
 
             var shortDate = sampleNow.AsDateString(formatProviderUS);
-            var shortDateShouldBe = "9/4/2012";
+            var shortDateShouldBe = sampleNow.ToString("d", formatProviderUS);
 
             Assert.AreEqual(shortDateShouldBe, shortDate);
         }
@@ -49,7 +47,7 @@ namespace Phnx.Tests.Extensions.Time.DateTimeExtensionsTests
             DateTime sampleNow = new DateTime(2012, 9, 4, 12, 15, 36);
 
             var shortDate = sampleNow.AsDateString(formatProviderUK);
-            var shortDateShouldBe = "04/09/2012";
+            var shortDateShouldBe = sampleNow.ToString("d", formatProviderUK);
 
             Assert.AreEqual(shortDateShouldBe, shortDate);
         }
@@ -60,10 +58,10 @@ namespace Phnx.Tests.Extensions.Time.DateTimeExtensionsTests
             var formatProviderUS = CultureInfo.GetCultureInfo("en-US").DateTimeFormat;
             DateTime sampleNow = new DateTime(2012, 9, 4, 12, 15, 36);
 
-            var shortDate = sampleNow.AsDateString(formatProviderUS, false);
-            var shortDateShouldBe = "Tuesday, September 4, 2012";
+            var longDate = sampleNow.AsDateString(formatProviderUS, false);
+            var longDateShouldBe = sampleNow.ToString("D", formatProviderUS);
 
-            Assert.AreEqual(shortDateShouldBe, shortDate);
+            Assert.AreEqual(longDateShouldBe, longDate);
         }
 
         [Test]
@@ -72,10 +70,10 @@ namespace Phnx.Tests.Extensions.Time.DateTimeExtensionsTests
             var formatProviderUK = CultureInfo.GetCultureInfo("en-GB").DateTimeFormat;
             DateTime sampleNow = new DateTime(2012, 9, 4, 12, 15, 36);
 
-            var shortDate = sampleNow.AsDateString(formatProviderUK, false);
-            var shortDateShouldBe = "04 September 2012";
+            var longDate = sampleNow.AsDateString(formatProviderUK, false);
+            var longDateShouldBe = sampleNow.ToString("D", formatProviderUK);
 
-            Assert.AreEqual(shortDateShouldBe, shortDate);
+            Assert.AreEqual(longDateShouldBe, longDate);
         }
 
         [Test]
