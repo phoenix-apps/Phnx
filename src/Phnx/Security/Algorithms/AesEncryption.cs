@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace Phnx.Security.Algorithms
@@ -12,10 +13,13 @@ namespace Phnx.Security.Algorithms
     /// If you're using AES with user entered passwords, you'll need to hash the passwords to a valid key length (see <see cref="KeyBits"/>). Use a password hashing library, such as aspnetcore's PasswordHasher https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.identity.passwordhasher-1 </remarks>
     public class AesEncryption : SymmetricEncryption
     {
+        private const int _nonceBytes = 12;
+        private const int _tagBytes = 16;
+
         /// <summary>
         /// The default initialization vector size in bits
         /// </summary>
-        public const int IvBits = 128;
+        public const int IvBits = _nonceBytes * 8;
 
         /// <summary>
         /// The default key size in bits to encrypt and decrypt the data, used by <see cref="CreateRandomKey()"/>
@@ -37,7 +41,7 @@ namespace Phnx.Security.Algorithms
         /// <returns>A random secury IV of length <see cref="IvBits"/> / 8</returns>
         public override byte[] CreateRandomIv()
         {
-            return SecureRandomBytes.Generate(IvBits / 8);
+            return SecureRandomBytes.Generate(_nonceBytes);
         }
 
         /// <summary>
@@ -77,10 +81,14 @@ namespace Phnx.Security.Algorithms
                 throw new ArgumentException($"{nameof(output)} stream does not support write", nameof(output));
             }
 
-            using var aes = CreateAes();
-            using var encrypter = aes.CreateEncryptor(key, iv);
+            using var aes = CreateAes(key);
+            var plaintext = ReadToEnd(input);
+            byte[] ciphertext = new byte[plaintext.Length];
+            byte[] tag = new byte[_tagBytes];
 
-            DumpCryptoStream(encrypter, input, output);
+            aes.Encrypt(iv, plaintext, ciphertext, tag);
+
+            WriteTagAndCipherTo(tag, ciphertext, output);
         }
 
         /// <summary>
@@ -119,45 +127,53 @@ namespace Phnx.Security.Algorithms
                 throw new ArgumentException($"{nameof(output)} stream does not support write", nameof(output));
             }
 
-            using var aes = CreateAes();
-            using var decrypter = aes.CreateDecryptor(key, iv);
+            using var aes = CreateAes(key);
+            var (tag, ciphertext) = ReadTagAndCipherFrom(input);
+            var plaintext = new byte[ciphertext.Length];
+            aes.Decrypt(iv, ciphertext, tag, plaintext);
 
-            DumpCryptoStream(decrypter, input, output);
+            output.Write(plaintext);
         }
 
-        private AesManaged CreateAes()
+        private AesGcm CreateAes(byte[] key)
         {
-            return new AesManaged
-            {
-                Mode = CipherMode.CBC,
-                Padding = PaddingMode.ISO10126
-            };
+            return new AesGcm(key);
         }
 
-        private void DumpCryptoStream(ICryptoTransform crypto, Stream source, Stream output)
+        private byte[] ReadToEnd(Stream input)
         {
-            Debug.Assert(crypto != null, $"{nameof(crypto)} cannot be null");
-            Debug.Assert(source != null, $"{nameof(source)} cannot be null");
-            Debug.Assert(output != null, $"{nameof(output)} cannot be null");
+            List<byte> result = new List<byte>(1024);
+            var buffer = new byte[1024];
 
-            byte[] buffer = new byte[Math.Min(1024, source.Length + 1)];
-            int bytesRead = buffer.Length;
-
-            var cryptoStream = new CryptoStream(output, crypto, CryptoStreamMode.Write);
-
-            // Not at end of stream yet
-            while (bytesRead == buffer.Length)
+            int totalRead;
+            do
             {
-                bytesRead = source.Read(buffer, 0, buffer.Length);
+                totalRead = input.Read(buffer);
 
-                cryptoStream.Write(
-                    buffer,
-                    0,
-                    bytesRead
-                );
+                result.AddRange(buffer.Take(totalRead));
+            } while (totalRead == 0);
+
+            return result.ToArray();
+        }
+
+        private (byte[] tag, byte[] ciphertext) ReadTagAndCipherFrom(Stream input)
+        {
+            byte[] tag = new byte[_tagBytes];
+
+            if (input.Read(tag) != tag.Length)
+            {
+                throw new CryptographicException("Data has an invalid cryptographic tag. Please ensure that the data was encrypted by this AES implementation, and not a different one");
             }
 
-            cryptoStream.FlushFinalBlock();
+            var ciphertext = ReadToEnd(input);
+
+            return (tag, ciphertext);
+        }
+
+        private void WriteTagAndCipherTo(byte[] tag, byte[] ciphertext, Stream output)
+        {
+            output.Write(tag);
+            output.Write(ciphertext);
         }
     }
 }

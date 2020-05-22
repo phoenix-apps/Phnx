@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using Phnx.Security.Algorithms;
 using System;
+using System.IO;
 using System.Text;
 
 namespace Phnx.Security.Tests.Algorithms
@@ -80,6 +81,19 @@ namespace Phnx.Security.Tests.Algorithms
             var decrypted = Aes.Decrypt(encrypted, key);
 
             Assert.AreEqual(plainBytes, decrypted);
+        }
+
+        [Test]
+        public void WriteThenReadHeader_WithValidIv_ReturnsSameHeader()
+        {
+            var iv = Aes.CreateRandomIv();
+
+            var output = new MemoryStream();
+            Aes.WriteIvHeader(iv, output);
+            output.Position = 0;
+            var restoredIv = Aes.ReadIvHeader(output);
+
+            Assert.AreEqual(iv, restoredIv);
         }
     }
 }

@@ -57,7 +57,7 @@ namespace Phnx.Security.Algorithms
             var ivLength = BitConverter.ToInt32(ivLengthBytes, 0);
             var iv = new byte[ivLength];
 
-            input.Read(iv, 0, ivLength);
+            input.Read(iv);
 
             return iv;
         }
