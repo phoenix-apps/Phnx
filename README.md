@@ -1,4 +1,8 @@
 # Phnx
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=phoenix-apps_Phnx&metric=coverage)](https://sonarcloud.io/dashboard?id=phoenix-apps_Phnx)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=phoenix-apps_Phnx&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=phoenix-apps_Phnx)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=phoenix-apps_Phnx&metric=security_rating)](https://sonarcloud.io/dashboard?id=phoenix-apps_Phnx)
+
 Phnx exists to solve common coding problems, giving you a reliable and easy to use library, with none of the effort.
 
 ## Compatibility & Dependencies
