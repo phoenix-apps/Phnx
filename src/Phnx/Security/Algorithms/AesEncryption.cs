@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 
 namespace Phnx.Security.Algorithms
@@ -15,6 +14,7 @@ namespace Phnx.Security.Algorithms
     {
         private const int _nonceBytes = 12;
         private const int _tagBytes = 16;
+        private const int _chunkSize = 1024 * 1024;
 
         /// <summary>
         /// The default initialization vector size in bits
@@ -82,13 +82,25 @@ namespace Phnx.Security.Algorithms
             }
 
             using var aes = CreateAes(key);
-            var plaintext = ReadToEnd(input);
-            byte[] ciphertext = new byte[plaintext.Length];
-            byte[] tag = new byte[_tagBytes];
 
-            aes.Encrypt(iv, plaintext, ciphertext, tag);
+            bool reachedEnd;
+            do
+            {
+                byte[] plaintext;
+                (reachedEnd, plaintext) = ReadChunk(input);
 
-            WriteTagAndCipherTo(tag, ciphertext, output);
+                if (plaintext.Length == 0)
+                {
+                    break;
+                }
+
+                byte[] ciphertext = new byte[plaintext.Length];
+                byte[] tag = new byte[_tagBytes];
+
+                aes.Encrypt(iv, plaintext, ciphertext, tag);
+
+                WriteEncyptedChunk(tag, ciphertext, output);
+            } while (!reachedEnd);
         }
 
         /// <summary>
@@ -128,11 +140,23 @@ namespace Phnx.Security.Algorithms
             }
 
             using var aes = CreateAes(key);
-            var (tag, ciphertext) = ReadTagAndCipherFrom(input);
-            var plaintext = new byte[ciphertext.Length];
-            aes.Decrypt(iv, ciphertext, tag, plaintext);
 
-            output.Write(plaintext);
+            bool reachedEnd;
+            do
+            {
+                byte[] tag, ciphertext;
+                (reachedEnd, tag, ciphertext) = ReadEncryptedChunk(input);
+
+                if (ciphertext.Length == 0)
+                {
+                    break;
+                }
+
+                var plaintext = new byte[ciphertext.Length];
+                aes.Decrypt(iv, ciphertext, tag, plaintext);
+
+                output.Write(plaintext);
+            } while (!reachedEnd);
         }
 
         private AesGcm CreateAes(byte[] key)
@@ -140,37 +164,41 @@ namespace Phnx.Security.Algorithms
             return new AesGcm(key);
         }
 
-        private byte[] ReadToEnd(Stream input)
+        private (bool reachedEnd, byte[] chunk) ReadChunk(Stream input)
         {
-            List<byte> result = new List<byte>(1024);
-            var buffer = new byte[1024];
+            var buffer = new byte[_chunkSize - _tagBytes];
+            int totalRead = input.Read(buffer);
 
-            int totalRead;
-            do
-            {
-                totalRead = input.Read(buffer);
+            var chunk = buffer.AsSpan(0, totalRead).ToArray();
 
-                result.AddRange(buffer.Take(totalRead));
-            } while (totalRead == 0);
-
-            return result.ToArray();
+            return (totalRead != _chunkSize - _tagBytes, chunk);
         }
 
-        private (byte[] tag, byte[] ciphertext) ReadTagAndCipherFrom(Stream input)
+        private (bool reachedEnd, byte[] tag, byte[] ciphertext) ReadEncryptedChunk(Stream input)
         {
             byte[] tag = new byte[_tagBytes];
 
-            if (input.Read(tag) != tag.Length)
+            var tagSize = input.Read(tag);
+            if (tagSize == 0)
+            {
+                return (true, Array.Empty<byte>(), Array.Empty<byte>());
+            }
+            if (tagSize != tag.Length)
             {
                 throw new CryptographicException("Data has an invalid cryptographic tag. Please ensure that the data was encrypted by this AES implementation, and not a different one");
             }
 
-            var ciphertext = ReadToEnd(input);
+            Debug.Assert(_chunkSize > _tagBytes);
+            byte[] ciphertext = new byte[_chunkSize - _tagBytes];
 
-            return (tag, ciphertext);
+            int ciphertextSize = input.Read(ciphertext);
+            bool atEnd = ciphertextSize != ciphertext.Length;
+            ciphertext = ciphertext.AsSpan(0, ciphertextSize).ToArray();
+
+            return (atEnd, tag, ciphertext);
         }
 
-        private void WriteTagAndCipherTo(byte[] tag, byte[] ciphertext, Stream output)
+        private void WriteEncyptedChunk(byte[] tag, byte[] ciphertext, Stream output)
         {
             output.Write(tag);
             output.Write(ciphertext);

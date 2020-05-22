@@ -3,6 +3,7 @@ using Phnx.IO;
 using Phnx.Security.Algorithms;
 using Phnx.Security.Tests.TestHelpers;
 using System;
+using System.Text;
 
 namespace Phnx.Security.Tests.Algorithms
 {
@@ -200,9 +201,37 @@ namespace Phnx.Security.Tests.Algorithms
         }
 
         [Test]
-        public void EncryptThenDecrypt_GetsOriginalMessage()
+        public void EncryptThenDecrypt_SmallContent_GetsOriginalMessage()
         {
             string plaintext = "This is some really long test text";
+            var key = Aes.CreateRandomKey();
+            var iv = Aes.CreateRandomIv();
+
+            var original = new PipeStream();
+            original.In.Write(plaintext);
+
+            var encrypted = new PipeStream();
+
+            Aes.Encrypt(original, key, iv, encrypted);
+
+            var output = new PipeStream();
+            Aes.Decrypt(encrypted, key, iv, output);
+
+            var results = output.Out.ReadToEnd();
+
+            Assert.AreEqual(plaintext, results);
+        }
+
+        [Test]
+        public void EncryptThenDecrypt_LargeContent_GetsOriginalMessage()
+        {
+            StringBuilder stb = new StringBuilder();
+            for (int rows = 0; rows < 30000; rows++)
+            {
+                stb.AppendLine("This is some really long test text");
+            }
+            var plaintext = stb.ToString();
+
             var key = Aes.CreateRandomKey();
             var iv = Aes.CreateRandomIv();
 
