@@ -127,11 +127,7 @@ namespace Phnx.Security.Algorithms
 
         private AesManaged CreateAes()
         {
-            return new AesManaged
-            {
-                Mode = CipherMode.CBC,
-                Padding = PaddingMode.PKCS7
-            };
+            return new AesManaged();
         }
 
         private void DumpCryptoStream(ICryptoTransform crypto, Stream source, Stream output)
