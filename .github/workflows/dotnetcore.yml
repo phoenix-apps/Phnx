@@ -26,7 +26,7 @@ jobs:
     - name: Test
       run: |
         dotnet test src/Phnx.Tests/Phnx.Tests.csproj --no-restore /p:CollectCoverage=true /p:CoverletOutput="../../"
-        dotnet test src/AspNetCore.Tests/Phnx.AspNetCore.Tests.csproj --no-restore /p:CollectCoverage=true /p:MergeWith="../../coverage.json" /p:CoverletOutputFormat=opencover
+        dotnet test src/AspNetCore.Tests/Phnx.AspNetCore.Tests.csproj --no-restore /p:CollectCoverage=true /p:MergeWith="../../coverage.json" /p:CoverletOutputFormat=opencover /p:CoverletOutput="../../"
     - name: Scan Quality
       env:
         SONAR_LOGIN:  ${{ secrets.sonar_login }}
