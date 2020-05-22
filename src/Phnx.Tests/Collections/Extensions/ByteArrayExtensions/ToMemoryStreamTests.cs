@@ -16,7 +16,7 @@ namespace Phnx.Collections.Tests.Extensions.ByteArrayExtensions
         [Test]
         public void ToMemoryStream_WithEmptyArray_ReturnsEmptyMemoryStream()
         {
-            byte[] bytes = new byte[0];
+            byte[] bytes = Array.Empty<byte>();
 
             var memoryStream = bytes.ToMemoryStream();
 

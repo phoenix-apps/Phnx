@@ -1,7 +1,5 @@
-﻿using Phnx.Collections;
-using System;
+﻿using System;
 using System.Drawing;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Phnx.Drawing
@@ -69,13 +67,9 @@ namespace Phnx.Drawing
         /// <exception cref="FormatException"><paramref name="hexCode"/> contains a character that is not a valid digit in hex</exception>
         private static byte[] HexStringToBytes(string hexCode)
         {
-            if (hexCode is null)
+            if (hexCode is null || hexCode.Length == 0)
             {
-                return null;
-            }
-            else if (hexCode.Length == 0)
-            {
-                return new byte[0];
+                return Array.Empty<byte>();
             }
 
             if (hexCode.Length % 2 == 1)
@@ -152,7 +146,7 @@ namespace Phnx.Drawing
         {
             if (HexCode is null)
             {
-                return null;
+                return Array.Empty<byte>();
             }
 
             var destArray = new byte[HexCode.Length];

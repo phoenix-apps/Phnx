@@ -38,8 +38,8 @@ namespace Phnx.Drawing.Shapes
                     antiClockwiseSum += Vertices[index + 1].X * Vertices[index].Y;
                 }
 
-                clockwiseSum += Vertices[Vertices.Length - 1].X * Vertices[0].Y;
-                antiClockwiseSum += Vertices[0].X * Vertices[Vertices.Length - 1].Y;
+                clockwiseSum += Vertices[^1].X * Vertices[0].Y;
+                antiClockwiseSum += Vertices[0].X * Vertices[^1].Y;
 
                 var totalArea = Math.Abs(clockwiseSum - antiClockwiseSum) / 2d;
 
@@ -87,14 +87,9 @@ namespace Phnx.Drawing.Shapes
         {
             get
             {
-                if (Vertices is null)
+                if (Vertices is null || Vertices.Length < 2)
                 {
-                    return null;
-                }
-
-                if (Vertices.Length < 2)
-                {
-                    return new Side[0];
+                    return Array.Empty<Side>();
                 }
 
                 Side[] sides = new Side[Vertices.Length];
@@ -104,7 +99,7 @@ namespace Phnx.Drawing.Shapes
                     sides[vertexIndex] = new Side(Vertices[vertexIndex], Vertices[vertexIndex + 1]);
                 }
 
-                sides[sides.Length - 1] = new Side(Vertices[Vertices.Length - 1], Vertices[0]);
+                sides[^1] = new Side(Vertices[^1], Vertices[0]);
 
                 return sides;
             }

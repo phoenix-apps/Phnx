@@ -1,8 +1,11 @@
-﻿namespace Phnx.AspNetCore.ETags
+﻿using System;
+
+namespace Phnx.AspNetCore.ETags
 {
     /// <summary>
     /// The result of an ETag's check for match
     /// </summary>
+    [Flags]
     public enum ETagMatchResult
     {
         /// <summary>

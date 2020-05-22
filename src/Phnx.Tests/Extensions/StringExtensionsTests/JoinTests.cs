@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Linq;
 
 namespace Phnx.Tests.Extensions.StringExtensionsTests
@@ -8,7 +9,7 @@ namespace Phnx.Tests.Extensions.StringExtensionsTests
         [Test]
         public void JoiningCollection_ThatIsEmpty_ReturnsEmptyString()
         {
-            byte[] arr = new byte[0];
+            byte[] arr = Array.Empty<byte>();
 
             var results = arr.Join(",");
 

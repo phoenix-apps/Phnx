@@ -66,7 +66,7 @@ namespace Phnx.Tests.Extensions.Numeric
         [Test]
         public void ToHexByteArray_WithEmptyByteArray_ReturnsEmptyString()
         {
-            byte[] value = new byte[0];
+            byte[] value = Array.Empty<byte>();
 
             var result = value.ToHex();
 

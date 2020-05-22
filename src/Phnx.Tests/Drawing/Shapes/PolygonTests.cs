@@ -52,11 +52,11 @@ namespace Phnx.Drawing.Tests.Shapes
         }
 
         [Test]
-        public void GetSides_WhenVerticesAreNull_GetsNull()
+        public void GetSides_WhenVerticesAreNull_GetsEmptyArray()
         {
             var polygon = new Polygon();
 
-            Assert.IsNull(polygon.Sides);
+            CollectionAssert.IsEmpty(polygon.Sides);
         }
 
         [Test]

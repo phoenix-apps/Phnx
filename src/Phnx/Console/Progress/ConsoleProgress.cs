@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Phnx.Console.Progress
 {
     /// <summary>
     /// Writes the progress of an operation to the console. If <see cref="System.Console.IsOutputRedirected"/> is <see langword="true"/>, the progress bar manager will print nothing
     /// </summary>
-    public class ConsoleProgress : IDisposable
+    public sealed class ConsoleProgress : IDisposable
     {
         private readonly ConsoleHelper _console;
         private readonly ProgressBarRenderer _bar;
         private readonly Func<decimal, string> _writeProgressMessage;
         private readonly bool _writeMessageToLeftOfBar;
-        private readonly Thread _thread;
+        private readonly ManualResetEventSlim _threadExited = new ManualResetEventSlim();
         private bool _safeExit;
 
         /// <summary>
@@ -29,9 +30,7 @@ namespace Phnx.Console.Progress
             _bar = bar;
             _writeProgressMessage = writeProgressMessage;
             _writeMessageToLeftOfBar = writeMessageToLeftOfBar;
-            _safeExit = false;
-            _thread = new Thread(WriterThread);
-            _thread.Start();
+            Task.Run(WriterThread);
         }
 
         /// <summary>
@@ -104,62 +103,69 @@ namespace Phnx.Console.Progress
 
         private void WriterThread()
         {
-            if (System.Console.IsOutputRedirected)
+            try
             {
-                return;
-            }
-
-            string lastWrite = string.Empty;
-            string newWrite;
-
-            int rendersSinceLastUpdate = 0;
-
-            while (!_safeExit && !IsComplete && !IsFaulted)
-            {
-                StringBuilder progressBarBuilder = new StringBuilder();
-                lock (_bar)
+                if (System.Console.IsOutputRedirected)
                 {
-                    if (_writeProgressMessage != null && _writeMessageToLeftOfBar)
-                    {
-                        progressBarBuilder.Append(_writeProgressMessage(Progress));
-                        progressBarBuilder.Append(' ');
-                    }
-
-                    progressBarBuilder.Append(_bar.RenderWithSpinner(rendersSinceLastUpdate % 20 == 0));
-
-                    if (_writeProgressMessage != null && !_writeMessageToLeftOfBar)
-                    {
-                        progressBarBuilder.Append(' ');
-                        progressBarBuilder.Append(_writeProgressMessage(Progress));
-                    }
+                    return;
                 }
 
-                newWrite = progressBarBuilder.ToString();
-                OverwriteLastWrite(lastWrite, newWrite, true);
-                lastWrite = newWrite;
+                string lastWrite = string.Empty;
+                string newWrite;
 
-                Thread.Sleep(25);
-                ++rendersSinceLastUpdate;
+                int rendersSinceLastUpdate = 0;
+
+                while (!_safeExit && !IsComplete && !IsFaulted)
+                {
+                    StringBuilder progressBarBuilder = new StringBuilder();
+                    lock (_bar)
+                    {
+                        if (_writeProgressMessage != null && _writeMessageToLeftOfBar)
+                        {
+                            progressBarBuilder.Append(_writeProgressMessage(Progress));
+                            progressBarBuilder.Append(' ');
+                        }
+
+                        progressBarBuilder.Append(_bar.RenderWithSpinner(rendersSinceLastUpdate % 20 == 0));
+
+                        if (_writeProgressMessage != null && !_writeMessageToLeftOfBar)
+                        {
+                            progressBarBuilder.Append(' ');
+                            progressBarBuilder.Append(_writeProgressMessage(Progress));
+                        }
+                    }
+
+                    newWrite = progressBarBuilder.ToString();
+                    OverwriteLastWrite(lastWrite, newWrite, true);
+                    lastWrite = newWrite;
+
+                    Thread.Sleep(25);
+                    ++rendersSinceLastUpdate;
+                }
+
+                // Write finished line
+                lock (_bar)
+                {
+                    newWrite = _bar.RenderWithoutSpinner();
+                }
+
+                if (IsComplete)
+                {
+                    _console.FontColor = ConsoleColor.Green;
+                }
+                else if (IsFaulted)
+                {
+                    _console.FontColor = ConsoleColor.Red;
+                }
+
+                OverwriteLastWrite(lastWrite, newWrite, false);
+                _console.NewLine();
+                _console.ResetColor();
             }
-
-            // Write finished line
-            lock (_bar)
+            finally
             {
-                newWrite = _bar.RenderWithoutSpinner();
+                _threadExited.Set();
             }
-
-            if (IsComplete)
-            {
-                _console.FontColor = ConsoleColor.Green;
-            }
-            else if (IsFaulted)
-            {
-                _console.FontColor = ConsoleColor.Red;
-            }
-
-            OverwriteLastWrite(lastWrite, newWrite, false);
-            _console.NewLine();
-            _console.ResetColor();
         }
 
         private void OverwriteLastWrite(string lastWrite, string newWrite, bool onlyOverwriteDifferentChars)
@@ -205,10 +211,7 @@ namespace Phnx.Console.Progress
                 _bar.Progress = _bar.MaxValue;
             }
 
-            while (_thread.IsAlive)
-            {
-                Thread.Sleep(50);
-            }
+            _threadExited.Wait();
         }
 
         /// <summary>
@@ -221,10 +224,7 @@ namespace Phnx.Console.Progress
                 _bar.IsFaulted = true;
             }
 
-            while (_thread.IsAlive)
-            {
-                Thread.Sleep(50);
-            }
+            _threadExited.Wait();
         }
 
         /// <summary>
@@ -242,10 +242,7 @@ namespace Phnx.Console.Progress
                 _safeExit = true;
             }
 
-            while (_thread.IsAlive)
-            {
-                Thread.Sleep(50);
-            }
+            _threadExited.Wait();
         }
     }
 }

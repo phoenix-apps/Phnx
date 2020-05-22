@@ -77,7 +77,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         {
             var mockETagService = new Mock<IETagService>();
 
-            mockETagService.Setup(e => e.CheckETagsForModel(It.IsAny<string>(), It.IsAny<object>()))
+            mockETagService.Setup(e => e.CheckETags(It.IsAny<string>(), It.IsAny<object>()))
                 .Returns(ETagMatchResult.Match);
 
             ETagRequestService service = GetService(mockETagService, ifNoneMatchHeader: "a");
@@ -91,7 +91,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         {
             var mockETagService = new Mock<IETagService>();
 
-            mockETagService.Setup(e => e.CheckETagsForModel(It.IsAny<string>(), It.IsAny<object>()))
+            mockETagService.Setup(e => e.CheckETags(It.IsAny<string>(), It.IsAny<object>()))
                 .Returns(ETagMatchResult.DoNotMatch);
 
             ETagRequestService service = GetService(mockETagService, ifNoneMatchHeader: "a");
@@ -130,7 +130,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         {
             var mockETagService = new Mock<IETagService>();
 
-            mockETagService.Setup(e => e.CheckETagsForModel(It.IsAny<string>(), It.IsAny<object>()))
+            mockETagService.Setup(e => e.CheckETags(It.IsAny<string>(), It.IsAny<object>()))
                 .Returns(ETagMatchResult.Match);
 
             ETagRequestService service = GetService(mockETagService, ifMatchHeader: "a");
@@ -144,7 +144,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         {
             var mockETagService = new Mock<IETagService>();
 
-            mockETagService.Setup(e => e.CheckETagsForModel(It.IsAny<string>(), It.IsAny<object>()))
+            mockETagService.Setup(e => e.CheckETags(It.IsAny<string>(), It.IsAny<object>()))
                 .Returns(ETagMatchResult.DoNotMatch);
 
             ETagRequestService service = GetService(mockETagService, ifMatchHeader: "a");
@@ -183,7 +183,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         {
             var mockETagService = new Mock<IETagService>();
 
-            mockETagService.Setup(e => e.CheckETagsForModel(It.IsAny<string>(), It.IsAny<object>()))
+            mockETagService.Setup(e => e.CheckETags(It.IsAny<string>(), It.IsAny<object>()))
                 .Returns(ETagMatchResult.Match);
 
             ETagRequestService service = GetService(mockETagService, ifMatchHeader: "a");
@@ -197,7 +197,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         {
             var mockETagService = new Mock<IETagService>();
 
-            mockETagService.Setup(e => e.CheckETagsForModel(It.IsAny<string>(), It.IsAny<object>()))
+            mockETagService.Setup(e => e.CheckETags(It.IsAny<string>(), It.IsAny<object>()))
                 .Returns(ETagMatchResult.DoNotMatch);
 
             ETagRequestService service = GetService(mockETagService, ifMatchHeader: "a");

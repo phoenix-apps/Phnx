@@ -140,14 +140,16 @@ namespace Phnx.Data.Tests.Lazy
         }
 
         [Test]
-        public void ImplictCast_WhenLazyIsNull_ThrowsArgumentNullException()
+        public void ImplictCast_WhenLazyIsNull_ReturnsNull()
         {
-            LazyGetSet<int> lazy = null;
-            Assert.Throws<ArgumentNullException>(() => { int value = lazy; });
+            LazyGetSet<int?> lazy = null;
+            int? value = lazy;
+
+            Assert.IsNull(value);
         }
 
         [Test]
-        public void ImplictCast_WhenLazyIsotNull_GetsValue()
+        public void ImplictCast_WhenLazyIsNotNull_GetsValue()
         {
             const int expected = 5;
             LazyGetSet<int> lazy = new LazyGetSet<int>(() => expected);

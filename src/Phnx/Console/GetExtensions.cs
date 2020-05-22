@@ -204,7 +204,9 @@ namespace Phnx.Console
                 }
 
                 Reset();
-                helper.WriteError(errorWritten = converted.ErrorMessage);
+
+                errorWritten = converted.ErrorMessage;
+                helper.WriteError(errorWritten);
             } while (true);
         }
     }

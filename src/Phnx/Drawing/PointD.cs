@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace Phnx.Drawing
 {
@@ -64,14 +65,14 @@ namespace Phnx.Drawing
         public static PointD Add(PointD pt, Size sz) => new PointD(pt.X + sz.Width, pt.Y + sz.Height);
 
         /// <summary>
-        /// Translates a <see cref='PointD'/> by the negative of a given <see cref='Size'/>
-        /// </summary>
-        public static PointD Subtract(PointD pt, Size sz) => new PointD(pt.X - sz.Width, pt.Y - sz.Height);
-
-        /// <summary>
         /// Translates a <see cref='PointD'/> by a given <see cref='SizeD'/>
         /// </summary>
         public static PointD Add(PointD pt, SizeD sz) => new PointD(pt.X + sz.Width, pt.Y + sz.Height);
+
+        /// <summary>
+        /// Translates a <see cref='PointD'/> by the negative of a given <see cref='Size'/>
+        /// </summary>
+        public static PointD Subtract(PointD pt, Size sz) => new PointD(pt.X - sz.Width, pt.Y - sz.Height);
 
         /// <summary>
         /// Translates a <see cref='PointD'/> by the negative of a given <see cref='SizeD'/>
@@ -130,10 +131,7 @@ namespace Phnx.Drawing
         /// <returns>The unique hash code</returns>
         public override int GetHashCode()
         {
-            var hashCode = 1861411795;
-            hashCode = hashCode * -1521134295 + X.GetHashCode();
-            hashCode = hashCode * -1521134295 + Y.GetHashCode();
-            return hashCode;
+            return HashCode.Combine(X, Y);
         }
 
         /// <summary>

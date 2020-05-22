@@ -127,7 +127,7 @@ namespace Phnx.Collections
         /// <param name="toString">The method to use to convert each member to a <see cref="string"/>. If this is <see langword="null"/>, <see cref="object.ToString"/> is used. If this returns <see langword="null"/>, <see cref="string.Empty"/> is used instead of <see langword="null"/></param>
         /// <returns>A string that consists of the members of <paramref name="source"/> delimited by the <paramref name="separator"/> string. If <paramref name="source"/> has no members, the method returns <see cref="string.Empty"></see></returns>
         /// <exception cref="ArgumentNullException"><paramref name="source"/> is null</exception>
-        public static string ToString<T>(this IEnumerable<T> source, string separator, Func<T, string> toString = null)
+        public static string ToString<T>(this IEnumerable<T> source, string separator, Func<T, string> toString)
         {
             if (separator is null)
             {

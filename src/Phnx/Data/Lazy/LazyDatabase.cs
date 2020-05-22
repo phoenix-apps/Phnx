@@ -135,7 +135,7 @@ namespace Phnx.Data.Lazy
             {
                 if (!TryAddTable(getFromExternalSource) || !TryGetTable<TEntry>(out table))
                 {
-                    // Threading fuckery, fuck it. Don't cache the value, just load it directly from the external source
+                    // Table was created on a backing thread. Don't cache the value, just load it directly from the external source
                     return getFromExternalSource(id);
                 }
             }

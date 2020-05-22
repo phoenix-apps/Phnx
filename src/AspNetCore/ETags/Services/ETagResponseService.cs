@@ -74,7 +74,7 @@ namespace Phnx.AspNetCore.ETags.Services
                 throw new ArgumentNullException(nameof(savedData));
             }
 
-            var eTag = ETagService.GetWeakETagForModel(savedData);
+            var eTag = ETagService.GetWeakETag(savedData);
 
             AddETag(eTag);
         }
@@ -86,7 +86,7 @@ namespace Phnx.AspNetCore.ETags.Services
         /// <exception cref="ArgumentNullException"><paramref name="savedData"/> is <see langword="null"/></exception>
         public bool TryAddStrongETagForModel(object savedData)
         {
-            if (!ETagService.TryGetStrongETagForModel(savedData, out var eTag))
+            if (!ETagService.TryGetStrongETag(savedData, out var eTag))
             {
                 return false;
             }

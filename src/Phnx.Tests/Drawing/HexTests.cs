@@ -7,18 +7,18 @@ namespace Phnx.Drawing.Tests
     public class HexTests
     {
         [Test]
-        public void New_WithNullChars_CreatesNullHex()
+        public void New_WithNullChars_CreatesEmptyHex()
         {
             char[] chars = null;
             var hex = new Hex(chars);
 
-            Assert.IsNull(hex.HexCode);
+            CollectionAssert.IsEmpty(hex.HexCode);
         }
 
         [Test]
         public void New_WithEmptyChars_CreatesEmptyHex()
         {
-            char[] chars = new char[0];
+            char[] chars = Array.Empty<char>();
 
             var hex = new Hex(chars);
 
@@ -80,7 +80,7 @@ namespace Phnx.Drawing.Tests
         [Test]
         public void New_WithEmptyBytes_CreatesEmptyHex()
         {
-            byte[] bytes = new byte[0];
+            byte[] bytes = Array.Empty<byte>();
 
             var hex = new Hex(bytes);
 
@@ -100,12 +100,12 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void New_WithNullString_CreatesNullHex()
+        public void New_WithNullString_CreatesEmptyHex()
         {
             string text = null;
             var hex = new Hex(text);
 
-            Assert.IsNull(hex.HexCode);
+            CollectionAssert.IsEmpty(hex.HexCode);
         }
 
         [Test]
@@ -181,7 +181,7 @@ namespace Phnx.Drawing.Tests
         public void GetHexString_WhenCodeIsEmpty_GetsEmptyHex()
         {
             string expected = string.Empty;
-            byte[] code = new byte[0];
+            byte[] code = Array.Empty<byte>();
 
             var hex = new Hex(code);
 
@@ -200,7 +200,7 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void SetHexString_WithNullString_SetsHexToNull()
+        public void SetHexString_WithNullString_SetsHexToEmpty()
         {
             string text = null;
             var hex = new Hex
@@ -208,7 +208,7 @@ namespace Phnx.Drawing.Tests
                 HexString = text
             };
 
-            Assert.IsNull(hex.HexCode);
+            CollectionAssert.IsEmpty(hex.HexCode);
         }
 
         [Test]
@@ -261,15 +261,15 @@ namespace Phnx.Drawing.Tests
         }
 
         [Test]
-        public void ToBytes_WhenBytesAreNull_ReturnsNull()
+        public void ToBytes_WhenBytesAreNull_ReturnsEmptyBytes()
         {
-            byte[] expected = null;
+            byte[] initialBytes = null;
 
-            var hex = new Hex(expected);
+            var hex = new Hex(initialBytes);
 
             var bytes = hex.ToBytes();
 
-            Assert.AreEqual(expected, bytes);
+            CollectionAssert.IsEmpty(bytes);
         }
 
         [Test]

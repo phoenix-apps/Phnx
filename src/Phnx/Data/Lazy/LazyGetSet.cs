@@ -138,7 +138,7 @@ namespace Phnx.Data.Lazy
         {
             if (lazy is null)
             {
-                throw new ArgumentNullException(nameof(lazy));
+                return default;
             }
 
             return lazy.Value;

@@ -17,7 +17,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         [Test]
         public void CheckETagsForModel_WhenETagsAreNull_ReturnsETagNotInRequest()
         {
-            ETagMatchResult result = ETagService.CheckETagsForModel(null, new object());
+            ETagMatchResult result = ETagService.CheckETags(null, new object());
 
             Assert.AreEqual(ETagMatchResult.ETagNotInRequest, result);
         }
@@ -25,7 +25,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         [Test]
         public void CheckETagsForModel_WhenETagsAreWhitespace_ReturnsETagNotInRequest()
         {
-            ETagMatchResult result = ETagService.CheckETagsForModel("    ", null);
+            ETagMatchResult result = ETagService.CheckETags("    ", null);
 
             Assert.AreEqual(ETagMatchResult.ETagNotInRequest, result);
         }
@@ -33,13 +33,13 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         [Test]
         public void CheckETagsForModel_WhenModelIsNull_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => ETagService.CheckETagsForModel("asdf", null));
+            Assert.Throws<ArgumentNullException>(() => ETagService.CheckETags("asdf", null));
         }
 
         [Test]
         public void CheckETagsForModel_WhenETagsAndModelIsNull_ReturnsETagNotInRequest()
         {
-            ETagMatchResult result = ETagService.CheckETagsForModel(null, null);
+            ETagMatchResult result = ETagService.CheckETags(null, null);
 
             Assert.AreEqual(ETagMatchResult.ETagNotInRequest, result);
         }
@@ -48,9 +48,9 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         public void CheckETagsForModel_WhenETagsAreWeakAndMatch_ReturnsWeakMatch()
         {
             var model = new FakeStrongResource(Guid.NewGuid().ToString());
-            var eTag = ETagService.GetWeakETagForModel(model);
+            var eTag = ETagService.GetWeakETag(model);
 
-            ETagMatchResult result = ETagService.CheckETagsForModel(eTag, model);
+            ETagMatchResult result = ETagService.CheckETags(eTag, model);
 
             Assert.AreEqual(ETagMatchResult.WeakMatch, result);
         }
@@ -61,7 +61,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             var model = new FakeStrongResource(Guid.NewGuid().ToString());
             var eTag = "W/\"" + Guid.NewGuid().ToString() + "\"";
 
-            ETagMatchResult result = ETagService.CheckETagsForModel(eTag, model);
+            ETagMatchResult result = ETagService.CheckETags(eTag, model);
 
             Assert.AreEqual(ETagMatchResult.WeakDoNotMatch, result);
         }
@@ -72,7 +72,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             var model = new FakeWeakResource();
             var eTag = "\"" + Guid.NewGuid().ToString() + "\"";
 
-            ETagMatchResult result = ETagService.CheckETagsForModel(eTag, model);
+            ETagMatchResult result = ETagService.CheckETags(eTag, model);
 
             Assert.AreEqual(ETagMatchResult.StrongDoNotMatch, result);
         }
@@ -81,9 +81,9 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         public void CheckETagsForModel_WhenETagsAreStrongAndMatch_ReturnsStrongMatch()
         {
             var model = new FakeStrongResource(Guid.NewGuid().ToString());
-            ETagService.TryGetStrongETagForModel(model, out var eTag);
+            ETagService.TryGetStrongETag(model, out var eTag);
 
-            ETagMatchResult result = ETagService.CheckETagsForModel(eTag, model);
+            ETagMatchResult result = ETagService.CheckETags(eTag, model);
 
             Assert.AreEqual(ETagMatchResult.StrongMatch, result);
         }
@@ -94,7 +94,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             var model = new FakeStrongResource(Guid.NewGuid().ToString());
             var eTag = "\"" + Guid.NewGuid().ToString() + "\"";
 
-            ETagMatchResult result = ETagService.CheckETagsForModel(eTag, model);
+            ETagMatchResult result = ETagService.CheckETags(eTag, model);
 
             Assert.AreEqual(ETagMatchResult.StrongDoNotMatch, result);
         }
@@ -102,7 +102,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         [Test]
         public void TryGetStrongETagForModel_WhenModelIsNull_ReturnsFalse()
         {
-            var result = ETagService.TryGetStrongETagForModel(null, out _);
+            var result = ETagService.TryGetStrongETag(null, out _);
 
             Assert.IsFalse(result);
         }
@@ -114,7 +114,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             var model = new FakeStrongResource(version);
             var expected = "\"" + version + "\"";
 
-            var result = ETagService.TryGetStrongETagForModel(model, out var eTag);
+            var result = ETagService.TryGetStrongETag(model, out var eTag);
 
             Assert.IsTrue(result);
             Assert.AreEqual(expected, eTag);
@@ -125,7 +125,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         {
             var model = new BrokenFakeResource();
 
-            var result = ETagService.TryGetStrongETagForModel(model, out var eTag);
+            var result = ETagService.TryGetStrongETag(model, out var eTag);
 
             Assert.IsFalse(result);
             Assert.IsNull(eTag);
@@ -136,7 +136,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         {
             var model = new FakeWeakResource();
 
-            var result = ETagService.TryGetStrongETagForModel(model, out var eTag);
+            var result = ETagService.TryGetStrongETag(model, out var eTag);
 
             Assert.IsFalse(result);
             Assert.IsNull(eTag);
@@ -145,14 +145,14 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
         [Test]
         public void TryGetWeakETagForModel_WhenModelIsNull_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => ETagService.GetWeakETagForModel(null));
+            Assert.Throws<ArgumentNullException>(() => ETagService.GetWeakETag(null));
         }
 
         [Test]
         public void TryGetWeakETagForModel_WhenModelIsNotNull_GetsWeakETag()
         {
             var resource = new FakeWeakResource();
-            var weakTag = ETagService.GetWeakETagForModel(resource);
+            var weakTag = ETagService.GetWeakETag(resource);
 
             Assert.IsFalse(string.IsNullOrWhiteSpace(weakTag));
             Assert.IsTrue(weakTag.StartsWith("W/\""));
@@ -165,11 +165,11 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             const int loopCount = 1000;
 
             var resource = new FakeWeakResource();
-            var weakTag = ETagService.GetWeakETagForModel(resource);
+            var weakTag = ETagService.GetWeakETag(resource);
 
             for (var index = 0; index < loopCount; index++)
             {
-                var result = ETagService.GetWeakETagForModel(resource);
+                var result = ETagService.GetWeakETag(resource);
                 Assert.AreEqual(weakTag, result);
             }
         }

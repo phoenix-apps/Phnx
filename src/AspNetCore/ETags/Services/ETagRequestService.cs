@@ -60,7 +60,7 @@ namespace Phnx.AspNetCore.ETags.Services
                 return true;
             }
 
-            ETagMatchResult result = ETagService.CheckETagsForModel(eTags[0], savedData);
+            ETagMatchResult result = ETagService.CheckETags(eTags[0], savedData);
 
             return
                 result == ETagMatchResult.ETagNotInRequest ||
@@ -81,7 +81,7 @@ namespace Phnx.AspNetCore.ETags.Services
                 return true;
             }
 
-            ETagMatchResult result = ETagService.CheckETagsForModel(eTags[0], savedData);
+            ETagMatchResult result = ETagService.CheckETags(eTags[0], savedData);
 
             return
                 result == ETagMatchResult.ETagNotInRequest ||

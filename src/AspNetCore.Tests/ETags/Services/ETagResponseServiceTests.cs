@@ -80,7 +80,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             var expected = "a";
             var mockService = new Mock<IETagService>();
             mockService
-                .Setup(e => e.GetWeakETagForModel(It.IsAny<object>()))
+                .Setup(e => e.GetWeakETag(It.IsAny<object>()))
                 .Returns(expected);
 
             ETagResponseService service = GetService(mockService);
@@ -108,7 +108,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             var expected = "a";
             var mockService = new Mock<IETagService>();
             mockService
-                .Setup(e => e.TryGetStrongETagForModel(It.IsAny<object>(), out expected))
+                .Setup(e => e.TryGetStrongETag(It.IsAny<object>(), out expected))
                 .Returns(true);
 
             ETagResponseService service = GetService(mockService);
@@ -127,7 +127,7 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
             string expected = null;
             var mockService = new Mock<IETagService>();
             mockService
-                .Setup(e => e.TryGetStrongETagForModel(It.IsAny<object>(), out expected))
+                .Setup(e => e.TryGetStrongETag(It.IsAny<object>(), out expected))
                 .Returns(false);
 
             ETagResponseService service = GetService(mockService);
@@ -156,10 +156,10 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
 
             var mockService = new Mock<IETagService>();
             mockService
-                .Setup(e => e.GetWeakETagForModel(It.IsAny<object>()))
+                .Setup(e => e.GetWeakETag(It.IsAny<object>()))
                 .Returns(expected);
             mockService
-                .Setup(e => e.TryGetStrongETagForModel(It.IsAny<object>(), out strongETag))
+                .Setup(e => e.TryGetStrongETag(It.IsAny<object>(), out strongETag))
                 .Returns(false);
 
             ETagResponseService service = GetService(mockService);
@@ -178,10 +178,10 @@ namespace Phnx.AspNetCore.ETags.Tests.Services
 
             var mockService = new Mock<IETagService>();
             mockService
-                .Setup(e => e.GetWeakETagForModel(It.IsAny<object>()))
+                .Setup(e => e.GetWeakETag(It.IsAny<object>()))
                 .Returns("Tried added weak etag");
             mockService
-                .Setup(e => e.TryGetStrongETagForModel(It.IsAny<object>(), out expected))
+                .Setup(e => e.TryGetStrongETag(It.IsAny<object>(), out expected))
                 .Returns(true);
 
             ETagResponseService service = GetService(mockService);
