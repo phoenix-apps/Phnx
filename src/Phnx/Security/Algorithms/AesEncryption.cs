@@ -130,7 +130,7 @@ namespace Phnx.Security.Algorithms
             return new AesManaged
             {
                 Mode = CipherMode.CBC,
-                Padding = PaddingMode.Zeros
+                Padding = PaddingMode.ISO10126
             };
         }
 
